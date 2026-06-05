@@ -26,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     window = UIWindow(frame: UIScreen.main.bounds)
 
     factory.startReactNative(
-      withModuleName: "rn-scaffold",
+      withModuleName: "swyp-rotation-dating-app",
       in: window,
       launchOptions: launchOptions
     )
