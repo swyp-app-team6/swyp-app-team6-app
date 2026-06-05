@@ -22,6 +22,9 @@
 | 환경 변수 | react-native-config | ^1.6.1 |
 
 
+## 앱 이름 변경
+https://www.npmjs.com/package/react-native-rename
+
 ## Automatic Configuration (Recommended)
 
 Add Sentry automatically to your app with the [Sentry wizard](https://docs.sentry.io/platforms/react-native/#install) (call this inside your project directory).
