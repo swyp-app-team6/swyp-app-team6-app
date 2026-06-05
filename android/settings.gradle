@@ -1,0 +1,19 @@
+pluginManagement { 
+    repositories {
+        google()          // 🔥 이거 추가 (핵심)
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    includeBuild("../node_modules/@react-native/gradle-plugin")
+   }
+plugins { id("com.facebook.react.settings") }
+extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand() }
+rootProject.name = 'rn-scaffold'
+include ':app'
+includeBuild('../node_modules/@react-native/gradle-plugin')
+dependencyResolutionManagement {
+    repositories {
+        google()          // 🔥 이것도 추가
+        mavenCentral()
+    }
+}
