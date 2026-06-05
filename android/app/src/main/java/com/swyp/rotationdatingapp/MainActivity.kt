@@ -1,4 +1,4 @@
-package com.rnscaffold
+package com.swyp.rotationdatingapp
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

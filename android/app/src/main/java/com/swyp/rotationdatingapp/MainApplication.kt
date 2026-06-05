@@ -1,4 +1,4 @@
-package com.rnscaffold
+package com.swyp.rotationdatingapp
 
 import android.app.Application
 import com.facebook.react.PackageList
