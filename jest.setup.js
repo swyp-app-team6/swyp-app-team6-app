@@ -1,5 +1,5 @@
 // Jest setup for React Native
-require('react-native-gesture-handler/jestSetup');
+// Note: react-native-gesture-handler jestSetup is loaded via setupFiles in jest.config.js
 
 // Mock react-native-worklets to avoid initialization errors
 jest.mock('react-native-worklets', () => ({
