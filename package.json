@@ -69,6 +69,7 @@
     "react-test-renderer": "19.2.3",
     "reactotron-react-native": "^5.2.0",
     "tailwind-merge": "^3.5.0",
+    "test-renderer": "^1.2.0",
     "typescript": "^5.8.3"
   },
   "engines": {
