@@ -10,12 +10,6 @@ jest.mock('react-native-worklets-core', () => ({
   addWorkletExtensionToNative: jest.fn(),
 }));
 
-// Mock react-native-config
-jest.mock('react-native-config', () => ({
-  API_URL: 'http://localhost:3000',
-  DEFAULT_LANGUAGE: 'en',
-}));
-
 // Mock @notifee/react-native
 jest.mock('@notifee/react-native', () => ({
   __esModule: true,
@@ -30,17 +24,6 @@ jest.mock('@notifee/react-native', () => ({
     CHANNEL_CREATED: 1,
     CHANNEL_UPDATED: 2,
     CHANNEL_DELETED: 3,
-  },
-}));
-
-// Mock react-native-encrypted-storage
-jest.mock('react-native-encrypted-storage', () => ({
-  __esModule: true,
-  default: {
-    setItem: jest.fn().mockResolvedValue(undefined),
-    getItem: jest.fn().mockResolvedValue(null),
-    removeItem: jest.fn().mockResolvedValue(undefined),
-    clear: jest.fn().mockResolvedValue(undefined),
   },
 }));
 
