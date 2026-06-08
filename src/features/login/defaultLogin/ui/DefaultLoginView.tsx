@@ -1,6 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
 import { Button, Input } from '@/shared/ui'
+import useDefaultLoginMutation from '../api/useDefaultLoginMutation';
 
 /**
  * 기본 로그인 view
@@ -16,7 +17,7 @@ export default function DefaultLoginView() {
         placeholder='password'
         secureTextEntry
       />
-      <Button onPress={mutate} loading={isPending}
+      <Button onPress={() => mutate()} loading={isPending}
         className='w-full'
         title='로그인'
       />
