@@ -3,8 +3,7 @@ import React from 'react'
 import { Text, View } from 'react-native'
 import DefaultLoginView from '@/features/login/defaultLogin/ui/DefaultLoginView';
 import { useNavigation } from '@react-navigation/native';
-import withLayout from '../../shared/hoc/withLayout';
-import { NAV_NAME } from '../../shared/enums';
+import { NavigationPropType, NavigatorType } from '../../shared/types';
 
 /**
  * # LoginPage
@@ -15,7 +14,7 @@ import { NAV_NAME } from '../../shared/enums';
  * <LoginPage />
  */
 function LoginPage() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationPropType>();
   return (
     <>
       <Header
@@ -24,7 +23,7 @@ function LoginPage() {
       <Layout.Body styleClass={{ root: 'px-6 pt-20' }}>
         <DefaultLoginView />
         <View className='w-full flex flex-row justify-between mt-4'>
-          <Button title='회원가입' variant='secondary' onPress={() => navigation.navigate(NAV_NAME.REGISTER)} />
+          <Button title='회원가입' variant='secondary' onPress={() => navigation.navigate('register')} />
           <Button title='비밀번호 찾기' variant='secondary' />
         </View>
       </Layout.Body>

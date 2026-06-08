@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RegisterFormView } from '@/features/register';
-import { NAV_NAME } from '@/shared/enums';
 
 /**
  * # RegisterPage
@@ -23,7 +22,7 @@ export default function RegisterPage() {
 
   const handleConfirm = () => {
     setModalVisible(false);
-    navigation.navigate(NAV_NAME.GALLERY);
+    navigation.navigate('gallery');
   };
 
   return (

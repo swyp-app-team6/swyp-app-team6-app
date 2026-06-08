@@ -1,7 +1,6 @@
 import React, { ComponentType, useEffect, useMemo } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import useAuthStore from '@/entities/user/model/authStore'
-import { NAV_NAME } from '../enums';
 import LoginPage from '../../pages/login/LoginPage';
 
 /**

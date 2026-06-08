@@ -1,7 +1,6 @@
 import React from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { GalleryIcon, Layout, PlaygroundIcon, ProfileIcon, TodoIcon } from '@/shared/ui'
-import { NAV_NAME } from '@/shared/enums'
 import { Text } from 'react-native';
 
 const ACTIVE_COLOR = '#3b82f6';
@@ -9,13 +8,13 @@ const INACTIVE_COLOR = '#9ca3af';
 
 /**
  * 하단 탭 네비게이션 아이템 목록
- * - NAV_NAME 기반으로 라우트 이름 관리
+ * - NavigatorType 키 기반으로 라우트 이름 관리
  */
 const NAV_ITEMS = [
-  { name: NAV_NAME.HOME, label: 'Todo', icon: (active: boolean) => <TodoIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
-  { name: NAV_NAME.PROFILE, label: '프로필', icon: (active: boolean) => <ProfileIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
-  { name: NAV_NAME.GALLERY, label: '갤러리', icon: (active: boolean) => <GalleryIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
-  { name: NAV_NAME.PLAYGROUND, label: 'UI', icon: (active: boolean) => <PlaygroundIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
+  { name: 'home', label: 'Todo', icon: (active: boolean) => <TodoIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
+  { name: 'profile', label: '프로필', icon: (active: boolean) => <ProfileIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
+  { name: 'gallery', label: '갤러리', icon: (active: boolean) => <GalleryIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
+  { name: 'playground', label: 'UI', icon: (active: boolean) => <PlaygroundIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
 ];
 
 /**
