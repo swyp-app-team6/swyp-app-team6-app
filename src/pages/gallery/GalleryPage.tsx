@@ -14,6 +14,14 @@ const NAV_ITEMS = [
   { name: 'Playground', label: 'UI', icon: (active: boolean) => <PlaygroundIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
 ];
 
+/**
+ * # GalleryPage
+ * ---
+ * - 간단설명: 갤러리 화면 - 디바이스 사진 선택 및 공유 기능 제공
+ * ---
+ * @example
+ * <GalleryPage />
+ */
 export default function GalleryPage() {
   const navigation = useNavigation<any>();
   const route = useRoute();

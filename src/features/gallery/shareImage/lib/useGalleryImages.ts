@@ -2,6 +2,14 @@ import { useState } from 'react';
 import { Share } from 'react-native';
 import { launchImageLibrary, type Asset } from 'react-native-image-picker';
 
+/**
+ * # useGalleryImages
+ * ---
+ * - 간단설명: 디바이스 갤러리 이미지 선택·공유·초기화 상태를 관리하는 훅
+ * ---
+ * @example
+ * const { images, pickImages, shareImage, clearImages } = useGalleryImages();
+ */
 export function useGalleryImages() {
   const [images, setImages] = useState<Asset[]>([]);
 

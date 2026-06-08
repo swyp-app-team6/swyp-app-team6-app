@@ -3,6 +3,15 @@ import { Button } from "@/shared/ui/Button";
 import { View } from "react-native";
 import notifee, { EventType } from '@notifee/react-native';
 
+/**
+ * # NotiScreen
+ * ---
+ * - 간단설명: 로컬 푸시 알림 테스트 화면 - 알림 권한 요청 및 즉시 발송 버튼 제공
+ * - 제약사항 및 특이사항: iOS 권한 요청 필요, Android는 채널 생성 필요
+ * ---
+ * @example
+ * <NotiScreen />
+ */
 export default function NotiScreen() {
   useEffect(() => {
     return notifee.onForegroundEvent(({ type, detail }) => {

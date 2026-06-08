@@ -38,6 +38,14 @@ const NAV_ITEMS = [
 // Helpers
 // ────────────────────────────────────────────────────────────────────────────────
 
+/**
+ * # Section
+ * ---
+ * - 간단설명: 플레이그라운드 내 컴포넌트 구분용 섹션 래퍼
+ * ---
+ * @param title 섹션 제목
+ * @param children 섹션 내부 컨텐츠
+ */
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <View className="mb-8">
@@ -53,6 +61,14 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 // Page
 // ────────────────────────────────────────────────────────────────────────────────
 
+/**
+ * # ComponentPlaygroundPage
+ * ---
+ * - 간단설명: 공용 UI 컴포넌트 전체를 한 화면에서 확인할 수 있는 플레이그라운드
+ * ---
+ * @example
+ * <ComponentPlaygroundPage />
+ */
 export default function ComponentPlaygroundPage() {
   const navigation = useNavigation<any>();
   const route = useRoute();

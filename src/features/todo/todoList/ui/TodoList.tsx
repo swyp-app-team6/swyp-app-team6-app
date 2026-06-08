@@ -4,6 +4,14 @@ import TodoListItem from '@/widgets/todos/TodoListItem';
 import { useGetTodosQuery } from '../api/useGetTodosQuery';
 import { Todo } from '@/entities/todo';
 
+/**
+ * # TodoList
+ * ---
+ * - 간단설명: Todo 전체 목록을 FlatList로 표시하며 pull-to-refresh 지원
+ * ---
+ * @example
+ * <TodoList />
+ */
 export default function TodoList() {
   const { data: todos, refetch } = useGetTodosQuery();
   const [refreshing, setRefreshing] = useState(false);

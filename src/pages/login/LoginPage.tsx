@@ -4,6 +4,14 @@ import { Text, View } from 'react-native'
 import DefaultLoginView from '@/features/login/defaultLogin/ui/DefaultLoginView';
 import { useNavigation } from '@react-navigation/native';
 
+/**
+ * # LoginPage
+ * ---
+ * - 간단설명: 로그인 화면 - 기본 로그인 폼, 회원가입 및 비밀번호 찾기 버튼 제공
+ * ---
+ * @example
+ * <LoginPage />
+ */
 export default function LoginPage() {
   const navigation = useNavigation();
   return (

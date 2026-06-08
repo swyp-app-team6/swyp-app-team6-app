@@ -3,6 +3,15 @@ import React from 'react'
 import { Button, Text, View } from 'react-native';
 import useDeleteTodoMutation from '../api/useDeleteTodoMutation';
 
+/**
+ * # DeleteTodoModal
+ * ---
+ * - 간단설명: Todo 삭제 확인 모달 컴포넌트
+ * ---
+ * @param todoId 삭제할 Todo의 ID
+ * @example
+ * <DeleteTodoModal todoId={1} />
+ */
 export default function DeleteTodoModal({ todoId }: {
   todoId: number;
 }) {

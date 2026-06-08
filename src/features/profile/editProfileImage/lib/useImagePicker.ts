@@ -8,6 +8,15 @@ const IMAGE_OPTIONS = {
   maxHeight: 512,
 };
 
+/**
+ * # useImagePicker
+ * ---
+ * - 간단설명: 카메라 또는 갤러리에서 이미지를 선택해 authStore의 프로필 이미지를 업데이트하는 훅
+ * - 제약사항 및 특이사항: 최대 512x512로 리사이즈, quality 0.8 압축 적용
+ * ---
+ * @example
+ * const { openCamera, openGallery } = useImagePicker();
+ */
 export function useImagePicker() {
   const setProfileImage = useAuthStore((s) => s.setProfileImage);
 

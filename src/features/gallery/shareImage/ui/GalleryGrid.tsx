@@ -5,12 +5,30 @@ import { Button } from '@/shared/ui';
 
 const CELL_SIZE = (Dimensions.get('window').width - 6) / 3; // 3열, 간격 2px
 
+/**
+ * GalleryGrid 컴포넌트 Props
+ * - images: 표시할 이미지 목록
+ * - onPickImages: 사진 선택 버튼 콜백
+ * - onShare: 이미지 공유 콜백 (uri 전달)
+ */
 interface GalleryGridProps {
   images: Asset[];
   onPickImages: () => void;
   onShare: (uri: string) => void;
 }
 
+/**
+ * # GalleryGrid
+ * ---
+ * - 간단설명: 선택된 이미지를 3열 그리드로 표시하고, 탭 시 공유 가능한 갤러리 UI
+ * - 제약사항 및 특이사항: 이미지가 없을 경우 빈 상태 뷰 표시
+ * ---
+ * @param images 표시할 이미지 Asset 배열
+ * @param onPickImages 사진 선택 버튼 콜백
+ * @param onShare 이미지 탭 시 공유 콜백 (uri 전달)
+ * @example
+ * <GalleryGrid images={images} onPickImages={pickImages} onShare={shareImage} />
+ */
 export default function GalleryGrid({ images, onPickImages, onShare }: GalleryGridProps) {
   if (images.length === 0) {
     return (

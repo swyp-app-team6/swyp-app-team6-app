@@ -4,6 +4,12 @@ import Config from 'react-native-config';
 import { googleLogin } from '@/entities/user';
 import useAuthStore from '@/entities/user/model/authStore';
 
+/**
+ * Google OAuth 인증 설정
+ * - issuer: Google 인증 서버 주소
+ * - clientId: 환경변수(GOOGLE_OAUTH_CLIENT_ID)에서 주입
+ * - scopes: openid, profile, email
+ */
 const googleAuthConfig: AuthConfiguration = {
   issuer: 'https://accounts.google.com',
   clientId: Config.GOOGLE_OAUTH_CLIENT_ID ?? '',
@@ -16,6 +22,16 @@ const googleAuthConfig: AuthConfiguration = {
   },
 };
 
+/**
+ * # useGoogleLoginMutation
+ * ---
+ * - 간단설명: Google OAuth를 통한 소셜 로그인 mutation 훅
+ * - 제약사항 및 특이사항: react-native-app-auth 사용, 성공 시 authStore에 토큰 및 유저 정보 저장
+ * ---
+ * @example
+ * const { mutate, isPending } = useGoogleLoginMutation();
+ * mutate();
+ */
 export default function useGoogleLoginMutation() {
   const { setTokens, setUser } = useAuthStore();
 

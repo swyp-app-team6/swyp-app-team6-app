@@ -13,6 +13,14 @@ const NAV_ITEMS = [
   { name: 'Playground', label: 'UI', icon: (active: boolean) => <PlaygroundIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
 ];
 
+/**
+ * # ProfilePage
+ * ---
+ * - 간단설명: 프로필 화면 - 사용자 정보 및 프로필 이미지 확인/수정
+ * ---
+ * @example
+ * <ProfilePage />
+ */
 export default function ProfilePage() {
   const navigation = useNavigation<any>();
   const route = useRoute();
