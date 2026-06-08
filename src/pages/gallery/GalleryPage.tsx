@@ -3,6 +3,7 @@ import { Text, TouchableOpacity } from 'react-native';
 import { Header, Layout } from '@/shared/ui';
 import { GalleryGrid, useGalleryImages } from '@/features/gallery/shareImage';
 import withLayout from '@/shared/hoc/withLayout';
+import withAuthorization from '../../shared/hoc/withAuthorization';
 
 /**
  * # GalleryPage
@@ -32,4 +33,4 @@ function GalleryPage() {
   );
 }
 
-export default withLayout(GalleryPage);
+export default withAuthorization(withLayout(GalleryPage));
