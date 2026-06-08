@@ -17,9 +17,9 @@ const NAV_ITEMS = [
 ];
 
 /**
- * 투두 샘플 페이지
+ * 페이지 공통 레이아웃
  */
-export default function TodoPage() {
+export default function AppLayout() {
   const navigation = useNavigation<any>();
   const route = useRoute();
 

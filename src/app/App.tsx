@@ -1,6 +1,6 @@
 import '../../global.css';
 import React, { useState } from 'react';
-import StackRouter from '@/app/StackRouter';
+import StackRouter from '@/shared/router/StackRouter';
 import AppProviders from '@/app/providers/AppProviders';
 import Toast from 'react-native-toast-message';
 

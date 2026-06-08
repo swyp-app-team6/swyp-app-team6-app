@@ -15,11 +15,8 @@ export default function StackRouter() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Todo123" component={TodoPage} />
         <Stack.Screen name="login" component={LoginPage} />
-        <Stack.Screen name="Noti" component={NotiScreen} />
-        <Stack.Screen name="Profile" component={ProfilePage} />
-        <Stack.Screen name="Gallery" component={GalleryPage} />
+        <Stack.Screen name="login" component={LoginPage} />
         <Stack.Screen name="Playground" component={ComponentPlaygroundPage} />
       </Stack.Navigator>
     </NavigationContainer>
