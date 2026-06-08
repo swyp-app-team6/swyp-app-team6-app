@@ -4,6 +4,7 @@ import { Text, View } from 'react-native'
 import DefaultLoginView from '@/features/login/defaultLogin/ui/DefaultLoginView';
 import { useNavigation } from '@react-navigation/native';
 import withLayout from '../../shared/hoc/withLayout';
+import { NAV_NAME } from '../../shared/enums';
 
 /**
  * # LoginPage

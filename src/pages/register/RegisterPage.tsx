@@ -1,32 +1,45 @@
-import { Button, Header, Input, Layout } from '@/shared/ui'
-import React from 'react'
-import { View } from 'react-native'
+import { Button, Header, Layout, Modal } from '@/shared/ui';
+import React, { useState } from 'react';
+import { Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { RegisterFormView } from '@/features/register';
+import { NAV_NAME } from '@/shared/enums';
 
 /**
  * # RegisterPage
  * ---
- * - 간단설명: 회원가입 화면 - 아이디/비밀번호/비밀번호 확인 입력 및 가입 버튼 제공
+ * - 간단설명: 회원가입 화면 - 아이디/비밀번호/비밀번호 확인 입력, 완료 시 다이얼로그 후 갤러리로 이동
  * ---
  * @example
  * <RegisterPage />
  */
 export default function RegisterPage() {
   const navigation = useNavigation();
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleSuccess = () => {
+    setModalVisible(true);
+  };
+
+  const handleConfirm = () => {
+    setModalVisible(false);
+    navigation.navigate(NAV_NAME.GALLERY);
+  };
+
   return (
     <>
       <Header title="회원가입" />
       <Layout.Body styleClass={{ root: 'px-6 pt-20' }}>
-        <View className='gap-3'>
-          <Input placeholder='아이디' />
-          <Input placeholder='비밀번호' secureTextEntry />
-          <Input placeholder='비밀번호 확인' secureTextEntry />
-          <Button className='w-full' title='회원가입' />
-        </View>
+        <RegisterFormView onSuccess={handleSuccess} />
         <View className='w-full flex flex-row justify-center mt-4'>
           <Button title='로그인으로 돌아가기' variant='ghost' onPress={() => navigation.goBack()} />
         </View>
       </Layout.Body>
+
+      <Modal visible={modalVisible} title="회원가입 완료" onClose={handleConfirm}>
+        <Text className='text-gray-600 mb-4'>회원가입이 완료되었습니다.</Text>
+        <Button title='갤러리로 이동' onPress={handleConfirm} />
+      </Modal>
     </>
-  )
+  );
 }
