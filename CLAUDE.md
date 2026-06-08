@@ -1,194 +1,98 @@
-# RN-SCAFFOLD : react native 스캐폴딩 프로젝트
+# CLAUDE.md
 
-## 프로젝트 개요
-- 기본 세팅 돌려쓰기 위한 프로젝트
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## 기획
+# 작업 순서: 신규 작업 시, 반드시 다음 플로우를 준수하여 작업 진행할 것
+1. 기획&요구사항 정리
+- atlassian mcp 사용해 Jira 접근하여 기획 확인
+- 전반적 작업 내용은 jira에서 확인
+- 브랜치 명은 티켓 이름을 그대로 사용
 
-### 서비스 목적
+<!-- - 세부 기획, 제약사항 등은 confluence에서 확인(현재 세팅 안되었으므로 무시)
+  - PDR: 기획 및 제약사항 어떻게, 어째서 했는지를 정리하는 문서
+  - ADR: 특정 기술 도입 결정을 왜 하였는지 정리하는 문서 -->
 
-FSD(Feature-Sliced Design) 아키텍처를 React Native 환경에서 실습하기 위한 학습용 Todo 서비스.
+2. 디자인: stitch mcp 사용해 화면, ui배치 구성
+- 반드시 존재하는 디자인 시스템 기반으로 제작할것, 새로 제작 필요할시는 별도 생성 질문후 진행
 
-### 도메인 모델
+3. 개발: Jira, confluence, stitch mcp 통해 작업사항 바탕으로 하여  작업내용 파악
+- 개발 과정은 red green refactor 원칙 기반 TDD로 작업 진행할 것
+- superpowers의 brainstorming skill 사용하여 기획 구체화 진행
+- 커밋 메세지: 내용은 전부 한글로 작성할것
 
-```ts
-interface Todo {
-  id: string;          // 고유 식별자
-  title: string;       // 제목
-  description: string; // 설명
-  completed: boolean;  // 완료 여부
+- 개발 방법론: superpowers의 test-driven-development skill 사용하여 TDD로 진행
+1. 테스트 desc 작성, 작성후 검토 요청하기
+2. 구현하려는 기능의 테스트 작성 
+3. 테스트를 통과시키는 최소한의 코드 작성
+4. 리팩토링 및 개선
+
+- 폴더 구조: fsd 패턴 사용하여 구조적으로 정리
+규칙
+폴더 구조: 레이어, 슬라이스, 세그먼트로 분류됨
+
+레이어: fsd에서 정의된 폴더 분류
+App: 최상위 app.tsx, provider, router 등 최상위 설정들
+Pages; 개별 페이지 정의, 비즈니스 로직보다는 사용자 인터페이스 관련 로직만 관리
+widgets: 페이지 내 독립적으로 작동하는 기능 관리, 다양한 페이지에서 재사용 가능 (ui): template
+Features: 재사용 가능한 비즈니스 기능 위한 레이어, 재사용 가능한 ui+비즈니스 로직: organisms
+Entities: 데이터 모델, 데이터에 대한 로직, 사용자 정보 관리 store, interface 정의
+Shared: 공용 ui, 유틸 순수함수들-슬라이스 없이 세그먼트만 있음: atoms, molecules
+
+슬라이스: 레이어의 컨텍스트별 폴더, 각 도메인에 대한 폴더명 구성
+- index.ts: 해당 슬라이스에서 사용가능한 모든 기능 리턴, 구체적인 경로 몰라도 import 가능함
+세그먼트: 컨텍스트별 세부 내용, 아래 디렉토리로 구별되나 커스터마이징 가능
+    - Model: 상태관리, 비즈니스로직, 데이터 상태 저장및 관리
+    - Ui: 각 기능에 대한 UI
+    - api: 각 api 요청에 대한 코드 작성 (rq useQuery, useMutation hoook)
+    - Lib: 유틸 순수함수
+    - Types: interface, type
+
+
+레이어는 반드시 자신의 하위요소만 참조해야 함
+각 세그먼트의 폴더명은 컨벤션은 있으나 임의 변경 가능
+
+
+
+
+
+- 중요!: Jsdoc 작성
+- 각 작성한 요소의 스펙에 대해 jsdoc 형식의 간단 문서를 작성해야 한다
+- 한국어로 작성하며, 함수, 변수, 클래스 등의 경우 요소 바로 위에 작성한다
+
+- 아래의 양식에 따라 작성한다
+/** 
+ * # 컴포넌트/함수/클래스 이름
+   ---
+ * - 간단설명: 무슨역할인지 1줄로 설명
+   - 제약사항 및 특이사항: 있으면 목록별로 나열
+   ---
+   @param: 쿼리파라미터
+   ex) @param children react children
+   ---
+ * @example: 간단예제
+ * 
+ */
+ 
+- type, interface, enum의 경우, jsdoc은 다음과 같은 형태로 작성한다
+/**
+ * 도서 검색 목록 정렬 기준
+ * - ACCURACY = 정확도순
+ * - LATEST = 발간일순
+ */
+export enum FETCH_BOOK_SORT {
+	/** 정확도순 */
+  ACCURACY = "accuracy",
+  /** 발간일순 */
+  LATEST = "latest",
 }
-```
 
-### 기능 목록
 
-| 기능 | 설명 | 구현 상태 |
-|---|---|---|
-| Todo 추가 | 제목과 설명을 입력해 새 Todo 생성 | 구현됨 |
-| Todo 목록 조회 | 전체 Todo 목록 표시 | 구현됨 |
-| Todo 완료 상태 변경 | 체크박스로 completed 토글 | 구현됨 |
-| Todo 수정 | 제목/설명 수정 | 미구현 (features/todo/updateTodo) |
-| Todo 삭제 | 특정 Todo 제거 | 미구현 (features/todo/deleteTodo) |
-
-### 기능 상세
-
-#### Todo 추가
-- 입력 항목: `title`(제목), `description`(설명)
-- 두 항목 모두 입력 후 추가 버튼 클릭
-- `id`는 클라이언트에서 자동 생성, `completed`는 `false`로 초기화
-
-#### Todo 완료 상태 변경
-- 목록의 각 아이템에 체크박스 표시
-- 체크박스 클릭 시 `completed` 값 토글
-- 상태에 따라 아이템 시각적 구분
-
-#### Todo 수정
-- 기존 `title`, `description` 값을 수정
-- `id`로 대상 Todo 식별
-
-#### Todo 삭제
-- `id`로 대상 Todo 식별 후 목록에서 제거
-
-### 화면 구성
-
-| 화면 | 경로 | 포함 요소 |
-|---|---|---|
-| Todo 메인 | `pages/todo/TodoPage` | Todo 입력 폼, Todo 목록 |
-
-## 기술 스택
-
-- **React Native** — 모바일 앱 프레임워크
-- **TypeScript** — 타입 안전성
-- **Zustand + Immer** — 전역 상태 관리 (`entities/*/model/`)
-- **Axios** — HTTP 클라이언트 (`shared/api/`)
-- **React Navigation (Native Stack)** — 화면 이동
-- **NativeWind (Tailwind CSS)** — 스타일링
-- **react-native-config** — 환경 변수 (`Config.API_URL`)
-
-## 아키텍처: FSD (Feature-Sliced Design)
-
-### 레이어 계층 및 import 방향
-
-```
-app → pages → widgets → features → entities → shared
-```
-
-- 상위 레이어는 하위 레이어만 import 가능
-- **같은 레이어 내 슬라이스 간 import 금지**
-- 모든 슬라이스는 `index.ts`(Public API)를 통해서만 외부에 노출
-
-### 레이어별 역할
-
-| 레이어 | 역할 | 예시 |
-|---|---|---|
-| `app/` | 앱 초기화, 라우터, providers | App.tsx, StackRouter.tsx |
-| `pages/` | 화면 단위 컴포넌트 | TodoPage.tsx |
-| `widgets/` | 여러 feature/entity를 조합한 UI 블록 | TodoList (목록 표시) |
-| `features/` | 사용자 액션 단위 로직 + UI | createTodo, deleteTodo, updateTodo |
-| `entities/` | 도메인 모델, API, 상태 | Todo 타입, todoStore, todo API |
-| `shared/` | 도메인 없는 범용 코드 | HTTP 클라이언트, Button, TextField |
-
-### 세그먼트 구조 (슬라이스 내부)
-
-```
-{layer}/{slice}/
-├── ui/        — 컴포넌트
-├── model/     — 상태, 스토어, 비즈니스 로직
-├── api/       — API 호출 함수
-├── lib/       — 유틸리티
-├── types.ts   — 타입 정의
-└── index.ts   — Public API (필수)
-```
-
-## 현재 구조 및 목표 구조
-
-### 현재 (개선 전)
-
-```
-src/
-├── app/
-│   ├── api/          ← shared/api로 이동 필요
-│   ├── lib/          ← shared/lib으로 이동 필요
-│   ├── navigation/
-│   ├── providers/
-│   ├── App.tsx
-│   └── StackRouter.tsx
-├── entities/
-│   └── todo/
-│       ├── model/
-│       │   └── todoStore.ts   ← Todo 타입 포함 (분리 필요)
-│       └── type.ts            ← 비어 있음, index.ts 없음
-├── features/
-│   └── todo/
-│       ├── createTodo/ui/     ← 비어 있음
-│       ├── deleteTodo/ui/     ← 비어 있음
-│       ├── updateTodo/ui/     ← 비어 있음
-│       ├── enums.ts           ← entities/todo로 이동 필요
-│       └── types.ts           ← entities/todo로 이동 필요
-├── pages/
-│   └── todo/TodoPage.tsx      ← index.ts 없음
-├── shared/
-│   ├── api/
-│   │   └── todo/              ← entities/todo/api로 이동 필요
-│   └── ui/
-└── widgets/
-    └── todos/
-        ├── TodoInput.tsx      ← create 로직 포함, features로 이동 필요
-        ├── TodoList.tsx
-        └── TodoListItem.tsx   ← toggle 로직 포함, features로 이동 필요
-```
-
-### 목표 (개선 후)
-
-```
-src/
-├── app/
-│   ├── navigation/
-│   ├── providers/
-│   ├── App.tsx
-│   └── StackRouter.tsx
-├── entities/
-│   └── todo/
-│       ├── api/               ← todo API 함수
-│       ├── model/
-│       │   ├── todoStore.ts
-│       │   └── types.ts       ← Todo 타입 분리
-│       └── index.ts           ← Public API
-├── features/
-│   └── todo/
-│       ├── createTodo/
-│       │   ├── ui/TodoInput.tsx
-│       │   └── index.ts
-│       ├── deleteTodo/
-│       │   ├── ui/
-│       │   └── index.ts
-│       └── updateTodo/
-│           ├── ui/TodoListItem.tsx
-│           └── index.ts
-├── pages/
-│   └── todo/
-│       ├── TodoPage.tsx
-│       └── index.ts
-├── shared/
-│   ├── api/
-│   │   ├── client.ts
-│   │   ├── interceptor.ts
-│   │   └── index.ts
-│   ├── lib/
-│   └── ui/
-│       ├── Button.tsx
-│       ├── Checkbox.tsx
-│       ├── TextField.tsx
-│       └── index.ts
-└── widgets/
-    └── todos/
-        ├── TodoList.tsx       ← feature UI 조합 역할만
-        └── index.ts
-```
-
-## 개발 규칙
-
-### Import 규칙
+4. 작업 마무리 및 PR
+- 티켓 검토중으로 작업상태 변경
+- 각 테스트 진행후 PR 
+- AI 가 기본 내용 검토
+- 사용자가 최종 검토
+ 
 
 ```ts
 // 슬라이스 외부에서 접근 시 반드시 index.ts 경유
