@@ -18,17 +18,17 @@ function LoginPage() {
   return (
     <>
       <Header
-        title="갤러리"
+        title="로그인"
       />
-      <Layout.Body>
+      <Layout.Body styleClass={{ root: 'px-6 pt-20' }}>
         <DefaultLoginView />
-        <View className='w-full inline-flex flex-row'>
-          <Button title='회원가입' onPress={() => navigation.navigate('register')} />
-          <Button title='비밀번호 찾기' />
+        <View className='w-full flex flex-row justify-between mt-4'>
+          <Button title='회원가입' variant='secondary' onPress={() => navigation.navigate('register')} />
+          <Button title='비밀번호 찾기' variant='secondary' />
         </View>
       </Layout.Body>
     </>
   )
 }
 
-export default withLayout(LoginPage);
+export default LoginPage;

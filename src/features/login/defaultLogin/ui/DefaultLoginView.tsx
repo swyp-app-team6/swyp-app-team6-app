@@ -15,7 +15,7 @@ import useDefaultLoginMutation from '../api/useDefaultLoginMutation';
 export default function DefaultLoginView() {
   const { mutate, isPending } = useDefaultLoginMutation();
   return (
-    <View>
+    <View className='gap-3'>
       <Input
         placeholder='id'
       />
