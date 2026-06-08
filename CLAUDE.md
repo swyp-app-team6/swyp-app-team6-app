@@ -115,6 +115,54 @@ import { Button } from '@/shared/ui';              // ✅
 - Zustand store는 `{entity}/model/` 에 위치
 - store 파일에 타입 정의 혼재 금지 — `types.ts`에 분리
 
+### Page 컴포넌트 구성 규칙
+
+Page 컴포넌트는 **UI 조합과 화면 레이아웃만** 담당한다. 비즈니스 로직은 features/widgets에 위임.
+
+**기본 구조:**
+
+```tsx
+function MyPage() {
+  return (
+    <>
+      <Header title="화면 제목" />
+      <Layout.Body styleClass={{ root: 'px-6 pt-10' }}>
+        {/* widgets 또는 features UI 조합 */}
+      </Layout.Body>
+    </>
+  )
+}
+
+export default withLayout(MyPage);
+```
+
+**규칙:**
+
+- 반드시 `withLayout(MyPage)` 로 감싸서 export — 탭 네비게이션·공통 레이아웃 자동 적용
+- 컴포넌트 내부는 `<Header>` + `<Layout.Body>` 구조만 렌더링 (`<Layout>` 직접 사용 금지)
+- `Layout.Body`에 `styleClass={{ root: 'px-6 pt-10' }}` 기본 여백 적용 (좌우 패딩 + 상단 여백)
+- 인증이 필요한 화면은 추가로 `withAuthorization` 적용
+
+```tsx
+export default withAuthorization(withLayout(MyPage));
+```
+
+- 페이지 자체에 비즈니스 로직(API 호출, 상태 관리) 작성 금지 — features/widgets에 위임
+- `useNavigation`은 페이지 내 네비게이션 이동 목적으로만 사용 허용
+
+**버튼 배치 규칙:**
+
+- 주 액션 버튼: `variant='primary'` (기본값)
+- 보조 액션 버튼(회원가입, 비밀번호 찾기 등): `variant='secondary'`
+- 버튼이 여러 개인 행: `flex flex-row justify-between mt-4`
+
+```tsx
+<View className='w-full flex flex-row justify-between mt-4'>
+  <Button title='회원가입' variant='secondary' onPress={...} />
+  <Button title='비밀번호 찾기' variant='secondary' />
+</View>
+```
+
 ## 알려진 버그
 
 ### TodoListItem memo 비교 로직 반전
