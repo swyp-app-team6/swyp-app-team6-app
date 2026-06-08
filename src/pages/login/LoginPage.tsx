@@ -18,7 +18,7 @@ export default function LoginPage() {
     <View className='w-full h-full flex justify-center items-center flex-col gap-4'>
       <Text className='text-xl'>로그인</Text>
       <DefaultLoginView />
-      <View className='w-full'>
+      <View className='w-full inline-flex flex-row'>
         <Button title='회원가입' onPress={() => navigation.navigate('register')}/>
         <Button title='비밀번호 찾기' />
       </View>

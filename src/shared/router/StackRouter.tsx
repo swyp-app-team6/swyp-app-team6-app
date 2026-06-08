@@ -7,6 +7,8 @@ import LoginPage from '@/pages/login/LoginPage';
 import ProfilePage from '@/pages/profile/ProfilePage';
 import ComponentPlaygroundPage from '@/pages/playground/ComponentPlaygroundPage';
 import GalleryPage from '@/pages/gallery/GalleryPage';
+import withLayout from '../hoc/withLayout';
+import { NAV_NAME } from '../enums';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,9 +17,9 @@ export default function StackRouter() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="login" component={LoginPage} />
-        <Stack.Screen name="login" component={LoginPage} />
-        <Stack.Screen name="Playground" component={ComponentPlaygroundPage} />
+        <Stack.Screen name={NAV_NAME.LOGIN} component={withLayout(LoginPage)} />
+        <Stack.Screen name={NAV_NAME.GALLERY} component={withLayout(GalleryPage)} />
+        <Stack.Screen name={NAV_NAME.PLAYGROUND} component={ComponentPlaygroundPage} />
       </Stack.Navigator>
     </NavigationContainer>
   )
