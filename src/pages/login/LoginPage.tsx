@@ -23,7 +23,7 @@ function LoginPage() {
       <Layout.Body styleClass={{ root: 'px-6 pt-20' }}>
         <DefaultLoginView />
         <View className='w-full flex flex-row justify-between mt-4'>
-          <Button title='회원가입' variant='secondary' onPress={() => navigation.navigate('register')} />
+          <Button title='회원가입' variant='secondary' onPress={() => navigation.navigate(NAV_NAME.REGISTER)} />
           <Button title='비밀번호 찾기' variant='secondary' />
         </View>
       </Layout.Body>

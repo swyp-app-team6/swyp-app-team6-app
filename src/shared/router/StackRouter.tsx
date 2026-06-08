@@ -4,6 +4,7 @@ import React from 'react'
 import TodoPage from '@/pages/todo/TodoPage';
 import NotiScreen from '@/pages/todo/NotiScreen';
 import LoginPage from '@/pages/login/LoginPage';
+import RegisterPage from '@/pages/register/RegisterPage';
 import ProfilePage from '@/pages/profile/ProfilePage';
 import ComponentPlaygroundPage from '@/pages/playground/ComponentPlaygroundPage';
 import GalleryPage from '@/pages/gallery/GalleryPage';
@@ -18,6 +19,7 @@ export default function StackRouter() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name={NAV_NAME.LOGIN} component={LoginPage} />
+        <Stack.Screen name={NAV_NAME.REGISTER} component={RegisterPage} />
         <Stack.Screen name={NAV_NAME.GALLERY} component={GalleryPage} />
         <Stack.Screen name={NAV_NAME.PLAYGROUND} component={ComponentPlaygroundPage} />
       </Stack.Navigator>
