@@ -1,6 +1,8 @@
-import React, { ComponentType, useEffect } from 'react'
+import React, { ComponentType, useEffect, useMemo } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import useAuthStore from '@/entities/user/model/authStore'
+import { NAV_NAME } from '../enums';
+import LoginPage from '../../pages/login/LoginPage';
 
 /**
  * # withAuthorization
@@ -20,15 +22,14 @@ export default function withAuthorization<P extends object>(
 ): ComponentType<P> {
   return function AuthorizedComponent(props: P) {
     const accessToken = useAuthStore((state) => state.accessToken)
-    const navigation = useNavigation()
+    // TODO: 로그인 여부 추가로직 작성
+    const isAuthorized = useMemo(() => {
+      return accessToken;
+    }, [accessToken])
 
-    useEffect(() => {
-      if (!accessToken) {
-        navigation.navigate('login' as never)
-      }
-    }, [accessToken, navigation])
-
-    if (!accessToken) return null
+    if (!isAuthorized) {
+      return <LoginPage />
+    }
 
     return <WrappedComponent {...props} />
   }
