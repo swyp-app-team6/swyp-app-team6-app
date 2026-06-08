@@ -1,8 +1,9 @@
-import { Button, Input } from '@/shared/ui'
+import { Button, Header, Input, Layout } from '@/shared/ui'
 import React from 'react'
 import { Text, View } from 'react-native'
 import DefaultLoginView from '@/features/login/defaultLogin/ui/DefaultLoginView';
 import { useNavigation } from '@react-navigation/native';
+import withLayout from '../../shared/hoc/withLayout';
 
 /**
  * # LoginPage
@@ -12,16 +13,22 @@ import { useNavigation } from '@react-navigation/native';
  * @example
  * <LoginPage />
  */
-export default function LoginPage() {
+function LoginPage() {
   const navigation = useNavigation();
   return (
-    <View className='w-full h-full flex justify-center items-center flex-col gap-4'>
-      <Text className='text-xl'>로그인</Text>
-      <DefaultLoginView />
-      <View className='w-full inline-flex flex-row'>
-        <Button title='회원가입' onPress={() => navigation.navigate('register')}/>
-        <Button title='비밀번호 찾기' />
-      </View>
-    </View>
+    <>
+      <Header
+        title="갤러리"
+      />
+      <Layout.Body>
+        <DefaultLoginView />
+        <View className='w-full inline-flex flex-row'>
+          <Button title='회원가입' onPress={() => navigation.navigate('register')} />
+          <Button title='비밀번호 찾기' />
+        </View>
+      </Layout.Body>
+    </>
   )
 }
+
+export default withLayout(LoginPage);

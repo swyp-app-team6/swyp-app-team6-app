@@ -2,6 +2,7 @@ import React from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { GalleryIcon, Layout, PlaygroundIcon, ProfileIcon, TodoIcon } from '@/shared/ui'
 import { NAV_NAME } from '@/shared/enums'
+import { Text } from 'react-native';
 
 const ACTIVE_COLOR = '#3b82f6';
 const INACTIVE_COLOR = '#9ca3af';
