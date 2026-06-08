@@ -5,15 +5,16 @@ import TodoList from '@/widgets/todos/TodoList'
 import ErrorBoundary from '@/shared/ui/ErrorBoundary'
 import LoadSuspense from '@/shared/ui/LoadSuspense'
 import { GalleryIcon, Header, Layout, PlaygroundIcon, ProfileIcon, TodoIcon } from '@/shared/ui'
+import { NAV_NAME } from '@/shared/enums'
 
 const ACTIVE_COLOR = '#3b82f6';
 const INACTIVE_COLOR = '#9ca3af';
 
 const NAV_ITEMS = [
-  { name: 'Todo123', label: 'Todo', icon: (active: boolean) => <TodoIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
-  { name: 'Profile', label: '프로필', icon: (active: boolean) => <ProfileIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
-  { name: 'Gallery', label: '갤러리', icon: (active: boolean) => <GalleryIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
-  { name: 'Playground', label: 'UI', icon: (active: boolean) => <PlaygroundIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
+  { name: NAV_NAME.HOME, label: 'Todo', icon: (active: boolean) => <TodoIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
+  { name: NAV_NAME.PROFILE, label: '프로필', icon: (active: boolean) => <ProfileIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
+  { name: NAV_NAME.GALLERY, label: '갤러리', icon: (active: boolean) => <GalleryIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
+  { name: NAV_NAME.PLAYGROUND, label: 'UI', icon: (active: boolean) => <PlaygroundIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
 ];
 
 /**
