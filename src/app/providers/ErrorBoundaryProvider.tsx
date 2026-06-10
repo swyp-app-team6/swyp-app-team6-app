@@ -7,7 +7,7 @@ import { ErrorBoundary } from 'react-error-boundary';
  * @param param0 
  * @returns 
  */
-function AppErrorFallback({ resetErrorBoundary, error }: { resetErrorBoundary: () => void; error: unknown }) {
+export function AppErrorFallback({ resetErrorBoundary, error }: { resetErrorBoundary?: () => void; error?: unknown }) {
 
   /** 
    * 에러 문구 
