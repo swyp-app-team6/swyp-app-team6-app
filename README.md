@@ -23,3 +23,4 @@
 | 내비게이션 | React Navigation (Native Stack) | ^7.1.33 |
 | 스타일링 | NativeWind (Tailwind CSS) | ^4.2.2 |
 | 환경 변수 | react-native-config | ^1.6.1 |
+| 모니터링 | Sentry | |
