@@ -4,6 +4,7 @@ import { Header, Layout } from '@/shared/ui';
 import { GalleryGrid, useGalleryImages } from '@/features/gallery/shareImage';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '../../shared/hoc/withAuthorization';
+import Config from 'react-native-config';
 
 /**
  * # GalleryPage
@@ -33,4 +34,4 @@ function GalleryPage() {
   );
 }
 
-export default withAuthorization(withLayout(GalleryPage));
+export default withLayout(GalleryPage);
