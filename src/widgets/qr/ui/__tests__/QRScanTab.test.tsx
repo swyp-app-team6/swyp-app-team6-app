@@ -9,6 +9,7 @@ jest.mock('react-native-vision-camera', () => ({
     hasPermission: false,
     requestPermission: mockRequestPermission,
   })),
+  useCameraDevice: jest.fn(() => ({ id: 'back' })),
   useCodeScanner: jest.fn(() => ({})),
   Camera: ({ testID }: { testID?: string }) => {
     const { View } = require('react-native');

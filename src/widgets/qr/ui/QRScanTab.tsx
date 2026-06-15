@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { Camera, useCameraPermission, useCodeScanner } from 'react-native-vision-camera';
+import { Camera, useCameraDevice, useCameraPermission, useCodeScanner } from 'react-native-vision-camera';
 
 /**
  * # QRScanTab
  * ---
  * - 간단설명: 카메라로 QR 코드를 스캔하고 디코딩된 텍스트를 화면에 표시하는 스캔 탭 컴포넌트
- * - 제약사항 및 특이사항: 카메라 권한 미승인 시 안내 UI 표시, 권한 승인 후 Camera 렌더링
+ * - 제약사항 및 특이사항: 카메라 권한 미승인 시 안내 UI 표시, 권한 승인 후 Camera 렌더링, 후면 카메라 사용
  * ---
  * @example
  * <QRScanTab />
  */
 export default function QRScanTab() {
   const { hasPermission, requestPermission } = useCameraPermission();
+  const device = useCameraDevice('back');
   const [scannedText, setScannedText] = useState('');
 
   const codeScanner = useCodeScanner({
@@ -38,12 +39,20 @@ export default function QRScanTab() {
     );
   }
 
+  if (!device) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text style={{ color: '#6b7280', fontSize: 16 }}>카메라를 사용할 수 없습니다</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <Camera
         testID="camera"
         style={{ flex: 1 }}
-        device={{ id: 'back' } as any}
+        device={device}
         isActive
         codeScanner={codeScanner}
       />
