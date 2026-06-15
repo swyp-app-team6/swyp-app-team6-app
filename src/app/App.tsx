@@ -26,7 +26,9 @@ export type HomeStackParamList = {
 function ErrorFallback({ resetError }: { resetError: () => void }) {
   return (
     <View className="flex-1 items-center justify-center px-6 bg-white">
-      <Text className="text-lg font-semibold text-gray-900 mb-2">문제가 발생했습니다</Text>
+      <Text className="text-lg font-semibold text-gray-900 mb-2">
+        문제가 발생했습니다
+      </Text>
       <Text className="text-sm text-gray-500 text-center mb-8">
         앱을 다시 시작해도 문제가 지속되면 고객센터에 문의해주세요.
       </Text>
@@ -37,7 +39,9 @@ function ErrorFallback({ resetError }: { resetError: () => void }) {
 
 function App() {
   return (
-    <Sentry.ErrorBoundary fallback={({ resetError }) => <ErrorFallback resetError={resetError} />}>
+    <Sentry.ErrorBoundary
+      fallback={({ resetError }) => <ErrorFallback resetError={resetError} />}
+    >
       <AppProviders>
         <StackRouter />
         <Toast />
@@ -46,4 +50,4 @@ function App() {
   );
 }
 
-export default App;
+export default Sentry.wrap(App);
