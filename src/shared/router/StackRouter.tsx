@@ -11,6 +11,9 @@ import { NavigatorType } from '../types';
 
 const Stack = createNativeStackNavigator<NavigatorType>();
 
+/**
+ * StackNavigator, 새 view 추가는 여기서
+ */
 export default function StackRouter() {
   return (
     <NavigationContainer>
