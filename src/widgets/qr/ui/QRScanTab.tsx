@@ -17,6 +17,7 @@ export default function QRScanTab() {
   const { hasPermission, requestPermission } = useCameraPermission();
   const device = useCameraDevice('back');
   const [scannedText, setScannedText] = useState('');
+  const isFocused = useIsFocused();
 
   /** 권한 요청 */
   if (!hasPermission) {
@@ -43,9 +44,10 @@ export default function QRScanTab() {
 
   return (
     <View className='flex-1 justify-center items-center'>
+      {isFocused && (
       <CodeScanner
         style={{ width: '80%', height: '50%' }}
-        isActive={!scannedText}
+        isActive={isFocused && !scannedText}
         barcodeFormats={['all-formats']}
         onBarcodeScanned={(barcodes) => {
           barcodes.forEach((barcode) => {
@@ -58,6 +60,7 @@ export default function QRScanTab() {
           console.error(`Error scanning barcodes:`, error)
         }}
       />
+      )}
       {scannedText ? (
         <View style={{ padding: 16, backgroundColor: '#ffffff', borderTopWidth: 1, borderTopColor: '#e5e7eb', width: '80%' }}>
           <Text style={{ color: '#6b7280', fontSize: 12, marginBottom: 4 }}>인식된 문구</Text>
