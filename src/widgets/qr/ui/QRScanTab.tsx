@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useCameraDevice, useCameraPermission } from 'react-native-vision-camera';
 import { CodeScanner } from 'react-native-vision-camera-barcode-scanner';
+import { useIsFocused } from '@react-navigation/native';
 
 /**
  * # QRScanTab
  * ---
  * - 간단설명: 카메라로 QR 코드를 스캔하고 디코딩된 텍스트를 화면에 표시하는 스캔 탭 컴포넌트
- * - 제약사항 및 특이사항: 카메라 권한 미승인 시 안내 UI 표시, 권한 승인 후 Camera 렌더링, 후면 카메라 사용
+ * - 제약사항 및 특이사항: 카메라 권한 미승인 시 안내 UI 표시, 권한 승인 후 Camera 렌더링, 후면 카메라 사용, 스캔 완료 후 초기화하여 재스캔 가능
  * ---
  * @example
  * <QRScanTab />
@@ -41,10 +42,10 @@ export default function QRScanTab() {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View className='flex-1 justify-center items-center'>
       <CodeScanner
-        testID="camera"
-        isActive={hasPermission}
+        style={{ width: '80%', height: '50%' }}
+        isActive={!scannedText}
         barcodeFormats={['all-formats']}
         onBarcodeScanned={(barcodes) => {
           barcodes.forEach((barcode) => {
@@ -58,9 +59,15 @@ export default function QRScanTab() {
         }}
       />
       {scannedText ? (
-        <View style={{ padding: 16, backgroundColor: '#ffffff', borderTopWidth: 1, borderTopColor: '#e5e7eb' }}>
+        <View style={{ padding: 16, backgroundColor: '#ffffff', borderTopWidth: 1, borderTopColor: '#e5e7eb', width: '80%' }}>
           <Text style={{ color: '#6b7280', fontSize: 12, marginBottom: 4 }}>인식된 문구</Text>
-          <Text style={{ fontSize: 16, color: '#111827' }}>{scannedText}</Text>
+          <Text style={{ fontSize: 16, color: '#111827', marginBottom: 12 }}>{scannedText}</Text>
+          <TouchableOpacity
+            style={{ backgroundColor: '#3b82f6', paddingHorizontal: 24, paddingVertical: 10, borderRadius: 8, alignItems: 'center' }}
+            onPress={() => setScannedText('')}
+          >
+            <Text style={{ color: '#ffffff', fontWeight: '600' }}>다시 스캔</Text>
+          </TouchableOpacity>
         </View>
       ) : null}
     </View>
