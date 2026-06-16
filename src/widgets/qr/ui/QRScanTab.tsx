@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useCameraDevice, useCameraPermission } from 'react-native-vision-camera';
-import { CodeScanner } from 'react-native-vision-camera-barcode-scanner';
-import { useIsFocused } from '@react-navigation/native';
+import QRScanView from './QRScanView';
 
 /**
  * # QRScanTab
@@ -17,8 +16,6 @@ export default function QRScanTab() {
   const { hasPermission, requestPermission } = useCameraPermission();
   const device = useCameraDevice('back');
   const [scannedText, setScannedText] = useState('');
-  const isFocused = useIsFocused();
-
   /** 권한 요청 */
   if (!hasPermission) {
     return (
@@ -43,24 +40,16 @@ export default function QRScanTab() {
   }
 
   return (
-    <View className='flex-1 justify-center items-center'>
-      {isFocused && (
-      <CodeScanner
-        style={{ width: '80%', height: '50%' }}
-        isActive={isFocused && !scannedText}
-        barcodeFormats={['all-formats']}
-        onBarcodeScanned={(barcodes) => {
-          barcodes.forEach((barcode) => {
-            if (!scannedText) {
-              setScannedText(barcode.displayValue || '')
-            }
-          });
+    <View className='flex-1'>
+      <QRScanView
+        isActive={!scannedText}
+        onScanned={(value) => {
+          if (!scannedText) setScannedText(value);
         }}
         onError={(error) => {
           console.error(`Error scanning barcodes:`, error)
         }}
       />
-      )}
       {scannedText ? (
         <View style={{ padding: 16, backgroundColor: '#ffffff', borderTopWidth: 1, borderTopColor: '#e5e7eb', width: '80%' }}>
           <Text style={{ color: '#6b7280', fontSize: 12, marginBottom: 4 }}>인식된 문구</Text>
