@@ -5,8 +5,6 @@ import usePermissionStore from '../usePermissionStore';
 describe('usePermissionStore', () => {
   beforeEach(() => {
     usePermissionStore.setState({ cameraStatus: 'unavailable' });
-    (check as jest.Mock).mockResolvedValue(RESULTS.UNAVAILABLE);
-    (request as jest.Mock).mockResolvedValue(RESULTS.GRANTED);
   });
 
   it('초기 cameraStatus는 unavailable이다', async () => {
@@ -31,6 +29,15 @@ describe('usePermissionStore', () => {
       await result.current.checkCameraPermission();
     });
     expect(result.current.cameraStatus).toBe('denied');
+  });
+
+  it('checkCameraPermission 호출 시 limited 결과를 cameraStatus에 반영한다', async () => {
+    (check as jest.Mock).mockResolvedValue(RESULTS.LIMITED);
+    const { result } = await renderHook(() => usePermissionStore());
+    await act(async () => {
+      await result.current.checkCameraPermission();
+    });
+    expect(result.current.cameraStatus).toBe('limited');
   });
 
   it('requestCameraPermission 호출 시 request()를 호출하고 cameraStatus를 갱신한다', async () => {
