@@ -1,8 +1,5 @@
 import React from 'react'
 import TodoInput from '@/widgets/todos/TodoInput'
-import TodoList from '@/widgets/todos/TodoList'
-import ErrorBoundary from '@/shared/ui/ErrorBoundary'
-import LoadSuspense from '@/shared/ui/LoadSuspense'
 import { Header, Layout } from '@/shared/ui'
 import withLayout from '@/shared/hoc/withLayout'
 
@@ -20,11 +17,6 @@ function TodoPage() {
       <Header title="Todo" />
       <Layout.Body>
         <TodoInput />
-        <ErrorBoundary>
-          <LoadSuspense>
-            <TodoList />
-          </LoadSuspense>
-        </ErrorBoundary>
       </Layout.Body>
     </>
   )
