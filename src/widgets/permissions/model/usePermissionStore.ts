@@ -4,6 +4,16 @@ import { check, request, PERMISSIONS } from 'react-native-permissions';
 import type { PermissionStore } from './types';
 
 /**
+ * 플랫폼별 카메라 권한 상수
+ * - iOS: PERMISSIONS.IOS.CAMERA
+ * - Android: PERMISSIONS.ANDROID.CAMERA
+ */
+const CAMERA_PERMISSION =
+  Platform.OS === 'ios'
+    ? PERMISSIONS.IOS.CAMERA
+    : PERMISSIONS.ANDROID.CAMERA;
+
+/**
  * # usePermissionStore
  * ---
  * - 간단설명: 카메라 권한 상태를 중앙에서 관리하는 Zustand 스토어
@@ -18,20 +28,12 @@ const usePermissionStore = create<PermissionStore>((set) => ({
   cameraStatus: 'unavailable',
 
   checkCameraPermission: async () => {
-    const permission =
-      Platform.OS === 'ios'
-        ? PERMISSIONS.IOS.CAMERA
-        : PERMISSIONS.ANDROID.CAMERA;
-    const status = await check(permission);
+    const status = await check(CAMERA_PERMISSION);
     set({ cameraStatus: status });
   },
 
   requestCameraPermission: async () => {
-    const permission =
-      Platform.OS === 'ios'
-        ? PERMISSIONS.IOS.CAMERA
-        : PERMISSIONS.ANDROID.CAMERA;
-    const status = await request(permission);
+    const status = await request(CAMERA_PERMISSION);
     set({ cameraStatus: status });
   },
 }));
