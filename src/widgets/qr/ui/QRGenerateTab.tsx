@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { View, TextInput, Text } from 'react-native';
-import QRCode from 'react-native-qrcode-svg';
+import { View, TextInput } from 'react-native';
+import QRCodeView from './QRCodeView';
 
 /**
  * # QRGenerateTab
  * ---
- * - 간단설명: 텍스트 입력을 받아 QR 코드 SVG를 즉시 렌더링하는 생성 탭 컴포넌트
- * - 제약사항 및 특이사항: 입력값 없을 때 QRCode 미렌더링, 안내 문구 표시
+ * - 간단설명: 텍스트 입력을 받아 QR 코드를 즉시 렌더링하는 생성 탭 컴포넌트
+ * - 제약사항 및 특이사항: 입력값 없을 때 QRCodeView에서 안내 문구 표시
  * ---
  * @example
  * <QRGenerateTab />
@@ -22,13 +22,7 @@ export default function QRGenerateTab() {
         value={text}
         onChangeText={setText}
       />
-      <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-        {text ? (
-          <QRCode value={text} size={200} testID="qr-code" />
-        ) : (
-          <Text style={{ color: '#9ca3af', fontSize: 16 }}>문구를 입력하세요</Text>
-        )}
-      </View>
+      <QRCodeView qrData={text || null} />
     </View>
   );
 }
