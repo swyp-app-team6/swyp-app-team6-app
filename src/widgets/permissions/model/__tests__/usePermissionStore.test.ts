@@ -5,6 +5,7 @@ import usePermissionStore from '../usePermissionStore';
 describe('usePermissionStore', () => {
   beforeEach(() => {
     usePermissionStore.setState({ cameraStatus: 'unavailable' });
+    jest.clearAllMocks();
   });
 
   it('초기 cameraStatus는 unavailable이다', async () => {

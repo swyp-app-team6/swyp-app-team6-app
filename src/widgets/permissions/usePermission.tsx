@@ -5,7 +5,7 @@
  * - 제약사항 및 특이사항: 외부에서는 이 파일을 통해 스토어에 접근할 것
  * ---
  * @example
- * import usePermissionStore from '@/widgets/permissions/usePermission';
+ * import { usePermissionStore } from '@/widgets/permissions';
  * const { cameraStatus, requestCameraPermission } = usePermissionStore();
  */
 export { default } from './model/usePermissionStore';
