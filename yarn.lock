@@ -7353,6 +7353,11 @@ react-native-toast-message@^2.3.3:
   resolved "https://registry.yarnpkg.com/react-native-toast-message/-/react-native-toast-message-2.3.3.tgz#e301508d386a9902ff6b4559ecc6674f8cfdf97a"
   integrity sha512-4IIUHwUPvKHu4gjD0Vj2aGQzqPATiblL1ey8tOqsxOWRPGGu52iIbL8M/mCz4uyqecvPdIcMY38AfwRuUADfQQ==
 
+react-native-vision-camera-barcode-scanner@^5.0.11:
+  version "5.0.11"
+  resolved "https://registry.yarnpkg.com/react-native-vision-camera-barcode-scanner/-/react-native-vision-camera-barcode-scanner-5.0.11.tgz#c75e8d0d915cef6073ce1fcef8da0c3c8360f6a7"
+  integrity sha512-sOISCu9PYYJwaSmRhdyyrDO++EHQjGYvLB06c66BpiC6kV5mnvxGd+sy2BczCI1rNVJtae8Mab8Ciy4tprb4Vw==
+
 react-native-vision-camera@^5.0.11:
   version "5.0.11"
   resolved "https://registry.yarnpkg.com/react-native-vision-camera/-/react-native-vision-camera-5.0.11.tgz#e9b3205b9f162f82c190c5034dd7bfd1a7bba918"

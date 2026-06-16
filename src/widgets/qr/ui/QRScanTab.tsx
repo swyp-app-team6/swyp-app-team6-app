@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { Camera, useCameraDevice, useCameraPermission, useCodeScanner } from 'react-native-vision-camera';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { useCameraDevice, useCameraPermission } from 'react-native-vision-camera';
+import { CodeScanner } from 'react-native-vision-camera-barcode-scanner';
 
 /**
  * # QRScanTab
@@ -16,15 +17,7 @@ export default function QRScanTab() {
   const device = useCameraDevice('back');
   const [scannedText, setScannedText] = useState('');
 
-  const codeScanner = useCodeScanner({
-    codeTypes: ['qr'],
-    onCodeScanned: (codes) => {
-      if (codes.length > 0 && codes[0].value) {
-        setScannedText(codes[0].value);
-      }
-    },
-  });
-
+  /** 권한 요청 */
   if (!hasPermission) {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 16 }}>
@@ -38,7 +31,7 @@ export default function QRScanTab() {
       </View>
     );
   }
-
+  /** 카메라 이상 발생 경우 */
   if (!device) {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -49,12 +42,20 @@ export default function QRScanTab() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Camera
+      <CodeScanner
         testID="camera"
-        style={{ flex: 1 }}
-        device={device}
-        isActive
-        codeScanner={codeScanner}
+        isActive={hasPermission}
+        barcodeFormats={['all-formats']}
+        onBarcodeScanned={(barcodes) => {
+          barcodes.forEach((barcode) => {
+            if (!scannedText) {
+              setScannedText(barcode.displayValue || '')
+            }
+          });
+        }}
+        onError={(error) => {
+          console.error(`Error scanning barcodes:`, error)
+        }}
       />
       {scannedText ? (
         <View style={{ padding: 16, backgroundColor: '#ffffff', borderTopWidth: 1, borderTopColor: '#e5e7eb' }}>
