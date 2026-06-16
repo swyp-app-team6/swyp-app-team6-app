@@ -7310,6 +7310,11 @@ react-native-nitro-modules@^0.35.9:
   resolved "https://registry.yarnpkg.com/react-native-nitro-modules/-/react-native-nitro-modules-0.35.9.tgz#fe84f9fbcfc93305018fe3773cf0b39d8efa9c6d"
   integrity sha512-yCO6eJ85SPPUo4a4an7H5oj6wPCSIT72fbjr5WZ/20n6zswaJ2gNNpnWtg2We0AZwkAOjSqkOJ0Vjc05p6kGiA==
 
+react-native-permissions@^5.5.3:
+  version "5.5.3"
+  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-5.5.3.tgz#9396838f8ad345fbcf82aa89f3462f7875c1f981"
+  integrity sha512-ngvzzhSC96Wnkz6tslF2BZHJAzBTi1lmrjA4EC/1StAkpNVUssctgotyX+wj/Ti3el/gTCBPOCP3frULMMOepQ==
+
 react-native-qrcode-svg@^6.3.21:
   version "6.3.21"
   resolved "https://registry.yarnpkg.com/react-native-qrcode-svg/-/react-native-qrcode-svg-6.3.21.tgz#af873cf8e5b9fc68315a2c267ff6563d55c56abb"
