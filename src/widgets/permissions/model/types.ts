@@ -3,6 +3,7 @@ import type { PermissionStatus } from 'react-native-permissions';
 /**
  * 권한 스토어 상태
  * - cameraStatus: 카메라 권한 현재 상태
+ * "unavailable" | "blocked(권한차단)" | "denied(권한거절)" | "granted(권한수락)" | "limited"
  */
 export interface PermissionState {
   /** 카메라 권한 상태 */

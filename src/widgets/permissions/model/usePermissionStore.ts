@@ -16,7 +16,7 @@ const CAMERA_PERMISSION =
 /**
  * # usePermissionStore
  * ---
- * - 간단설명: 카메라 권한 상태를 중앙에서 관리하는 Zustand 스토어
+ * - 간단설명: 권한 상태를 중앙에서 관리하는 Zustand 스토어
  * - 제약사항 및 특이사항:
  *   - react-native-permissions으로 플랫폼별 권한 처리 통일
  *   - 카메라 권한만 관리 (추후 필드/액션 추가로 확장)
