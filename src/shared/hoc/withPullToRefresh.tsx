@@ -29,7 +29,7 @@ export default function withPullToRefresh<P extends { refreshControl?: React.Rea
 
     return (
       <WrappedComponent
-        {...(props as P)}
+        {...(props as unknown as P)}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       />
     );

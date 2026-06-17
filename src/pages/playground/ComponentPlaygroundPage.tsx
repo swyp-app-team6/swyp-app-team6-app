@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { RefreshControl, ScrollView, Text, View } from 'react-native';
+import { Alert, RefreshControl, ScrollView, Text, View } from 'react-native';
 import * as Sentry from '@sentry/react-native';
 import {
   Anim,
@@ -302,7 +302,7 @@ export default function ComponentPlaygroundPage() {
               onPress={() => {
                 const error = new Error('[Sentry 테스트] 수동 captureException 호출');
                 Sentry.captureException(error);
-                alert('Sentry에 에러를 전송했습니다.\nSentry 대시보드에서 확인하세요.');
+                Alert.alert('Sentry 테스트', 'Sentry에 에러를 전송했습니다.\nSentry 대시보드에서 확인하세요.');
               }}
             />
             <Button

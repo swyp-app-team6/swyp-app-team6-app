@@ -24,7 +24,7 @@ const ErrorBoundary = ({ children }: { children: React.ReactNode }) => (
         onReset={reset}
         fallbackRender={({ resetErrorBoundary, error }) => (
           <View className="items-center justify-center p-4 gap-2">
-            <Text className="text-red-500 text-sm">{error?.message ?? '오류가 발생했습니다.'}</Text>
+            <Text className="text-red-500 text-sm">{(error as Error)?.message ?? '오류가 발생했습니다.'}</Text>
             <Button onPress={() => resetErrorBoundary()} title="재시도" />
           </View>
         )}

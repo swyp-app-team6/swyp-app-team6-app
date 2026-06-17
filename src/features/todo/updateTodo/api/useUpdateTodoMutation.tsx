@@ -28,7 +28,7 @@ export default function useUpdateTodoMutation() {
   return useMutation({
     mutationFn: ({ id, data }: UpdateTodoVariables) => updateTodo(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries(todoKeys.all);
+      queryClient.invalidateQueries({ queryKey: todoKeys.all });
     },
   });
 }

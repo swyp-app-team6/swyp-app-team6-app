@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { ModalProps } from '@/shared/ui';
-import _Modal from '@/shared/ui/Modal';
+import { Modal as _Modal } from '@/shared/ui/Modal';
 
 /** modal open close 상태 */
 export default function useModal() {

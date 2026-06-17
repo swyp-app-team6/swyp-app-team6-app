@@ -15,7 +15,7 @@ import useUpdateTodoMutation from '../api/useUpdateTodoMutation';
  * @example
  * <UpdateTodoModal todoId={1} title="기존 제목" description="기존 내용" />
  */
-function UpdateTodoModal({ todoId, title: initTitle, description: initDescription }: { todoId: number }) {
+function UpdateTodoModal({ todoId, title: initTitle, description: initDescription }: { todoId: number; title?: string; description?: string }) {
   const { isOpen, openModal, closeModal } = useModal();
   const [title, setTitle] = useState(initTitle);
   const [description, setDescription] = useState(initDescription);

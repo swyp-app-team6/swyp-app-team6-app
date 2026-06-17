@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { View, Linking } from 'react-native';
+import React from 'react';
+import { View } from 'react-native';
 import { CodeScanner } from 'react-native-vision-camera-barcode-scanner';
 import { usePermissionStore } from '../../permissions';
 import CameraPermissionRequiredFallbackView from '../../permissions/ui/CameraPermissionRequiredFallbackView';

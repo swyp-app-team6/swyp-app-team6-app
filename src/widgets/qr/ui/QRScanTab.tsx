@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { useCameraDevice, useCameraPermission } from 'react-native-vision-camera';
+import { useCameraDevice } from 'react-native-vision-camera';
 import QRScanView from './QRScanView';
 
 /**
@@ -13,7 +13,6 @@ import QRScanView from './QRScanView';
  * <QRScanTab />
  */
 export default function QRScanTab() {
-  const { hasPermission, requestPermission } = useCameraPermission();
   const device = useCameraDevice('back');
   const [scannedText, setScannedText] = useState('');
 
@@ -31,7 +30,7 @@ export default function QRScanTab() {
       <QRScanView
         isActive={!scannedText}
         onScanned={(value) => {
-          if (!scannedText) setScannedText(value);
+          if (!scannedText && value != null) setScannedText(value);
         }}
         onError={(error) => {
           console.error(`Error scanning barcodes:`, error)

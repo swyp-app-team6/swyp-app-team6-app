@@ -17,7 +17,7 @@ export default function useDeleteTodoMutation() {
   return useMutation({
     mutationFn: (id: number) => deleteTodo(id),
     onSuccess: () => {
-      queryClient.invalidateQueries(todoKeys.all);
+      queryClient.invalidateQueries({ queryKey: todoKeys.all });
     },
   });
 }

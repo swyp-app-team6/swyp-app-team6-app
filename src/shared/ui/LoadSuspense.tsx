@@ -11,7 +11,7 @@ import { ActivityIndicator, View } from 'react-native'
  * </LoadSuspense>
  * ```
  */
-export default function LoadSuspense({ children }) {
+export default function LoadSuspense({ children }: { children: React.ReactNode }) {
   return (
     <Suspense fallback={<ActivityIndicator />}>
       <View className='fixed inset-0 flex flex-row items-center justify-center'>

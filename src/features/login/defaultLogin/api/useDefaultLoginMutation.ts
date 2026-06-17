@@ -1,6 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
-import React from 'react'
-import { refreshTokens, useAuthStore } from '../../../../entities/user';
+import { useAuthStore } from '../../../../entities/user';
 
 /**
  * # useDefaultLoginMutation
@@ -25,7 +24,7 @@ export default function useDefaultLoginMutation() {
     },
     onSuccess: ({ accessToken, refreshToken, user }) => {
       setTokens({ accessToken, refreshToken });
-      setUser(user);
+      if (user) setUser(user);
     },
   })
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { GalleryIcon, Layout, PlaygroundIcon, ProfileIcon, QRIcon } from '@/shared/ui'
-import { Text } from 'react-native';
+import LocalEnvBadge from '@/shared/ui/LocalEnvBadge';
 
 const ACTIVE_COLOR = '#3b82f6';
 const INACTIVE_COLOR = '#9ca3af';
@@ -35,6 +35,7 @@ export default function withLayout<P extends object>(WrappedComponent: React.Com
     return (
       <Layout>
         <WrappedComponent {...props} />
+        <LocalEnvBadge />
         <Layout.BottomNav
           items={NAV_ITEMS}
           activeRoute={route.name}

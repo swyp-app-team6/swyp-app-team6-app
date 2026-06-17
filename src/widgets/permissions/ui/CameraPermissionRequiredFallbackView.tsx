@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, Linking } from 'react-native';
 import usePermissionStore from '../model/usePermissionStore';
 import { Button } from '../../../shared/ui/Button';
 
@@ -20,6 +20,7 @@ export default function CameraPermissionRequiredFallbackView() {
   const { cameraStatus, requestCameraPermission } = usePermissionStore();
   useEffect(() => {
     requestCameraPermission();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 16 }}>

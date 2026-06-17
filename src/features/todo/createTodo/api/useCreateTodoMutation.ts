@@ -25,7 +25,7 @@ export default function useCreateTodoMutation() {
   return useMutation({
     mutationFn: (variables: CreateTodoVariables) => createTodo(variables),
     onSuccess: () => {
-      queryClient.invalidateQueries(todoKeys.all);
+      queryClient.invalidateQueries({ queryKey: todoKeys.all });
     },
   });
 }

@@ -22,7 +22,7 @@ export default function RegisterPage() {
 
   const handleConfirm = () => {
     setModalVisible(false);
-    navigation.navigate('gallery');
+    navigation.navigate('gallery' as never);
   };
 
   return (
