@@ -8,6 +8,7 @@ import ComponentPlaygroundPage from '@/pages/playground/ComponentPlaygroundPage'
 import GalleryPage from '@/pages/gallery/GalleryPage';
 import QRPage from '@/pages/qr/QRPage';
 import { NavigatorType } from '../types';
+import Config from 'react-native-config';
 
 const Stack = createNativeStackNavigator<NavigatorType>();
 
@@ -21,9 +22,11 @@ export default function StackRouter() {
         <Stack.Screen name='qr' component={QRPage} />
         <Stack.Screen name='profile' component={ProfilePage} />
         <Stack.Screen name='gallery' component={GalleryPage} />
-        <Stack.Screen name='playground' component={ComponentPlaygroundPage} />
         <Stack.Screen name='register' component={RegisterPage} />
         <Stack.Screen name='login' component={LoginPage} />
+        {
+          Config.PROJECT_ENV === 'local' && <Stack.Screen name='playground' component={ComponentPlaygroundPage} />
+        }
       </Stack.Navigator>
     </NavigationContainer>
   )

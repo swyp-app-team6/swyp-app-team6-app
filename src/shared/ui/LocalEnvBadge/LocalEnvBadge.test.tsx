@@ -1,13 +1,22 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react-native';
+import { fireEvent, render, screen } from '@testing-library/react-native';
 
 jest.mock('react-native-config', () => ({
   PROJECT_ENV: 'local',
 }));
 
+const mockNavigate = jest.fn();
+jest.mock('@react-navigation/native', () => ({
+  useNavigation: () => ({ navigate: mockNavigate }),
+}));
+
 import LocalEnvBadge from '.';
 
 describe('LocalEnvBadge', () => {
+  beforeEach(() => {
+    mockNavigate.mockClear();
+  });
+
   afterEach(() => {
     jest.requireMock('react-native-config').PROJECT_ENV = 'local';
   });
@@ -21,6 +30,12 @@ describe('LocalEnvBadge', () => {
     it('"LOCAL" 텍스트를 표시한다', async () => {
       await render(<LocalEnvBadge />);
       expect(screen.getByText('LOCAL')).toBeTruthy();
+    });
+
+    it('뱃지 탭 시 playground 화면으로 이동한다', async () => {
+      await render(<LocalEnvBadge />);
+      fireEvent.press(screen.getByTestId('local-env-badge'));
+      expect(mockNavigate).toHaveBeenCalledWith('playground');
     });
   });
 
