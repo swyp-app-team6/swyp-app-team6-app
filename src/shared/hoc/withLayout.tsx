@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import { GalleryIcon, Layout, PlaygroundIcon, ProfileIcon, TodoIcon } from '@/shared/ui'
+import { GalleryIcon, Layout, PlaygroundIcon, ProfileIcon, QRIcon } from '@/shared/ui'
 import { Text } from 'react-native';
 
 const ACTIVE_COLOR = '#3b82f6';
@@ -11,7 +11,7 @@ const INACTIVE_COLOR = '#9ca3af';
  * - NavigatorType 키 기반으로 라우트 이름 관리
  */
 const NAV_ITEMS = [
-  { name: 'home', label: 'Todo', icon: (active: boolean) => <TodoIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
+  { name: 'qr', label: 'QR', icon: (active: boolean) => <QRIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
   { name: 'profile', label: '프로필', icon: (active: boolean) => <ProfileIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
   { name: 'gallery', label: '갤러리', icon: (active: boolean) => <GalleryIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
   { name: 'playground', label: 'UI', icon: (active: boolean) => <PlaygroundIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },

@@ -4,7 +4,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
  * stack navigator type 목록
  * - login = 로그인
  * - register = 회원가입
- * - home = 홈(Todo) 탭
+ * - qr = QR 코드 생성/스캔
  * - profile = 프로필 탭
  * - gallery = 갤러리 탭
  * - playground = UI 플레이그라운드
@@ -13,7 +13,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 export type NavigatorType = {
   login: undefined;
   register: undefined;
-  home: undefined;
+  qr: undefined;
   profile: undefined;
   gallery: undefined;
   playground: undefined;
