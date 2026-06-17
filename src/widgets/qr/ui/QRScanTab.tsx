@@ -16,20 +16,7 @@ export default function QRScanTab() {
   const { hasPermission, requestPermission } = useCameraPermission();
   const device = useCameraDevice('back');
   const [scannedText, setScannedText] = useState('');
-  /** 권한 요청 */
-  if (!hasPermission) {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 16 }}>
-        <Text style={{ color: '#6b7280', fontSize: 16 }}>카메라 권한이 필요합니다</Text>
-        <TouchableOpacity
-          style={{ backgroundColor: '#3b82f6', paddingHorizontal: 24, paddingVertical: 12, borderRadius: 8 }}
-          onPress={requestPermission}
-        >
-          <Text style={{ color: '#ffffff', fontWeight: '600' }}>권한 요청</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
+
   /** 카메라 이상 발생 경우 */
   if (!device) {
     return (
