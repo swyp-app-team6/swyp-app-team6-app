@@ -17,13 +17,13 @@ export default function useDefaultLoginMutation() {
     mutationFn: async () => {
       // TODO: API 형식에 맞춰 로그인 작성
       return {
-        accessToken: '',
-        refreshToken: '',
+        access_token: '',
+        refresh_token: '',
         user: null,
       }
     },
-    onSuccess: ({ accessToken, refreshToken, user }) => {
-      setTokens({ accessToken, refreshToken });
+    onSuccess: ({ access_token, refresh_token, user }) => {
+      setTokens({ access_token, refresh_token });
       if (user) setUser(user);
     },
   })

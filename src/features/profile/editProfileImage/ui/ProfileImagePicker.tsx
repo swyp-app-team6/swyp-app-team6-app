@@ -17,10 +17,9 @@ import { useImagePicker } from '../lib/useImagePicker';
 export default function ProfileImagePicker() {
   const { isOpen, openModal, closeModal } = useModal();
   const user = useAuthStore((s) => s.user);
-  const localProfileImage = useAuthStore((s) => s.localProfileImage);
-  const { openCamera, openGallery } = useImagePicker();
+  const { localImageUri, openCamera, openGallery } = useImagePicker();
 
-  const imageUri = localProfileImage ?? user?.picture;
+  const imageUri = localImageUri;
 
   const handleCamera = () => {
     closeModal();
@@ -40,7 +39,7 @@ export default function ProfileImagePicker() {
           {imageUri ? (
             <Image source={{ uri: imageUri }} className="w-full h-full" resizeMode="cover" />
           ) : (
-            <Text className="text-3xl text-gray-400">{user?.name?.[0] ?? '?'}</Text>
+            <Text className="text-3xl text-gray-400">{user?.email?.[0] ?? '?'}</Text>
           )}
         </View>
         <Text className="mt-2 text-sm text-blue-600">사진 변경</Text>

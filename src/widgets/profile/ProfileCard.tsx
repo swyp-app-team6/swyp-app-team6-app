@@ -10,8 +10,8 @@ export default function ProfileCard() {
     <View className="items-center gap-4 p-6 bg-white rounded-2xl w-full">
       <ProfileImagePicker />
       <View className="items-center gap-1">
-        <Text className="text-xl font-bold text-gray-900">{user?.name ?? '-'}</Text>
-        <Text className="text-sm text-gray-500">{user?.email ?? '-'}</Text>
+        <Text className="text-xl font-bold text-gray-900">{user?.email ?? '-'}</Text>
+        <Text className="text-sm text-gray-500">{user?.role ?? '-'}</Text>
       </View>
     </View>
   );

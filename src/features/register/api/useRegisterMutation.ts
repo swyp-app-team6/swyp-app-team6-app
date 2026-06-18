@@ -17,12 +17,12 @@ export default function useRegisterMutation() {
     mutationFn: async (_params: { id: string; password: string }) => {
       // TODO: API 형식에 맞춰 회원가입 작성
       return {
-        accessToken: 'temp-access-token',
-        refreshToken: 'temp-refresh-token',
+        access_token: 'temp-access-token',
+        refresh_token: 'temp-refresh-token',
       };
     },
-    onSuccess: ({ accessToken, refreshToken }) => {
-      setTokens({ accessToken, refreshToken });
+    onSuccess: ({ access_token, refresh_token }) => {
+      setTokens({ access_token, refresh_token });
     },
   });
 }

@@ -55,7 +55,6 @@ describe('performGoogleLogin', () => {
   it('사용자가 브라우저를 닫으면 에러 없이 종료', async () => {
     mockedInAppBrowser.openAuth.mockResolvedValue({
       type: 'cancel',
-      url: '',
     });
 
     await expect(performGoogleLogin()).resolves.toBeUndefined();
