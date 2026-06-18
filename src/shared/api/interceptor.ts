@@ -19,6 +19,18 @@ function processQueue(error: unknown, token: string | null = null) {
   failedQueue = [];
 }
 
+/**
+ * # interceptor
+ * ---
+ * - 간단설명: axios 요청/응답 인터셉터 초기화
+ * - 제약사항 및 특이사항:
+ *   - 앱 시작 시 1회만 호출
+ *   - 401 응답 시 자동으로 토큰 갱신 시도
+ *   - 동시 요청 실패 시 큐에 저장 후 갱신 완료 후 재시도
+ * ---
+ * @example
+ * interceptor(); // QueryProvider에서 호출
+ */
 export const interceptor = () => {
   API.interceptors.request.use((config) => {
     const { accessToken } = useAuthStore.getState();
@@ -59,8 +71,8 @@ export const interceptor = () => {
       try {
         const { data } = await refreshTokens(refreshToken);
         setTokens(data);
-        processQueue(null, data.accessToken);
-        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+        processQueue(null, data.access_token);
+        originalRequest.headers.Authorization = `Bearer ${data.access_token}`;
         return API(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError, null);
