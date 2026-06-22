@@ -39,20 +39,19 @@ describe('EditProfilePage', () => {
     jest.clearAllMocks();
     useAuthStore.setState({
       user: {
-        id: '1',
+        id: 1,
         email: 'test@example.com',
-        name: '기존 닉네임',
-        picture: 'https://example.com/pic.jpg',
-        provider: 'google',
+        role: 'USER',
+        provider: 'GOOGLE',
       },
     });
   });
 
-  it('현재 닉네임을 입력 필드에 표시한다', async () => {
+  it('닉네임 입력 필드를 렌더링한다', async () => {
     await act(async () => {
       render(<EditProfilePage />, { wrapper: safeAreaWrapper });
     });
-    const input = screen.getByDisplayValue('기존 닉네임');
+    const input = screen.getByPlaceholderText('닉네임을 입력해주세요');
     expect(input).toBeTruthy();
   });
 
@@ -70,19 +69,15 @@ describe('EditProfilePage', () => {
     expect(screen.getByText('저장')).toBeTruthy();
   });
 
-  it('닉네임 수정 후 저장하면 authStore가 업데이트된다', async () => {
+  it('저장 버튼 클릭 시 뒤로 이동한다', async () => {
     await act(async () => {
       render(<EditProfilePage />, { wrapper: safeAreaWrapper });
     });
 
-    const input = screen.getByDisplayValue('기존 닉네임');
-    await act(async () => {
-      fireEvent.changeText(input, '새 닉네임');
-    });
     await act(async () => {
       fireEvent.press(screen.getByText('저장'));
     });
 
-    expect(useAuthStore.getState().user?.name).toBe('새 닉네임');
+    expect(mockGoBack).toHaveBeenCalled();
   });
 });

@@ -2,11 +2,10 @@ import { act, renderHook } from '@testing-library/react-native';
 import useAuthStore from '../authStore';
 
 const MOCK_USER = {
-  id: '1',
+  id: 1,
   email: 'test@example.com',
-  name: '테스트 유저',
-  picture: 'https://example.com/pic.jpg',
-  provider: 'google' as const,
+  role: 'USER',
+  provider: 'GOOGLE',
 };
 
 describe('useAuthStore', () => {
@@ -15,43 +14,48 @@ describe('useAuthStore', () => {
       accessToken: null,
       refreshToken: null,
       user: null,
-      localProfileImage: null,
     });
   });
 
-  it('updateUser는 유저 정보를 부분적으로 업데이트한다', async () => {
-    useAuthStore.setState({ user: { ...MOCK_USER } });
+  it('setUser는 유저 정보를 저장한다', async () => {
+    const { result } = await renderHook(() => useAuthStore());
+
+    await act(async () => {
+      result.current.setUser(MOCK_USER);
+    });
+
+    expect(result.current.user).toEqual(MOCK_USER);
+  });
+
+  it('setTokens는 토큰을 저장한다', async () => {
+    const { result } = await renderHook(() => useAuthStore());
+
+    await act(async () => {
+      result.current.setTokens({
+        accessToken: 'test-access',
+        refreshToken: 'test-refresh',
+      });
+    });
+
+    expect(result.current.accessToken).toBe('test-access');
+    expect(result.current.refreshToken).toBe('test-refresh');
+  });
+
+  it('clear는 모든 상태를 초기화한다', async () => {
+    useAuthStore.setState({
+      accessToken: 'token',
+      refreshToken: 'refresh',
+      user: MOCK_USER,
+    });
 
     const { result } = await renderHook(() => useAuthStore());
 
     await act(async () => {
-      result.current.updateUser({ name: '변경된 이름' });
+      result.current.clear();
     });
 
-    expect(result.current.user?.name).toBe('변경된 이름');
-    expect(result.current.user?.email).toBe('test@example.com');
-  });
-
-  it('updateUser는 user가 null이면 아무 동작도 하지 않는다', async () => {
-    const { result } = await renderHook(() => useAuthStore());
-
-    await act(async () => {
-      result.current.updateUser({ name: '변경된 이름' });
-    });
-
+    expect(result.current.accessToken).toBeNull();
+    expect(result.current.refreshToken).toBeNull();
     expect(result.current.user).toBeNull();
-  });
-
-  it('updateUser로 프로필 이미지를 변경할 수 있다', async () => {
-    useAuthStore.setState({ user: { ...MOCK_USER } });
-
-    const { result } = await renderHook(() => useAuthStore());
-
-    await act(async () => {
-      result.current.updateUser({ picture: 'https://example.com/new-pic.jpg' });
-    });
-
-    expect(result.current.user?.picture).toBe('https://example.com/new-pic.jpg');
-    expect(result.current.user?.name).toBe('테스트 유저');
   });
 });

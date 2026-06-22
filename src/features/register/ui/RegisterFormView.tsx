@@ -3,7 +3,6 @@ import { View, Image } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Button, Input } from '@/shared/ui';
 import { usePermissionStore } from '@/widgets/permissions';
-import useAuthStore from '@/entities/user/model/authStore';
 
 interface Props {
   /** 가입 완료 시 호출 */
@@ -26,7 +25,6 @@ export default function RegisterFormView({ onSuccess }: Props) {
   const [nickname, setNickname] = useState('');
   const [profileUri, setProfileUri] = useState<string | null>(null);
   const { galleryStatus, requestGalleryPermission } = usePermissionStore();
-  const { setUser, user } = useAuthStore();
 
   const handleSelectImage = async () => {
     if (galleryStatus !== 'granted' && galleryStatus !== 'limited') {
@@ -44,13 +42,7 @@ export default function RegisterFormView({ onSuccess }: Props) {
   };
 
   const handleSubmit = () => {
-    setUser({
-      id: user?.id ?? 'new-user',
-      email: user?.email ?? '',
-      name: nickname,
-      picture: profileUri ?? '',
-      provider: user?.provider,
-    });
+    // TODO: registerProfile API 연동 시 구현
     onSuccess();
   };
 

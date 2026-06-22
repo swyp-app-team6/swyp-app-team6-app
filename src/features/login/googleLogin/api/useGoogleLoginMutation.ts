@@ -9,7 +9,6 @@ import Config from 'react-native-config';
 import { googleLogin } from '@/entities/user';
 import type { GoogleLoginResponse } from '@/entities/user/api/authApi';
 import useAuthStore from '@/entities/user/model/authStore';
-import { Alert } from 'react-native';
 
 /**
  * # useGoogleLoginMutation
@@ -48,11 +47,10 @@ export default function useGoogleLoginMutation() {
       const { data } = await googleLogin(idToken);
       return data;
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       if (!data) return;
       const { access_token, refresh_token } = data;
-      Alert.alert('login success', JSON.stringify(data))
-      setTokens({ accessToken: access_token, refreshToken: refresh_token });
+      await setTokens({ accessToken: access_token, refreshToken: refresh_token });
     },
     onError: (error) => {
       console.error(error);

@@ -21,10 +21,11 @@ import useGoogleLoginMutation from '@/features/login/googleLogin/api/useGoogleLo
 function LoginPage() {
   const navigation = useNavigation<NavigationPropType>();
   const { setTokens, setUser } = useAuthStore();
-  const { mutate: googleLogin, isPending: isGooglePending } = useGoogleLoginMutation();
-  
-  const handleGoogleLogin = () => {
-    googleLogin();
+  const { mutateAsync: googleLogin, isPending: isGooglePending } = useGoogleLoginMutation();
+
+  const handleGoogleLogin = async () => {
+    await googleLogin();
+    navigation.navigate('gallery');
   };
 
   const handleDummyLogin = () => {
@@ -33,11 +34,10 @@ function LoginPage() {
       refreshToken: 'dummy-refresh-token',
     });
     setUser({
-      id: 'dummy-1',
+      id: 0,
       email: 'dummy@example.com',
-      name: '더미 유저',
-      picture: '',
-      provider: 'google',
+      role: 'USER',
+      provider: 'GOOGLE',
     });
     navigation.reset({
       index: 0,

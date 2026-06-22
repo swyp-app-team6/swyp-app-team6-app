@@ -17,14 +17,10 @@ import { useImagePicker } from '../lib/useImagePicker';
 export default function ProfileImagePicker() {
   const { isOpen, openModal, closeModal } = useModal();
   const user = useAuthStore((s) => s.user);
-  const localProfileImage = useAuthStore((s) => s.localProfileImage);
-  const { openCamera, openGallery } = useImagePicker();
-
-  const imageUri = localProfileImage ?? user?.picture;
+  const { imageUri, openCamera, openGallery } = useImagePicker();
 
   const handleCamera = () => {
     closeModal();
-    // iOS에서 Modal dismiss 애니메이션 후 시스템 UI 열기 (레이어 충돌 방지)
     setTimeout(openCamera, 300);
   };
 
@@ -40,7 +36,9 @@ export default function ProfileImagePicker() {
           {imageUri ? (
             <Image source={{ uri: imageUri }} className="w-full h-full" resizeMode="cover" />
           ) : (
-            <Text className="text-3xl text-gray-400">{user?.name?.[0] ?? '?'}</Text>
+            <Text className="text-3xl text-gray-400">
+              {user?.email?.charAt(0)?.toUpperCase() ?? '?'}
+            </Text>
           )}
         </View>
         <Text className="mt-2 text-sm text-blue-600">사진 변경</Text>

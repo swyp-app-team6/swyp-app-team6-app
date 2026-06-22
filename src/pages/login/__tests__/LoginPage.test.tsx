@@ -18,11 +18,11 @@ jest.mock('react-native-config', () => ({
   default: {},
 }));
 
-const mockGoogleLoginMutate = jest.fn();
+const mockGoogleLoginMutateAsync = jest.fn().mockResolvedValue(null);
 jest.mock('@/features/login/googleLogin/api/useGoogleLoginMutation', () => ({
   __esModule: true,
   default: () => ({
-    mutate: mockGoogleLoginMutate,
+    mutateAsync: mockGoogleLoginMutateAsync,
     isPending: false,
   }),
 }));
@@ -75,7 +75,9 @@ describe('LoginPage', () => {
     await act(async () => {
       render(<LoginPage />, { wrapper: safeAreaWrapper });
     });
-    fireEvent.press(screen.getByText('Google로 로그인'));
-    expect(mockGoogleLoginMutate).toHaveBeenCalled();
+    await act(async () => {
+      fireEvent.press(screen.getByText('Google로 로그인'));
+    });
+    expect(mockGoogleLoginMutateAsync).toHaveBeenCalled();
   });
 });

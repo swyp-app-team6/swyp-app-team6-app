@@ -2,35 +2,32 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import type { User, AuthTokens } from './types';
+import { getMe } from '../api/authApi';
 
 /**
  * 인증 상태
  * - accessToken: API 요청에 사용하는 액세스 토큰
  * - refreshToken: 토큰 갱신에 사용하는 리프레시 토큰
  * - user: 로그인된 사용자 정보
- * - localProfileImage: 기기에 저장된 프로필 이미지 URI
  */
 interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
   user: User | null;
-  localProfileImage: string | null;
 }
 
 /**
  * 인증 액션
  * - setTokens: 토큰 저장 (메모리 + EncryptedStorage)
  * - setUser: 사용자 정보 저장
- * - setProfileImage: 로컬 프로필 이미지 URI 저장
- * - updateUser: 사용자 정보 부분 업데이트
+ * - fetchMe: /users/me API를 호출하여 사용자 정보를 조회·저장
  * - clear: 인증 상태 초기화 및 저장된 토큰 삭제
- * - hydrate: 앱 시작 시 EncryptedStorage에서 토큰 복원
+ * - hydrate: 앱 시작 시 EncryptedStorage에서 토큰 복원 + 유저 정보 조회
  */
 interface AuthActions {
   setTokens: (tokens: AuthTokens) => void;
   setUser: (user: User) => void;
-  setProfileImage: (uri: string) => void;
-  updateUser: (partial: Partial<User>) => void;
+  fetchMe: () => Promise<void>;
   clear: () => void;
   hydrate: () => Promise<void>;
 }
@@ -42,16 +39,16 @@ interface AuthActions {
  * - 제약사항 및 특이사항:
  *   - 토큰은 EncryptedStorage에 암호화 저장됨
  *   - 앱 시작 시 hydrate() 호출 필요
+ *   - fetchMe()는 토큰 설정 후 호출하여 유저 정보 초기화
  * ---
  * @example
- * const { accessToken, setTokens, hydrate } = useAuthStore();
+ * const { accessToken, user, setTokens, fetchMe, hydrate } = useAuthStore();
  */
 const useAuthStore = create<AuthState & AuthActions>()(
   immer((set) => ({
     accessToken: null,
     refreshToken: null,
     user: null,
-    localProfileImage: null,
 
     /**
      * 액세스/리프레시 토큰을 메모리와 EncryptedStorage에 저장
@@ -77,28 +74,17 @@ const useAuthStore = create<AuthState & AuthActions>()(
     },
 
     /**
-     * 로컬 프로필 이미지 URI를 저장하고 user 객체에도 반영
-     * @param uri - 기기에 저장된 이미지 URI
+     * /users/me API를 호출하여 사용자 정보를 조회하고 스토어에 저장
      */
-    setProfileImage: (uri) => {
-      set((state) => {
-        state.localProfileImage = uri;
-        if (state.user) {
-          state.user.localProfileImage = uri;
-        }
-      });
-    },
-
-    /**
-     * 사용자 정보를 부분적으로 업데이트
-     * @param partial - 변경할 User 필드
-     */
-    updateUser: (partial) => {
-      set((state) => {
-        if (state.user) {
-          Object.assign(state.user, partial);
-        }
-      });
+    fetchMe: async () => {
+      try {
+        const { data } = await getMe();
+        set((state) => {
+          state.user = data;
+        });
+      } catch (error) {
+        console.error('fetchMe 실패:', error);
+      }
     },
 
     /**
@@ -115,7 +101,7 @@ const useAuthStore = create<AuthState & AuthActions>()(
     },
 
     /**
-     * 앱 시작 시 EncryptedStorage에서 토큰을 읽어 메모리에 복원
+     * 앱 시작 시 EncryptedStorage에서 토큰을 읽어 메모리에 복원하고 유저 정보 조회
      */
     hydrate: async () => {
       const accessToken = await EncryptedStorage.getItem('accessToken');

@@ -31,11 +31,10 @@ describe('WithdrawalPage', () => {
       accessToken: 'test-token',
       refreshToken: 'test-refresh',
       user: {
-        id: '1',
+        id: 1,
         email: 'test@example.com',
-        name: '테스트 유저',
-        picture: '',
-        provider: 'google',
+        role: 'USER',
+        provider: 'GOOGLE',
       },
     });
   });

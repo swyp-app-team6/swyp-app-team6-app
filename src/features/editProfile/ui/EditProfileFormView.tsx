@@ -3,8 +3,6 @@ import { View, Image } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Button, Input } from '@/shared/ui';
 import { usePermissionStore } from '@/widgets/permissions';
-import useAuthStore from '@/entities/user/model/authStore';
-
 interface Props {
   /** 저장 완료 시 호출 */
   onSave: () => void;
@@ -15,7 +13,7 @@ interface Props {
  * ---
  * - 간단설명: 닉네임 및 프로필 사진 수정 폼
  * - 제약사항 및 특이사항:
- *   - authStore.updateUser로 부분 업데이트
+ *   - 현재 /users/me 응답에는 닉네임/사진이 없으므로 프로필 API 연동 시 확장 필요
  *   - 갤러리 권한은 usePermissionStore로 관리
  * ---
  * @param onSave 저장 완료 시 호출되는 콜백
@@ -23,11 +21,8 @@ interface Props {
  * <EditProfileFormView onSave={() => navigation.goBack()} />
  */
 export default function EditProfileFormView({ onSave }: Props) {
-  const { user, updateUser } = useAuthStore();
-  const [nickname, setNickname] = useState(user?.name ?? '');
-  const [profileUri, setProfileUri] = useState<string | null>(
-    user?.picture ?? null,
-  );
+  const [nickname, setNickname] = useState('');
+  const [profileUri, setProfileUri] = useState<string | null>(null);
   const { galleryStatus, requestGalleryPermission } = usePermissionStore();
 
   const handleSelectImage = async () => {
@@ -46,10 +41,7 @@ export default function EditProfileFormView({ onSave }: Props) {
   };
 
   const handleSave = () => {
-    updateUser({
-      name: nickname,
-      ...(profileUri ? { picture: profileUri } : {}),
-    });
+    // TODO: 프로필 등록/수정 API 연동 시 구현
     onSave();
   };
 
