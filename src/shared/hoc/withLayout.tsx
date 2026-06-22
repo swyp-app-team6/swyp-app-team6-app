@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import { GalleryIcon, Layout, PlaygroundIcon, ProfileIcon, QRIcon } from '@/shared/ui'
+import { GalleryIcon, Layout, LoginIcon, PlaygroundIcon, ProfileIcon, QRIcon } from '@/shared/ui'
 import LocalEnvBadge from '@/shared/ui/LocalEnvBadge';
 
 const ACTIVE_COLOR = '#3b82f6';
@@ -11,6 +11,7 @@ const INACTIVE_COLOR = '#9ca3af';
  * - NavigatorType 키 기반으로 라우트 이름 관리
  */
 const NAV_ITEMS = [
+  { name: 'login', label: '로그인', icon: (active: boolean) => <LoginIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
   { name: 'qr', label: 'QR', icon: (active: boolean) => <QRIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
   { name: 'profile', label: '회원정보', icon: (active: boolean) => <ProfileIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
   { name: 'gallery', label: '갤러리', icon: (active: boolean) => <GalleryIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },

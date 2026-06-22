@@ -4,13 +4,15 @@ import { useNavigation } from '@react-navigation/native';
 import { Button, Header, Layout } from '@/shared/ui';
 import useAuthStore from '@/entities/user/model/authStore';
 import type { NavigationPropType } from '@/shared/types';
+import useGoogleLoginMutation from '@/features/login/googleLogin/api/useGoogleLoginMutation';
 
 /**
  * # LoginPage
  * ---
  * - 간단설명: 소셜 로그인 + 더미 로그인 버튼을 제공하는 로그인 화면
  * - 제약사항 및 특이사항:
- *   - Google/Apple 로그인은 UI만 배치 (실제 연동 제외)
+ *   - Google 로그인 성공 시 profile 화면으로 이동
+ *   - Apple 로그인은 UI만 배치 (실제 연동 제외)
  *   - 개발용 더미 로그인으로 플로우 테스트 가능
  * ---
  * @example
@@ -19,6 +21,11 @@ import type { NavigationPropType } from '@/shared/types';
 function LoginPage() {
   const navigation = useNavigation<NavigationPropType>();
   const { setTokens, setUser } = useAuthStore();
+  const { mutate: googleLogin, isPending: isGooglePending } = useGoogleLoginMutation();
+  
+  const handleGoogleLogin = () => {
+    googleLogin();
+  };
 
   const handleDummyLogin = () => {
     setTokens({
@@ -43,7 +50,7 @@ function LoginPage() {
       <Header title="로그인" />
       <Layout.Body styleClass={{ root: 'px-6 pt-20' }}>
         <View className="gap-3">
-          <Button title="Google로 로그인" variant="secondary" />
+          <Button title="Google로 로그인" variant="secondary" onPress={handleGoogleLogin} loading={isGooglePending} />
           <Button title="Apple로 로그인" variant="secondary" />
           <Button title="개발용 로그인" variant="ghost" onPress={handleDummyLogin} />
         </View>

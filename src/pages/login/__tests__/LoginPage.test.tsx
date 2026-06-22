@@ -13,14 +13,19 @@ jest.mock('@react-navigation/native', () => ({
   }),
 }));
 
-jest.mock('@/features/login/defaultLogin/ui/DefaultLoginView', () => {
-  const { View, Text } = require('react-native');
-  return () => (
-    <View>
-      <Text>DefaultLoginView</Text>
-    </View>
-  );
-});
+jest.mock('react-native-config', () => ({
+  __esModule: true,
+  default: {},
+}));
+
+const mockGoogleLoginMutate = jest.fn();
+jest.mock('@/features/login/googleLogin/api/useGoogleLoginMutation', () => ({
+  __esModule: true,
+  default: () => ({
+    mutate: mockGoogleLoginMutate,
+    isPending: false,
+  }),
+}));
 
 const safeAreaWrapper = ({ children }: { children: React.ReactNode }) => (
   <SafeAreaProvider
@@ -64,5 +69,13 @@ describe('LoginPage', () => {
     });
     fireEvent.press(screen.getByText('회원가입'));
     expect(mockNavigate).toHaveBeenCalledWith('register');
+  });
+
+  it('Google 로그인 버튼 클릭 시 googleLogin mutation이 호출된다', async () => {
+    await act(async () => {
+      render(<LoginPage />, { wrapper: safeAreaWrapper });
+    });
+    fireEvent.press(screen.getByText('Google로 로그인'));
+    expect(mockGoogleLoginMutate).toHaveBeenCalled();
   });
 });

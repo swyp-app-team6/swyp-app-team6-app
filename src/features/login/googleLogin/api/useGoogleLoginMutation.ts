@@ -7,7 +7,9 @@ import {
 } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
 import { googleLogin } from '@/entities/user';
+import type { GoogleLoginResponse } from '@/entities/user/api/authApi';
 import useAuthStore from '@/entities/user/model/authStore';
+import { Alert } from 'react-native';
 
 /**
  * # useGoogleLoginMutation
@@ -15,7 +17,7 @@ import useAuthStore from '@/entities/user/model/authStore';
  * - 간단설명: Google Sign-In을 통한 소셜 로그인 mutation 훅
  * - 제약사항 및 특이사항:
  *   - GoogleSignin.configure()를 내부에서 호출함
- *   - 성공 시 authStore에 토큰 및 유저 정보 자동 저장
+ *   - 성공 시 authStore에 토큰 자동 저장 (access_token/refresh_token → camelCase 변환)
  *   - 로그인 취소 시 null 반환 (에러로 처리하지 않음)
  * ---
  * @example
@@ -23,13 +25,12 @@ import useAuthStore from '@/entities/user/model/authStore';
  * mutate();
  */
 export default function useGoogleLoginMutation() {
-  const { setTokens, setUser } = useAuthStore();
+  const { setTokens } = useAuthStore();
 
-  return useMutation({
+  return useMutation<GoogleLoginResponse | null, Error, void>({
     mutationFn: async () => {
       GoogleSignin.configure({
         webClientId: Config.GOOGLE_WEB_CLIENT,
-        iosClientId: Config.GOOGLE_IOS_CLIENT,
       });
 
       await GoogleSignin.hasPlayServices();
@@ -49,11 +50,12 @@ export default function useGoogleLoginMutation() {
     },
     onSuccess: (data) => {
       if (!data) return;
-      const { accessToken, refreshToken, user } = data;
-      setTokens({ accessToken, refreshToken });
-      setUser(user);
+      const { access_token, refresh_token } = data;
+      Alert.alert('login success', JSON.stringify(data))
+      setTokens({ accessToken: access_token, refreshToken: refresh_token });
     },
     onError: (error) => {
+      console.error(error);
       if (isErrorWithCode(error)) {
         switch (error.code) {
           case statusCodes.IN_PROGRESS:
