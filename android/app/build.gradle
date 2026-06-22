@@ -88,7 +88,6 @@ android {
         versionCode 1
         versionName "1.0"
         manifestPlaceholders = [
-            appAuthRedirectScheme: project.env.get("GOOGLE_OAUTH_REDIRECT_SCHEME"),
             usesCleartextTraffic: "true"
         ]
     }

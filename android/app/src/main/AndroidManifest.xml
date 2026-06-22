@@ -13,17 +13,5 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
-    <!-- google 로그인용 -->
-    <activity android:name="net.openid.appauth.RedirectUriReceiverActivity" android:exported="true" tools:node="replace">
-
-      <intent-filter>
-        <action android:name="android.intent.action.VIEW" />
-
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-        <!-- config에서 설정한 redirect와 일치해야 함 -->
-        <data android:scheme="${appAuthRedirectScheme}" android:host="oauth2redirect" />
-      </intent-filter>
-    </activity>
   </application>
 </manifest>
