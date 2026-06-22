@@ -6,27 +6,29 @@ import { usePermissionStore } from '@/widgets/permissions';
 import useAuthStore from '@/entities/user/model/authStore';
 
 interface Props {
-  /** 가입 완료 시 호출 */
-  onSuccess: () => void;
+  /** 저장 완료 시 호출 */
+  onSave: () => void;
 }
 
 /**
- * # RegisterFormView
+ * # EditProfileFormView
  * ---
- * - 간단설명: 닉네임 입력 + 프로필 사진 선택 회원가입 폼
+ * - 간단설명: 닉네임 및 프로필 사진 수정 폼
  * - 제약사항 및 특이사항:
+ *   - authStore.updateUser로 부분 업데이트
  *   - 갤러리 권한은 usePermissionStore로 관리
- *   - 더미 동작: authStore에 로컬 상태만 업데이트
  * ---
- * @param onSuccess 가입 완료 시 호출되는 콜백
+ * @param onSave 저장 완료 시 호출되는 콜백
  * @example
- * <RegisterFormView onSuccess={() => navigation.reset(...)} />
+ * <EditProfileFormView onSave={() => navigation.goBack()} />
  */
-export default function RegisterFormView({ onSuccess }: Props) {
-  const [nickname, setNickname] = useState('');
-  const [profileUri, setProfileUri] = useState<string | null>(null);
+export default function EditProfileFormView({ onSave }: Props) {
+  const { user, updateUser } = useAuthStore();
+  const [nickname, setNickname] = useState(user?.name ?? '');
+  const [profileUri, setProfileUri] = useState<string | null>(
+    user?.picture ?? null,
+  );
   const { galleryStatus, requestGalleryPermission } = usePermissionStore();
-  const { setUser, user } = useAuthStore();
 
   const handleSelectImage = async () => {
     if (galleryStatus !== 'granted' && galleryStatus !== 'limited') {
@@ -43,27 +45,24 @@ export default function RegisterFormView({ onSuccess }: Props) {
     }
   };
 
-  const handleSubmit = () => {
-    setUser({
-      id: user?.id ?? 'new-user',
-      email: user?.email ?? '',
+  const handleSave = () => {
+    updateUser({
       name: nickname,
-      picture: profileUri ?? '',
-      provider: user?.provider,
+      ...(profileUri ? { picture: profileUri } : {}),
     });
-    onSuccess();
+    onSave();
   };
 
   return (
     <View className="gap-4">
-      {profileUri && (
+      {profileUri ? (
         <Image
           source={{ uri: profileUri }}
           className="w-24 h-24 rounded-full self-center"
         />
-      )}
+      ) : null}
       <Button
-        title="프로필 사진 선택"
+        title="프로필 사진 변경"
         variant="secondary"
         onPress={handleSelectImage}
       />
@@ -72,7 +71,7 @@ export default function RegisterFormView({ onSuccess }: Props) {
         value={nickname}
         onChangeText={setNickname}
       />
-      <Button title="가입 완료" onPress={handleSubmit} />
+      <Button title="저장" onPress={handleSave} />
     </View>
   );
 }

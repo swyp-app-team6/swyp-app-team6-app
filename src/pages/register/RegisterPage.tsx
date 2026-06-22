@@ -1,44 +1,44 @@
-import { Button, Header, Layout, Modal } from '@/shared/ui';
-import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import React from 'react';
+import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { Button, Header, Layout } from '@/shared/ui';
 import { RegisterFormView } from '@/features/register';
+import type { NavigationPropType } from '@/shared/types';
 
 /**
  * # RegisterPage
  * ---
- * - 간단설명: 회원가입 화면 - 아이디/비밀번호/비밀번호 확인 입력, 완료 시 다이얼로그 후 갤러리로 이동
+ * - 간단설명: 회원가입 화면 - 닉네임 + 프로필 사진 등록
+ * - 제약사항 및 특이사항:
+ *   - 소셜 로그인 후 추가 정보 입력 화면으로 사용
+ *   - 완료 시 메인(프로필) 화면으로 이동
  * ---
  * @example
  * <RegisterPage />
  */
 export default function RegisterPage() {
-  const navigation = useNavigation();
-  const [modalVisible, setModalVisible] = useState(false);
+  const navigation = useNavigation<NavigationPropType>();
 
   const handleSuccess = () => {
-    setModalVisible(true);
-  };
-
-  const handleConfirm = () => {
-    setModalVisible(false);
-    navigation.navigate('gallery' as never);
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'profile' }],
+    });
   };
 
   return (
     <>
-      <Header title="회원가입" />
-      <Layout.Body styleClass={{ root: 'px-6 pt-20' }}>
+      <Header title="회원가입" showBack />
+      <Layout.Body styleClass={{ root: 'px-6 pt-10' }}>
         <RegisterFormView onSuccess={handleSuccess} />
-        <View className='w-full flex flex-row justify-center mt-4'>
-          <Button title='로그인으로 돌아가기' variant='ghost' onPress={() => navigation.goBack()} />
+        <View className="w-full flex flex-row justify-center mt-4">
+          <Button
+            title="로그인으로 돌아가기"
+            variant="ghost"
+            onPress={() => navigation.goBack()}
+          />
         </View>
       </Layout.Body>
-
-      <Modal visible={modalVisible} title="회원가입 완료" onClose={handleConfirm}>
-        <Text className='text-gray-600 mb-4'>회원가입이 완료되었습니다.</Text>
-        <Button title='갤러리로 이동' onPress={handleConfirm} />
-      </Modal>
     </>
   );
 }

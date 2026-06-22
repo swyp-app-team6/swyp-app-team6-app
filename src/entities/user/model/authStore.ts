@@ -22,6 +22,7 @@ interface AuthState {
  * - setTokens: 토큰 저장 (메모리 + EncryptedStorage)
  * - setUser: 사용자 정보 저장
  * - setProfileImage: 로컬 프로필 이미지 URI 저장
+ * - updateUser: 사용자 정보 부분 업데이트
  * - clear: 인증 상태 초기화 및 저장된 토큰 삭제
  * - hydrate: 앱 시작 시 EncryptedStorage에서 토큰 복원
  */
@@ -29,6 +30,7 @@ interface AuthActions {
   setTokens: (tokens: AuthTokens) => void;
   setUser: (user: User) => void;
   setProfileImage: (uri: string) => void;
+  updateUser: (partial: Partial<User>) => void;
   clear: () => void;
   hydrate: () => Promise<void>;
 }
@@ -83,6 +85,18 @@ const useAuthStore = create<AuthState & AuthActions>()(
         state.localProfileImage = uri;
         if (state.user) {
           state.user.localProfileImage = uri;
+        }
+      });
+    },
+
+    /**
+     * 사용자 정보를 부분적으로 업데이트
+     * @param partial - 변경할 User 필드
+     */
+    updateUser: (partial) => {
+      set((state) => {
+        if (state.user) {
+          Object.assign(state.user, partial);
         }
       });
     },

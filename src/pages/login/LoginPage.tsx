@@ -1,34 +1,62 @@
-import { Button, Header, Input, Layout } from '@/shared/ui'
-import React from 'react'
-import { Text, View } from 'react-native'
-import DefaultLoginView from '@/features/login/defaultLogin/ui/DefaultLoginView';
+import React from 'react';
+import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { NavigationPropType, NavigatorType } from '../../shared/types';
+import { Button, Header, Layout } from '@/shared/ui';
+import useAuthStore from '@/entities/user/model/authStore';
+import type { NavigationPropType } from '@/shared/types';
 
 /**
  * # LoginPage
  * ---
- * - 간단설명: 로그인 화면 - 기본 로그인 폼, 회원가입 및 비밀번호 찾기 버튼 제공
+ * - 간단설명: 소셜 로그인 + 더미 로그인 버튼을 제공하는 로그인 화면
+ * - 제약사항 및 특이사항:
+ *   - Google/Apple 로그인은 UI만 배치 (실제 연동 제외)
+ *   - 개발용 더미 로그인으로 플로우 테스트 가능
  * ---
  * @example
  * <LoginPage />
  */
 function LoginPage() {
   const navigation = useNavigation<NavigationPropType>();
+  const { setTokens, setUser } = useAuthStore();
+
+  const handleDummyLogin = () => {
+    setTokens({
+      accessToken: 'dummy-access-token',
+      refreshToken: 'dummy-refresh-token',
+    });
+    setUser({
+      id: 'dummy-1',
+      email: 'dummy@example.com',
+      name: '더미 유저',
+      picture: '',
+      provider: 'google',
+    });
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'profile' }],
+    });
+  };
+
   return (
     <>
-      <Header
-        title="로그인"
-      />
+      <Header title="로그인" />
       <Layout.Body styleClass={{ root: 'px-6 pt-20' }}>
-        <DefaultLoginView />
-        <View className='w-full flex flex-row justify-between mt-4'>
-          <Button title='회원가입' variant='secondary' onPress={() => navigation.navigate('register')} />
-          <Button title='비밀번호 찾기' variant='secondary' />
+        <View className="gap-3">
+          <Button title="Google로 로그인" variant="secondary" />
+          <Button title="Apple로 로그인" variant="secondary" />
+          <Button title="개발용 로그인" variant="ghost" onPress={handleDummyLogin} />
+        </View>
+        <View className="w-full flex flex-row justify-between mt-4">
+          <Button
+            title="회원가입"
+            variant="secondary"
+            onPress={() => navigation.navigate('register')}
+          />
         </View>
       </Layout.Body>
     </>
-  )
+  );
 }
 
 export default LoginPage;
