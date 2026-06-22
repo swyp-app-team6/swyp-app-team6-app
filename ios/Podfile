@@ -15,6 +15,13 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
+require_relative '../node_modules/react-native-permissions/scripts/setup'
+
+setup_permissions([
+  'Camera',
+  'PhotoLibrary',
+])
+
 target 'swyprotationdatingapp' do
   config = use_native_modules!
 
