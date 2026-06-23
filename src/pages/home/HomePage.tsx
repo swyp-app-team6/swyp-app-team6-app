@@ -13,7 +13,10 @@ import withAuthorization from '@/shared/hoc/withAuthorization';
 function HomePage() {
   return (
     <>
-      <Header title="홈" />
+      <Header
+        left="왼쪽"
+        right="오른쪽"
+        title="홈" />
       <Layout.Body styleClass={{ root: 'px-6 pt-10' }}>
         <View />
       </Layout.Body>
