@@ -14,4 +14,4 @@ export { default as SwipeableCard } from './SwipeableCard';
 export { default as BottomNav, type BottomNavItem } from './BottomNav';
 export { default as Popover } from './Popover';
 export { default as Selectbox } from './Selectbox';
-export { TodoIcon, ProfileIcon, GalleryIcon, PlaygroundIcon, SearchIcon, QRIcon, LoginIcon, type IconProps } from './icons';
+export { TodoIcon, ProfileIcon, GalleryIcon, PlaygroundIcon, SearchIcon, QRIcon, LoginIcon, HomeIcon, CardIcon, MyPageIcon, type IconProps } from './icons';
