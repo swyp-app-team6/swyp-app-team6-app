@@ -1,38 +1,33 @@
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react'
-import OnboardingPage from '@/pages/onboarding/OnboardingPage';
 import LoginPage from '@/pages/login/LoginPage';
 import RegisterPage from '@/pages/register/RegisterPage';
-import ProfilePage from '@/pages/profile/ProfilePage';
-import EditProfilePage from '@/pages/editProfile/EditProfilePage';
-import WithdrawalPage from '@/pages/withdrawal/WithdrawalPage';
-import ComponentPlaygroundPage from '@/pages/playground/ComponentPlaygroundPage';
-import GalleryPage from '@/pages/gallery/GalleryPage';
-import QRPage from '@/pages/qr/QRPage';
+import HomePage from '@/pages/home/HomePage';
+import ProfileCardPage from '@/pages/profileCard/ProfileCardPage';
+import MyPage from '@/pages/mypage/MyPage';
 import { NavigatorType } from '../types';
-import Config from 'react-native-config';
 
 const Stack = createNativeStackNavigator<NavigatorType>();
 
 /**
- * StackNavigator, 새 view 추가는 여기서
+ * # StackRouter
+ * ---
+ * - 간단설명: 앱 전체 네비게이션 스택 라우터
+ * - 제약사항 및 특이사항:
+ *   - 로그인 전: login → register
+ *   - 로그인 후: home, profileCard, mypage (하단 탭 네비게이션)
+ * ---
  */
 export default function StackRouter() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name='onboarding' component={OnboardingPage} />
         <Stack.Screen name='login' component={LoginPage} />
         <Stack.Screen name='register' component={RegisterPage} />
-        <Stack.Screen name='qr' component={QRPage} />
-        <Stack.Screen name='profile' component={ProfilePage} />
-        <Stack.Screen name='gallery' component={GalleryPage} />
-        <Stack.Screen name='editProfile' component={EditProfilePage} />
-        <Stack.Screen name='withdrawal' component={WithdrawalPage} />
-        {
-          Config.PROJECT_ENV === 'local' && <Stack.Screen name='playground' component={ComponentPlaygroundPage} />
-        }
+        <Stack.Screen name='home' component={HomePage} />
+        <Stack.Screen name='profileCard' component={ProfileCardPage} />
+        <Stack.Screen name='mypage' component={MyPage} />
       </Stack.Navigator>
     </NavigationContainer>
   )

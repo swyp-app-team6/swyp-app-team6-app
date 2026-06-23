@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import { GalleryIcon, Layout, LoginIcon, PlaygroundIcon, ProfileIcon, QRIcon } from '@/shared/ui'
+import { Layout, HomeIcon, CardIcon, MyPageIcon } from '@/shared/ui'
 import LocalEnvBadge from '@/shared/ui/LocalEnvBadge';
 
 const ACTIVE_COLOR = '#3b82f6';
@@ -11,11 +11,9 @@ const INACTIVE_COLOR = '#9ca3af';
  * - NavigatorType 키 기반으로 라우트 이름 관리
  */
 const NAV_ITEMS = [
-  { name: 'login', label: '로그인', icon: (active: boolean) => <LoginIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
-  { name: 'qr', label: 'QR', icon: (active: boolean) => <QRIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
-  { name: 'profile', label: '회원정보', icon: (active: boolean) => <ProfileIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
-  { name: 'gallery', label: '갤러리', icon: (active: boolean) => <GalleryIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
-  { name: 'playground', label: 'UI', icon: (active: boolean) => <PlaygroundIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
+  { name: 'home', label: '홈', icon: (active: boolean) => <HomeIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
+  { name: 'profileCard', label: '프로필카드', icon: (active: boolean) => <CardIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
+  { name: 'mypage', label: '마이페이지', icon: (active: boolean) => <MyPageIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
 ];
 
 /**
@@ -26,7 +24,7 @@ const NAV_ITEMS = [
  * ---
  * @param WrappedComponent 레이아웃을 적용할 페이지 컴포넌트
  * @example
- * export default withLayout(TodoPage);
+ * export default withLayout(HomePage);
  */
 export default function withLayout<P extends object>(WrappedComponent: React.ComponentType<P>) {
   function WithLayout(props: P) {
