@@ -1,4 +1,5 @@
 import React from 'react';
+import { View } from 'react-native';
 import { Header, Layout } from '@/shared/ui';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
@@ -14,6 +15,7 @@ function HomePage() {
     <>
       <Header title="홈" />
       <Layout.Body styleClass={{ root: 'px-6 pt-10' }}>
+        <View />
       </Layout.Body>
     </>
   );

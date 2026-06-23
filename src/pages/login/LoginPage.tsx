@@ -11,7 +11,7 @@ import useGoogleLoginMutation from '@/features/login/googleLogin/api/useGoogleLo
  * ---
  * - 간단설명: 소셜 로그인 + 더미 로그인 버튼을 제공하는 로그인 화면
  * - 제약사항 및 특이사항:
- *   - Google 로그인 성공 시 profile 화면으로 이동
+ *   - Google 로그인 성공 시 home 화면으로 이동
  *   - Apple 로그인은 UI만 배치 (실제 연동 제외)
  *   - 개발용 더미 로그인으로 플로우 테스트 가능
  * ---
@@ -25,7 +25,7 @@ function LoginPage() {
 
   const handleGoogleLogin = async () => {
     await googleLogin();
-    navigation.navigate('gallery');
+    navigation.navigate('home');
   };
 
   const handleDummyLogin = () => {
@@ -41,7 +41,7 @@ function LoginPage() {
     });
     navigation.reset({
       index: 0,
-      routes: [{ name: 'profile' }],
+      routes: [{ name: 'home' }],
     });
   };
 

@@ -16,7 +16,7 @@ import type { NavigationPropType } from '@/shared/types';
  * - 간단설명: 회원탈퇴 4단계 플로우 페이지
  * - 제약사항 및 특이사항:
  *   - 안내 → 사유 선택 → 최종 확인 → 완료 순서로 진행
- *   - 완료 시 authStore 클리어 후 온보딩으로 리다이렉트
+ *   - 완료 시 authStore 클리어 후 로그인으로 리다이렉트
  * ---
  * @example
  * <WithdrawalPage />
@@ -39,7 +39,7 @@ function WithdrawalPage() {
     await clear();
     navigation.reset({
       index: 0,
-      routes: [{ name: 'onboarding' }],
+      routes: [{ name: 'login' }],
     });
   };
 

@@ -26,12 +26,12 @@ function ProfilePage() {
           <Button
             title="회원정보 수정"
             variant="secondary"
-            onPress={() => navigation.navigate('editProfile')}
+            onPress={() => navigation.navigate('mypage')}
           />
           <Button
             title="회원탈퇴"
             variant="ghost"
-            onPress={() => navigation.navigate('withdrawal')}
+            onPress={() => navigation.navigate('mypage')}
           />
         </View>
       </Layout.Body>
