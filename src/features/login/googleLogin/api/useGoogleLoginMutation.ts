@@ -6,9 +6,8 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
-import { googleLogin } from '@/entities/user';
-import type { GoogleLoginResponse } from '@/entities/user/api/authApi';
-import useAuthStore from '@/entities/user/model/authStore';
+import { UserAPI, useAuthStore } from '@/entities/user';
+import type { GoogleLoginResponse } from '@/entities/user';
 
 /**
  * # useGoogleLoginMutation
@@ -44,7 +43,7 @@ export default function useGoogleLoginMutation() {
         throw new Error('Google 로그인 실패: idToken을 가져올 수 없습니다.');
       }
 
-      const { data } = await googleLogin(idToken);
+      const { data } = await UserAPI.googleLogin(idToken);
       return data;
     },
     onSuccess: async (data) => {

@@ -1,83 +1,20 @@
 import axios from "axios";
 import Config from "react-native-config";
-import useAuthStore from '@/entities/user/model/authStore';
-import { refreshTokens } from '@/entities/user/api/authApi';
-import { Alert } from 'react-native';
+import './axios.d';
 
-// TODO: 여기 리팩토링
-
-let isRefreshing = false;
-let failedQueue: Array<{
-  resolve: (value: unknown) => void;
-  reject: (reason?: unknown) => void;
-}> = [];
-
-function processQueue(error: unknown, token: string | null = null) {
-  failedQueue.forEach(({ resolve, reject }) => {
-    if (error) {
-      reject(error);
-    } else {
-      resolve(token);
-    }
-  });
-  failedQueue = [];
-}
-
-
+/**
+ * # API
+ * ---
+ * - 간단설명: 기본 Axios 인스턴스 — 모든 API 호출에 사용
+ * - 제약사항 및 특이사항:
+ *   - 인터셉터는 setupInterceptors()로 별도 등록 (앱 시작 시 호출 필요)
+ *   - skipAuth: true 옵션으로 인증 헤더 생략 가능
+ * ---
+ * @example
+ * API.post('/api/example');
+ * API.get('/public/endpoint', { skipAuth: true });
+ */
 export const API = axios.create({
   baseURL: Config.API_URL,
   headers: { 'Content-Type': 'application/json' },
 });
-
-API.interceptors.request.use((config) => {
-  const { accessToken } = useAuthStore.getState();
-  Alert.alert(accessToken || '');
-  if (accessToken) {
-    config.headers.Authorization = `Bearer ${accessToken}`;
-  }
-  return config;
-});
-
-API.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-
-    if (error.response?.status !== 401 || originalRequest._retry) {
-      return Promise.reject(error);
-    }
-
-    if (isRefreshing) {
-      return new Promise((resolve, reject) => {
-        failedQueue.push({ resolve, reject });
-      }).then((token) => {
-        originalRequest.headers.Authorization = `Bearer ${token}`;
-        return API(originalRequest);
-      });
-    }
-
-    originalRequest._retry = true;
-    isRefreshing = true;
-
-    const { refreshToken, setTokens, clear } = useAuthStore.getState();
-
-    if (!refreshToken) {
-      clear();
-      return Promise.reject(error);
-    }
-
-    try {
-      const { data } = await refreshTokens(refreshToken);
-      setTokens(data);
-      processQueue(null, data.accessToken);
-      originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
-      return API(originalRequest);
-    } catch (refreshError) {
-      processQueue(refreshError, null);
-      clear();
-      return Promise.reject(refreshError);
-    } finally {
-      isRefreshing = false;
-    }
-  },
-);

@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import type { User, AuthTokens } from './types';
-import { getMe } from '../api/authApi';
+import { UserAPI } from '../api/userApi';
 
 /**
  * 인증 상태
@@ -21,6 +21,7 @@ interface AuthState {
  * - setTokens: 토큰 저장 (메모리 + EncryptedStorage)
  * - setUser: 사용자 정보 저장
  * - fetchMe: /users/me API를 호출하여 사용자 정보를 조회·저장
+ * - refreshAccessToken: 토큰 갱신 큐를 관리하며 새 accessToken을 반환
  * - clear: 인증 상태 초기화 및 저장된 토큰 삭제
  * - hydrate: 앱 시작 시 EncryptedStorage에서 토큰 복원 + 유저 정보 조회
  */
@@ -28,8 +29,32 @@ interface AuthActions {
   setTokens: (tokens: AuthTokens) => void;
   setUser: (user: User) => void;
   fetchMe: () => Promise<void>;
+  refreshAccessToken: () => Promise<string>;
   clear: () => void;
   hydrate: () => Promise<void>;
+}
+
+/** 토큰 갱신 진행 중 플래그 */
+let isRefreshing = false;
+
+/** 토큰 갱신 대기 큐 */
+let failedQueue: Array<{
+  resolve: (token: string) => void;
+  reject: (reason?: unknown) => void;
+}> = [];
+
+/**
+ * 대기 큐에 쌓인 요청들을 일괄 처리
+ */
+function processQueue(error: unknown, token: string | null = null) {
+  failedQueue.forEach(({ resolve, reject }) => {
+    if (error) {
+      reject(error);
+    } else {
+      resolve(token!);
+    }
+  });
+  failedQueue = [];
 }
 
 /**
@@ -40,12 +65,13 @@ interface AuthActions {
  *   - 토큰은 EncryptedStorage에 암호화 저장됨
  *   - 앱 시작 시 hydrate() 호출 필요
  *   - fetchMe()는 토큰 설정 후 호출하여 유저 정보 초기화
+ *   - refreshAccessToken()은 동시 호출 시 큐로 관리하여 단일 갱신만 수행
  * ---
  * @example
  * const { accessToken, user, setTokens, fetchMe, hydrate } = useAuthStore();
  */
 const useAuthStore = create<AuthState & AuthActions>()(
-  immer((set) => ({
+  immer((set, get) => ({
     accessToken: null,
     refreshToken: null,
     user: null,
@@ -78,12 +104,53 @@ const useAuthStore = create<AuthState & AuthActions>()(
      */
     fetchMe: async () => {
       try {
-        const { data } = await getMe();
+        const { data } = await UserAPI.getMe();
         set((state) => {
           state.user = data;
         });
       } catch (error) {
         console.error('fetchMe 실패:', error);
+      }
+    },
+
+    /**
+     * # refreshAccessToken
+     * ---
+     * - 간단설명: refreshToken으로 새 토큰을 발급받고 스토어에 저장 후 새 accessToken 반환
+     * - 제약사항 및 특이사항:
+     *   - 동시 호출 시 큐를 사용해 단일 갱신만 실행
+     *   - 갱신 실패 시 인증 상태 초기화(clear) 후 에러 전파
+     * ---
+     */
+    refreshAccessToken: async () => {
+      if (isRefreshing) {
+        return new Promise<string>((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        });
+      }
+
+      isRefreshing = true;
+      const { refreshToken } = get();
+
+      if (!refreshToken) {
+        get().clear();
+        const error = new Error('리프레시 토큰이 없습니다');
+        processQueue(error);
+        isRefreshing = false;
+        throw error;
+      }
+
+      try {
+        const { data } = await UserAPI.refreshTokens(refreshToken);
+        get().setTokens(data);
+        processQueue(null, data.accessToken);
+        return data.accessToken;
+      } catch (refreshError) {
+        processQueue(refreshError);
+        get().clear();
+        throw refreshError;
+      } finally {
+        isRefreshing = false;
       }
     },
 

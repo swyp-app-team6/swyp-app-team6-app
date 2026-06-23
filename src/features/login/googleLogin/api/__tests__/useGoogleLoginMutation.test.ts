@@ -3,7 +3,7 @@ import React from 'react';
 import { Alert } from 'react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import useGoogleLoginMutation from '../useGoogleLoginMutation';
-import { googleLogin } from '@/entities/user';
+import { UserAPI } from '@/entities/user';
 
 const mockSetTokens = jest.fn();
 
@@ -36,7 +36,12 @@ jest.mock('react-native-config', () => ({
 }));
 
 jest.mock('@/entities/user', () => ({
-  googleLogin: jest.fn(),
+  UserAPI: {
+    googleLogin: jest.fn(),
+  },
+  useAuthStore: () => ({
+    setTokens: mockSetTokens,
+  }),
 }));
 
 const createWrapper = () => {
@@ -51,7 +56,7 @@ describe('useGoogleLoginMutation', () => {
   });
 
   it('성공 시 access_token과 refresh_token을 camelCase로 변환해 setTokens를 호출한다', async () => {
-    (googleLogin as jest.Mock).mockResolvedValueOnce({
+    (UserAPI.googleLogin as jest.Mock).mockResolvedValueOnce({
       data: { access_token: 'my-access', refresh_token: 'my-refresh' },
     });
 

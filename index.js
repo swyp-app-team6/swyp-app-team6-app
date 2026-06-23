@@ -1,18 +1,21 @@
 /**
- * @format
+ * index.js
+ * 앱 실행시 초기 설정 필요한 부분은 전부 여기 작성
  */
 
 if (__DEV__) {
   require('./src/shared/lib/reactotron');
 }
 
-// TODO: ios/GoogleService-Info.plist 추가 후 다시 적용
-// import messaging from '@react-native-firebase/messaging';
 import { AppRegistry } from 'react-native';
 import App from './src/app/App';
 import { name as appName } from './app.json';
 import * as Sentry from '@sentry/react-native';
 import Config from 'react-native-config';
+import setupInterceptors from './src/shared/api/setupInterceptors';
+
+// API interceptor 초기화
+setupInterceptors();
 
 // messaging().setBackgroundMessageHandler(async remoteMessage => {
 //   console.log('Background message:', remoteMessage);

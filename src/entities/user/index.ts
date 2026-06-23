@@ -8,10 +8,5 @@ export type {
   PresignResponse,
   UploadContentType,
 } from './model/types';
-export {
-  googleLogin,
-  refreshTokens,
-  getMe,
-  registerProfile,
-  profileImageUpload
-} from './api/authApi';
+export { UserAPI } from './api/userApi';
+export type { GoogleLoginResponse } from './api/userApi';

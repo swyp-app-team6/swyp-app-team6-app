@@ -1,5 +1,5 @@
 import { API } from '@/shared/api';
-import { googleLogin } from '../authApi';
+import { UserAPI } from '../userApi';
 
 jest.mock('@/shared/api', () => ({
   API: {
@@ -8,7 +8,7 @@ jest.mock('@/shared/api', () => ({
   },
 }));
 
-describe('googleLogin', () => {
+describe('UserAPI.googleLogin', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -18,9 +18,13 @@ describe('googleLogin', () => {
       data: { access_token: 'access', refresh_token: 'refresh' },
     });
 
-    await googleLogin('test-id-token');
+    await UserAPI.googleLogin('test-id-token');
 
-    expect(API.post).toHaveBeenCalledWith('/auth/google/app', { idToken: 'test-id-token' });
+    expect(API.post).toHaveBeenCalledWith(
+      '/auth/google/app',
+      { idToken: 'test-id-token' },
+      { skipAuth: true },
+    );
   });
 
   it('응답으로 access_token과 refresh_token을 반환한다', async () => {
@@ -28,7 +32,7 @@ describe('googleLogin', () => {
       data: { access_token: 'my-access', refresh_token: 'my-refresh' },
     });
 
-    const result = await googleLogin('token');
+    const result = await UserAPI.googleLogin('token');
 
     expect(result.data).toEqual({ access_token: 'my-access', refresh_token: 'my-refresh' });
   });
