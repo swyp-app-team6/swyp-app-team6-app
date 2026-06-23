@@ -178,6 +178,7 @@ const useAuthStore = create<AuthState & AuthActions>()(
           state.accessToken = accessToken;
           state.refreshToken = refreshToken;
         });
+        await get().fetchMe();
       }
     },
   })),
