@@ -13,5 +13,5 @@ export {
   refreshTokens,
   getMe,
   registerProfile,
-  presignUpload,
+  profileImageUpload
 } from './api/authApi';

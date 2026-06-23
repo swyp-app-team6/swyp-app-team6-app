@@ -8,6 +8,8 @@ import type {
   UploadContentType,
 } from '../model/types';
 
+// TODO: 본격 api 나오면 분리
+
 /**
  * Google 로그인 API 응답
  * - access_token: 액세스 토큰 (snake_case)
@@ -22,6 +24,7 @@ export interface GoogleLoginResponse {
  * # googleLogin
  * ---
  * - 간단설명: 앱(Android/iOS) Google idToken을 검증하고 서비스 토큰을 반환
+ * - 구글로그인 성공후 전달받은 idToken 사용해 인증토큰 획득
  * ---
  * @param idToken Google에서 발급받은 idToken
  * ---
@@ -58,7 +61,7 @@ export const getMe = () =>
 /**
  * # registerProfile
  * ---
- * - 간단설명: 사용자 프로필을 등록
+ * - 간단설명: 회원가입 시 사용자 프로필 등록
  * - 제약사항: nickname 3~10자, bio/keyword/topic 0~20자, interests 1~5개
  * ---
  * @param data 프로필 등록 요청 데이터
@@ -77,17 +80,19 @@ export const registerProfile = (data: ProfileRegisterRequest) =>
   API.post<MyProfileResponse>('/profile/register', data);
 
 /**
- * # presignUpload
+ * # profileImageUpload
  * ---
- * - 간단설명: 파일 업로드를 위한 S3 Presigned URL을 발급 (10분간 유효)
- * - 제약사항: 발급된 URL로 PUT 방식으로 파일을 직접 업로드, imageKey는 프로필 생성 API에 사용
+ * - 간단설명: 프로필 이미지 업로드를 위한 presign uploadURL, imageKey 발급
+ * - 이미지 업로드 후 나온 url을 사용해 S3이미지업로드 수행
+ * - imageKey값은 추후 이미지 조회 링크 등 제작 용도로 사용됨
+ * TODO: 이미지 압축기능 필요
  * ---
- * @param contentType 업로드할 파일의 Content-Type (기본값: image/jpeg)
+ * @param contentType 업로드할 파일의 Content-Type, Available values : image/jpeg, image/png, image/webp, image/gif (기본값: image/jpeg)
  * ---
  * @example
  * const { uploadUrl, imageKey } = await presignUpload('image/png');
  */
-export const presignUpload = (contentType: UploadContentType = 'image/jpeg') =>
+export const profileImageUpload = (contentType: UploadContentType = 'image/jpeg') =>
   API.post<PresignResponse>('/api/uploads/presign', null, {
     params: { contentType },
   });
