@@ -1,21 +1,50 @@
 import React from 'react';
-import { View } from 'react-native';
-import { Header, Layout } from '@/shared/ui';
+import { Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { Button, Header, Layout } from '@/shared/ui';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
+import useAuthStore from '@/entities/user/model/authStore';
+import type { NavigationPropType } from '@/shared/types';
 
 /**
  * # MyPage
  * ---
- * - 간단설명: 마이페이지 화면
+ * - 간단설명: 회원정보 출력 및 회원탈퇴 진입을 제공하는 마이페이지 화면
+ * - 제약사항 및 특이사항:
+ *   - authStore의 user 정보를 출력
+ *   - 회원탈퇴 버튼 클릭 시 WithdrawalPage로 이동
  * ---
  */
 function MyPage() {
+  const navigation = useNavigation<NavigationPropType>();
+  const user = useAuthStore((state) => state.user);
+
   return (
     <>
       <Header title="마이페이지" />
       <Layout.Body styleClass={{ root: 'px-6 pt-10' }}>
-        <View />
+        <View className="gap-4">
+          <View className="gap-2">
+            <Text className="text-sm text-gray-500">이메일</Text>
+            <Text className="text-base text-gray-900">{user?.email ?? '-'}</Text>
+          </View>
+          <View className="gap-2">
+            <Text className="text-sm text-gray-500">역할</Text>
+            <Text className="text-base text-gray-900">{user?.role ?? '-'}</Text>
+          </View>
+          <View className="gap-2">
+            <Text className="text-sm text-gray-500">로그인 방식</Text>
+            <Text className="text-base text-gray-900">{user?.provider ?? '-'}</Text>
+          </View>
+        </View>
+        <View className="mt-8">
+          <Button
+            title="회원탈퇴"
+            variant="ghost"
+            onPress={() => navigation.navigate('withdrawal')}
+          />
+        </View>
       </Layout.Body>
     </>
   );
