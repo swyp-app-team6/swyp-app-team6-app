@@ -14,9 +14,6 @@ import * as Sentry from '@sentry/react-native';
 import Config from 'react-native-config';
 import setupInterceptors from './src/shared/api/setupInterceptors';
 
-// API interceptor 초기화
-setupInterceptors();
-
 // messaging().setBackgroundMessageHandler(async remoteMessage => {
 //   console.log('Background message:', remoteMessage);
 // });
