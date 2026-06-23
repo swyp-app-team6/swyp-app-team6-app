@@ -25,9 +25,9 @@ export default function StackRouter() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name='login' component={LoginPage} />
         <Stack.Screen name='register' component={RegisterPage} />
-        <Stack.Screen name='home' component={HomePage} />
-        <Stack.Screen name='profileCard' component={ProfileCardPage} />
-        <Stack.Screen name='mypage' component={MyPage} />
+        <Stack.Screen name='home' component={HomePage} options={{ animation: 'none' }} />
+        <Stack.Screen name='profileCard' component={ProfileCardPage} options={{ animation: 'none' }} />
+        <Stack.Screen name='mypage' component={MyPage} options={{ animation: 'none' }} />
       </Stack.Navigator>
     </NavigationContainer>
   )
