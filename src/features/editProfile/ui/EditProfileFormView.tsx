@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { View, Image } from 'react-native';
-import { launchImageLibrary } from 'react-native-image-picker';
 import { Button, Input } from '@/shared/ui';
 import { usePermissionStore } from '@/widgets/permissions';
+import { toast } from '@/shared/lib/toast';
+import { useEditProfileImagePicker } from '../lib/useEditProfileImagePicker';
+import useProfileImageUploadMutation from '../api/useProfileImageUploadMutation';
+
 interface Props {
   /** 저장 완료 시 호출 */
   onSave: () => void;
@@ -13,7 +16,7 @@ interface Props {
  * ---
  * - 간단설명: 닉네임 및 프로필 사진 수정 폼
  * - 제약사항 및 특이사항:
- *   - 현재 /users/me 응답에는 닉네임/사진이 없으므로 프로필 API 연동 시 확장 필요
+ *   - 이미지 선택 시 presigned URL 발급 (UserAPI.profileImageUpload)
  *   - 갤러리 권한은 usePermissionStore로 관리
  * ---
  * @param onSave 저장 완료 시 호출되는 콜백
@@ -22,34 +25,39 @@ interface Props {
  */
 export default function EditProfileFormView({ onSave }: Props) {
   const [nickname, setNickname] = useState('');
-  const [profileUri, setProfileUri] = useState<string | null>(null);
   const { galleryStatus, requestGalleryPermission } = usePermissionStore();
+  const { pickedImage, openGallery } = useEditProfileImagePicker();
+  const { mutate: uploadImage, isPending } = useProfileImageUploadMutation();
 
   const handleSelectImage = async () => {
     if (galleryStatus !== 'granted' && galleryStatus !== 'limited') {
       await requestGalleryPermission();
     }
-    const result = await launchImageLibrary({
-      mediaType: 'photo',
-      quality: 0.8,
-      maxWidth: 512,
-      maxHeight: 512,
-    });
-    if (!result.didCancel && result.assets?.[0]?.uri) {
-      setProfileUri(result.assets[0].uri);
-    }
+    openGallery();
   };
 
   const handleSave = () => {
-    // TODO: 프로필 등록/수정 API 연동 시 구현
-    onSave();
+    if (pickedImage) {
+      uploadImage(pickedImage.contentType, {
+        onSuccess: (presign) => {
+          // TODO: presign.uploadUrl로 S3 PUT 업로드 후 presign.imageKey를 프로필 수정 API에 전달
+          console.log('presign 발급 완료:', presign);
+          onSave();
+        },
+        onError: () => {
+          toast.error('이미지 업로드에 실패했습니다');
+        },
+      });
+    } else {
+      onSave();
+    }
   };
 
   return (
     <View className="gap-4">
-      {profileUri ? (
+      {pickedImage ? (
         <Image
-          source={{ uri: profileUri }}
+          source={{ uri: pickedImage.uri }}
           className="w-24 h-24 rounded-full self-center"
         />
       ) : null}
@@ -63,7 +71,11 @@ export default function EditProfileFormView({ onSave }: Props) {
         value={nickname}
         onChangeText={setNickname}
       />
-      <Button title="저장" onPress={handleSave} />
+      <Button
+        title={isPending ? '저장 중...' : '저장'}
+        onPress={handleSave}
+        disabled={isPending}
+      />
     </View>
   );
 }
