@@ -1,7 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react'
-import BootSplash from 'react-native-bootsplash';
 import LoginPage from '@/pages/login/LoginPage';
 import RegisterPage from '@/pages/register/RegisterPage';
 import HomePage from '@/pages/home/HomePage';
@@ -23,7 +22,7 @@ const Stack = createNativeStackNavigator<NavigatorType>();
  */
 export default function StackRouter() {
   return (
-    <NavigationContainer onReady={() => BootSplash.hide({ fade: true })}>
+    <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name='login' component={LoginPage} />
         <Stack.Screen name='register' component={RegisterPage} />
