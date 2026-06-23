@@ -3,7 +3,7 @@ import { RefreshControl, ScrollView } from 'react-native';
 
 interface Props {
   /** 새로고침 시 호출되는 비동기 함수 */
-  onRefetch: () => Promise<void>;
+  onRefetch: () => void;
   children: React.ReactNode;
 }
 
