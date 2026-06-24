@@ -29,6 +29,7 @@ export default function useGoogleLoginMutation() {
     mutationFn: async () => {
       GoogleSignin.configure({
         webClientId: Config.GOOGLE_WEB_CLIENT,
+        iosClientId: Config.GOOGLE_IOS_CLIENT_ID
       });
 
       await GoogleSignin.hasPlayServices();
