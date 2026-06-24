@@ -1,7 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react'
-import LoginPage from '@/pages/login/LoginPage';
 import RegisterPage from '@/pages/register/RegisterPage';
 import HomePage from '@/pages/home/HomePage';
 import ProfileCardPage from '@/pages/profileCard/ProfileCardPage';
@@ -24,11 +23,10 @@ export default function StackRouter() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name='login' component={LoginPage} />
-        <Stack.Screen name='register' component={RegisterPage} />
         <Stack.Screen name='home' component={HomePage} options={{ animation: 'none' }} />
         <Stack.Screen name='profileCard' component={ProfileCardPage} options={{ animation: 'none' }} />
         <Stack.Screen name='mypage' component={MyPage} options={{ animation: 'none' }} />
+        <Stack.Screen name='register' component={RegisterPage} />
         <Stack.Screen name='withdrawal' component={WithdrawalPage} />
       </Stack.Navigator>
     </NavigationContainer>
