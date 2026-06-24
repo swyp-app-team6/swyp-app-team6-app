@@ -35,14 +35,16 @@ function App() {
   useEffect(() => {
     (async () => {
       try {
-        const { initTokenFromStorage } = useAuthStore.getState();
+        const { initTokenFromStorage, fetchUserInfo } = useAuthStore.getState();
         const { checkCameraPermission, checkGalleryPermission } = usePermissionStore.getState();
 
         await initTokenFromStorage();
         await checkCameraPermission();
         await checkGalleryPermission();
-      } catch {
+        await fetchUserInfo();
+      } catch (e) {
         // TODO: 만약 초기화 에러시 행위 정책 정리해 처리 필요(현재는 무조건 넘어감)
+        console.error(e);
       } finally {
         setIsReady(true);
         BootSplash.hide({ fade: true });
