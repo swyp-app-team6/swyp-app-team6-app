@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Text, View } from 'react-native';
 import useAuthStore from '@/entities/user/model/authStore';
 
@@ -14,11 +14,6 @@ import useAuthStore from '@/entities/user/model/authStore';
  */
 export default function ProfileCard() {
   const user = useAuthStore((s) => s.user);
-  const fetchMe = useAuthStore((s) => s.fetchMe);
-
-  useEffect(() => {
-    fetchMe();
-  }, [fetchMe]);
 
   return (
     <View className="items-center gap-4 p-6 bg-white rounded-2xl w-full">

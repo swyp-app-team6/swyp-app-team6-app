@@ -61,7 +61,7 @@ export class UserAPI {
    * ---
    */
   static getMe() {
-    return API.get<User>('/users/me');
+    return API.get<User>('/user');
   }
 
   /**
