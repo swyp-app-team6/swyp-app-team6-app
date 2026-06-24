@@ -22,8 +22,16 @@ setup_permissions([
   'PhotoLibrary',
 ])
 
+project 'swyprotationdatingapp', {
+  'Debug' => :debug,
+  'Release' => :release,
+}
+
 target 'swyprotationdatingapp' do
   config = use_native_modules!
+
+  # react-native-config: .env 파일을 iOS 빌드에서 읽기 위한 설정
+  pod 'react-native-config/Extension', :path => '../node_modules/react-native-config'
 
   use_react_native!(
     :path => config[:reactNativePath],
