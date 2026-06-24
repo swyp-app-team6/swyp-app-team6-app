@@ -24,7 +24,7 @@ import { Alert } from 'react-native';
  * mutate();
  */
 export default function useGoogleLoginMutation() {
-  const { setTokens, fetchMe } = useAuthStore();
+  const { setTokens, fetchUserInfo } = useAuthStore();
 
   return useMutation<GoogleLoginResponse | null, Error, void>({
     mutationFn: async () => {
@@ -51,7 +51,7 @@ export default function useGoogleLoginMutation() {
       if (!data) return;
       const { access_token, refresh_token } = data;
       await setTokens({ accessToken: access_token, refreshToken: refresh_token });
-      await fetchMe();
+      await fetchUserInfo();
     },
     onError: (error) => {
       console.error(error);

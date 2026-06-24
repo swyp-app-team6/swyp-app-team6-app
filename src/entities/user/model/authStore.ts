@@ -20,18 +20,18 @@ interface AuthState {
  * 인증 액션
  * - setTokens: 토큰 저장 (메모리 + EncryptedStorage)
  * - setUser: 사용자 정보 저장
- * - fetchMe: /users/me API를 호출하여 사용자 정보를 조회·저장
+ * - fetchUserInfo: /users/me API를 호출하여 사용자 정보를 조회·저장
  * - refreshAccessToken: 토큰 갱신 큐를 관리하며 새 accessToken을 반환
  * - clear: 인증 상태 초기화 및 저장된 토큰 삭제
- * - hydrate: 앱 시작 시 EncryptedStorage에서 토큰 복원 + 유저 정보 조회
+ * - initTokenFromStorage: 앱 시작 시 EncryptedStorage에서 토큰 복원 + 유저 정보 조회
  */
 interface AuthActions {
   setTokens: (tokens: AuthTokens) => void;
   setUser: (user: User) => void;
-  fetchMe: () => Promise<void>;
+  fetchUserInfo: () => Promise<void>;
   refreshAccessToken: () => Promise<string>;
   clear: () => void;
-  hydrate: () => Promise<void>;
+  initTokenFromStorage: () => Promise<boolean>;
 }
 
 /** 토큰 갱신 진행 중 플래그 */
@@ -63,12 +63,12 @@ function processQueue(error: unknown, token: string | null = null) {
  * - 간단설명: 인증 토큰 및 사용자 정보를 관리하는 전역 스토어
  * - 제약사항 및 특이사항:
  *   - 토큰은 EncryptedStorage에 암호화 저장됨
- *   - 앱 시작 시 hydrate() 호출 필요
- *   - fetchMe()는 토큰 설정 후 호출하여 유저 정보 초기화
+ *   - 앱 시작 시 initTokenFromStorage() 호출 필요
+ *   - fetchUserInfo()는 토큰 설정 후 호출하여 유저 정보 초기화
  *   - refreshAccessToken()은 동시 호출 시 큐로 관리하여 단일 갱신만 수행
  * ---
  * @example
- * const { accessToken, user, setTokens, fetchMe, hydrate } = useAuthStore();
+ * const { accessToken, user, setTokens, fetchUserInfo, initTokenFromStorage } = useAuthStore();
  */
 const useAuthStore = create<AuthState & AuthActions>()(
   immer((set, get) => ({
@@ -102,14 +102,14 @@ const useAuthStore = create<AuthState & AuthActions>()(
     /**
      * /users/me API를 호출하여 사용자 정보를 조회하고 스토어에 저장
      */
-    fetchMe: async () => {
+    fetchUserInfo: async () => {
       try {
         const { data } = await UserAPI.getMe();
         set((state) => {
           state.user = data;
         });
       } catch (error) {
-        console.error('fetchMe 실패:', error);
+        console.error('fetchUserInfo 실패:', error);
       }
     },
 
@@ -169,8 +169,9 @@ const useAuthStore = create<AuthState & AuthActions>()(
 
     /**
      * 앱 시작 시 EncryptedStorage에서 토큰을 읽어 메모리에 복원하고 유저 정보 조회
+     * @returns storage에 두 토큰 들어있는지 여부, 하나라도 없으면 false
      */
-    hydrate: async () => {
+    initTokenFromStorage: async () => {
       const accessToken = await EncryptedStorage.getItem('accessToken');
       const refreshToken = await EncryptedStorage.getItem('refreshToken');
       if (accessToken && refreshToken) {
@@ -178,7 +179,11 @@ const useAuthStore = create<AuthState & AuthActions>()(
           state.accessToken = accessToken;
           state.refreshToken = refreshToken;
         });
-        await get().fetchMe();
+      }
+      if(!accessToken || !refreshToken){
+        return false;
+      }else{
+        return true;
       }
     },
   })),
