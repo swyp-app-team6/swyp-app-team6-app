@@ -1,27 +1,44 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Alert, RefreshControl, ScrollView, Text, View } from 'react-native';
 import * as Sentry from '@sentry/react-native';
 import {
+  Accordion,
+  AlertModal,
   Anim,
+  Avatar,
+  BottomCTA,
+  BottomSheet,
   Button,
   Card,
   Checkbox,
+  ChipSelect,
   GalleryIcon,
   Header,
   Input,
   Layout,
+  MenuList,
   Modal,
   PlaygroundIcon,
   Popover,
   ProfileIcon,
+  QRIcon,
+  LoginIcon,
+  HomeIcon,
+  CardIcon,
+  MyPageIcon,
   SearchFallbackView,
   SearchIcon,
+  SelectCard,
   Selectbox,
   Skeleton,
+  StepView,
   SwipeableCard,
+  Tab,
   TextField,
+  Textbox,
   Toast,
   TodoIcon,
+  type BottomSheetHandle,
 } from '@/shared/ui';
 
 // ────────────────────────────────────────────────────────────────────────────────
@@ -91,12 +108,35 @@ export default function ComponentPlaygroundPage() {
     { id: '3', title: '세 번째 카드', description: '삭제 버튼을 탭하면 사라집니다.' },
   ]);
 
+  // StepView 상태
+  const [step, setStep] = useState(0);
+
+  // ChipSelect 상태
+  const [chipSelected, setChipSelected] = useState<string[]>([]);
+
+  // SelectCard 상태
+  const [selectedCard, setSelectedCard] = useState('');
+
+  // BottomSheet ref
+  const bottomSheetRef = useRef<BottomSheetHandle>(null);
+
+  // AlertModal 상태
+  const [alertVisible, setAlertVisible] = useState(false);
+
+  // Textbox 상태
+  const [textboxValue, setTextboxValue] = useState('');
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setChecked(false);
     setModalVisible(false);
     setSelectValue(undefined);
     setAnimType('in');
+    setStep(0);
+    setChipSelected([]);
+    setSelectedCard('');
+    setAlertVisible(false);
+    setTextboxValue('');
     setCards([
       { id: '1', title: '첫 번째 카드', description: '오른쪽으로 스와이프해서 삭제하세요.' },
       { id: '2', title: '두 번째 카드', description: '카드 컴포넌트 예시입니다.' },
@@ -162,6 +202,25 @@ export default function ComponentPlaygroundPage() {
           />
         </Section>
 
+        {/* ── Textbox ────────────────────────────────────────────────────────── */}
+        <Section title="Textbox (멀티라인)">
+          <View className="gap-3">
+            <Textbox
+              label="자기소개"
+              value={textboxValue}
+              onChangeText={setTextboxValue}
+              maxLength={200}
+              placeholder="자기소개를 입력해주세요"
+            />
+            <Textbox
+              label="에러 상태"
+              placeholder="에러 예시"
+              error="200자 이내로 입력해주세요"
+              maxLength={200}
+            />
+          </View>
+        </Section>
+
         {/* ── Layout ─────────────────────────────────────────────────────────── */}
         <Section title="Layout (Header / Body / Footer)">
           <Layout styleClass={{ root: 'h-40 rounded-xl overflow-hidden border border-gray-200' }}>
@@ -219,6 +278,212 @@ export default function ComponentPlaygroundPage() {
               <Button title="닫기" variant="ghost" onPress={() => setModalVisible(false)} />
             </View>
           </Modal>
+        </Section>
+
+        {/* ── AlertModal ─────────────────────────────────────────────────────── */}
+        <Section title="AlertModal">
+          <Button title="알림 모달 열기" variant="secondary" onPress={() => setAlertVisible(true)} />
+          <AlertModal
+            visible={alertVisible}
+            title="삭제 확인"
+            message="정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+            confirmText="삭제"
+            cancelText="취소"
+            onConfirm={() => {
+              setAlertVisible(false);
+              Alert.alert('삭제 완료', '항목이 삭제되었습니다.');
+            }}
+            onCancel={() => setAlertVisible(false)}
+          />
+        </Section>
+
+        {/* ── BottomSheet ────────────────────────────────────────────────────── */}
+        <Section title="BottomSheet">
+          <Button
+            title="바텀시트 열기"
+            variant="secondary"
+            onPress={() => bottomSheetRef.current?.open()}
+          />
+          <BottomSheet ref={bottomSheetRef} title="옵션 선택" onClose={() => {}}>
+            <View className="gap-3 pb-4">
+              <Text className="text-base text-gray-700">바텀시트 컨텐츠 영역입니다.</Text>
+              <Button
+                title="확인"
+                variant="primary"
+                onPress={() => bottomSheetRef.current?.close()}
+              />
+            </View>
+          </BottomSheet>
+        </Section>
+
+        {/* ── StepView ───────────────────────────────────────────────────────── */}
+        <Section title="StepView (슬라이드)">
+          <View className="flex-row gap-2 mb-3">
+            <Button
+              title="이전"
+              variant="secondary"
+              onPress={() => setStep(s => Math.max(0, s - 1))}
+              disabled={step === 0}
+            />
+            <Button
+              title="다음"
+              variant="secondary"
+              onPress={() => setStep(s => Math.min(2, s + 1))}
+              disabled={step === 2}
+            />
+            <Text className="self-center text-sm text-gray-500">현재: {step + 1}/3</Text>
+          </View>
+          <View className="h-24 rounded-xl overflow-hidden border border-gray-200">
+            <StepView currentStep={step}>
+              <StepView.Step>
+                <View className="flex-1 items-center justify-center bg-blue-50">
+                  <Text className="text-blue-800 font-semibold">1단계: 정보 입력</Text>
+                </View>
+              </StepView.Step>
+              <StepView.Step>
+                <View className="flex-1 items-center justify-center bg-green-50">
+                  <Text className="text-green-800 font-semibold">2단계: 프로필 설정</Text>
+                </View>
+              </StepView.Step>
+              <StepView.Step>
+                <View className="flex-1 items-center justify-center bg-purple-50">
+                  <Text className="text-purple-800 font-semibold">3단계: 완료</Text>
+                </View>
+              </StepView.Step>
+            </StepView>
+          </View>
+        </Section>
+
+        {/* ── ChipSelect ─────────────────────────────────────────────────────── */}
+        <Section title="ChipSelect (최대 3개)">
+          <ChipSelect
+            options={[
+              { label: '운동', value: 'exercise' },
+              { label: '독서', value: 'reading' },
+              { label: '음악', value: 'music' },
+              { label: '여행', value: 'travel' },
+              { label: '요리', value: 'cooking' },
+            ]}
+            selected={chipSelected}
+            onSelect={setChipSelected}
+            max={3}
+          />
+          <Text className="mt-2 text-xs text-gray-400">
+            선택: {chipSelected.length > 0 ? chipSelected.join(', ') : '없음'}
+          </Text>
+        </Section>
+
+        {/* ── SelectCard ─────────────────────────────────────────────────────── */}
+        <Section title="SelectCard">
+          <View className="gap-3">
+            {['A', 'B', 'C'].map(option => (
+              <SelectCard
+                key={option}
+                selected={selectedCard === option}
+                onPress={() => setSelectedCard(option)}
+              >
+                <Text className="font-semibold text-gray-900">옵션 {option}</Text>
+                <Text className="text-sm text-gray-500 mt-1">
+                  옵션 {option}에 대한 설명입니다.
+                </Text>
+              </SelectCard>
+            ))}
+          </View>
+        </Section>
+
+        {/* ── Avatar ─────────────────────────────────────────────────────────── */}
+        <Section title="Avatar">
+          <View className="flex-row items-center gap-4">
+            <View className="items-center gap-1">
+              <Avatar size={56} name="홍길동" />
+              <Text className="text-xs text-gray-500">이니셜</Text>
+            </View>
+            <View className="items-center gap-1">
+              <Avatar size={56} name="김철수" />
+              <Text className="text-xs text-gray-500">이니셜</Text>
+            </View>
+            <View className="items-center gap-1">
+              <Avatar size={56} />
+              <Text className="text-xs text-gray-500">기본</Text>
+            </View>
+            <View className="items-center gap-1">
+              <Avatar size={40} name="A" />
+              <Text className="text-xs text-gray-500">작은 사이즈</Text>
+            </View>
+          </View>
+        </Section>
+
+        {/* ── Tab ────────────────────────────────────────────────────────────── */}
+        <Section title="Tab">
+          <View className="rounded-xl overflow-hidden border border-gray-200 bg-white">
+            <Tab.Root defaultValue="tab1">
+              <Tab.List>
+                <Tab.Trigger value="tab1" label="프로필" />
+                <Tab.Trigger value="tab2" label="활동" />
+                <Tab.Trigger value="tab3" label="설정" />
+              </Tab.List>
+              <Tab.Content value="tab1">
+                <View className="p-4">
+                  <Text className="text-gray-700">프로필 탭 내용입니다.</Text>
+                </View>
+              </Tab.Content>
+              <Tab.Content value="tab2">
+                <View className="p-4">
+                  <Text className="text-gray-700">활동 탭 내용입니다.</Text>
+                </View>
+              </Tab.Content>
+              <Tab.Content value="tab3">
+                <View className="p-4">
+                  <Text className="text-gray-700">설정 탭 내용입니다.</Text>
+                </View>
+              </Tab.Content>
+            </Tab.Root>
+          </View>
+        </Section>
+
+        {/* ── MenuList ───────────────────────────────────────────────────────── */}
+        <Section title="MenuList">
+          <MenuList.Section title="계정">
+            <MenuList.Item label="프로필 수정" onPress={() => {}} right={<Text className="text-gray-400">›</Text>} />
+            <MenuList.Item label="비밀번호 변경" onPress={() => {}} right={<Text className="text-gray-400">›</Text>} />
+            <MenuList.Item label="알림 설정" onPress={() => {}} right={<Text className="text-gray-400">›</Text>} showDivider={false} />
+          </MenuList.Section>
+          <MenuList.Section title="앱 정보">
+            <MenuList.Item label="버전" right={<Text className="text-xs text-gray-400">1.0.0</Text>} />
+            <MenuList.Item label="이용약관" onPress={() => {}} right={<Text className="text-gray-400">›</Text>} showDivider={false} />
+          </MenuList.Section>
+        </Section>
+
+        {/* ── Accordion ──────────────────────────────────────────────────────── */}
+        <Section title="Accordion">
+          <View className="rounded-xl overflow-hidden border border-gray-200 bg-white">
+            <Accordion.Root>
+              <Accordion.Item itemKey="faq1" title="자주 묻는 질문 1">
+                <Text className="text-gray-600">
+                  답변 내용 1입니다. 아코디언 컴포넌트는 접기/펼치기 UI를 제공합니다.
+                </Text>
+              </Accordion.Item>
+              <Accordion.Item itemKey="faq2" title="자주 묻는 질문 2">
+                <Text className="text-gray-600">
+                  답변 내용 2입니다. multiple 옵션으로 동시에 여러 항목을 열 수 있습니다.
+                </Text>
+              </Accordion.Item>
+              <Accordion.Item itemKey="faq3" title="자주 묻는 질문 3">
+                <Text className="text-gray-600">
+                  답변 내용 3입니다. 기본적으로 하나의 항목만 열립니다.
+                </Text>
+              </Accordion.Item>
+            </Accordion.Root>
+          </View>
+        </Section>
+
+        {/* ── BottomCTA ──────────────────────────────────────────────────────── */}
+        <Section title="BottomCTA (미리보기)">
+          <View className="rounded-xl overflow-hidden border border-gray-200">
+            <BottomCTA>
+              <Button title="다음 단계로" variant="primary" onPress={() => {}} />
+            </BottomCTA>
+          </View>
         </Section>
 
         {/* ── Skeleton ───────────────────────────────────────────────────────── */}
@@ -323,6 +588,11 @@ export default function ComponentPlaygroundPage() {
               { label: 'GalleryIcon', node: <GalleryIcon size={28} color="#374151" /> },
               { label: 'PlaygroundIcon', node: <PlaygroundIcon size={28} color="#374151" /> },
               { label: 'SearchIcon', node: <SearchIcon size={28} color="#374151" /> },
+              { label: 'QRIcon', node: <QRIcon size={28} color="#374151" /> },
+              { label: 'LoginIcon', node: <LoginIcon size={28} color="#374151" /> },
+              { label: 'HomeIcon', node: <HomeIcon size={28} color="#374151" /> },
+              { label: 'CardIcon', node: <CardIcon size={28} color="#374151" /> },
+              { label: 'MyPageIcon', node: <MyPageIcon size={28} color="#374151" /> },
             ].map(({ label, node }) => (
               <View key={label} className="items-center gap-1.5">
                 {node}
