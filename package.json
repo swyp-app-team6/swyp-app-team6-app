@@ -4,8 +4,10 @@
   "private": true,
   "scripts": {
     "android:local": "ENVFILE=.env.development npx react-native run-android",
+    "android:local:mock": "ENVFILE=.env.mock npx react-native run-android",
     "android:prod": "ENVFILE=.env.production npx react-native run-android",
     "ios:local": "ENVFILE=.env.development react-native run-ios --simulator \"iPhone 17 Pro\"",
+    "ios:local:mock": "ENVFILE=.env.mock react-native run-ios --simulator \"iPhone 17 Pro\"",
     "ios:prod": "ENVFILE=.env.production react-native run-ios --simulator \"iPhone 17 Pro\"",
     "lint": "eslint .",
     "start": "react-native start",

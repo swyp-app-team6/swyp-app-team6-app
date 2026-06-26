@@ -7,4 +7,10 @@ declare module 'react-native-config' {
    * dev: 개발 환경
    */
   export const PROJECT_ENV: 'prod' | 'local' | 'dev';
+
+  /**
+   * MSW mock 서버 활성화 플래그
+   * - 'true': mock 서버 실행
+   */
+  export const MSW_ENABLED: string | undefined;
 }
