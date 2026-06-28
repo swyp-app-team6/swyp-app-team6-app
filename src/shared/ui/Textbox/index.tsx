@@ -60,7 +60,7 @@ export default function Textbox({
   return (
     <View className={cn(styleClass?.root)}>
       {label && (
-        <Text className={cn('mb-1.5 text-sm font-medium text-gray-700', styleClass?.label)}>
+        <Text className={cn('mb-1.5 text-sm font-medium text-text-gray3', styleClass?.label)}>
           {label}
         </Text>
       )}
@@ -69,25 +69,25 @@ export default function Textbox({
         textAlignVertical="top"
         maxLength={maxLength}
         value={value}
-        placeholderTextColor="#9ca3af"
+        placeholderTextColor="#BFBFBF"
         className={cn(
-          'rounded-lg border p-3 text-base text-gray-900',
-          error ? 'border-red-500' : 'border-gray-300',
+          'rounded-xl border p-4 text-base text-text-black',
+          error ? 'border-red-500' : 'border-text-gray6',
           styleClass?.input,
         )}
         style={{ minHeight }}
         onChangeText={handleChangeText}
         {...rest}
       />
-      <View className="flex-row justify-between mt-1">
+      <View className="flex-row justify-between mt-1.5">
         {error ? (
           <Text className="text-xs text-red-600">{error}</Text>
         ) : (
           <View />
         )}
         {maxLength !== undefined && (
-          <Text className="text-xs text-gray-400">
-            {length}/{maxLength}
+          <Text className="text-xs text-text-gray4">
+            {length} / {maxLength}
           </Text>
         )}
       </View>

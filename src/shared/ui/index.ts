@@ -12,7 +12,6 @@ export { default as Header } from './Header';
 export { default as Card } from './Card';
 export { default as SwipeableCard } from './SwipeableCard';
 export { default as BottomNav, type BottomNavItem } from './BottomNav';
-export { default as Popover } from './Popover';
 export { default as Selectbox } from './Selectbox';
 export { default as StepView } from './StepView';
 export { default as BottomCTA } from './BottomCTA';

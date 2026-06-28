@@ -6,12 +6,14 @@ import {
   AlertModal,
   Anim,
   Avatar,
+  Badge,
   BottomCTA,
   Button,
   BottomSheet,
   Card,
   Checkbox,
   ChipSelect,
+  ChooseButton,
   GalleryIcon,
   Header,
   Input,
@@ -19,8 +21,8 @@ import {
   MenuList,
   Modal,
   PlaygroundIcon,
-  Popover,
   ProfileIcon,
+  ProgressBar,
   QRIcon,
   LoginIcon,
   HomeIcon,
@@ -31,11 +33,14 @@ import {
   SelectCard,
   Selectbox,
   Skeleton,
+  SocialLoginButton,
   StepView,
   SwipeableCard,
   Tab,
+  Tag,
   TextField,
   Textbox,
+  TMICard,
   Toast,
   TodoIcon,
   type BottomSheetHandle,
@@ -126,6 +131,15 @@ export default function ComponentPlaygroundPage() {
   // Textbox 상태
   const [textboxValue, setTextboxValue] = useState('');
 
+  // ProgressBar 상태
+  const [progress, setProgress] = useState(40);
+
+  // ChooseButton 상태
+  const [chooseValue, setChooseValue] = useState('');
+
+  // TMICard 상태
+  const [selectedTMI, setSelectedTMI] = useState('');
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setChecked(false);
@@ -137,6 +151,9 @@ export default function ComponentPlaygroundPage() {
     setSelectedCard('');
     setAlertVisible(false);
     setTextboxValue('');
+    setProgress(40);
+    setChooseValue('');
+    setSelectedTMI('');
     setCards([
       { id: '1', title: '첫 번째 카드', description: '오른쪽으로 스와이프해서 삭제하세요.' },
       { id: '2', title: '두 번째 카드', description: '카드 컴포넌트 예시입니다.' },
@@ -150,7 +167,7 @@ export default function ComponentPlaygroundPage() {
       <Layout>
         <Header title="Components" showBack />
         <ScrollView
-          className="flex-1 bg-gray-50"
+          className="flex-1 bg-white"
           contentContainerClassName="p-5 pb-20"
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         >
@@ -243,13 +260,8 @@ export default function ComponentPlaygroundPage() {
         <Section title="Input (prefix / suffix)">
           <Input
             placeholder="검색어 입력 후 Enter"
-            prefix={<SearchIcon size={18} color="#9ca3af" />}
-            suffix={<Text className="text-blue-500 text-xs">검색</Text>}
+            prefix={<SearchIcon size={18} color="#BFBFBF" />}
             onEnter={() => {}}
-            styleClass={{
-              root: 'rounded-lg border border-gray-300 bg-white px-2',
-              input: 'py-2 text-sm text-gray-900',
-            }}
           />
         </Section>
 
@@ -272,21 +284,6 @@ export default function ComponentPlaygroundPage() {
           </View>
         </Section>
 
-        {/* ── Layout ─────────────────────────────────────────────────────────── */}
-        <Section title="Layout (Header / Body / Footer)">
-          <Layout styleClass={{ root: 'h-40 rounded-xl overflow-hidden border border-gray-200' }}>
-            <Layout.Header styleClass={{ root: 'bg-blue-500 px-3 py-2' }}>
-              <Text className="font-semibold text-white">Header</Text>
-            </Layout.Header>
-            <Layout.Body styleClass={{ root: 'bg-white px-3 py-2' }}>
-              <Text className="text-gray-700">Body (flex-1)</Text>
-            </Layout.Body>
-            <Layout.Footer styleClass={{ root: 'bg-gray-100 px-3 py-2' }}>
-              <Text className="text-xs text-gray-500">Footer</Text>
-            </Layout.Footer>
-          </Layout>
-        </Section>
-
         {/* ── Selectbox ──────────────────────────────────────────────────────── */}
         <Section title="Selectbox">
           <Selectbox
@@ -299,21 +296,6 @@ export default function ComponentPlaygroundPage() {
               { label: '체리', value: 'cherry' },
             ]}
           />
-        </Section>
-
-        {/* ── Popover ────────────────────────────────────────────────────────── */}
-        <Section title="Popover">
-          <Popover.Root>
-            <Popover.Trigger>
-              <Button title="팝오버 열기" variant="secondary" />
-            </Popover.Trigger>
-            <Popover.Content styleClass={{ content: 'bg-white' }}>
-              <Text className="mb-2 font-semibold text-gray-900">팝오버 제목</Text>
-              <Text className="text-sm text-gray-600">
-                배경을 탭하면 닫힙니다.
-              </Text>
-            </Popover.Content>
-          </Popover.Root>
         </Section>
 
         {/* ── Modal ──────────────────────────────────────────────────────────── */}
@@ -606,6 +588,83 @@ export default function ComponentPlaygroundPage() {
             {cards.length === 0 && (
               <Text className="text-center text-gray-400 text-sm py-4">모든 카드가 삭제되었습니다.</Text>
             )}
+          </View>
+        </Section>
+
+        {/* ── ProgressBar ──────────────────────────────────────────────────── */}
+        <Section title="ProgressBar">
+          <View className="gap-4">
+            <ProgressBar value={progress} />
+            <View className="flex-row gap-2">
+              <Button title="0%" variant="secondary" onPress={() => setProgress(0)} />
+              <Button title="50%" variant="secondary" onPress={() => setProgress(50)} />
+              <Button title="100%" variant="secondary" onPress={() => setProgress(100)} />
+            </View>
+            <Text className="text-xs text-text-gray4">Steps (5단계)</Text>
+            <ProgressBar value={progress} steps={5} />
+          </View>
+        </Section>
+
+        {/* ── Tag ────────────────────────────────────────────────────────────── */}
+        <Section title="Tag">
+          <View className="flex-row flex-wrap gap-2">
+            <Tag label="Q1" />
+            <Tag label="연애" variant="primary" />
+            <Tag label="성격" variant="secondary" />
+          </View>
+        </Section>
+
+        {/* ── Badge ──────────────────────────────────────────────────────────── */}
+        <Section title="Badge">
+          <View className="flex-row flex-wrap gap-2">
+            <Badge level="star" />
+            <Badge level="galaxy" />
+            <Badge level="solar" />
+            <Badge level="luna" />
+          </View>
+        </Section>
+
+        {/* ── TMICard ────────────────────────────────────────────────────────── */}
+        <Section title="TMICard">
+          <View className="gap-3">
+            <TMICard
+              tag="Q1"
+              question="나는 연애할 때 이런 모습이다"
+              selected={selectedTMI === '1'}
+              onPress={() => setSelectedTMI('1')}
+            />
+            <TMICard
+              tag="Q2"
+              question="내가 가장 자주 듣는 말은?"
+              answer="너는 진짜 착한 것 같아!"
+              selected={selectedTMI === '2'}
+              onPress={() => setSelectedTMI('2')}
+            />
+          </View>
+        </Section>
+
+        {/* ── ChooseButton ───────────────────────────────────────────────────── */}
+        <Section title="ChooseButton">
+          <View className="gap-2">
+            <ChooseButton
+              label="적극적으로 다가가는 편"
+              selected={chooseValue === 'A'}
+              onPress={() => setChooseValue('A')}
+            />
+            <ChooseButton
+              label="자연스럽게 친해지는 편"
+              selected={chooseValue === 'B'}
+              onPress={() => setChooseValue('B')}
+            />
+          </View>
+        </Section>
+
+        {/* ── SocialLoginButton ──────────────────────────────────────────────── */}
+        <Section title="SocialLoginButton">
+          <View className="gap-2">
+            <SocialLoginButton provider="kakao" onPress={() => {}} />
+            <SocialLoginButton provider="google" onPress={() => {}} />
+            <SocialLoginButton provider="apple" onPress={() => {}} />
           </View>
         </Section>
 
