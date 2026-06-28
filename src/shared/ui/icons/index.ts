@@ -8,4 +8,7 @@ export { default as LoginIcon } from './LoginIcon';
 export { default as HomeIcon } from './HomeIcon';
 export { default as CardIcon } from './CardIcon';
 export { default as MyPageIcon } from './MyPageIcon';
+export { default as KakaoIcon } from './KakaoIcon';
+export { default as GoogleIcon } from './GoogleIcon';
+export { default as AppleIcon } from './AppleIcon';
 export type { IconProps } from './types';

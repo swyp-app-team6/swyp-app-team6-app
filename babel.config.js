@@ -5,6 +5,7 @@ module.exports = {
       root: ['./src'],
       alias: { '@': './src' },
     }],
+    '@babel/plugin-transform-class-static-block',
     'react-native-reanimated/plugin',
   ]
 };

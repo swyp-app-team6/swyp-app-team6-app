@@ -1,7 +1,7 @@
 import React from "react";
 import { ActivityIndicator, Pressable, Text, type PressableProps } from "react-native";
 
-/** 버튼 스타일 변형. primary(파란 배경) | secondary(테두리) | ghost(투명) */
+/** 버튼 스타일 변형. primary(보라 배경) | secondary(테두리) | ghost(투명) */
 export type ButtonVariant = "primary" | "secondary" | "ghost";
 
 /**
@@ -23,18 +23,24 @@ export type ButtonProps = Omit<PressableProps, "children"> & {
   loading?: boolean;
 };
 
-const variantClass: Record<ButtonVariant, { pressable: string; text: string }> = {
+const variantClass: Record<ButtonVariant, { pressable: string; text: string; disabledPressable: string; disabledText: string }> = {
   primary: {
-    pressable: "rounded-lg bg-blue-600 px-4 py-2 active:opacity-90",
-    text: "text-center font-semibold text-white",
+    pressable: "h-14 rounded-xl bg-primary items-center justify-center active:opacity-90",
+    text: "text-center text-base font-bold text-white",
+    disabledPressable: "h-14 rounded-xl bg-text-gray6 items-center justify-center",
+    disabledText: "text-center text-base font-bold text-text-gray4",
   },
   secondary: {
-    pressable: "rounded-lg border border-gray-300 bg-white px-4 py-2 active:bg-gray-50",
-    text: "text-center font-semibold text-gray-900",
+    pressable: "h-14 rounded-xl border border-text-gray6 bg-white items-center justify-center active:bg-gray-50",
+    text: "text-center text-base font-bold text-text-black",
+    disabledPressable: "h-14 rounded-xl bg-text-gray6 items-center justify-center",
+    disabledText: "text-center text-base font-bold text-text-gray4",
   },
   ghost: {
-    pressable: "rounded-lg px-3 py-2 active:bg-gray-100",
-    text: "text-center font-medium text-blue-600",
+    pressable: "rounded-xl px-3 py-2 active:bg-gray-100",
+    text: "text-center font-medium text-primary",
+    disabledPressable: "rounded-xl px-3 py-2",
+    disabledText: "text-center font-medium text-text-gray4",
   },
 };
 
@@ -53,13 +59,13 @@ export function Button({
     <Pressable
       accessibilityRole="button"
       disabled={isDisabled}
-      className={`${v.pressable} ${isDisabled ? "opacity-50" : ""} ${className ?? ""}`}
+      className={`${isDisabled ? v.disabledPressable : v.pressable} ${className ?? ""}`}
       {...rest}
     >
       {loading ? (
-        <ActivityIndicator color={variant === "primary" ? "#fff" : "#2563eb"} />
+        <ActivityIndicator color={variant === "primary" ? "#fff" : "#8C39FB"} />
       ) : (
-        <Text className={v.text}>{title}</Text>
+        <Text className={isDisabled ? v.disabledText : v.text}>{title}</Text>
       )}
     </Pressable>
   );

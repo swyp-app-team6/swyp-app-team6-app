@@ -17,7 +17,7 @@ interface StyleClass {
  * <Input
  *   placeholder="검색어"
  *   prefix={<Text>🔍</Text>}
- *   suffix={<Text className="text-blue-500">검색</Text>}
+ *   suffix={<Text className="text-primary">검색</Text>}
  *   onEnter={handleSearch}
  *   styleClass={{ root: 'border border-gray-300 rounded-lg px-2' }}
  * />
@@ -35,17 +35,18 @@ interface InputProps extends Omit<TextInputProps, 'onSubmitEditing'> {
 
 function Input({ prefix, suffix, onEnter, styleClass, ...props }: InputProps) {
   return (
-    <View className={cn('relative flex-row items-center', styleClass?.root)}>
+    <View className={cn('relative h-14 flex-row items-center rounded-xl border border-text-gray6 bg-white px-4', styleClass?.root)}>
       {prefix && (
         <View
-          className={cn('absolute left-2 z-10 items-center justify-center', styleClass?.prefix)}
+          className={cn('mr-2 items-center justify-center', styleClass?.prefix)}
           pointerEvents="none"
         >
           {prefix}
         </View>
       )}
       <TextInput
-        className={cn('flex-1', styleClass?.input)}
+        placeholderTextColor="#BFBFBF"
+        className={cn('flex-1 text-base text-text-black', styleClass?.input)}
         onSubmitEditing={onEnter ? () => onEnter() : undefined}
         returnKeyType={onEnter ? 'done' : undefined}
         {...props}
@@ -53,7 +54,7 @@ function Input({ prefix, suffix, onEnter, styleClass, ...props }: InputProps) {
       {suffix && (
         <View
           pointerEvents="auto"
-          className={cn('absolute right-2 z-10 items-center justify-center', styleClass?.suffix)}
+          className={cn('ml-2 items-center justify-center', styleClass?.suffix)}
         >
           {suffix}
         </View>

@@ -13,6 +13,7 @@ import { name as appName } from './app.json';
 import * as Sentry from '@sentry/react-native';
 import Config from 'react-native-config';
 import setupInterceptors from './src/shared/api/setupInterceptors';
+import { startMsw } from './src/shared/api/mocks/startMsw';
 
 // messaging().setBackgroundMessageHandler(async remoteMessage => {
 //   console.log('Background message:', remoteMessage);
@@ -43,4 +44,6 @@ Sentry.init({
   // spotlight: __DEV__,
 });
 
-AppRegistry.registerComponent(appName, () => App);
+startMsw().then(() => {
+  AppRegistry.registerComponent(appName, () => App);
+});

@@ -7,6 +7,8 @@ import ProfileCardPage from '@/pages/profileCard/ProfileCardPage';
 import MyPage from '@/pages/mypage/MyPage';
 import WithdrawalPage from '@/pages/withdrawal/WithdrawalPage';
 import { NavigatorType } from '../types';
+import ComponentPlaygroundPage from '../../pages/playground/ComponentPlaygroundPage';
+import Config from 'react-native-config';
 
 const Stack = createNativeStackNavigator<NavigatorType>();
 
@@ -28,6 +30,11 @@ export default function StackRouter() {
         <Stack.Screen name='mypage' component={MyPage} options={{ animation: 'none' }} />
         <Stack.Screen name='register' component={RegisterPage} />
         <Stack.Screen name='withdrawal' component={WithdrawalPage} />
+        {
+          Config.PROJECT_ENV === 'local' && (
+            <Stack.Screen name='playground' component={ComponentPlaygroundPage} />
+          )
+        }
       </Stack.Navigator>
     </NavigationContainer>
   )

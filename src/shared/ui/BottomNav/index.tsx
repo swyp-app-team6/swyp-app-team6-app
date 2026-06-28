@@ -52,7 +52,7 @@ export default function BottomNav({ items, activeRoute, onPress }: Props) {
             activeOpacity={0.7}
           >
             {item.icon(isActive)}
-            <Text className={cn('text-xs mt-0.5', isActive ? 'text-blue-500 font-semibold' : 'text-gray-400')}>
+            <Text className={cn('text-xs mt-0.5', isActive ? 'text-primary font-semibold' : 'text-gray-400')}>
               {item.label}
             </Text>
           </TouchableOpacity>
