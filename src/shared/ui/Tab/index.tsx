@@ -124,7 +124,7 @@ function Trigger({ value, label, styleClass }: TriggerProps) {
       accessibilityState={{ selected: isActive }}
       className={cn(
         'flex-1 items-center py-3',
-        isActive ? 'border-b-2 border-blue-600' : '',
+        isActive ? 'border-b-2 border-primary' : '',
         styleClass?.root,
         isActive ? styleClass?.active : '',
       )}
@@ -132,7 +132,7 @@ function Trigger({ value, label, styleClass }: TriggerProps) {
       <Text
         className={cn(
           'text-sm font-medium',
-          isActive ? 'text-blue-600' : 'text-gray-500',
+          isActive ? 'text-primary' : 'text-gray-500',
           styleClass?.label,
         )}
       >

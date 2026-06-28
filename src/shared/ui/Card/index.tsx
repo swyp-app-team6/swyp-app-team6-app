@@ -22,7 +22,7 @@ interface Props {
  *   <Text className="text-sm text-gray-500">내용</Text>
  * </Card>
  *
- * <Card styleClass={{ root: 'bg-blue-50 p-6' }}>
+ * <Card styleClass={{ root: 'bg-primary-lightest p-6' }}>
  *   <Text>커스텀 카드</Text>
  * </Card>
  * ```

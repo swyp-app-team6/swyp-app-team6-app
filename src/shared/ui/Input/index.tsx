@@ -17,7 +17,7 @@ interface StyleClass {
  * <Input
  *   placeholder="검색어"
  *   prefix={<Text>🔍</Text>}
- *   suffix={<Text className="text-blue-500">검색</Text>}
+ *   suffix={<Text className="text-primary">검색</Text>}
  *   onEnter={handleSearch}
  *   styleClass={{ root: 'border border-gray-300 rounded-lg px-2' }}
  * />

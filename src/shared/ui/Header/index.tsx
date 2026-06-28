@@ -43,7 +43,7 @@ export default function Header({ left, center, right, title, showBack = false }:
 
   const leftContent = showBack ? (
     <TouchableOpacity onPress={() => navigation.goBack()}>
-      <Text className="text-base text-blue-500">{'< 뒤로'}</Text>
+      <Text className="text-base text-primary">{'< 뒤로'}</Text>
     </TouchableOpacity>
   ) : (
     left ?? null

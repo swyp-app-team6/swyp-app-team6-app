@@ -1,7 +1,7 @@
 import React from "react";
 import { ActivityIndicator, Pressable, Text, type PressableProps } from "react-native";
 
-/** 버튼 스타일 변형. primary(파란 배경) | secondary(테두리) | ghost(투명) */
+/** 버튼 스타일 변형. primary(보라 배경) | secondary(테두리) | ghost(투명) */
 export type ButtonVariant = "primary" | "secondary" | "ghost";
 
 /**
@@ -25,7 +25,7 @@ export type ButtonProps = Omit<PressableProps, "children"> & {
 
 const variantClass: Record<ButtonVariant, { pressable: string; text: string }> = {
   primary: {
-    pressable: "rounded-lg bg-blue-600 px-4 py-2 active:opacity-90",
+    pressable: "rounded-lg bg-primary px-4 py-2 active:opacity-90",
     text: "text-center font-semibold text-white",
   },
   secondary: {
@@ -34,7 +34,7 @@ const variantClass: Record<ButtonVariant, { pressable: string; text: string }> =
   },
   ghost: {
     pressable: "rounded-lg px-3 py-2 active:bg-gray-100",
-    text: "text-center font-medium text-blue-600",
+    text: "text-center font-medium text-primary",
   },
 };
 
@@ -57,7 +57,7 @@ export function Button({
       {...rest}
     >
       {loading ? (
-        <ActivityIndicator color={variant === "primary" ? "#fff" : "#2563eb"} />
+        <ActivityIndicator color={variant === "primary" ? "#fff" : "#8C39FB"} />
       ) : (
         <Text className={v.text}>{title}</Text>
       )}

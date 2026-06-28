@@ -45,7 +45,7 @@ export function Checkbox({
     >
       <View
         className={`h-6 w-6 items-center justify-center rounded border ${
-          checked ? "border-blue-600 bg-blue-600" : "border-gray-400 bg-white"
+          checked ? "border-primary bg-primary" : "border-gray-400 bg-white"
         }`}
       >
         {checked ? <Text className="text-xs font-bold text-white">✓</Text> : null}

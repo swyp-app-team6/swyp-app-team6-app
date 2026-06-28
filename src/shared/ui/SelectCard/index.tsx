@@ -50,7 +50,7 @@ export default function SelectCard({
       accessibilityState={{ selected, disabled: !!disabled }}
       className={cn(
         'rounded-2xl p-4 border-2',
-        selected ? 'border-blue-600 bg-blue-50' : 'border-gray-200 bg-white',
+        selected ? 'border-primary bg-primary-lightest' : 'border-gray-200 bg-white',
         disabled ? 'opacity-50' : '',
         styleClass?.root,
       )}
@@ -58,7 +58,7 @@ export default function SelectCard({
       {selected && (
         <View
           className={cn(
-            'absolute top-3 right-3 h-6 w-6 items-center justify-center rounded-full bg-blue-600',
+            'absolute top-3 right-3 h-6 w-6 items-center justify-center rounded-full bg-primary',
             styleClass?.check,
           )}
         >

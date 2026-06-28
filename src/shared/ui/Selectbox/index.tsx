@@ -79,14 +79,14 @@ function Selectbox({ value, options, onSelect, placeholder, styleClass }: Props)
               }}
               className={cn(
                 'border-b border-gray-100 px-5 py-4',
-                item.value === value ? 'bg-blue-50' : '',
+                item.value === value ? 'bg-primary-lightest' : '',
                 styleClass?.item,
               )}
             >
               <Text
                 className={cn(
                   'text-base',
-                  item.value === value ? 'font-semibold text-blue-600' : 'text-gray-900',
+                  item.value === value ? 'font-semibold text-primary' : 'text-gray-900',
                 )}
               >
                 {item.label}

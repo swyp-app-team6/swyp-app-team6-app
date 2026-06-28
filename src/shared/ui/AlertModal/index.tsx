@@ -71,7 +71,7 @@ export default function AlertModal({
         )}
         <Pressable
           onPress={onConfirm}
-          className="rounded-lg bg-blue-600 px-4 py-2"
+          className="rounded-lg bg-primary px-4 py-2"
         >
           <Text className="text-sm font-semibold text-white">{confirmText}</Text>
         </Pressable>
