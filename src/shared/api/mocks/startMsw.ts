@@ -22,7 +22,7 @@ export async function startMsw(): Promise<void> {
   if (Config.MSW_ENABLED !== 'true') {
     return;
   }
-
+  await import('./msw.polyfills');
   const { server } = await import('./server');
 
   server.listen({ onUnhandledRequest: 'bypass' });
