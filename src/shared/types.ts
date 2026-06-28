@@ -16,6 +16,7 @@ export type NavigatorType = {
   profileCard: undefined;
   mypage: undefined;
   withdrawal: undefined;
+  playground: undefined;
 }
 
 /** useNavigation 제네릭 타입 */

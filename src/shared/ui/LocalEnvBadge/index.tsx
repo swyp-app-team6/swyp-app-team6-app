@@ -27,7 +27,7 @@ export default function LocalEnvBadge() {
     <TouchableOpacity
       testID="local-env-badge"
       className="absolute bottom-24 right-4 bg-red-500 w-14 h-14 rounded-full z-50 items-center justify-center shadow-lg elevation-5"
-      onPress={() => navigation.navigate('home')}
+      onPress={() => navigation.navigate('playground')}
     >
       <Text className="text-white text-sm font-bold">LOCAL</Text>
     </TouchableOpacity>
