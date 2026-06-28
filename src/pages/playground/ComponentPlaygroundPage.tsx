@@ -34,6 +34,12 @@ import {
   Selectbox,
   Skeleton,
   SocialLoginButton,
+  KakaoLoginButton,
+  GoogleLoginButton,
+  AppleLoginButton,
+  KakaoIcon,
+  GoogleIcon,
+  AppleIcon,
   StepView,
   SwipeableCard,
   Tab,
@@ -668,6 +674,15 @@ export default function ComponentPlaygroundPage() {
           </View>
         </Section>
 
+        {/* ── 개별 소셜 로그인 버튼 ────────────────────────────────────────── */}
+        <Section title="KakaoLoginButton / GoogleLoginButton / AppleLoginButton">
+          <View className="gap-2">
+            <KakaoLoginButton onPress={() => {}} />
+            <GoogleLoginButton onPress={() => {}} />
+            <AppleLoginButton onPress={() => {}} />
+          </View>
+        </Section>
+
         {/* ── Sentry 에러 테스트 ────────────────────────────────────────────── */}
         <Section title="Sentry 에러 테스트 (개발용)">
           <View className="gap-3">
@@ -703,6 +718,9 @@ export default function ComponentPlaygroundPage() {
               { label: 'HomeIcon', node: <HomeIcon size={28} color="#374151" /> },
               { label: 'CardIcon', node: <CardIcon size={28} color="#374151" /> },
               { label: 'MyPageIcon', node: <MyPageIcon size={28} color="#374151" /> },
+              { label: 'KakaoIcon', node: <KakaoIcon size={28} color="#374151" /> },
+              { label: 'GoogleIcon', node: <GoogleIcon size={28} /> },
+              { label: 'AppleIcon', node: <AppleIcon size={28} color="#374151" /> },
             ].map(({ label, node }) => (
               <View key={label} className="items-center gap-1.5">
                 {node}
