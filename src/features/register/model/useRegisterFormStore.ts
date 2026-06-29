@@ -58,7 +58,7 @@ const useRegisterFormStore = create<RegisterFormStore>()(
      */
     setStep: (step: number) => {
       set((state) => {
-        state.currentStep = Math.max(0, Math.min(4, step));
+        state.currentStep = Math.max(0, Math.min(3, step));
       });
     },
 
@@ -67,7 +67,7 @@ const useRegisterFormStore = create<RegisterFormStore>()(
      */
     nextStep: () => {
       set((state) => {
-        if (state.currentStep < 4) {
+        if (state.currentStep < 3) {
           state.currentStep += 1;
         }
       });

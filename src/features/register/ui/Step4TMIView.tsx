@@ -87,8 +87,8 @@ export default function Step4TMIView() {
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          className="mb-4 px-5"
-          contentContainerStyle={{ gap: 8 }}
+          className="mb-4"
+          contentContainerStyle={{ gap: 8, paddingHorizontal: 20 }}
         >
           {TMI_CATEGORY_OPTIONS.map((cat) => (
             <ChipSelect.Chip
@@ -127,14 +127,7 @@ export default function Step4TMIView() {
       </ScrollView>
 
       <BottomCTA>
-        <View className="flex-row gap-3">
-          <View className="flex-1">
-            <Button title="건너뛰기" variant="secondary" onPress={nextStep} />
-          </View>
-          <View className="flex-1">
-            <Button title="다음으로" onPress={nextStep} />
-          </View>
-        </View>
+        <Button title="다음으로" onPress={nextStep} />
       </BottomCTA>
 
       {/* 답변 바텀시트 */}

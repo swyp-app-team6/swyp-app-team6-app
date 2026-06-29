@@ -59,14 +59,13 @@ export default function RegisterPage() {
   return (
     <>
       <Header
-        title="프로필 등록"
         left={
           <TouchableOpacity onPress={handleBack}>
             <Text className="text-base text-primary">{'< 뒤로'}</Text>
           </TouchableOpacity>
         }
       />
-      <Layout.Body>
+      <Layout.Body styleClass={{ root: 'bg-white' }}>
         <RegisterFormView
           onViewProfile={handleViewProfile}
           onGoHome={handleGoHome}

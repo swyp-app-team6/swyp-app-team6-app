@@ -7,6 +7,7 @@ import AppProviders from '@/app/providers/AppProviders';
 import Toast from 'react-native-toast-message';
 import { setupInterceptors } from '../shared/api';
 import useAuthStore from '@/entities/user/model/authStore';
+import { UserAPI } from '@/entities/user';
 import usePermissionStore from '@/widgets/permissions/model/usePermissionStore';
 import useConditionStateStore from '@/shared/model/conditionStateStore';
 import type { NavigatorType } from '@/shared/types';
@@ -59,8 +60,13 @@ function App() {
         } else if (!hasTokens) {
           setInitialRoute('login');
         } else {
-          setInitialRoute('home');
           fetchUserInfo().catch(() => { });
+          try {
+            await UserAPI.fetchProfile();
+            setInitialRoute('home');
+          } catch {
+            setInitialRoute('register');
+          }
         }
       } catch (e) {
         console.error(e);

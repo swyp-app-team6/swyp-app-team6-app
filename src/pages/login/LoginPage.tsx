@@ -7,6 +7,7 @@ import type { NavigationPropType } from '@/shared/types';
 import useGoogleLoginMutation from '@/features/login/googleLogin/api/useGoogleLoginMutation';
 import { TermsAgreementBottomSheet } from '@/features/terms';
 import { PermissionGuideBottomSheet } from '@/features/permissionGuide';
+import { UserAPI } from '@/entities/user';
 import useConditionStateStore from '@/shared/model/conditionStateStore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -36,6 +37,16 @@ function LoginPage() {
   const termsRef = useRef<BottomSheetHandle>(null);
   const permissionRef = useRef<BottomSheetHandle>(null);
 
+  /** 프로필 존재 여부를 확인하여 home 또는 register로 분기 */
+  const navigateByProfile = async () => {
+    try {
+      await UserAPI.fetchProfile();
+      navigation.reset({ index: 0, routes: [{ name: 'home' }] });
+    } catch {
+      navigation.reset({ index: 0, routes: [{ name: 'register' }] });
+    }
+  };
+
   /** 로그인 성공 후 플로우 분기 */
   const handleLoginSuccess = () => {
     if (isAgreedToTerms) {
@@ -43,7 +54,7 @@ function LoginPage() {
     } else if (isPermissionAllowed) {
       permissionRef.current?.open();
     } else {
-      navigation.navigate('home');
+      navigateByProfile();
     }
   };
 
@@ -58,14 +69,14 @@ function LoginPage() {
     if (isPermissionAllowed) {
       setTimeout(() => permissionRef.current?.open(), 300);
     } else {
-      navigation.navigate('home');
+      navigateByProfile();
     }
   };
 
-  /** 접근권한 확인 완료 → 홈 이동 */
+  /** 접근권한 확인 완료 → 프로필 체크 후 분기 */
   const handlePermissionConfirm = async () => {
     await setIsPermissionAllowed(false);
-    navigation.navigate('home');
+    navigateByProfile();
   };
 
   return (
