@@ -1,28 +1,29 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { cn } from '@/shared/lib/cn';
 
 /**
  * 뱃지 레벨 타입
- * - star = 스타 등급
- * - galaxy = 갤럭시 등급
- * - solar = 솔라 등급
- * - luna = 루나 등급
+ * - star = 슈팅스타 등급 (보라 그라디언트)
+ * - galaxy = 갤럭시 등급 (블루-퍼플 그라디언트)
+ * - solar = 솔라 등급 (오렌지-레드 그라디언트)
+ * - luna = 루나 등급 (골드 그라디언트)
  */
 export type BadgeLevel = 'star' | 'galaxy' | 'solar' | 'luna';
 
 interface StyleClass {
-  root?: string;
   label?: string;
 }
 
 /**
  * # Badge
  * ---
- * - 간단설명: 등급/레벨 표시 뱃지 컴포넌트
+ * - 간단설명: 등급/레벨 표시 그라디언트 뱃지 컴포넌트
  * - 제약사항 및 특이사항:
- *   - 4가지 레벨(star, galaxy, solar, luna) 각각 고유 색상
+ *   - 4가지 레벨(star, galaxy, solar, luna) 각각 고유 그라디언트 색상
  *   - label 미지정 시 레벨명을 기본 텍스트로 사용
+ *   - react-native-linear-gradient 의존
  * ---
  * @param level 뱃지 레벨
  * @param label 커스텀 라벨 (미지정 시 레벨명 사용)
@@ -30,7 +31,7 @@ interface StyleClass {
  * @example
  * ```tsx
  * <Badge level="star" />
- * <Badge level="galaxy" label="갤럭시 등급" />
+ * <Badge level="galaxy" label="갤럭시 유형" />
  * ```
  */
 
@@ -42,30 +43,22 @@ export interface BadgeProps {
   styleClass?: StyleClass;
 }
 
-const levelConfig: Record<BadgeLevel, { icon: string; root: string; label: string; defaultLabel: string }> = {
+const levelConfig: Record<BadgeLevel, { colors: string[]; defaultLabel: string }> = {
   star: {
-    icon: '⭐',
-    root: 'bg-secondary-yellow/20',
-    label: 'text-text-black',
-    defaultLabel: 'Star',
+    colors: ['#DB76FF', '#8C39FB'],
+    defaultLabel: '슈팅스타 유형',
   },
   galaxy: {
-    icon: '🌌',
-    root: 'bg-primary-lightest',
-    label: 'text-primary',
-    defaultLabel: 'Galaxy',
+    colors: ['#37C7FF', '#517BE1', '#6A2EC4'],
+    defaultLabel: '갤럭시 유형',
   },
   solar: {
-    icon: '☀️',
-    root: 'bg-secondary-pink/20',
-    label: 'text-secondary-pink',
-    defaultLabel: 'Solar',
+    colors: ['#FF7D37', '#C42E59'],
+    defaultLabel: '솔라 유형',
   },
   luna: {
-    icon: '🌙',
-    root: 'bg-text-gray7',
-    label: 'text-text-gray3',
-    defaultLabel: 'Luna',
+    colors: ['#F8E3A4', '#F3CA65', '#ED9626'],
+    defaultLabel: '루나 유형',
   },
 };
 
@@ -73,19 +66,26 @@ export default function Badge({ level, label, styleClass }: BadgeProps) {
   const config = levelConfig[level];
 
   return (
-    <View
-      className={cn(
-        'flex-row items-center gap-1 rounded-full px-3 py-1',
-        config.root,
-        styleClass?.root,
-      )}
+    <LinearGradient
+      colors={config.colors}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}
+      style={{
+        height: 28,
+        borderRadius: 8,
+        paddingHorizontal: 16,
+        paddingVertical: 4,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'flex-start',
+      }}
     >
-      <Text className="text-xs">{config.icon}</Text>
       <Text
-        className={cn('text-xs font-medium', config.label, styleClass?.label)}
+        className={cn('text-sm font-semibold text-white', styleClass?.label)}
       >
         {label ?? config.defaultLabel}
       </Text>
-    </View>
+    </LinearGradient>
   );
 }

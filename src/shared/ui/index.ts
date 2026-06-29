@@ -33,4 +33,7 @@ export { default as KakaoLoginButton, type KakaoLoginButtonProps } from './Kakao
 export { default as GoogleLoginButton, type GoogleLoginButtonProps } from './GoogleLoginButton';
 export { default as AppleLoginButton, type AppleLoginButtonProps } from './AppleLoginButton';
 export { default as ChooseButton, type ChooseButtonProps } from './ChooseButton';
-export { TodoIcon, ProfileIcon, GalleryIcon, PlaygroundIcon, SearchIcon, QRIcon, LoginIcon, HomeIcon, CardIcon, MyPageIcon, KakaoIcon, GoogleIcon, AppleIcon, type IconProps } from './icons';
+export { default as FavTag, type FavTagProps } from './FavTag';
+export { default as CameraUploadZone } from './CameraUploadZone';
+export { default as SelectedTMIPreviewButton } from './SelectedTMIPreviewButton';
+export { TodoIcon, ProfileIcon, GalleryIcon, PlaygroundIcon, SearchIcon, QRIcon, LoginIcon, HomeIcon, CardIcon, MyPageIcon, KakaoIcon, GoogleIcon, AppleIcon, CameraIcon, type IconProps } from './icons';

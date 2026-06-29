@@ -68,7 +68,7 @@ export default function Textbox({
   return (
     <View className={cn(styleClass?.root)}>
       {label && (
-        <Text className={cn('mb-1.5 text-sm font-medium text-text-gray3', styleClass?.label)}>
+        <Text className={cn('mb-3 text-base font-medium text-text-black', styleClass?.label)}>
           {label}
         </Text>
       )}
@@ -78,7 +78,7 @@ export default function Textbox({
         maxLength={maxLength}
         placeholderTextColor="#BFBFBF"
         className={cn(
-          'rounded-xl border p-4 text-base text-text-black',
+          'rounded-xl border bg-white p-4 text-base text-text-black',
           error ? 'border-red-500' : 'border-text-gray6',
           styleClass?.input,
         )}

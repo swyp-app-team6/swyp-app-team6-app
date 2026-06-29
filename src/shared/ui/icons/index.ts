@@ -11,4 +11,5 @@ export { default as MyPageIcon } from './MyPageIcon';
 export { default as KakaoIcon } from './KakaoIcon';
 export { default as GoogleIcon } from './GoogleIcon';
 export { default as AppleIcon } from './AppleIcon';
+export { default as CameraIcon } from './CameraIcon';
 export type { IconProps } from './types';

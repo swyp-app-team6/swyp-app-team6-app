@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { cn } from '@/shared/lib/cn';
 
@@ -13,14 +13,29 @@ export interface BottomNavItem {
   icon: (active: boolean) => React.ReactNode;
 }
 
+interface StyleClass {
+  root?: string;
+  tab?: string;
+  label?: string;
+}
+
 /**
- * 하단 고정 탭 네비게이션 컴포넌트.
- * iOS 홈 버튼 영역(safe area)을 자동으로 처리합니다.
- *
+ * # BottomNav
+ * ---
+ * - 간단설명: 하단 고정 탭 네비게이션 컴포넌트
+ * - 제약사항 및 특이사항:
+ *   - iOS 홈 버튼 영역(safe area) 자동 처리
+ *   - 상단 드롭 쉐도우 적용
+ *   - active 탭은 보라색, inactive 탭은 검정 텍스트
+ * ---
+ * @param items 탭 아이템 배열
+ * @param activeRoute 현재 활성화된 라우트 이름
+ * @param onPress 탭 터치 시 호출
+ * ---
  * @example
  * ```tsx
  * <BottomNav
- *   items={[{ name: 'Home', label: '홈', icon: '🏠' }]}
+ *   items={[{ name: 'Home', label: '홈', icon: (active) => <HomeIcon active={active} /> }]}
  *   activeRoute={route.name}
  *   onPress={(name) => navigation.navigate(name)}
  * />
@@ -32,27 +47,47 @@ interface Props {
   activeRoute: string;
   /** 탭 탭 시 호출. 라우트 이름을 인자로 전달 */
   onPress: (name: string) => void;
+  styleClass?: StyleClass;
 }
 
-export default function BottomNav({ items, activeRoute, onPress }: Props) {
+export default function BottomNav({ items, activeRoute, onPress, styleClass }: Props) {
   const { bottom } = useSafeAreaInsets();
 
   return (
     <View
-      className="flex-row bg-white border-t border-gray-100"
-      style={{ paddingBottom: bottom || 8 }}
+      className={cn('h-16 flex-row bg-white', styleClass?.root)}
+      style={[
+        { paddingBottom: bottom || 8 },
+        Platform.select({
+          ios: {
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: -2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+          },
+          android: {
+            elevation: 8,
+          },
+        }),
+      ]}
     >
       {items.map((item) => {
         const isActive = activeRoute === item.name;
         return (
           <TouchableOpacity
             key={item.name}
-            className="flex-1 items-center pt-2 pb-1"
+            className={cn('flex-1 items-center pt-2 pb-1', styleClass?.tab)}
             onPress={() => onPress(item.name)}
             activeOpacity={0.7}
           >
             {item.icon(isActive)}
-            <Text className={cn('text-xs mt-0.5', isActive ? 'text-primary font-semibold' : 'text-gray-400')}>
+            <Text
+              className={cn(
+                'text-xs mt-0.5',
+                isActive ? 'text-primary font-semibold' : 'text-text-black',
+                styleClass?.label,
+              )}
+            >
               {item.label}
             </Text>
           </TouchableOpacity>

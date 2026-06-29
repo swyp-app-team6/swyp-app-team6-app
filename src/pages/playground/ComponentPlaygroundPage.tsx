@@ -10,10 +10,13 @@ import {
   BottomCTA,
   Button,
   BottomSheet,
+  CameraUploadZone,
   Card,
   Checkbox,
   ChipSelect,
   ChooseButton,
+  FavTag,
+  CameraIcon,
   GalleryIcon,
   Header,
   Input,
@@ -30,6 +33,7 @@ import {
   MyPageIcon,
   SearchFallbackView,
   SearchIcon,
+  SelectedTMIPreviewButton,
   SelectCard,
   Selectbox,
   Skeleton,
@@ -146,6 +150,9 @@ export default function ComponentPlaygroundPage() {
   // TMICard 상태
   const [selectedTMI, setSelectedTMI] = useState('');
 
+  // FavTag 상태
+  const [favTags, setFavTags] = useState<Record<string, boolean>>({});
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setChecked(false);
@@ -160,6 +167,7 @@ export default function ComponentPlaygroundPage() {
     setProgress(40);
     setChooseValue('');
     setSelectedTMI('');
+    setFavTags({});
     setCards([
       { id: '1', title: '첫 번째 카드', description: '오른쪽으로 스와이프해서 삭제하세요.' },
       { id: '2', title: '두 번째 카드', description: '카드 컴포넌트 예시입니다.' },
@@ -235,8 +243,17 @@ export default function ComponentPlaygroundPage() {
             <Button title="Primary" variant="primary" />
             <Button title="Secondary" variant="secondary" />
             <Button title="Ghost" variant="ghost" />
+            <Button title="Black" variant="black" />
+            <Button title="Outline" variant="outline" />
+            <Button title="Dark Outline" variant="dark-outline" />
+            <Button title="이미지 저장" variant="outline" icon={<Text>⬇</Text>} />
             <Button title="Loading" variant="primary" loading />
             <Button title="Disabled" variant="primary" disabled />
+            <Text className="mt-2 text-xs text-text-gray4">Dual 레이아웃 (Button 2개)</Text>
+            <View className="flex-row gap-3">
+              <Button title="보조 버튼" variant="secondary" className="flex-1" />
+              <Button title="메인 버튼" variant="primary" className="flex-1" />
+            </View>
           </View>
         </Section>
 
@@ -263,12 +280,24 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── Input ──────────────────────────────────────────────────────────── */}
-        <Section title="Input (prefix / suffix)">
-          <Input
-            placeholder="검색어 입력 후 Enter"
-            prefix={<SearchIcon size={18} color="#BFBFBF" />}
-            onEnter={() => {}}
-          />
+        <Section title="Input (prefix / suffix / label / counter)">
+          <View className="gap-3">
+            <Input
+              placeholder="검색어 입력 후 Enter"
+              prefix={<SearchIcon size={18} color="#BFBFBF" />}
+              onEnter={() => {}}
+            />
+            <Input
+              label="이름"
+              placeholder="프로필 이름을 입력해주세요"
+              maxLength={10}
+            />
+            <Input
+              label="에러 상태"
+              placeholder="입력하세요"
+              error="필수 항목입니다"
+            />
+          </View>
         </Section>
 
         {/* ── Textbox ────────────────────────────────────────────────────────── */}
@@ -616,7 +645,29 @@ export default function ComponentPlaygroundPage() {
           <View className="flex-row flex-wrap gap-2">
             <Tag label="Q1" />
             <Tag label="연애" variant="primary" />
+            <Tag label="정보" variant="primary-subtle" />
             <Tag label="성격" variant="secondary" />
+            <Tag label="관심사" variant="outline" />
+          </View>
+        </Section>
+
+        {/* ── FavTag ─────────────────────────────────────────────────────────── */}
+        <Section title="FavTag (관심사 토글)">
+          <View className="flex-row flex-wrap gap-2">
+            {[
+              { emoji: '🇺🇸', label: '외국어', key: 'lang' },
+              { emoji: '⛺', label: '캠핑 / 드라이브', key: 'camp' },
+              { emoji: '🎵', label: '음악', key: 'music' },
+              { emoji: '📚', label: '독서', key: 'book' },
+            ].map(tag => (
+              <FavTag
+                key={tag.key}
+                emoji={tag.emoji}
+                label={tag.label}
+                selected={!!favTags[tag.key]}
+                onPress={() => setFavTags(prev => ({ ...prev, [tag.key]: !prev[tag.key] }))}
+              />
+            ))}
           </View>
         </Section>
 
@@ -704,10 +755,30 @@ export default function ComponentPlaygroundPage() {
           </View>
         </Section>
 
+        {/* ── CameraUploadZone ──────────────────────────────────────────────── */}
+        <Section title="CameraUploadZone">
+          <View className="flex-row gap-3">
+            <CameraUploadZone onPress={() => Alert.alert('카메라', '이미지 선택')} />
+            <CameraUploadZone
+              imageUri="https://picsum.photos/120/148"
+              onPress={() => Alert.alert('카메라', '이미지 변경')}
+            />
+          </View>
+        </Section>
+
+        {/* ── SelectedTMIPreviewButton ─────────────────────────────────────── */}
+        <Section title="SelectedTMIPreviewButton">
+          <View className="gap-3">
+            <SelectedTMIPreviewButton count={2} onPress={() => Alert.alert('미리보기')} />
+            <SelectedTMIPreviewButton count={5} onPress={() => {}} />
+          </View>
+        </Section>
+
         {/* ── Icons ──────────────────────────────────────────────────────────── */}
         <Section title="Icons (SVG)">
           <View className="flex-row flex-wrap gap-6">
             {[
+              { label: 'CameraIcon', node: <CameraIcon size={28} color="#374151" /> },
               { label: 'TodoIcon', node: <TodoIcon size={28} color="#374151" /> },
               { label: 'ProfileIcon', node: <ProfileIcon size={28} color="#374151" /> },
               { label: 'GalleryIcon', node: <GalleryIcon size={28} color="#374151" /> },
