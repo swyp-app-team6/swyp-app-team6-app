@@ -61,9 +61,9 @@ const useConditionStateStore = create<ConditionState & ConditionActions>()(
      */
     setHasSeenOnboarding: async (value: boolean) => {
       set((state) => {
-        state.hasSeenOnboarding = true;
+        state.hasSeenOnboarding = value;
       });
-      // await AsyncStorage.setItem(STORAGE_KEYS.HAS_SEEN_ONBOARDING, String(value));
+      await AsyncStorage.setItem(STORAGE_KEYS.HAS_SEEN_ONBOARDING, String(value));
     },
 
     /**
@@ -73,9 +73,9 @@ const useConditionStateStore = create<ConditionState & ConditionActions>()(
      */
     setIsProfileCreated: async (value: boolean) => {
       set((state) => {
-        state.isProfileCreated = true;
+        state.isProfileCreated = value;
       });
-      // await AsyncStorage.setItem(STORAGE_KEYS.IS_PROFILE_CREATED, String(value));
+      await AsyncStorage.setItem(STORAGE_KEYS.IS_PROFILE_CREATED, String(value));
     },
 
     /**
@@ -85,9 +85,9 @@ const useConditionStateStore = create<ConditionState & ConditionActions>()(
      */
     setIsAgreedToTerms: async (value: boolean) => {
       set((state) => {
-        state.isAgreedToTerms = true;
+        state.isAgreedToTerms = value;
       });
-      // await AsyncStorage.setItem(STORAGE_KEYS.IS_AGREED_TO_TERMS, String(value));
+      await AsyncStorage.setItem(STORAGE_KEYS.IS_AGREED_TO_TERMS, String(value));
     },
 
     /**
@@ -96,9 +96,9 @@ const useConditionStateStore = create<ConditionState & ConditionActions>()(
      */
     setIsPermissionAllowed: async (value: boolean) => {
       set((state) => {
-        state.isPermissionAllowed = true;
+        state.isPermissionAllowed = value;
       });
-      // await AsyncStorage.setItem(STORAGE_KEYS.IS_PERMISSION_ALLOWED, String(value));
+      await AsyncStorage.setItem(STORAGE_KEYS.IS_PERMISSION_ALLOWED, String(value));
     },
 
     /**
@@ -118,10 +118,10 @@ const useConditionStateStore = create<ConditionState & ConditionActions>()(
       ]);
 
       set((state) => {
-        state.hasSeenOnboarding = storedOnboarding === 'true';
-        state.isProfileCreated = storedProfileCreated === 'true';
-        state.isAgreedToTerms = storedAgreedToTerms === 'true';
-        state.isPermissionAllowed = storedPermissionAllowed === 'true';
+        state.hasSeenOnboarding = storedOnboarding === null ? true : storedOnboarding === 'true';
+        state.isProfileCreated = storedProfileCreated === null ? true : storedProfileCreated === 'true';
+        state.isAgreedToTerms = storedAgreedToTerms === null ? true : storedAgreedToTerms === 'true';
+        state.isPermissionAllowed = storedPermissionAllowed === null ? true : storedPermissionAllowed === 'true';
       });
     },
 
