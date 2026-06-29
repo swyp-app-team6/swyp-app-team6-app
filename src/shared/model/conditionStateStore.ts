@@ -50,7 +50,7 @@ interface ConditionActions {
  */
 const useConditionStateStore = create<ConditionState & ConditionActions>()(
   immer((set) => ({
-    hasSeenOnboarding: true,
+    hasSeenOnboarding: false,
     isProfileCreated: true,
     isAgreedToTerms: true,
     isPermissionAllowed: true,
@@ -118,7 +118,7 @@ const useConditionStateStore = create<ConditionState & ConditionActions>()(
       ]);
 
       set((state) => {
-        state.hasSeenOnboarding = storedOnboarding === null ? true : storedOnboarding === 'true';
+        state.hasSeenOnboarding = storedOnboarding === null ? false : storedOnboarding === 'true';
         state.isProfileCreated = storedProfileCreated === null ? true : storedProfileCreated === 'true';
         state.isAgreedToTerms = storedAgreedToTerms === null ? true : storedAgreedToTerms === 'true';
         state.isPermissionAllowed = storedPermissionAllowed === null ? true : storedPermissionAllowed === 'true';

@@ -29,6 +29,8 @@ export interface AuthTokens {
  * - GAME = 게임
  * - SELF_DEVELOPMENT = 자기계발
  * - INVESTING = 투자
+ * - CAMPING = 캠핑/드라이브
+ * - LANGUAGE = 외국어
  */
 export type Interest =
   | 'TRAVEL'
@@ -40,7 +42,9 @@ export type Interest =
   | 'BOOKS'
   | 'GAME'
   | 'SELF_DEVELOPMENT'
-  | 'INVESTING';
+  | 'INVESTING'
+  | 'CAMPING'
+  | 'LANGUAGE';
 
 /**
  * 프로필 등록 요청

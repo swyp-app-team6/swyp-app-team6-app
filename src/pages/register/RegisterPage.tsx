@@ -1,25 +1,55 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { useState } from 'react';
+import { Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Button, Header, Layout } from '@/shared/ui';
-import { RegisterFormView } from '@/features/register';
+import { Header, Layout, AlertModal } from '@/shared/ui';
+import { RegisterFormView, useRegisterFormStore } from '@/features/register';
 import type { NavigationPropType } from '@/shared/types';
 
 /**
  * # RegisterPage
  * ---
- * - 간단설명: 회원가입 화면 - 닉네임 + 프로필 사진 등록
+ * - 간단설명: 프로필 등록 5단계 페이지
  * - 제약사항 및 특이사항:
- *   - 소셜 로그인 후 추가 정보 입력 화면으로 사용
- *   - 완료 시 home 화면으로 이동
+ *   - 소셜 로그인 후 프로필 미등록 시 진입
+ *   - 뒤로가기: step > 0이면 이전 단계, step === 0이면 이탈 확인 팝업
+ *   - 완료 시 home 또는 profileCard 화면으로 이동
  * ---
  * @example
  * <RegisterPage />
  */
 export default function RegisterPage() {
   const navigation = useNavigation<NavigationPropType>();
+  const { currentStep, prevStep, isDirty, reset } = useRegisterFormStore();
+  const [showExitModal, setShowExitModal] = useState(false);
 
-  const handleSuccess = () => {
+  /** 뒤로가기 핸들러 */
+  const handleBack = () => {
+    if (currentStep > 0) {
+      prevStep();
+    } else if (isDirty()) {
+      setShowExitModal(true);
+    } else {
+      navigation.goBack();
+    }
+  };
+
+  /** 이탈 확인 후 나가기 */
+  const handleExitConfirm = () => {
+    setShowExitModal(false);
+    reset();
+    navigation.goBack();
+  };
+
+  /** 프로필 보기로 이동 */
+  const handleViewProfile = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'profileCard' }],
+    });
+  };
+
+  /** 홈으로 이동 */
+  const handleGoHome = () => {
     navigation.reset({
       index: 0,
       routes: [{ name: 'home' }],
@@ -28,17 +58,30 @@ export default function RegisterPage() {
 
   return (
     <>
-      <Header title="회원가입" showBack />
-      <Layout.Body styleClass={{ root: 'px-6 pt-10' }}>
-        <RegisterFormView onSuccess={handleSuccess} />
-        <View className="w-full flex flex-row justify-center mt-4">
-          <Button
-            title="로그인으로 돌아가기"
-            variant="ghost"
-            onPress={() => navigation.goBack()}
-          />
-        </View>
+      <Header
+        title="프로필 등록"
+        left={
+          <TouchableOpacity onPress={handleBack}>
+            <Text className="text-base text-primary">{'< 뒤로'}</Text>
+          </TouchableOpacity>
+        }
+      />
+      <Layout.Body>
+        <RegisterFormView
+          onViewProfile={handleViewProfile}
+          onGoHome={handleGoHome}
+        />
       </Layout.Body>
+
+      <AlertModal
+        visible={showExitModal}
+        title="프로필 등록 중단"
+        message="이미 입력한 정보가 있어요. 프로필 등록을 그만두실건가요?"
+        confirmText="나가기"
+        cancelText="계속 작성"
+        onConfirm={handleExitConfirm}
+        onCancel={() => setShowExitModal(false)}
+      />
     </>
   );
 }

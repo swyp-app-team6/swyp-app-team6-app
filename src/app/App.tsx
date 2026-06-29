@@ -10,6 +10,7 @@ import useAuthStore from '@/entities/user/model/authStore';
 import usePermissionStore from '@/widgets/permissions/model/usePermissionStore';
 import useConditionStateStore from '@/shared/model/conditionStateStore';
 import type { NavigatorType } from '@/shared/types';
+import { Alert } from 'react-native';
 
 /**
  * navigation 화면 타입
@@ -48,8 +49,8 @@ function App() {
           initFromStorage(),
         ]);
 
-        await checkCameraPermission().catch(() => {});
-        await checkGalleryPermission().catch(() => {});
+        await checkCameraPermission().catch(() => { });
+        await checkGalleryPermission().catch(() => { });
 
         const { hasSeenOnboarding } = useConditionStateStore.getState();
 
@@ -59,7 +60,7 @@ function App() {
           setInitialRoute('login');
         } else {
           setInitialRoute('home');
-          fetchUserInfo().catch(() => {});
+          fetchUserInfo().catch(() => { });
         }
       } catch (e) {
         console.error(e);
