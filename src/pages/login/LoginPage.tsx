@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Button, Layout } from '@/shared/ui';
+import { AppleLoginButton, Button, GoogleLoginButton, Layout } from '@/shared/ui';
 import type { NavigationPropType } from '@/shared/types';
 import useGoogleLoginMutation from '@/features/login/googleLogin/api/useGoogleLoginMutation';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -34,15 +34,17 @@ function LoginPage() {
         <Text className="text-4xl font-bold text-gray-900">SWYP</Text>
       </View>
       <View className="px-6 gap-3" style={{ paddingBottom: bottom || 40 }}>
-        <Button title="Google로 로그인" variant="secondary" onPress={handleGoogleLogin} loading={isGooglePending} />
-        <Button title="Apple로 로그인" variant="secondary" />
-        <View className="items-center mt-1">
+        <GoogleLoginButton onPress={handleGoogleLogin} loading={isGooglePending} />
+        <AppleLoginButton onPress={() => { }} />
+        {/* <Button title="Google로 로그인" variant="secondary" /> */}
+        {/* <Button title="Apple로 로그인" variant="secondary" /> */}
+        {/* <View className="items-center mt-1">
           <Button
             title="회원가입"
             variant="secondary"
             onPress={() => navigation.navigate('register')}
           />
-        </View>
+        </View> */}
       </View>
     </Layout>
   );

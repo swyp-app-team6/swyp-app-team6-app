@@ -2,6 +2,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 /**
  * stack navigator type 목록
+ * - onboarding = 온보딩
  * - login = 로그인
  * - register = 회원가입
  * - home = 홈
@@ -10,6 +11,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
  * - withdrawal = 회원탈퇴
  */
 export type NavigatorType = {
+  onboarding: undefined;
   login: undefined;
   register: undefined;
   home: undefined;
