@@ -150,16 +150,15 @@ const useRegisterFormStore = create<RegisterFormStore>()(
 
     /**
      * 1단계 유효성 검사 (필수 정보)
-     * - 프로필 사진 필수
      * - 이름 2~10자, 한글/영문만
      * - 성별 선택 필수
      * - 자기소개 10~100자
+     * - 프로필 사진은 선택사항
      */
     isStep1Valid: () => {
       const { form } = get();
       const nicknameRegex = /^[가-힣a-zA-Z]{2,10}$/;
       return (
-        form.profileImageUri !== null &&
         nicknameRegex.test(form.nickname) &&
         form.gender !== null &&
         form.bio.length >= 10 &&
