@@ -88,6 +88,7 @@ const useAuthStore = create<AuthState & AuthActions>()(
     accessToken: null,
     refreshToken: null,
     user: null,
+    // TODO: 조건별 view 노출 플래그들 별도 store로 옮겨야할지
     isProfileCreated: false,
     isAgreedToTerms: false,
     isPermissionAllowed: false,
