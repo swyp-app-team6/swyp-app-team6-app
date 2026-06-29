@@ -1,5 +1,6 @@
 import React, { useRef, useState, useMemo } from 'react';
-import { View, Text, ScrollView, TextInput } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
+import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { TMICard, BottomCTA, Button, ChipSelect } from '@/shared/ui';
 import BottomSheet, { type BottomSheetHandle } from '@/shared/ui/BottomSheet';
 import useRegisterFormStore from '../model/useRegisterFormStore';
@@ -146,7 +147,7 @@ export default function Step4TMIView() {
           </View>
         ) : (
           <View className="pb-4">
-            <TextInput
+            <BottomSheetTextInput
               value={textInput}
               onChangeText={setTextInput}
               placeholder="답변을 입력해주세요 (5~100자)"

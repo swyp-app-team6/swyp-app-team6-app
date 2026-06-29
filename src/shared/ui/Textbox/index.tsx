@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Text, TextInput, View, type TextInputProps } from 'react-native';
+import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { cn } from '@/shared/lib/cn';
 
 interface Props extends Omit<TextInputProps, 'multiline'> {
@@ -11,6 +12,8 @@ interface Props extends Omit<TextInputProps, 'multiline'> {
   maxLength?: number;
   /** 최소 높이(px). 기본값: 100 */
   minHeight?: number;
+  /** 바텀시트 내부에서 사용 시 true로 설정 (키보드 회피 지원) */
+  isBottomSheet?: boolean;
   styleClass?: { root?: string; input?: string; label?: string };
 }
 
@@ -46,11 +49,13 @@ export default function Textbox({
   error,
   maxLength,
   minHeight = 100,
+  isBottomSheet,
   styleClass,
   value,
   ...rest
 }: Props) {
   const [length, setLength] = useState(value?.length ?? 0);
+  const InputComponent = isBottomSheet ? BottomSheetTextInput : TextInput;
 
   const handleChangeText = (text: string) => {
     setLength(text.length);
@@ -64,7 +69,7 @@ export default function Textbox({
           {label}
         </Text>
       )}
-      <TextInput
+      <InputComponent
         multiline
         textAlignVertical="top"
         maxLength={maxLength}

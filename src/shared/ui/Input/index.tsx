@@ -1,5 +1,6 @@
 import React from 'react';
 import { TextInput, View, type TextInputProps } from 'react-native';
+import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { cn } from '@/shared/lib/cn';
 
 interface StyleClass {
@@ -30,10 +31,14 @@ interface InputProps extends Omit<TextInputProps, 'onSubmitEditing'> {
   suffix?: React.ReactNode;
   /** 키보드 Return 키 탭 시 호출 */
   onEnter?: () => void;
+  /** 바텀시트 내부에서 사용 시 true로 설정 (키보드 회피 지원) */
+  isBottomSheet?: boolean;
   styleClass?: StyleClass;
 }
 
-function Input({ prefix, suffix, onEnter, styleClass, ...props }: InputProps) {
+function Input({ prefix, suffix, onEnter, isBottomSheet, styleClass, ...props }: InputProps) {
+  const InputComponent = isBottomSheet ? BottomSheetTextInput : TextInput;
+
   return (
     <View className={cn('relative h-14 flex-row items-center rounded-xl border border-text-gray6 bg-white px-4', styleClass?.root)}>
       {prefix && (
@@ -44,7 +49,7 @@ function Input({ prefix, suffix, onEnter, styleClass, ...props }: InputProps) {
           {prefix}
         </View>
       )}
-      <TextInput
+      <InputComponent
         placeholderTextColor="#BFBFBF"
         className={cn('flex-1 text-base text-text-black', styleClass?.input)}
         onSubmitEditing={onEnter ? () => onEnter() : undefined}
