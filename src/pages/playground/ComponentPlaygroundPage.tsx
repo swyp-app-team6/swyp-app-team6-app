@@ -340,7 +340,7 @@ export default function ComponentPlaygroundPage() {
             onClose={() => setModalVisible(false)}
             message={"사용할 수 없는 계정입니다. 아이디,\n비밀번호를 다시 확인해주시길 바랍니다."}
           >
-            <Button title="확인" onPress={() => setModalVisible(false)} />
+            <Button className="w-full" title="확인" onPress={() => setModalVisible(false)} />
           </Modal>
         </Section>
 
