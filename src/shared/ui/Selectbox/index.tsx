@@ -28,6 +28,30 @@ interface Props {
   styleClass?: StyleClass;
 }
 
+/**
+ * # Selectbox
+ * ---
+ * - 간단설명: 바텀시트 기반 드롭다운 옵션 선택 컴포넌트
+ * - 제약사항 및 특이사항:
+ *   - @gorhom/bottom-sheet BottomSheetModal 기반
+ *   - 선택된 항목은 보라색 강조 표시
+ *   - SafeArea 하단 여백 자동 처리
+ * ---
+ * @param value 현재 선택된 값
+ * @param options 선택 가능한 옵션 목록
+ * @param onSelect 옵션 선택 시 콜백
+ * @param placeholder 미선택 시 표시 텍스트
+ * ---
+ * @example
+ * ```tsx
+ * <Selectbox
+ *   value={selected}
+ *   options={[{ label: '옵션1', value: '1' }]}
+ *   onSelect={setSelected}
+ *   placeholder="선택해주세요"
+ * />
+ * ```
+ */
 function Selectbox({ value, options, onSelect, placeholder, styleClass }: Props) {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const { bottom } = useSafeAreaInsets();

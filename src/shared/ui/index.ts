@@ -28,7 +28,6 @@ export { default as ProgressBar, type ProgressBarProps } from './ProgressBar';
 export { default as Tag, type TagProps, type TagVariant } from './Tag';
 export { default as Badge, type BadgeProps, type BadgeLevel } from './Badge';
 export { default as TMICard, type TMICardProps } from './TMICard';
-export { default as SocialLoginButton, type SocialLoginButtonProps, type SocialProvider } from './SocialLoginButton';
 export { default as KakaoLoginButton, type KakaoLoginButtonProps } from './KakaoLoginButton';
 export { default as GoogleLoginButton, type GoogleLoginButtonProps } from './GoogleLoginButton';
 export { default as AppleLoginButton, type AppleLoginButtonProps } from './AppleLoginButton';

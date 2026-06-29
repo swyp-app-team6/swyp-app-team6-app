@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { cn } from '@/shared/lib/cn';
 
@@ -66,26 +66,36 @@ export default function Badge({ level, label, styleClass }: BadgeProps) {
   const config = levelConfig[level];
 
   return (
-    <LinearGradient
-      colors={config.colors}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 0 }}
-      style={{
-        height: 28,
-        borderRadius: 8,
-        paddingHorizontal: 16,
-        paddingVertical: 4,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        alignSelf: 'flex-start',
-      }}
-    >
+    <View style={styles.wrapper}>
+      <LinearGradient
+        colors={config.colors}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        style={StyleSheet.absoluteFill}
+      />
       <Text
-        className={cn('text-sm font-semibold text-white', styleClass?.label)}
+        className={cn('font-semibold text-white', styleClass?.label)}
+        style={styles.label}
       >
         {label ?? config.defaultLabel}
       </Text>
-    </LinearGradient>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  wrapper: {
+    height: 28,
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'flex-start',
+    overflow: 'hidden',
+  },
+  label: {
+    fontSize: 14,
+    lineHeight: 20,
+  },
+});

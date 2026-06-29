@@ -37,7 +37,6 @@ import {
   SelectCard,
   Selectbox,
   Skeleton,
-  SocialLoginButton,
   KakaoLoginButton,
   GoogleLoginButton,
   AppleLoginButton,
@@ -187,7 +186,7 @@ export default function ComponentPlaygroundPage() {
         >
 
         {/* ── Color Palette ──────────────────────────────────────────────────── */}
-        <Section title="Color Palette">
+        <Section title="Color Palette — 디자인 시스템 색상 토큰">
           <Text className="mb-2 text-xs text-text-gray4">Title color (그레이스케일)</Text>
           <View className="flex-row flex-wrap gap-3 mb-4">
             {[
@@ -238,7 +237,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── Button ─────────────────────────────────────────────────────────── */}
-        <Section title="Button">
+        <Section title="Button — 공용 액션 버튼 (6가지 variant)">
           <View className="gap-2">
             <Button title="Primary" variant="primary" />
             <Button title="Secondary" variant="secondary" />
@@ -258,7 +257,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── Checkbox ───────────────────────────────────────────────────────── */}
-        <Section title="Checkbox">
+        <Section title="Checkbox — 약관 동의 등 체크박스">
           <View className="gap-3">
             <Checkbox
               checked={checked}
@@ -271,7 +270,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── TextField ──────────────────────────────────────────────────────── */}
-        <Section title="TextField">
+        <Section title="TextField — 라벨+에러 지원 단일행 입력">
           <View className="gap-3">
             <TextField label="기본 입력" placeholder="입력하세요" />
             <TextField label="에러 상태" placeholder="입력하세요" error="필수 항목입니다" />
@@ -280,7 +279,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── Input ──────────────────────────────────────────────────────────── */}
-        <Section title="Input (prefix / suffix / label / counter)">
+        <Section title="Input — prefix/suffix 슬롯 + 라벨/카운터 인라인 입력">
           <View className="gap-3">
             <Input
               placeholder="검색어 입력 후 Enter"
@@ -301,7 +300,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── Textbox ────────────────────────────────────────────────────────── */}
-        <Section title="Textbox (멀티라인)">
+        <Section title="Textbox — 멀티라인 텍스트 입력 (글자수 카운터)">
           <View className="gap-3">
             <Textbox
               label="자기소개"
@@ -320,7 +319,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── Selectbox ──────────────────────────────────────────────────────── */}
-        <Section title="Selectbox">
+        <Section title="Selectbox — 드롭다운 옵션 선택">
           <Selectbox
             value={selectValue}
             onSelect={setSelectValue}
@@ -334,22 +333,19 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── Modal ──────────────────────────────────────────────────────────── */}
-        <Section title="Modal">
+        <Section title="Modal — 커스텀 컨텐츠 모달">
           <Button title="모달 열기" variant="secondary" onPress={() => setModalVisible(true)} />
           <Modal
             visible={modalVisible}
             onClose={() => setModalVisible(false)}
-            title="모달 제목"
+            message={"사용할 수 없는 계정입니다. 아이디,\n비밀번호를 다시 확인해주시길 바랍니다."}
           >
-            <Text className="text-gray-700">모달 본문입니다.</Text>
-            <View className="mt-4">
-              <Button title="닫기" variant="ghost" onPress={() => setModalVisible(false)} />
-            </View>
+            <Button title="확인" onPress={() => setModalVisible(false)} />
           </Modal>
         </Section>
 
         {/* ── AlertModal ─────────────────────────────────────────────────────── */}
-        <Section title="AlertModal">
+        <Section title="AlertModal — 확인/취소 알림 팝업">
           <Button title="알림 모달 열기" variant="secondary" onPress={() => setAlertVisible(true)} />
           <AlertModal
             visible={alertVisible}
@@ -366,7 +362,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── BottomSheet ────────────────────────────────────────────────────── */}
-        <Section title="BottomSheet">
+        <Section title="BottomSheet — 하단 슬라이드업 시트">
           <Button
             title="바텀시트 열기"
             variant="secondary"
@@ -385,7 +381,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── StepView ───────────────────────────────────────────────────────── */}
-        <Section title="StepView (슬라이드)">
+        <Section title="StepView — 단계별 슬라이드 뷰 (회원가입 등)">
           <View className="flex-row gap-2 mb-3">
             <Button
               title="이전"
@@ -423,7 +419,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── ChipSelect ─────────────────────────────────────────────────────── */}
-        <Section title="ChipSelect (최대 3개)">
+        <Section title="ChipSelect — 다중 선택 칩 (최대 N개)">
           <ChipSelect
             options={[
               { label: '운동', value: 'exercise' },
@@ -442,7 +438,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── SelectCard ─────────────────────────────────────────────────────── */}
-        <Section title="SelectCard">
+        <Section title="SelectCard — 카드형 단일 선택">
           <View className="gap-3">
             {['A', 'B', 'C'].map(option => (
               <SelectCard
@@ -460,7 +456,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── Avatar ─────────────────────────────────────────────────────────── */}
-        <Section title="Avatar">
+        <Section title="Avatar — 프로필 이미지/이니셜 표시">
           <View className="flex-row items-center gap-4">
             <View className="items-center gap-1">
               <Avatar size={56} name="홍길동" />
@@ -482,7 +478,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── Tab ────────────────────────────────────────────────────────────── */}
-        <Section title="Tab">
+        <Section title="Tab — 탭 전환 (언더바 탭)">
           <View className="rounded-xl overflow-hidden border border-gray-200 bg-white">
             <Tab.Root defaultValue="tab1">
               <Tab.List>
@@ -510,7 +506,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── MenuList ───────────────────────────────────────────────────────── */}
-        <Section title="MenuList">
+        <Section title="MenuList — 마이페이지 설정 메뉴 목록">
           <MenuList.Section title="계정">
             <MenuList.Item label="프로필 수정" onPress={() => {}} right={<Text className="text-gray-400">›</Text>} />
             <MenuList.Item label="비밀번호 변경" onPress={() => {}} right={<Text className="text-gray-400">›</Text>} />
@@ -523,7 +519,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── Accordion ──────────────────────────────────────────────────────── */}
-        <Section title="Accordion">
+        <Section title="Accordion — FAQ 접기/펼치기">
           <View className="rounded-xl overflow-hidden border border-gray-200 bg-white">
             <Accordion.Root>
               <Accordion.Item itemKey="faq1" title="자주 묻는 질문 1">
@@ -546,7 +542,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── BottomCTA ──────────────────────────────────────────────────────── */}
-        <Section title="BottomCTA (미리보기)">
+        <Section title="BottomCTA — 하단 고정 액션 버튼 영역">
           <View className="rounded-xl overflow-hidden border border-gray-200">
             <BottomCTA>
               <Button title="다음 단계로" variant="primary" onPress={() => {}} />
@@ -555,7 +551,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── Skeleton ───────────────────────────────────────────────────────── */}
-        <Section title="Skeleton">
+        <Section title="Skeleton — 로딩 플레이스홀더">
           <Skeleton.Container styleClass={{ root: 'gap-3' }}>
             <Skeleton.Box styleClass={{ root: 'h-5 w-3/4' }} />
             <Skeleton.Box styleClass={{ root: 'h-5 w-full' }} />
@@ -570,7 +566,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── SearchFallbackView ─────────────────────────────────────────────── */}
-        <Section title="SearchFallbackView">
+        <Section title="SearchFallbackView — 검색 결과 없음 안내">
           <SearchFallbackView
             message="검색 결과가 없습니다"
             icon={<Text className="text-4xl">🔍</Text>}
@@ -579,7 +575,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── Anim ───────────────────────────────────────────────────────────── */}
-        <Section title="Anim (Fade / ScaleFade)">
+        <Section title="Anim — 페이드/스케일 등장 애니메이션">
           <View className="mb-3 flex-row gap-2">
             <Button
               title="Fade In"
@@ -605,7 +601,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── Card ───────────────────────────────────────────────────────────── */}
-        <Section title="Card (swipe to delete)">
+        <Section title="Card / SwipeableCard — 카드 컨테이너 (스와이프 삭제)">
           <Card styleClass={{ root: 'mb-3' }}>
             <Text className="font-semibold text-gray-900">기본 카드</Text>
             <Text className="text-sm text-gray-500 mt-1">rounded card 컴포넌트입니다.</Text>
@@ -627,7 +623,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── ProgressBar ──────────────────────────────────────────────────── */}
-        <Section title="ProgressBar">
+        <Section title="ProgressBar — 진행률 표시 바">
           <View className="gap-4">
             <ProgressBar value={progress} />
             <View className="flex-row gap-2">
@@ -641,7 +637,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── Tag ────────────────────────────────────────────────────────────── */}
-        <Section title="Tag">
+        <Section title="Tag — 소형 라벨 태그 (5가지 variant)">
           <View className="flex-row flex-wrap gap-2">
             <Tag label="Q1" />
             <Tag label="연애" variant="primary" />
@@ -652,7 +648,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── FavTag ─────────────────────────────────────────────────────────── */}
-        <Section title="FavTag (관심사 토글)">
+        <Section title="FavTag — 관심사/취미 선택 토글 태그">
           <View className="flex-row flex-wrap gap-2">
             {[
               { emoji: '🇺🇸', label: '외국어', key: 'lang' },
@@ -672,7 +668,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── Badge ──────────────────────────────────────────────────────────── */}
-        <Section title="Badge">
+        <Section title="Badge — 등급/유형 표시 그라디언트 뱃지">
           <View className="flex-row flex-wrap gap-2">
             <Badge level="star" />
             <Badge level="galaxy" />
@@ -682,7 +678,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── TMICard ────────────────────────────────────────────────────────── */}
-        <Section title="TMICard">
+        <Section title="TMICard — TMI 질문/답변 카드">
           <View className="gap-3">
             <TMICard
               tag="Q1"
@@ -701,7 +697,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── ChooseButton ───────────────────────────────────────────────────── */}
-        <Section title="ChooseButton">
+        <Section title="ChooseButton — 2지선다 선택 버튼">
           <View className="gap-2">
             <ChooseButton
               label="적극적으로 다가가는 편"
@@ -716,17 +712,8 @@ export default function ComponentPlaygroundPage() {
           </View>
         </Section>
 
-        {/* ── SocialLoginButton ──────────────────────────────────────────────── */}
-        <Section title="SocialLoginButton">
-          <View className="gap-2">
-            <SocialLoginButton provider="kakao" onPress={() => {}} />
-            <SocialLoginButton provider="google" onPress={() => {}} />
-            <SocialLoginButton provider="apple" onPress={() => {}} />
-          </View>
-        </Section>
-
-        {/* ── 개별 소셜 로그인 버튼 ────────────────────────────────────────── */}
-        <Section title="KakaoLoginButton / GoogleLoginButton / AppleLoginButton">
+        {/* ── 소셜 로그인 버튼 ──────────────────────────────────────────────── */}
+        <Section title="소셜 로그인 — 카카오/구글/애플 로그인 버튼">
           <View className="gap-2">
             <KakaoLoginButton onPress={() => {}} />
             <GoogleLoginButton onPress={() => {}} />
@@ -735,7 +722,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── Sentry 에러 테스트 ────────────────────────────────────────────── */}
-        <Section title="Sentry 에러 테스트 (개발용)">
+        <Section title="Sentry — 에러 리포팅 연동 테스트 (개발용)">
           <View className="gap-3">
             <Button
               title="captureException 전송"
@@ -756,7 +743,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── CameraUploadZone ──────────────────────────────────────────────── */}
-        <Section title="CameraUploadZone">
+        <Section title="CameraUploadZone — 프로필 사진 촬영/업로드 영역">
           <View className="flex-row gap-3">
             <CameraUploadZone onPress={() => Alert.alert('카메라', '이미지 선택')} />
             <CameraUploadZone
@@ -767,7 +754,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── SelectedTMIPreviewButton ─────────────────────────────────────── */}
-        <Section title="SelectedTMIPreviewButton">
+        <Section title="SelectedTMIPreviewButton — 선택 TMI 미리보기 버튼">
           <View className="gap-3">
             <SelectedTMIPreviewButton count={2} onPress={() => Alert.alert('미리보기')} />
             <SelectedTMIPreviewButton count={5} onPress={() => {}} />
@@ -775,7 +762,7 @@ export default function ComponentPlaygroundPage() {
         </Section>
 
         {/* ── Icons ──────────────────────────────────────────────────────────── */}
-        <Section title="Icons (SVG)">
+        <Section title="Icons — SVG 아이콘 모음">
           <View className="flex-row flex-wrap gap-6">
             {[
               { label: 'CameraIcon', node: <CameraIcon size={28} color="#374151" /> },
