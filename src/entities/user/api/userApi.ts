@@ -3,6 +3,7 @@ import type {
   User,
   AuthTokens,
   ProfileRegisterRequest,
+  ProfileUpdateRequest,
   MyProfileResponse,
   PresignResponse,
   UploadContentType,
@@ -29,7 +30,7 @@ export interface GoogleLoginResponse {
  * ---
  * @example
  * const { data } = await UserAPI.googleLogin('eyJhbGci...');
- * const { data } = await UserAPI.getMe();
+ * const { data } = await UserAPI.fetchUserInfo();
  */
 export class UserAPI {
   /**
@@ -55,25 +56,68 @@ export class UserAPI {
   }
 
   /**
-   * # getMe
+   * # fetchUserInfo
    * ---
    * - 간단설명: 현재 로그인된 사용자의 기본 정보(ID, 이메일, 역할, OAuth 제공자)를 조회
    * ---
    */
-  static getMe() {
+  static fetchUserInfo() {
     return API.get<User>('/user');
   }
 
   /**
-   * # registerProfile\
+   * # deleteUser
+   * ---
+   * - 간단설명: 회원 탈퇴 및 관련 데이터 삭제
+   * - 제약사항: 탈퇴 시 프로필 등 연관 데이터도 함께 삭제됨
+   * ---
+   */
+  static deleteUser() {
+    return API.delete<void>('/user');
+  }
+
+  /**
+   * # fetchProfile
+   * ---
+   * - 간단설명: 현재 로그인된 사용자의 프로필 정보를 조회
+   * ---
+   */
+  static fetchProfile() {
+    return API.get<MyProfileResponse>('/profile');
+  }
+
+  /**
+   * # registerProfile
    * ---
    * - 간단설명: 회원가입 시 사용자 프로필 등록
-   * - 제약사항: nickname 3~10자, bio/keyword/topic 0~20자, interests 1~5개
+   * - 제약사항: nickname 3~10자, bio/keyword/topic 0~20자, interests 3~5개
    * ---
    * @param data 프로필 등록 요청 데이터
    */
   static registerProfile(data: ProfileRegisterRequest) {
-    return API.post<MyProfileResponse>('/profile/register', data);
+    return API.post<MyProfileResponse>('/profile', data);
+  }
+
+  /**
+   * # updateProfile
+   * ---
+   * - 간단설명: 기존 프로필 정보를 부분 수정
+   * - 제약사항: nickname 3~10자, bio/keyword/topic 0~20자, interests 3~5개 (변경할 필드만 전송)
+   * ---
+   * @param data 프로필 수정 요청 데이터
+   */
+  static updateProfile(data: ProfileUpdateRequest) {
+    return API.patch<MyProfileResponse>('/profile', data);
+  }
+
+  /**
+   * # deleteProfile
+   * ---
+   * - 간단설명: 사용자 프로필 및 연관 데이터 삭제
+   * ---
+   */
+  static deleteProfile() {
+    return API.delete<void>('/profile');
   }
 
   /**
@@ -94,7 +138,11 @@ export class UserAPI {
   static query = createQueryKeys('users', {
     me: () => ({
       queryKey: ['me'],
-      queryFn: () => UserAPI.getMe(),
+      queryFn: () => UserAPI.fetchUserInfo(),
+    }),
+    profile: () => ({
+      queryKey: ['profile'],
+      queryFn: () => UserAPI.fetchProfile(),
     }),
   });
 }

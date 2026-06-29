@@ -4,6 +4,7 @@ export type {
   AuthTokens,
   Interest,
   ProfileRegisterRequest,
+  ProfileUpdateRequest,
   MyProfileResponse,
   PresignResponse,
   UploadContentType,

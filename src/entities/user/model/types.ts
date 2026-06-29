@@ -46,16 +46,16 @@ export type Interest =
  * 프로필 등록 요청
  * - nickname: 닉네임 (3~10자)
  * - gender: 성별 (M | F)
- * - image_url: 프로필 이미지 URL (선택)
+ * - image_key: 프로필 이미지 키 (선택, presign API에서 발급)
  * - bio: 자기소개 (0~20자)
  * - keyword: 키워드 (0~20자)
  * - topic: 토픽 (0~20자)
- * - interests: 관심사 목록 (1~5개)
+ * - interests: 관심사 목록 (3~5개)
  */
 export interface ProfileRegisterRequest {
   nickname: string;
   gender: 'M' | 'F';
-  image_url?: string;
+  image_key?: string;
   bio: string;
   keyword: string;
   topic: string;
@@ -63,10 +63,28 @@ export interface ProfileRegisterRequest {
 }
 
 /**
+ * 프로필 수정 요청 (PATCH /profile)
+ * - nickname: 닉네임 (3~10자, 선택)
+ * - image_key: 프로필 이미지 키 (선택)
+ * - bio: 자기소개 (0~20자, 선택)
+ * - keyword: 키워드 (0~20자, 선택)
+ * - topic: 토픽 (0~20자, 선택)
+ * - interests: 관심사 목록 (3~5개, 선택)
+ */
+export interface ProfileUpdateRequest {
+  nickname?: string;
+  image_key?: string;
+  bio?: string;
+  keyword?: string;
+  topic?: string;
+  interests?: Interest[];
+}
+
+/**
  * 프로필 응답
  * - id: 프로필 ID
  * - nickname: 닉네임
- * - image_url: 프로필 이미지 URL
+ * - image_key: 프로필 이미지 키
  * - gender: 성별
  * - bio: 자기소개
  * - keyword: 키워드
@@ -76,7 +94,7 @@ export interface ProfileRegisterRequest {
 export interface MyProfileResponse {
   id: number;
   nickname: string;
-  image_url?: string;
+  image_key?: string;
   gender: 'M' | 'F';
   bio: string;
   keyword: string;

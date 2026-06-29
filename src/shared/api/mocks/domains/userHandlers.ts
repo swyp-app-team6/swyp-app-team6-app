@@ -35,7 +35,7 @@ export const userHandlers = [
     const response: MyProfileResponse = {
       id: 1,
       nickname: body.nickname,
-      image_url: body.image_url,
+      image_key: body.image_key,
       gender: body.gender,
       bio: body.bio,
       keyword: body.keyword,
