@@ -11,7 +11,6 @@ import { UserAPI } from '@/entities/user';
 import usePermissionStore from '@/widgets/permissions/model/usePermissionStore';
 import useConditionStateStore from '@/shared/model/conditionStateStore';
 import type { NavigatorType } from '@/shared/types';
-import { Alert } from 'react-native';
 
 /**
  * navigation 화면 타입
@@ -64,8 +63,12 @@ function App() {
           try {
             await UserAPI.fetchProfile();
             setInitialRoute('home');
-          } catch {
-            setInitialRoute('register');
+          } catch (profileError: any) {
+            if (profileError?.response?.status === 404) {
+              setInitialRoute('register');
+            } else {
+              setInitialRoute('login');
+            }
           }
         }
       } catch (e) {

@@ -42,8 +42,12 @@ function LoginPage() {
     try {
       await UserAPI.fetchProfile();
       navigation.reset({ index: 0, routes: [{ name: 'home' }] });
-    } catch {
-      navigation.reset({ index: 0, routes: [{ name: 'register' }] });
+    } catch (error: any) {
+      if (error?.response?.status === 404) {
+        navigation.reset({ index: 0, routes: [{ name: 'register' }] });
+      } else {
+        navigation.reset({ index: 0, routes: [{ name: 'home' }] });
+      }
     }
   };
 
