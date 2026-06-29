@@ -3,6 +3,7 @@ import { immer } from 'zustand/middleware/immer';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import type { User, AuthTokens } from './types';
 import { UserAPI } from '../api/userApi';
+import { STORAGE_KEYS } from '@/shared/lib/storageKeys';
 
 /**
  * 인증 상태
@@ -85,8 +86,8 @@ const useAuthStore = create<AuthState & AuthActions>()(
         state.accessToken = accessToken;
         state.refreshToken = refreshToken;
       });
-      await EncryptedStorage.setItem('accessToken', accessToken);
-      await EncryptedStorage.setItem('refreshToken', refreshToken);
+      await EncryptedStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, accessToken);
+      await EncryptedStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
     },
 
     /**
@@ -163,8 +164,8 @@ const useAuthStore = create<AuthState & AuthActions>()(
         state.refreshToken = null;
         state.user = null;
       });
-      await EncryptedStorage.removeItem('accessToken');
-      await EncryptedStorage.removeItem('refreshToken');
+      await EncryptedStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
+      await EncryptedStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
     },
 
     /**
@@ -172,8 +173,8 @@ const useAuthStore = create<AuthState & AuthActions>()(
      * @returns storage에 두 토큰 들어있는지 여부, 하나라도 없으면 false
      */
     initTokenFromStorage: async () => {
-      const accessToken = await EncryptedStorage.getItem('accessToken');
-      const refreshToken = await EncryptedStorage.getItem('refreshToken');
+      const accessToken = await EncryptedStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+      const refreshToken = await EncryptedStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
 
       if (accessToken && refreshToken) {
         set((state) => {

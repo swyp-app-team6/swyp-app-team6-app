@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { STORAGE_KEYS } from '@/shared/lib/storageKeys';
 
 /**
  * 조건별 화면 노출 상태
@@ -34,14 +35,6 @@ interface ConditionActions {
   clearAll: () => Promise<void>;
 }
 
-/** AsyncStorage 키 상수 */
-const STORAGE_KEYS = {
-  HAS_SEEN_ONBOARDING: 'hasSeenOnboarding',
-  IS_PROFILE_CREATED: 'isProfileCreated',
-  IS_AGREED_TO_TERMS: 'isAgreedToTerms',
-  IS_PERMISSION_ALLOWED: 'isPermissionAllowed',
-} as const;
-
 /**
  * # useConditionStateStore
  * ---
@@ -50,16 +43,17 @@ const STORAGE_KEYS = {
  *   - 모든 플래그는 AsyncStorage에 영속화
  *   - 앱 시작 시 initFromStorage() 호출 필요
  *   - 로그아웃/탈퇴 시 clearAll() 호출하여 초기화
+ * TODO: 현재 테스트용으로 모두 true로 강제지정, 추후 storage 값에 따라 판별할 것
  * ---
  * @example
  * const { hasSeenOnboarding, isAgreedToTerms, setIsAgreedToTerms } = useConditionStateStore();
  */
 const useConditionStateStore = create<ConditionState & ConditionActions>()(
   immer((set) => ({
-    hasSeenOnboarding: false,
-    isProfileCreated: false,
-    isAgreedToTerms: false,
-    isPermissionAllowed: false,
+    hasSeenOnboarding: true,
+    isProfileCreated: true,
+    isAgreedToTerms: true,
+    isPermissionAllowed: true,
 
     /**
      * 온보딩 완료 여부 설정 (true = 온보딩 완료, 이후 스킵)
@@ -67,9 +61,9 @@ const useConditionStateStore = create<ConditionState & ConditionActions>()(
      */
     setHasSeenOnboarding: async (value: boolean) => {
       set((state) => {
-        state.hasSeenOnboarding = value;
+        state.hasSeenOnboarding = true;
       });
-      await AsyncStorage.setItem(STORAGE_KEYS.HAS_SEEN_ONBOARDING, String(value));
+      // await AsyncStorage.setItem(STORAGE_KEYS.HAS_SEEN_ONBOARDING, String(value));
     },
 
     /**
@@ -79,9 +73,9 @@ const useConditionStateStore = create<ConditionState & ConditionActions>()(
      */
     setIsProfileCreated: async (value: boolean) => {
       set((state) => {
-        state.isProfileCreated = value;
+        state.isProfileCreated = true;
       });
-      await AsyncStorage.setItem(STORAGE_KEYS.IS_PROFILE_CREATED, String(value));
+      // await AsyncStorage.setItem(STORAGE_KEYS.IS_PROFILE_CREATED, String(value));
     },
 
     /**
@@ -91,9 +85,9 @@ const useConditionStateStore = create<ConditionState & ConditionActions>()(
      */
     setIsAgreedToTerms: async (value: boolean) => {
       set((state) => {
-        state.isAgreedToTerms = value;
+        state.isAgreedToTerms = true;
       });
-      await AsyncStorage.setItem(STORAGE_KEYS.IS_AGREED_TO_TERMS, String(value));
+      // await AsyncStorage.setItem(STORAGE_KEYS.IS_AGREED_TO_TERMS, String(value));
     },
 
     /**
@@ -102,9 +96,9 @@ const useConditionStateStore = create<ConditionState & ConditionActions>()(
      */
     setIsPermissionAllowed: async (value: boolean) => {
       set((state) => {
-        state.isPermissionAllowed = value;
+        state.isPermissionAllowed = true;
       });
-      await AsyncStorage.setItem(STORAGE_KEYS.IS_PERMISSION_ALLOWED, String(value));
+      // await AsyncStorage.setItem(STORAGE_KEYS.IS_PERMISSION_ALLOWED, String(value));
     },
 
     /**
