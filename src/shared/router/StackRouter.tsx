@@ -39,7 +39,7 @@ export default function StackRouter({ initialRouteName = 'home' }: StackRouterPr
         <Stack.Screen name='home' component={HomePage} options={{ animation: 'none' }} />
         <Stack.Screen name='profileCard' component={ProfileCardPage} options={{ animation: 'none' }} />
         <Stack.Screen name='mypage' component={MyPage} options={{ animation: 'none' }} />
-        <Stack.Screen name='register' component={RegisterPage} />
+        <Stack.Screen name='registerProfile' component={RegisterPage} />
         <Stack.Screen name='withdrawal' component={WithdrawalPage} />
         {
           Config.PROJECT_ENV === 'local' && (

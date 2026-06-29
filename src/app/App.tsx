@@ -11,6 +11,7 @@ import { UserAPI } from '@/entities/user';
 import usePermissionStore from '@/widgets/permissions/model/usePermissionStore';
 import useConditionStateStore from '@/shared/model/conditionStateStore';
 import type { NavigatorType } from '@/shared/types';
+import { Alert } from 'react-native';
 
 /**
  * navigation 화면 타입
@@ -56,24 +57,9 @@ function App() {
 
         if (!hasSeenOnboarding) {
           setInitialRoute('onboarding');
-        } else if (!hasTokens) {
-          setInitialRoute('login');
-        } else {
-          fetchUserInfo().catch(() => { });
-          try {
-            await UserAPI.fetchProfile();
-            setInitialRoute('home');
-          } catch (profileError: any) {
-            if (profileError?.response?.status === 404) {
-              setInitialRoute('register');
-            } else {
-              setInitialRoute('login');
-            }
-          }
         }
       } catch (e) {
         console.error(e);
-        setInitialRoute('login');
       } finally {
         setIsReady(true);
         BootSplash.hide({ fade: true });
