@@ -44,7 +44,7 @@ function LoginPage() {
       navigation.reset({ index: 0, routes: [{ name: 'home' }] });
     } catch (error: any) {
       if (error?.response?.status === 404) {
-        navigation.reset({ index: 0, routes: [{ name: 'register' }] });
+        navigation.reset({ index: 0, routes: [{ name: 'registerProfile' }] });
       } else {
         navigation.reset({ index: 0, routes: [{ name: 'home' }] });
       }
