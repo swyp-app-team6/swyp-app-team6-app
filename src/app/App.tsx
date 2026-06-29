@@ -42,11 +42,14 @@ function App() {
         const { initTokenFromStorage, fetchUserInfo } = useAuthStore.getState();
         const { checkCameraPermission, checkGalleryPermission } = usePermissionStore.getState();
 
-        const hasSeenOnboarding = await AsyncStorage.getItem('hasSeenOnboarding');
+        // TODO: 테스트도중은 온보딩 항상나오게
+        // TODO: 온보딩 상태 전역으로 관리
+        // const hasSeenOnboarding = await AsyncStorage.getItem('hasSeenOnboarding');
+        const hasSeenOnboarding: any = false;
         const hasTokens = await initTokenFromStorage();
 
-        await checkCameraPermission().catch(() => {});
-        await checkGalleryPermission().catch(() => {});
+        await checkCameraPermission().catch(() => { });
+        await checkGalleryPermission().catch(() => { });
 
         if (hasSeenOnboarding !== 'true') {
           setInitialRoute('onboarding');
@@ -54,7 +57,7 @@ function App() {
           setInitialRoute('login');
         } else {
           setInitialRoute('home');
-          fetchUserInfo().catch(() => {});
+          fetchUserInfo().catch(() => { });
         }
       } catch (e) {
         console.error(e);
