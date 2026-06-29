@@ -32,8 +32,6 @@ export function setupInterceptors() {
   /** 응답 인터셉터 — 401 시 토큰 갱신 후 재시도 */
   API.interceptors.response.use(
     (response) => {
-      // FIXME: 네트워크 호출 디버깅 못해 임시추가, 나중에 삭제
-      Alert.alert(JSON.stringify(response.data || ''));
       return response;
     },
     async (error) => {
