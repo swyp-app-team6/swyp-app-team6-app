@@ -28,10 +28,7 @@ export default function Step2InterestsView() {
     <View className="flex-1">
       <ScrollView className="flex-1 px-5 pt-6" showsVerticalScrollIndicator={false}>
         <Text className="text-xl font-bold text-text-black mb-2">
-          관심사를 선택해주세요
-        </Text>
-        <Text className="text-sm text-text-gray3 mb-6">
-          3~5개를 선택해주세요 ({form.interests.length}/5)
+          관심사 선택
         </Text>
 
         <ChipSelect

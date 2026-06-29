@@ -76,10 +76,7 @@ export default function Step4TMIView() {
       <ScrollView className="flex-1 pt-6" showsVerticalScrollIndicator={false}>
         <View className="px-5">
           <Text className="text-xl font-bold text-text-black mb-2">
-            TMI를 등록해주세요
-          </Text>
-          <Text className="text-sm text-text-gray3 mb-4">
-            선택사항이에요. 나를 더 잘 표현할 수 있어요
+            TMI를 등록
           </Text>
         </View>
 
