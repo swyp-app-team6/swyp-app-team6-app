@@ -51,7 +51,7 @@ export default function GoogleLoginButton({
       accessibilityRole="button"
       accessibilityLabel="Google로 로그인하기"
       className={cn(
-        'w-full h-14 rounded-xl items-center justify-center bg-white active:opacity-90',
+        'w-full h-14 rounded-xl items-center justify-center bg-white border border-gray-300 active:opacity-90',
         isDisabled ? 'opacity-50' : '',
         styleClass?.root,
       )}
