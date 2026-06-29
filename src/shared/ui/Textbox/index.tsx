@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Text, TextInput, View, type TextInputProps } from 'react-native';
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { cn } from '@/shared/lib/cn';
+import { useKoreanSafeValue } from '@/shared/lib/useKoreanSafeValue';
 
 interface Props extends Omit<TextInputProps, 'multiline'> {
   /** 입력 필드 상단 레이블 */
@@ -62,6 +63,8 @@ export default function Textbox({
     rest.onChangeText?.(text);
   };
 
+  const { valueProps, onChangeText } = useKoreanSafeValue(value, handleChangeText);
+
   return (
     <View className={cn(styleClass?.root)}>
       {label && (
@@ -73,7 +76,6 @@ export default function Textbox({
         multiline
         textAlignVertical="top"
         maxLength={maxLength}
-        value={value}
         placeholderTextColor="#BFBFBF"
         className={cn(
           'rounded-xl border p-4 text-base text-text-black',
@@ -81,8 +83,9 @@ export default function Textbox({
           styleClass?.input,
         )}
         style={{ minHeight }}
-        onChangeText={handleChangeText}
         {...rest}
+        {...valueProps}
+        onChangeText={onChangeText}
       />
       <View className="flex-row justify-between mt-1.5">
         {error ? (

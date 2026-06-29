@@ -1,7 +1,6 @@
 import React, { useRef, useState, useMemo } from 'react';
 import { View, Text, ScrollView } from 'react-native';
-import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
-import { TMICard, BottomCTA, Button, ChipSelect } from '@/shared/ui';
+import { TMICard, BottomCTA, Button, ChipSelect, Textbox } from '@/shared/ui';
 import BottomSheet, { type BottomSheetHandle } from '@/shared/ui/BottomSheet';
 import useRegisterFormStore from '../model/useRegisterFormStore';
 import { TMI_QUESTIONS } from '../model/tmiData';
@@ -147,15 +146,13 @@ export default function Step4TMIView() {
           </View>
         ) : (
           <View className="pb-4">
-            <BottomSheetTextInput
+            <Textbox
               value={textInput}
               onChangeText={setTextInput}
               placeholder="답변을 입력해주세요 (5~100자)"
-              placeholderTextColor="#BFBFBF"
               maxLength={100}
-              multiline
-              className="rounded-xl border border-text-gray6 p-4 text-base text-text-black min-h-[80px]"
-              textAlignVertical="top"
+              minHeight={80}
+              isBottomSheet
             />
             <Text className="text-xs text-text-gray4 text-right mt-1">
               {textInput.length}/100

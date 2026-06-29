@@ -2,6 +2,7 @@ import React from 'react';
 import { TextInput, View, type TextInputProps } from 'react-native';
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { cn } from '@/shared/lib/cn';
+import { useKoreanSafeValue } from '@/shared/lib/useKoreanSafeValue';
 
 interface StyleClass {
   root?: string;
@@ -38,6 +39,7 @@ interface InputProps extends Omit<TextInputProps, 'onSubmitEditing'> {
 
 function Input({ prefix, suffix, onEnter, isBottomSheet, styleClass, ...props }: InputProps) {
   const InputComponent = isBottomSheet ? BottomSheetTextInput : TextInput;
+  const { valueProps, onChangeText } = useKoreanSafeValue(props.value, props.onChangeText);
 
   return (
     <View className={cn('relative h-14 flex-row items-center rounded-xl border border-text-gray6 bg-white px-4', styleClass?.root)}>
@@ -55,6 +57,8 @@ function Input({ prefix, suffix, onEnter, isBottomSheet, styleClass, ...props }:
         onSubmitEditing={onEnter ? () => onEnter() : undefined}
         returnKeyType={onEnter ? 'done' : undefined}
         {...props}
+        {...valueProps}
+        onChangeText={onChangeText}
       />
       {suffix && (
         <View
