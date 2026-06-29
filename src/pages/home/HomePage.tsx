@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { Header, Layout } from '@/shared/ui';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
+import withUserProfileRequired from '../../shared/hoc/withUserProfileRequired';
 
 /**
  * # HomePage
@@ -22,4 +23,4 @@ function HomePage() {
   );
 }
 
-export default withAuthorization(withLayout(HomePage));
+export default withAuthorization(withUserProfileRequired(withLayout(HomePage)));
