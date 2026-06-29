@@ -5,6 +5,7 @@ import { Button, Header, Layout } from '@/shared/ui';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
 import useAuthStore from '@/entities/user/model/authStore';
+import useConditionStateStore from '@/shared/model/conditionStateStore';
 import type { NavigationPropType } from '@/shared/types';
 
 /**
@@ -19,6 +20,18 @@ import type { NavigationPropType } from '@/shared/types';
 function MyPage() {
   const navigation = useNavigation<NavigationPropType>();
   const user = useAuthStore((state) => state.user);
+  const clearAuth = useAuthStore((state) => state.clear);
+  const clearCondition = useConditionStateStore((state) => state.clearAll);
+
+  /** 로그아웃: 토큰 및 조건 플래그 초기화 후 로그인 화면으로 이동 */
+  const handleLogout = async () => {
+    await clearAuth();
+    await clearCondition();
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'login' }],
+    });
+  };
 
   return (
     <>
@@ -38,7 +51,12 @@ function MyPage() {
             <Text className="text-base text-gray-900">{user?.provider ?? '-'}</Text>
           </View>
         </View>
-        <View className="mt-8">
+        <View className="mt-8 gap-3">
+          <Button
+            title="로그아웃"
+            variant="secondary"
+            onPress={handleLogout}
+          />
           <Button
             title="회원탈퇴"
             variant="ghost"
