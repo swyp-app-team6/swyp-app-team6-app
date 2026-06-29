@@ -7,7 +7,7 @@ import type { NavigationPropType } from '@/shared/types';
 import useGoogleLoginMutation from '@/features/login/googleLogin/api/useGoogleLoginMutation';
 import { TermsAgreementBottomSheet } from '@/features/terms';
 import { PermissionGuideBottomSheet } from '@/features/permissionGuide';
-import { useAuthStore } from '@/entities/user';
+import useConditionStateStore from '@/shared/model/conditionStateStore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 /**
@@ -31,7 +31,7 @@ function LoginPage() {
     isPermissionAllowed,
     setIsAgreedToTerms,
     setIsPermissionAllowed,
-  } = useAuthStore();
+  } = useConditionStateStore();
 
   const termsRef = useRef<BottomSheetHandle>(null);
   const permissionRef = useRef<BottomSheetHandle>(null);

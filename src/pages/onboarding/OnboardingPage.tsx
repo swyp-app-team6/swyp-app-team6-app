@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
 import { Button, Layout, StepView } from '@/shared/ui';
 import type { NavigationPropType } from '@/shared/types';
+import useConditionStateStore from '@/shared/model/conditionStateStore';
 
 /** 온보딩 슬라이드 데이터 */
 const ONBOARDING_SLIDES = [
@@ -28,7 +28,7 @@ const ONBOARDING_SLIDES = [
  * ---
  * - 간단설명: 앱 최초 실행 시 3단계 스와이프 온보딩 화면
  * - 제약사항 및 특이사항:
- *   - AsyncStorage 'hasSeenOnboarding' 플래그로 최초 실행 판별
+ *   - conditionStateStore 'hasSeenOnboarding' 플래그로 최초 실행 판별
  *   - 좌우 스와이프로 단계 이동 가능
  *   - 마지막 단계에서는 "건너뛰기" 숨김, "시작하기" 표시
  * TODO: slide step ui ui/state hook으로 분리 필ㅛ
@@ -38,17 +38,18 @@ const ONBOARDING_SLIDES = [
  */
 function OnboardingPage() {
   const navigation = useNavigation<NavigationPropType>();
+  const { setHasSeenOnboarding } = useConditionStateStore();
   const [currentStep, setCurrentStep] = useState(0);
   const isLastStep = currentStep === ONBOARDING_SLIDES.length - 1;
 
   /** 온보딩 완료 후 로그인 화면으로 이동 */
   const handleComplete = useCallback(async () => {
-    await AsyncStorage.setItem('hasSeenOnboarding', 'true');
+    await setHasSeenOnboarding(true);
     navigation.reset({
       index: 0,
       routes: [{ name: 'login' }],
     });
-  }, [navigation]);
+  }, [navigation, setHasSeenOnboarding]);
 
   /** 다음 단계로 이동 */
   const handleNext = useCallback(() => {

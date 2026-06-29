@@ -2,13 +2,13 @@ import '../../global.css';
 import React, { useEffect, useState } from 'react';
 import * as Sentry from '@sentry/react-native';
 import BootSplash from 'react-native-bootsplash';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import StackRouter from '@/shared/router/StackRouter';
 import AppProviders from '@/app/providers/AppProviders';
 import Toast from 'react-native-toast-message';
 import { setupInterceptors } from '../shared/api';
 import useAuthStore from '@/entities/user/model/authStore';
 import usePermissionStore from '@/widgets/permissions/model/usePermissionStore';
+import useConditionStateStore from '@/shared/model/conditionStateStore';
 import type { NavigatorType } from '@/shared/types';
 
 /**
@@ -28,7 +28,7 @@ setupInterceptors();
  * - 제약사항 및 특이사항:
  *   - 스플래시 동안 토큰 복원(hydrate) + fetchMe로 유저정보 초기화
  *   - 스플래시 동안 카메라·갤러리 권한 상태 확인
- *   - 최초 실행 여부(hasSeenOnboarding)로 초기 라우트 결정
+ *   - 조건 플래그(hasSeenOnboarding 등)로 초기 라우트 결정
  *   - 모든 초기화 완료 후 스플래시 숨김
  * ---
  */
@@ -41,23 +41,25 @@ function App() {
       try {
         const { initTokenFromStorage, fetchUserInfo } = useAuthStore.getState();
         const { checkCameraPermission, checkGalleryPermission } = usePermissionStore.getState();
+        const { initFromStorage } = useConditionStateStore.getState();
 
-        // TODO: 테스트도중은 온보딩 항상나오게
-        // TODO: 온보딩 상태 전역으로 관리
-        // const hasSeenOnboarding = await AsyncStorage.getItem('hasSeenOnboarding');
-        const hasSeenOnboarding: any = false;
-        const hasTokens = await initTokenFromStorage();
+        const [hasTokens] = await Promise.all([
+          initTokenFromStorage(),
+          initFromStorage(),
+        ]);
 
-        await checkCameraPermission().catch(() => { });
-        await checkGalleryPermission().catch(() => { });
+        await checkCameraPermission().catch(() => {});
+        await checkGalleryPermission().catch(() => {});
 
-        if (hasSeenOnboarding !== 'true') {
+        const { hasSeenOnboarding } = useConditionStateStore.getState();
+
+        if (!hasSeenOnboarding) {
           setInitialRoute('onboarding');
         } else if (!hasTokens) {
           setInitialRoute('login');
         } else {
           setInitialRoute('home');
-          fetchUserInfo().catch(() => { });
+          fetchUserInfo().catch(() => {});
         }
       } catch (e) {
         console.error(e);
