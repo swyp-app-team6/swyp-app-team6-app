@@ -10,6 +10,7 @@ import type { BottomSheetBackdropProps } from '@gorhom/bottom-sheet';
 import { useImperativeHandle } from 'react';
 import { Button } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
+import { CameraIcon, GalleryIcon, BellIcon } from '@/shared/ui/icons';
 
 interface Props {
   /** 확인 버튼 클릭 시 호출되는 콜백 */
@@ -83,24 +84,24 @@ const PermissionGuideBottomSheet = forwardRef<BottomSheetHandle, Props>(
           {/* 타이틀 */}
           <View className="px-5 pb-6">
             <Text className="text-xl font-bold text-gray-900">
-              서비스를 위한 앱 접근 권한 안내
+              서비스 이용을 위한 앱 접근 권한 안내
             </Text>
           </View>
 
           {/* 권한 목록 */}
           <View className="px-5 gap-5">
             <PermissionItem
-              icon="📷"
+              icon={<CameraIcon size={24} color="#8C39FB" />}
               title="카메라 사용 권한 [선택]"
               description="QR코드 인식 및 이미지 첨부 시 사용"
             />
             <PermissionItem
-              icon="🖼️"
+              icon={<GalleryIcon size={24} color="#8C39FB" />}
               title="사진보관함 사용 권한 [선택]"
               description="프로필 사진 저장 / 첨부 시 사용"
             />
             <PermissionItem
-              icon="🔔"
+              icon={<BellIcon size={24} color="#8C39FB" />}
               title="PUSH 알림 권한 [선택]"
               description="업데이트, 혜택 등 푸시 알림 시 사용"
             />
@@ -136,14 +137,14 @@ function PermissionItem({
   title,
   description,
 }: {
-  icon: string;
+  icon: React.ReactNode;
   title: string;
   description: string;
 }) {
   return (
-    <View className="flex-row items-center gap-3">
-      <View className="h-10 w-10 items-center justify-center rounded-full bg-gray-100">
-        <Text className="text-lg">{icon}</Text>
+    <View className="flex-row items-center gap-4">
+      <View className="h-12 w-12 items-center justify-center rounded-full bg-gray-100">
+        {icon}
       </View>
       <View className="flex-1">
         <Text className="text-sm font-semibold text-gray-900">{title}</Text>

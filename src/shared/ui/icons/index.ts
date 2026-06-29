@@ -12,4 +12,5 @@ export { default as KakaoIcon } from './KakaoIcon';
 export { default as GoogleIcon } from './GoogleIcon';
 export { default as AppleIcon } from './AppleIcon';
 export { default as CameraIcon } from './CameraIcon';
+export { default as BellIcon } from './BellIcon';
 export type { IconProps } from './types';

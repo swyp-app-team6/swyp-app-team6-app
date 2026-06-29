@@ -8,6 +8,7 @@ import HomePage from '@/pages/home/HomePage';
 import ProfileCardPage from '@/pages/profileCard/ProfileCardPage';
 import MyPage from '@/pages/mypage/MyPage';
 import WithdrawalPage from '@/pages/withdrawal/WithdrawalPage';
+import DefaultLoginPage from '@/pages/login/DefaultLoginPage';
 import { NavigatorType } from '../types';
 import ComponentPlaygroundPage from '../../pages/playground/ComponentPlaygroundPage';
 import Config from 'react-native-config';
@@ -36,6 +37,7 @@ export default function StackRouter({ initialRouteName = 'home' }: StackRouterPr
       <Stack.Navigator initialRouteName={initialRouteName} screenOptions={{ headerShown: false }}>
         <Stack.Screen name='onboarding' component={OnboardingPage} />
         <Stack.Screen name='login' component={LoginPage} />
+        <Stack.Screen name='defaultLogin' component={DefaultLoginPage} />
         <Stack.Screen name='home' component={HomePage} options={{ animation: 'none' }} />
         <Stack.Screen name='profileCard' component={ProfileCardPage} options={{ animation: 'none' }} />
         <Stack.Screen name='mypage' component={MyPage} options={{ animation: 'none' }} />

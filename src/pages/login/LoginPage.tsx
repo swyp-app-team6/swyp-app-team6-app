@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Text, View } from 'react-native';
+import { Image, Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { AppleLoginButton, GoogleLoginButton, Layout } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
@@ -7,6 +7,7 @@ import type { NavigationPropType } from '@/shared/types';
 import useGoogleLoginMutation from '@/features/login/googleLogin/api/useGoogleLoginMutation';
 import { TermsAgreementBottomSheet } from '@/features/terms';
 import { PermissionGuideBottomSheet } from '@/features/permissionGuide';
+import LoginTroubleBottomSheet from '@/features/login/ui/LoginTroubleBottomSheet';
 import { UserAPI } from '@/entities/user';
 import useConditionStateStore from '@/shared/model/conditionStateStore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -14,11 +15,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 /**
  * # LoginPage
  * ---
- * - 간단설명: 앱 로고 + 소셜 로그인 + 이용약관/접근권한 바텀시트를 제공하는 로그인 화면
+ * - 간단설명: Orbits 브랜딩 + 소셜 로그인 + 이용약관/접근권한 바텀시트를 제공하는 로그인 화면
  * - 제약사항 및 특이사항:
  *   - Google 로그인 성공 시 비회원이면 이용약관 → 접근권한 바텀시트 순서로 노출
  *   - 기존 회원이면 바로 home 화면으로 이동
  *   - Apple 로그인은 UI만 배치 (실제 연동 제외)
+ *   - "로그인에 문제가 있나요?" → LoginTroubleBottomSheet → DefaultLoginPage 진입
  * ---
  * @example
  * <LoginPage />
@@ -36,6 +38,7 @@ function LoginPage() {
 
   const termsRef = useRef<BottomSheetHandle>(null);
   const permissionRef = useRef<BottomSheetHandle>(null);
+  const troubleRef = useRef<BottomSheetHandle>(null);
 
   /** 프로필 존재 여부를 확인하여 home 또는 register로 분기 */
   const navigateByProfile = async () => {
@@ -85,12 +88,36 @@ function LoginPage() {
 
   return (
     <Layout styleClass={{ root: 'bg-white' }}>
+      {/* 로고 영역 */}
       <View className="flex-1 justify-center items-center">
-        <Text className="text-4xl font-bold text-gray-900">SWYP</Text>
+        <Image
+          source={require('@/assets/orbits-character-icon.png')}
+          className="w-28 h-28 mb-4"
+          resizeMode="contain"
+        />
+        <Image
+          source={require('@/assets/orbits-name-icon.png')}
+          className="w-52 h-14"
+          resizeMode="contain"
+        />
+        <Text className="text-base text-gray-500 mt-4">
+          대화를 여는 프로필 카드
+        </Text>
       </View>
-      <View className="px-6 gap-3" style={{ paddingBottom: bottom || 40 }}>
+
+      {/* 소셜 로그인 버튼 */}
+      <View className="px-5 gap-3" style={{ paddingBottom: bottom || 40 }}>
         <GoogleLoginButton onPress={handleGoogleLogin} loading={isGooglePending} />
         <AppleLoginButton onPress={() => {}} />
+
+        {/* 로그인 문제 링크 */}
+        <View className="items-center pt-2">
+          <Pressable onPress={() => troubleRef.current?.open()} hitSlop={8}>
+            <Text className="text-xs text-white/60 underline">
+              로그인에 문제가 있나요?
+            </Text>
+          </Pressable>
+        </View>
       </View>
 
       <TermsAgreementBottomSheet
@@ -100,6 +127,10 @@ function LoginPage() {
       <PermissionGuideBottomSheet
         ref={permissionRef}
         onConfirm={handlePermissionConfirm}
+      />
+      <LoginTroubleBottomSheet
+        ref={troubleRef}
+        onDefaultLogin={() => navigation.navigate('defaultLogin')}
       />
     </Layout>
   );
