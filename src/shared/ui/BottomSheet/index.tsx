@@ -92,6 +92,9 @@ const BottomSheetComponent = forwardRef<BottomSheetHandle, Props>(
         enableDynamicSizing={!snapPoints}
         backdropComponent={renderBackdrop}
         onDismiss={handleDismiss}
+        keyboardBehavior="interactive"
+        keyboardBlurBehavior="restore"
+        android_keyboardInputMode="adjustResize"
       >
         <BottomSheetView className={cn(styleClass?.root)}>
           {(title || showClose) && (
