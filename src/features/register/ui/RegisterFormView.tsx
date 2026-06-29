@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { StepView, ProgressBar } from '@/shared/ui';
-import type { ProfileRegisterRequest } from '@/entities/user';
 import useRegisterFormStore from '../model/useRegisterFormStore';
-import useRegisterMutation from '../api/useRegisterMutation';
 import Step1BasicInfoView from './Step1BasicInfoView';
 import Step2InterestsView from './Step2InterestsView';
 import Step3TMIView from './Step4TMIView';
@@ -34,7 +32,6 @@ interface Props {
  */
 export default function RegisterFormView({ onViewProfile, onGoHome }: Props) {
   const { currentStep, form, reset } = useRegisterFormStore();
-  const { mutate, isPending } = useRegisterMutation();
   const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
@@ -43,23 +40,12 @@ export default function RegisterFormView({ onViewProfile, onGoHome }: Props) {
     };
   }, [reset]);
 
-  /** 프로필 등록 제출 */
+  /** 
+   * 프로필 등록 제출 (API 호출 없이 완료 처리) 
+   * TODO: 프로필등록 API 연동
+   * */
   const handleSubmit = () => {
-    const request: ProfileRegisterRequest = {
-      nickname: form.nickname,
-      gender: form.gender!,
-      bio: form.bio,
-      keyword: '',
-      topic: '',
-      interests: form.interests,
-      ...(form.profileImageKey && { image_key: form.profileImageKey }),
-    };
-
-    mutate(request, {
-      onSuccess: () => {
-        setIsComplete(true);
-      },
-    });
+    setIsComplete(true);
   };
 
   if (isComplete) {
@@ -91,7 +77,7 @@ export default function RegisterFormView({ onViewProfile, onGoHome }: Props) {
           <Step3TMIView />
         </StepView.Step>
         <StepView.Step>
-          <Step4PreviewView onSubmit={handleSubmit} loading={isPending} />
+          <Step4PreviewView onSubmit={handleSubmit} loading={false} />
         </StepView.Step>
       </StepView>
     </View>
