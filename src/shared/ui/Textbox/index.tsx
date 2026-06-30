@@ -68,6 +68,12 @@ export default function Textbox({
     parentOnChangeTextRef.current?.(text);
   }, []);
 
+  /**
+   * BottomSheetTextInput은 자체 네이티브 텍스트 상태를 관리하므로:
+   * - value 전달 → iOS 한글 자음모음분리 발생
+   * - useKoreanSafeValue(value 조건부 생략) → 네이티브/JS 상태 충돌로 이중 호출
+   * 해결: 비제어 모드(defaultValue)로 동작시키고 onChangeText로만 부모 상태 동기화
+   */
   const { valueProps, onChangeText } = useKoreanSafeValue(value, handleChangeText);
 
   return (
@@ -89,8 +95,8 @@ export default function Textbox({
         )}
         style={{ minHeight }}
         {...rest}
-        {...valueProps}
-        onChangeText={onChangeText}
+        {...(isBottomSheet ? { defaultValue: value } : valueProps)}
+        onChangeText={isBottomSheet ? handleChangeText : onChangeText}
       />
       <View className="flex-row justify-between mt-1.5">
         {error ? (
