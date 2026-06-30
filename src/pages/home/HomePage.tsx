@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Image, Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Header, Layout, MyPageIcon } from '@/shared/ui';
+import { Header, Layout, MyPageIcon, QRIcon } from '@/shared/ui';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
+import { ProfileShareQRModal } from '@/features/profileShare';
 import type { NavigationPropType } from '@/shared/types';
 
 /**
@@ -13,11 +14,13 @@ import type { NavigationPropType } from '@/shared/types';
  * - 제약사항 및 특이사항:
  *   - 프로필 카드가 없는 경우 빈 카드(추가 유도) UI 표시
  *   - 우측 상단 아이콘으로 마이페이지 이동
+ *   - 프로필 카드 타이틀 우측 QR 아이콘으로 프로필 공유 모달 표시
  *   - 하단 네비게이션은 withLayout HOC가 자동 제공
  * ---
  */
 function HomePage() {
   const navigation = useNavigation<NavigationPropType>();
+  const [showQR, setShowQR] = useState(false);
 
   return (
     <>
@@ -43,14 +46,23 @@ function HomePage() {
 
         {/* 내 프로필 카드 섹션 */}
         <View className="mt-8 items-center">
-          {/* 내 프로필 카드 타이틀 */}
-          <View className="w-full flex-row items-center gap-1">
-            <Text className="text-[16px] font-semibold leading-[22px] tracking-tight text-primary">
-              사용자
-            </Text>
-            <Text className="text-[16px] font-medium leading-[22px] tracking-tight text-text-black">
-              님의 프로필 카드
-            </Text>
+          {/* 내 프로필 카드 타이틀 + QR 공유 버튼 */}
+          <View className="w-full flex-row items-center justify-between">
+            <View className="flex-row items-center gap-1">
+              <Text className="text-[16px] font-semibold leading-[22px] tracking-tight text-primary">
+                사용자
+              </Text>
+              <Text className="text-[16px] font-medium leading-[22px] tracking-tight text-text-black">
+                님의 프로필 카드
+              </Text>
+            </View>
+            <Pressable
+              hitSlop={8}
+              onPress={() => setShowQR(true)}
+              accessibilityLabel="프로필 카드 QR 공유"
+            >
+              <QRIcon size={24} color="#9ca3af" />
+            </Pressable>
           </View>
 
           {/* 빈 프로필 카드 */}
@@ -74,8 +86,22 @@ function HomePage() {
               뒷면보기
             </Text>
           </Pressable>
+
+          {/* 상세보기 버튼 */}
+          <Pressable
+            onPress={() => navigation.navigate('profileDetail')}
+            className="mt-2 flex-row items-center gap-1 rounded-[20px] px-3 py-2"
+          >
+            <Text className="text-[12px] font-medium tracking-tight text-primary">
+              상세보기
+            </Text>
+            <Text className="text-[14px] text-primary">›</Text>
+          </Pressable>
         </View>
       </Layout.Body>
+
+      {/* 프로필 카드 QR 공유 모달 */}
+      <ProfileShareQRModal visible={showQR} onClose={() => setShowQR(false)} />
     </>
   );
 }

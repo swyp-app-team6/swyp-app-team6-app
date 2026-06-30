@@ -9,6 +9,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
  * - profileCard = 프로필카드
  * - mypage = 마이페이지
  * - withdrawal = 회원탈퇴
+ * - profileDetail = 프로필 상세보기
  */
 export type NavigatorType = {
   onboarding: undefined;
@@ -20,6 +21,7 @@ export type NavigatorType = {
   mypage: undefined;
   qr: undefined;
   storage: undefined;
+  profileDetail: undefined;
   withdrawal: undefined;
   playground: undefined;
 }
