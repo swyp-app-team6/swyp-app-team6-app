@@ -6,7 +6,7 @@ import Step1BasicInfoView from './Step1BasicInfoView';
 import Step2DetailInfoView from './Step2DetailInfoView';
 import Step3InterestsView from './Step2InterestsView';
 import Step4BioView from './Step3BioView';
-import Step5TypeTestView from './Step3TypeTestView';
+import CosmicTypeTestView from './CosmicTypeTestView';
 import Step6TMIView from './Step4TMIView';
 import Step7PreviewView from './Step5PreviewView';
 import RegisterCompleteView from './RegisterCompleteView';
@@ -34,7 +34,7 @@ interface Props {
  * <RegisterFormView onViewProfile={...} onGoHome={...} />
  */
 export default function RegisterFormView({ onViewProfile, onGoHome }: Props) {
-  const { currentStep, reset } = useRegisterFormStore();
+  const { currentStep, nextStep, reset } = useRegisterFormStore();
   const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
@@ -84,7 +84,7 @@ export default function RegisterFormView({ onViewProfile, onGoHome }: Props) {
           <Step4BioView />
         </StepView.Step>
         <StepView.Step>
-          <Step5TypeTestView />
+          <CosmicTypeTestView onComplete={nextStep} />
         </StepView.Step>
         <StepView.Step>
           <Step6TMIView />
