@@ -40,8 +40,8 @@ export default function Step2DetailInfoView() {
     updateForm({ jobField: text });
   };
 
-  /** 활동 지역 선택 핸들러 */
-  const handleRegionSelect = (region: string, subArea: string) => {
+  /** 지역 선택완료 핸들러 */
+  const handleRegionConfirm = (region: string, subArea: string) => {
     updateForm({ region, subArea });
     bottomSheetRef.current?.dismiss();
   };
@@ -143,7 +143,7 @@ export default function Step2DetailInfoView() {
             <RegionPicker
               selectedRegion={form.region}
               selectedSubArea={form.subArea}
-              onSelect={handleRegionSelect}
+              onConfirm={handleRegionConfirm}
             />
           </View>
           <View style={{ height: bottom + 16 }} />
