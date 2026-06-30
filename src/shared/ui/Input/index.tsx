@@ -86,7 +86,7 @@ function Input({
       )}
       <View
         className={cn(
-          'relative h-14 flex-row items-center rounded-xl border bg-white px-4',
+          'relative h-14 flex-row items-center rounded-xl bg-text-gray7 px-4',
           error ? 'border-red-500' : 'border-text-gray6',
           styleClass?.root,
         )}

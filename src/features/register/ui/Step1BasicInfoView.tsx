@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Pressable, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Input, BottomCTA, Button, CameraUploadZone } from '@/shared/ui';
 import { UserAPI } from '@/entities/user';
@@ -102,34 +102,18 @@ export default function Step1BasicInfoView() {
         <View className="mb-8">
           <Text className="mb-3 text-base font-medium text-text-black">성별</Text>
           <View className="flex-row gap-3">
-            <Pressable
+            <Button
+              title="남성"
+              variant={form.gender === 'M' ? 'primary' : 'secondary'}
               onPress={() => updateForm({ gender: 'M' })}
-              className={`px-6 h-11 rounded-lg items-center justify-center border ${form.gender === 'M'
-                ? 'bg-primary border-primary'
-                : 'bg-white border-text-gray6'
-                }`}
-            >
-              <Text
-                className={`text-sm font-medium ${form.gender === 'M' ? 'text-white' : 'text-text-gray4'
-                  }`}
-              >
-                남성
-              </Text>
-            </Pressable>
-            <Pressable
+              className="px-6 h-11"
+            />
+            <Button
+              title="여성"
+              variant={form.gender === 'F' ? 'primary' : 'secondary'}
               onPress={() => updateForm({ gender: 'F' })}
-              className={`px-6 h-11 rounded-lg items-center justify-center border ${form.gender === 'F'
-                ? 'bg-primary border-primary'
-                : 'bg-white border-text-gray6'
-                }`}
-            >
-              <Text
-                className={`text-sm font-medium ${form.gender === 'F' ? 'text-white' : 'text-text-gray4'
-                  }`}
-              >
-                여성
-              </Text>
-            </Pressable>
+              className="px-6 h-11"
+            />
           </View>
         </View>
 
