@@ -28,6 +28,10 @@ function MyPage() {
     try {
       await clearAuth();
       await clearCondition();
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'login' }],
+      });
     } catch (e) {
       console.error(e);
     }
