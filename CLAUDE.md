@@ -12,19 +12,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - PDR: 기획 및 제약사항 어떻게, 어째서 했는지를 정리하는 문서
   - ADR: 특정 기술 도입 결정을 왜 하였는지 정리하는 문서 -->
 
-2. 디자인: stitch mcp 사용해 화면, ui배치 구성
-- 반드시 존재하는 디자인 시스템 기반으로 제작할것, 새로 제작 필요할시는 별도 생성 질문후 진행
+2. 디자인: 주어지는 피그마 링크, mcp, 퍼블리싱 데이터 조합하여 ui 구성후 작성
+- 반드시 shared/ui 의 컴포넌트를 사용할것, 새로 제작 필요할시는 개발자에게 허락 받아야 함
 
 3. 개발: Jira, confluence, stitch mcp 통해 작업사항 바탕으로 하여  작업내용 파악
 - 개발 과정은 red green refactor 원칙 기반 TDD로 작업 진행할 것
 - superpowers의 brainstorming skill 사용하여 기획 구체화 진행
 - 커밋 메세지: 내용은 전부 한글로 작성할것
 
-- 개발 방법론: superpowers의 test-driven-development skill 사용하여 TDD로 진행
+- 현재 개발 시 테스트 작성은 생략
+<!-- - 개발 방법론: superpowers의 test-driven-development skill 사용하여 TDD로 진행
 1. 테스트 desc 작성, 작성후 검토 요청하기
 2. 구현하려는 기능의 테스트 작성 
 3. 테스트를 통과시키는 최소한의 코드 작성
-4. 리팩토링 및 개선
+4. 리팩토링 및 개선 -->
 
 - 폴더 구조: fsd 패턴 사용하여 구조적으로 정리
 규칙
