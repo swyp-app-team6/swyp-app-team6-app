@@ -34,7 +34,7 @@ function HomePage() {
           </Pressable>
         }
       />
-      <Layout.Body styleClass={{ root: 'px-5 pt-6' }}>
+      <Layout.Body styleClass={{ root: 'px-5 pt-6 bg-white' }}>
         {/* 환영 메시지 */}
         <Text className="text-[20px] font-semibold leading-[30px] tracking-tight text-text-black">
           {'오르비츠와 함께 새로운 만남을\n시작할 준비가 되셨나요?'}

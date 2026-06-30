@@ -38,6 +38,7 @@ module.exports = {
           /** 핑크 */
           pink: '#FF6CC2',
         },
+        white: '#FFFFFF',
         /** 메인 텍스트 (거의 블랙) */
         black: '#1A1A1A',
         /** 본문 텍스트 (다크 그레이) */
