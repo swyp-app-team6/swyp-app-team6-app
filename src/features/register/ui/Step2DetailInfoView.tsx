@@ -72,7 +72,7 @@ export default function Step2DetailInfoView() {
   );
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 bg-white">
       <ScrollView className="flex-1 px-5" showsVerticalScrollIndicator={false}>
         {/* 안내 타이틀 */}
         <Text className="text-xl font-bold text-text-black mt-6 mb-8">

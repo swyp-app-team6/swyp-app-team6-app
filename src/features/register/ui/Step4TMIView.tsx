@@ -75,7 +75,7 @@ export default function Step4TMIView() {
   };
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 bg-white">
       <ScrollView className="flex-1 pt-6" showsVerticalScrollIndicator={false}>
         <View className="px-5">
           <Text className="text-xl font-bold text-text-black mb-2">

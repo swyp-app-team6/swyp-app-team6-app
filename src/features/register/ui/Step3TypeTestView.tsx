@@ -19,7 +19,7 @@ export default function Step3TypeTestView() {
   const { nextStep } = useRegisterFormStore();
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 bg-white">
       <View className="flex-1 items-center justify-center px-5">
         <Text className="text-5xl mb-6">🔮</Text>
         <Text className="text-xl font-bold text-text-black mb-3">

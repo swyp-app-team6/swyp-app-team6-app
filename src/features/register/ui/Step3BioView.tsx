@@ -25,7 +25,7 @@ export default function Step3BioView() {
   };
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 bg-white">
       {/* 건너뛰기 버튼 */}
       <View className="flex-row justify-end px-5">
         <Pressable onPress={nextStep} hitSlop={8}>

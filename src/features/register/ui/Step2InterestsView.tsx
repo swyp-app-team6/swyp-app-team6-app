@@ -38,7 +38,7 @@ export default function Step2InterestsView() {
   const isValid = form.interests.length >= 3;
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 bg-white">
       <ScrollView className="flex-1 px-5 pt-6" showsVerticalScrollIndicator={false}>
         <Text className="text-xl font-bold text-text-black mb-2">
           관심사 선택

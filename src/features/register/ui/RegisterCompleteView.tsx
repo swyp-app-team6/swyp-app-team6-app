@@ -27,7 +27,7 @@ interface Props {
  */
 export default function RegisterCompleteView({ onViewProfile, onGoHome }: Props) {
   return (
-    <View className="flex-1">
+    <View className="flex-1 bg-white">
       <View className="flex-1 items-center justify-center px-5">
         {/* 축하 일러스트 플레이스홀더 */}
         <View className="w-[200px] h-[167px] items-center justify-center mb-10">

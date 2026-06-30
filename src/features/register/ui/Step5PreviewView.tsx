@@ -48,7 +48,7 @@ export default function Step5PreviewView({ onSubmit, loading }: Props) {
   };
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 bg-white">
       <ScrollView
         ref={scrollRef}
         className="flex-1"
