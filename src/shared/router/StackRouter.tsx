@@ -11,6 +11,7 @@ import WithdrawalPage from '@/pages/withdrawal/WithdrawalPage';
 import DefaultLoginPage from '@/pages/login/DefaultLoginPage';
 import QRPage from '@/pages/qr/QRPage';
 import StoragePage from '@/pages/storage/StoragePage';
+import StorageAllPage from '@/pages/storage/StorageAllPage';
 import ProfileDetailPage from '@/pages/profileDetail/ProfileDetailPage';
 import { NavigatorType } from '../types';
 import ComponentPlaygroundPage from '../../pages/playground/ComponentPlaygroundPage';
@@ -46,6 +47,7 @@ export default function StackRouter({ initialRouteName = 'home' }: StackRouterPr
         <Stack.Screen name='mypage' component={MyPage} options={{ animation: 'none' }} />
         <Stack.Screen name='qr' component={QRPage} options={{ animation: 'none' }} />
         <Stack.Screen name='storage' component={StoragePage} options={{ animation: 'none' }} />
+        <Stack.Screen name='storageAll' component={StorageAllPage} />
         <Stack.Screen name='profileDetail' component={ProfileDetailPage} />
         <Stack.Screen name='registerProfile' component={RegisterPage} />
         <Stack.Screen name='withdrawal' component={WithdrawalPage} />

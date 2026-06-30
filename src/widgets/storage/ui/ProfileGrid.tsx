@@ -8,6 +8,12 @@ interface ProfileGridProps {
   profiles: StorageProfile[];
   /** 즐겨찾기 토글 콜백 */
   onToggleFavorite: (id: number) => void;
+  /** 편집 모드 여부 */
+  isEditMode?: boolean;
+  /** 선택된 프로필 ID Set */
+  selectedIds?: Set<number>;
+  /** 선택 토글 콜백 */
+  onToggleSelect?: (id: number) => void;
 }
 
 /**
@@ -17,14 +23,24 @@ interface ProfileGridProps {
  * - 제약사항 및 특이사항:
  *   - FlatList numColumns=2, 12px 간격
  *   - 빈 목록 시 빈 화면 표시
+ *   - 편집 모드 시 체크박스 오버레이 전달
  * ---
  * @param profiles 프로필 목록
  * @param onToggleFavorite 즐겨찾기 토글 콜백
+ * @param isEditMode 편집 모드 여부
+ * @param selectedIds 선택된 프로필 ID Set
+ * @param onToggleSelect 선택 토글 콜백
  * ---
  * @example
  * <ProfileGrid profiles={profiles} onToggleFavorite={toggle} />
  */
-export default function ProfileGrid({ profiles, onToggleFavorite }: ProfileGridProps) {
+export default function ProfileGrid({
+  profiles,
+  onToggleFavorite,
+  isEditMode = false,
+  selectedIds,
+  onToggleSelect,
+}: ProfileGridProps) {
   return (
     <FlatList
       data={profiles}
@@ -34,7 +50,13 @@ export default function ProfileGrid({ profiles, onToggleFavorite }: ProfileGridP
       contentContainerStyle={styles.contentContainer}
       scrollEnabled={false}
       renderItem={({ item }) => (
-        <ProfileCard profile={item} onToggleFavorite={onToggleFavorite} />
+        <ProfileCard
+          profile={item}
+          onToggleFavorite={onToggleFavorite}
+          isEditMode={isEditMode}
+          isSelected={selectedIds?.has(item.id) ?? false}
+          onToggleSelect={onToggleSelect}
+        />
       )}
     />
   );

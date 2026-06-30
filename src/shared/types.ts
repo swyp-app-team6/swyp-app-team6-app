@@ -21,6 +21,7 @@ export type NavigatorType = {
   mypage: undefined;
   qr: undefined;
   storage: undefined;
+  storageAll: undefined;
   profileDetail: undefined;
   withdrawal: undefined;
   playground: undefined;

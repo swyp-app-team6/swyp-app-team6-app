@@ -1,6 +1,7 @@
 import React from 'react';
 import { Image, Pressable, Text, View } from 'react-native';
 import { Tag } from '@/shared/ui';
+import { Checkbox } from '@/shared/ui/Checkbox';
 import { HeartIcon } from '@/shared/ui/icons';
 import type { StorageProfile } from '@/entities/storage';
 import { COSMIC_TYPE_LABEL } from '@/entities/storage';
@@ -10,6 +11,12 @@ interface ProfileCardProps {
   profile: StorageProfile;
   /** 즐겨찾기 토글 콜백 */
   onToggleFavorite: (id: number) => void;
+  /** 편집 모드 여부 */
+  isEditMode?: boolean;
+  /** 선택 여부 (편집 모드) */
+  isSelected?: boolean;
+  /** 선택 토글 콜백 (편집 모드) */
+  onToggleSelect?: (id: number) => void;
 }
 
 /**
@@ -20,14 +27,24 @@ interface ProfileCardProps {
  *   - 이미지 높이 184px, rounded-lg
  *   - Tag outline 변형으로 코스믹 유형 표시
  *   - HeartIcon으로 즐겨찾기 토글
+ *   - 편집 모드 시 좌측 상단에 체크박스 오버레이 표시
  * ---
  * @param profile 프로필 데이터
  * @param onToggleFavorite 즐겨찾기 토글 콜백
+ * @param isEditMode 편집 모드 여부
+ * @param isSelected 선택 여부
+ * @param onToggleSelect 선택 토글 콜백
  * ---
  * @example
  * <ProfileCard profile={profile} onToggleFavorite={(id) => toggle(id)} />
  */
-export default function ProfileCard({ profile, onToggleFavorite }: ProfileCardProps) {
+export default function ProfileCard({
+  profile,
+  onToggleFavorite,
+  isEditMode = false,
+  isSelected = false,
+  onToggleSelect,
+}: ProfileCardProps) {
   const typeLabel = COSMIC_TYPE_LABEL[profile.cosmicType];
 
   return (
@@ -39,6 +56,14 @@ export default function ProfileCard({ profile, onToggleFavorite }: ProfileCardPr
           className="h-full w-full"
           resizeMode="cover"
         />
+        {isEditMode && (
+          <View className="absolute left-2 top-2">
+            <Checkbox
+              checked={isSelected}
+              onValueChange={() => onToggleSelect?.(profile.id)}
+            />
+          </View>
+        )}
       </View>
 
       {/* 카드 정보 */}
