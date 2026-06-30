@@ -9,6 +9,8 @@ import ProfileCardPage from '@/pages/profileCard/ProfileCardPage';
 import MyPage from '@/pages/mypage/MyPage';
 import WithdrawalPage from '@/pages/withdrawal/WithdrawalPage';
 import DefaultLoginPage from '@/pages/login/DefaultLoginPage';
+import QRPage from '@/pages/qr/QRPage';
+import StoragePage from '@/pages/storage/StoragePage';
 import { NavigatorType } from '../types';
 import ComponentPlaygroundPage from '../../pages/playground/ComponentPlaygroundPage';
 import Config from 'react-native-config';
@@ -41,6 +43,8 @@ export default function StackRouter({ initialRouteName = 'home' }: StackRouterPr
         <Stack.Screen name='home' component={HomePage} options={{ animation: 'none' }} />
         <Stack.Screen name='profileCard' component={ProfileCardPage} options={{ animation: 'none' }} />
         <Stack.Screen name='mypage' component={MyPage} options={{ animation: 'none' }} />
+        <Stack.Screen name='qr' component={QRPage} options={{ animation: 'none' }} />
+        <Stack.Screen name='storage' component={StoragePage} options={{ animation: 'none' }} />
         <Stack.Screen name='registerProfile' component={RegisterPage} />
         <Stack.Screen name='withdrawal' component={WithdrawalPage} />
         {

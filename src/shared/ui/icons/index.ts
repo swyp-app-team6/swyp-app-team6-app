@@ -14,4 +14,6 @@ export { default as AppleIcon } from './AppleIcon';
 export { default as CameraIcon } from './CameraIcon';
 export { default as BellIcon } from './BellIcon';
 export { default as ChevronDownIcon } from './ChevronDownIcon';
+export { default as HeartIcon } from './HeartIcon';
+export { default as StorageIcon } from './StorageIcon';
 export type { IconProps } from './types';

@@ -18,6 +18,8 @@ export type NavigatorType = {
   home: undefined;
   profileCard: undefined;
   mypage: undefined;
+  qr: undefined;
+  storage: undefined;
   withdrawal: undefined;
   playground: undefined;
 }

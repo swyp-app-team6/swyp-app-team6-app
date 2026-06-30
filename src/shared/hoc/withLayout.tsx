@@ -1,9 +1,9 @@
 import React from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import { Layout, HomeIcon, CardIcon, MyPageIcon } from '@/shared/ui'
+import { Layout, HomeIcon, QRIcon, StorageIcon } from '@/shared/ui'
 import LocalEnvBadge from '@/shared/ui/LocalEnvBadge';
 
-const ACTIVE_COLOR = '#3b82f6';
+const ACTIVE_COLOR = '#8C39FB';
 const INACTIVE_COLOR = '#9ca3af';
 
 /**
@@ -12,8 +12,8 @@ const INACTIVE_COLOR = '#9ca3af';
  */
 const NAV_ITEMS = [
   { name: 'home', label: '홈', icon: (active: boolean) => <HomeIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
-  { name: 'profileCard', label: '프로필카드', icon: (active: boolean) => <CardIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
-  { name: 'mypage', label: '마이페이지', icon: (active: boolean) => <MyPageIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
+  { name: 'qr', label: 'QR 스캔', icon: (active: boolean) => <QRIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
+  { name: 'storage', label: '보관함', icon: (active: boolean) => <StorageIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
 ];
 
 /**
