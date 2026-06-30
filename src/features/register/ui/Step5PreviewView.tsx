@@ -74,14 +74,14 @@ export default function Step5PreviewView({ onSubmit, loading }: Props) {
             >
               <Text
                 className={`text-base font-semibold ${
-                  activeTab === tab ? 'text-[#742bd5]' : 'text-[#9e9e9e]'
+                  activeTab === tab ? 'text-primary' : 'text-text-gray4'
                 }`}
                 style={{ letterSpacing: -0.4 }}
               >
                 {tab}
               </Text>
               {activeTab === tab && (
-                <View className="h-0.5 bg-[#742bd5] mt-1 rounded-full" />
+                <View className="h-0.5 bg-primary mt-1 rounded-full" />
               )}
             </Pressable>
           ))}
@@ -109,7 +109,7 @@ export default function Step5PreviewView({ onSubmit, loading }: Props) {
                       style={{ backgroundColor: 'rgba(120,50,213,0.1)' }}
                     >
                       <Text
-                        className="text-sm font-medium text-[#7832d5]"
+                        className="text-sm font-medium text-primary"
                         style={{ letterSpacing: -0.4, lineHeight: 22.4 }}
                       >
                         {getInterestLabel(interest)}
@@ -117,7 +117,7 @@ export default function Step5PreviewView({ onSubmit, loading }: Props) {
                     </View>
                   ))
                 ) : (
-                  <Text className="text-sm text-[#797979]">등록된 관심사가 없습니다</Text>
+                  <Text className="text-sm text-text-gray4">등록된 관심사가 없습니다</Text>
                 )}
               </View>
             </InfoCard>
@@ -127,7 +127,7 @@ export default function Step5PreviewView({ onSubmit, loading }: Props) {
           {activeTab === '자기소개' && (
             <InfoCard title="자기소개">
               <Text
-                className="text-[15px] font-medium text-[#797979]"
+                className="text-[15px] font-medium text-text-gray4"
                 style={{ letterSpacing: -0.15, lineHeight: 22.5 }}
               >
                 {form.bio || '등록된 자기소개가 없습니다'}
@@ -138,7 +138,7 @@ export default function Step5PreviewView({ onSubmit, loading }: Props) {
           {/* 유형테스트 */}
           {activeTab === '유형테스트' && (
             <InfoCard title="유형테스트">
-              <Text className="text-sm text-[#797979]">
+              <Text className="text-sm text-text-gray4">
                 아직 유형 테스트를 완료하지 않았습니다
               </Text>
             </InfoCard>
@@ -152,13 +152,13 @@ export default function Step5PreviewView({ onSubmit, loading }: Props) {
                   {form.tmiAnswers.map((tmi) => (
                     <View key={tmi.questionId}>
                       <Text
-                        className="text-sm font-medium text-[#707070] mb-1"
+                        className="text-sm font-medium text-text-gray4 mb-1"
                         style={{ letterSpacing: -0.4 }}
                       >
                         {getQuestionText(tmi.questionId)}
                       </Text>
                       <Text
-                        className="text-[15px] font-medium text-[#181818]"
+                        className="text-[15px] font-medium text-text-gray2"
                         style={{ letterSpacing: -0.15 }}
                       >
                         {tmi.answer}
@@ -167,7 +167,7 @@ export default function Step5PreviewView({ onSubmit, loading }: Props) {
                   ))}
                 </View>
               ) : (
-                <Text className="text-sm text-[#797979]">
+                <Text className="text-sm text-text-gray4">
                   등록된 TMI가 없습니다
                 </Text>
               )}
@@ -199,7 +199,7 @@ export default function Step5PreviewView({ onSubmit, loading }: Props) {
  */
 function InfoCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <View className="bg-white border border-[#d2d2d2] rounded-xl px-6 py-8">
+    <View className="bg-white border border-text-gray6 rounded-xl px-6 py-8">
       <Text
         className="text-base font-semibold text-black mb-4"
         style={{ letterSpacing: -0.4 }}
@@ -223,13 +223,13 @@ function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <View className="flex-row items-center gap-4 mb-3">
       <Text
-        className="text-sm font-medium text-[#707070] w-14"
+        className="text-sm font-medium text-text-gray4 w-14"
         style={{ letterSpacing: -0.4 }}
       >
         {label}
       </Text>
       <Text
-        className="text-sm font-medium text-[#181818] flex-1"
+        className="text-sm font-medium text-text-gray2 flex-1"
         style={{ letterSpacing: -0.4 }}
       >
         {value}

@@ -26,7 +26,7 @@ export default function ProfilePreviewCard() {
   return (
     <View
       className="w-[284px] h-[394px] rounded-xl overflow-hidden self-center"
-      style={{ backgroundColor: '#a6a6a6' }}
+      style={{ backgroundColor: '#A6A6A6' }}
     >
       {/* 프로필 사진 (카드 전체 채움) */}
       {form.profileImageUri ? (

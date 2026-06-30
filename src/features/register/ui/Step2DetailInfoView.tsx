@@ -135,7 +135,7 @@ export default function Step2DetailInfoView() {
       >
         <BottomSheetView>
           <View className="px-5 pb-3 pt-1">
-            <Text className="text-xl font-bold text-[#1A1A1A] leading-7">
+            <Text className="text-xl font-bold text-text-black leading-7">
               활동 지역을 선택해주세요
             </Text>
           </View>

@@ -63,14 +63,14 @@ export default function RegionPicker({ selectedRegion, selectedSubArea, onSelect
               key={option.value}
               onPress={() => handleProvincePress(option.label)}
               className={`h-12 px-4 rounded-xl justify-center mb-1 ${
-                isActive ? 'bg-[#F5F5F5]' : 'bg-white'
+                isActive ? 'bg-gray7' : 'bg-white'
               }`}
             >
               <Text
                 className={`text-base ${
                   isActive
-                    ? 'font-bold text-[#1B1B1B]'
-                    : 'font-medium text-[#888888]'
+                    ? 'font-bold text-text-gray2'
+                    : 'font-medium text-text-gray4'
                 }`}
               >
                 {option.label}
@@ -81,7 +81,7 @@ export default function RegionPicker({ selectedRegion, selectedSubArea, onSelect
       </ScrollView>
 
       {/* 구분선 */}
-      <View className="w-px bg-[#D9D9D9] self-stretch" />
+      <View className="w-px bg-text-gray6 self-stretch" />
 
       {/* 하위 지역 컬럼 */}
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
@@ -92,14 +92,14 @@ export default function RegionPicker({ selectedRegion, selectedSubArea, onSelect
               key={area}
               onPress={() => handleSubAreaPress(area)}
               className={`h-12 px-4 rounded-xl justify-center mb-1 ${
-                isActive ? 'bg-[#F5F5F5]' : 'bg-white'
+                isActive ? 'bg-gray7' : 'bg-white'
               }`}
             >
               <Text
                 className={`text-base ${
                   isActive
-                    ? 'font-bold text-[#1B1B1B]'
-                    : 'font-medium text-[#888888]'
+                    ? 'font-bold text-text-gray2'
+                    : 'font-medium text-text-gray4'
                 }`}
               >
                 {area}
