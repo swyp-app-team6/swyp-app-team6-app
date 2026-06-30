@@ -48,11 +48,16 @@ export default function EditToolbar({
   return (
     <View className="flex-row items-center justify-between">
       {/* 전체 선택 */}
-      <Checkbox
-        checked={isAllSelected}
-        onValueChange={onToggleSelectAll}
-        label="전체 선택"
-      />
+      <Pressable
+        className="flex-row items-center gap-2"
+        onPress={() => onToggleSelectAll()}
+      >
+        <Checkbox
+          checked={isAllSelected}
+          onValueChange={onToggleSelectAll}
+        />
+        <Text className="text-sm text-[#1A1A1A]">전체 선택</Text>
+      </Pressable>
 
       {/* 편집취소 + 선택삭제 */}
       <View className="flex-row items-center gap-3">
