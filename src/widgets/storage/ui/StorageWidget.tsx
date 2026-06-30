@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { Input } from '@/shared/ui';
+import PullToRefreshWrapper from '@/shared/ui/PullToRefreshWrapper';
 import { ChevronDownIcon, SearchIcon } from '@/shared/ui/icons';
 import { MOCK_STORAGE_PROFILES, COSMIC_TYPE_LABEL } from '@/entities/storage';
 import type { StorageProfile } from '@/entities/storage';
@@ -40,8 +41,12 @@ export default function StorageWidget() {
     );
   };
 
+  const handleRefetch = () => {
+    setProfiles([...MOCK_STORAGE_PROFILES]);
+  };
+
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <PullToRefreshWrapper onRefetch={handleRefetch}>
       {/* 검색바 */}
       <Input
         placeholder="이름 또는 태그로 검색"
@@ -70,6 +75,6 @@ export default function StorageWidget() {
         profiles={filteredProfiles}
         onToggleFavorite={handleToggleFavorite}
       />
-    </ScrollView>
+    </PullToRefreshWrapper>
   );
 }
