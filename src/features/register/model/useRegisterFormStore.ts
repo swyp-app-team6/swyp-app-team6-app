@@ -170,20 +170,15 @@ const useRegisterFormStore = create<RegisterFormStore>()(
 
     /**
      * 2단계 유효성 검사 (나이, 직무분야, 활동 지역)
-     * - 나이: 숫자만, 1~99
-     * - 직무분야: 1~10자
+     * - 나이: 입력 필수
+     * - 직무분야: 입력 필수
      * - 활동 지역: 선택 필수
      */
     isStep2Valid: () => {
       const { form } = get();
-      const ageNum = Number(form.age);
       return (
         form.age.length > 0 &&
-        !isNaN(ageNum) &&
-        ageNum >= 1 &&
-        ageNum <= 99 &&
-        form.jobField.length >= 1 &&
-        form.jobField.length <= 10 &&
+        form.jobField.length > 0 &&
         form.region.length > 0
       );
     },

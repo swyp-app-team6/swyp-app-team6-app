@@ -6,6 +6,7 @@ import { UserAPI } from '@/entities/user';
 import { usePermissionStore } from '@/widgets/permissions';
 import useRegisterFormStore from '../model/useRegisterFormStore';
 
+
 /**
  * # Step1BasicInfoView
  * ---
@@ -24,7 +25,6 @@ export default function Step1BasicInfoView() {
   const { form, updateForm, nextStep, isStep1Valid } = useRegisterFormStore();
   const { galleryStatus, requestGalleryPermission } = usePermissionStore();
   const [uploading, setUploading] = useState(false);
-  const [nicknameError, setNicknameError] = useState<string | undefined>();
 
   /** 프로필 사진 선택 및 업로드 */
   const handleSelectImage = async () => {
@@ -94,7 +94,6 @@ export default function Step1BasicInfoView() {
             value={form.nickname}
             onChangeText={handleNicknameChange}
             maxLength={10}
-            error={nicknameError}
           />
         </View>
 

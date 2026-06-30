@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { View, Text, ScrollView, Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
@@ -27,25 +27,12 @@ import RegionPicker from './RegionPicker';
  */
 export default function Step2DetailInfoView() {
   const { form, updateForm, nextStep, isStep2Valid } = useRegisterFormStore();
-  const [ageError, setAgeError] = useState<string | undefined>();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const { bottom } = useSafeAreaInsets();
 
   /** 나이 변경 핸들러 */
   const handleAgeChange = (text: string) => {
-    const numbersOnly = text.replace(/[^0-9]/g, '');
-    updateForm({ age: numbersOnly });
-
-    if (numbersOnly.length > 0) {
-      const num = Number(numbersOnly);
-      if (num < 1 || num > 99) {
-        setAgeError('1~99 사이의 나이를 입력해주세요');
-      } else {
-        setAgeError(undefined);
-      }
-    } else {
-      setAgeError(undefined);
-    }
+    updateForm({ age: text });
   };
 
   /** 직무분야 변경 핸들러 */
@@ -100,7 +87,6 @@ export default function Step2DetailInfoView() {
             value={form.age}
             onChangeText={handleAgeChange}
             keyboardType="number-pad"
-            error={ageError}
           />
         </View>
 
