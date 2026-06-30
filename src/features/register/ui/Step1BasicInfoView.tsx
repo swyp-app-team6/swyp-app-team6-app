@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, Pressable, Image, ScrollView } from 'react-native';
+import { View, Text, Pressable, ScrollView } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
-import { TextField, Textbox, BottomCTA, Button } from '@/shared/ui';
+import { Input, BottomCTA, Button, CameraUploadZone } from '@/shared/ui';
 import { UserAPI } from '@/entities/user';
 import { usePermissionStore } from '@/widgets/permissions';
 import useRegisterFormStore from '../model/useRegisterFormStore';
@@ -9,13 +9,13 @@ import useRegisterFormStore from '../model/useRegisterFormStore';
 /**
  * # Step1BasicInfoView
  * ---
- * - 간단설명: 프로필 등록 1단계 - 필수 정보 입력 (사진, 이름, 성별, 자기소개)
+ * - 간단설명: 프로필 등록 1단계 - 필수 정보 입력 (사진, 이름, 성별)
  * - 제약사항 및 특이사항:
  *   - 프로필 사진은 갤러리에서 선택 후 presign URL로 S3 업로드
  *   - 이름: 2~10자, 한글/영문만, 공백 불가
  *   - 성별: 남성/여성 중 택 1
- *   - 자기소개: 10~100자
- *   - 모든 필수 항목 충족 시 "다음" 버튼 활성화
+ *   - 자기소개는 3단계로 분리됨
+ *   - 모든 필수 항목 충족 시 "다음으로" 버튼 활성화
  * ---
  * @example
  * <Step1BasicInfoView />
@@ -25,7 +25,6 @@ export default function Step1BasicInfoView() {
   const { galleryStatus, requestGalleryPermission } = usePermissionStore();
   const [uploading, setUploading] = useState(false);
   const [nicknameError, setNicknameError] = useState<string | undefined>();
-  const [bioError, setBioError] = useState<string | undefined>();
 
   const nicknameRegex = /^[가-힣a-zA-Z]{2,10}$/;
 
@@ -76,46 +75,29 @@ export default function Step1BasicInfoView() {
     }
   };
 
-  /** 자기소개 변경 핸들러 */
-  const handleBioChange = (text: string) => {
-    updateForm({ bio: text });
-
-    if (text.length > 0 && text.length < 10) {
-      setBioError('최소 10자 이상 입력해주세요');
-    } else {
-      setBioError(undefined);
-    }
-  };
-
   return (
     <View className="flex-1">
-      <ScrollView className="flex-1 px-5 pt-6" showsVerticalScrollIndicator={false}>
+      <ScrollView className="flex-1 px-5" showsVerticalScrollIndicator={false}>
+        {/* 안내 타이틀 */}
+        <Text className="text-xl font-bold text-text-black mt-6 mb-8">
+          {'프로필에 넣을\n정보를 입력해주세요'}
+        </Text>
+
         {/* 프로필 사진 */}
-        <View className="items-center mb-8">
-          <Pressable
+        <View className="mb-8">
+          <Text className="mb-3 text-base font-medium text-text-black">프로필 사진</Text>
+          <CameraUploadZone
+            imageUri={form.profileImageUri}
             onPress={handleSelectImage}
             disabled={uploading}
-            className="w-[100px] h-[100px] rounded-full bg-gray-100 items-center justify-center overflow-hidden"
-          >
-            {form.profileImageUri ? (
-              <Image
-                source={{ uri: form.profileImageUri }}
-                className="w-full h-full"
-              />
-            ) : (
-              <Text className="text-3xl text-gray-400">📷</Text>
-            )}
-          </Pressable>
-          <Text className="text-xs text-text-gray4 mt-2">
-            {uploading ? '업로드 중...' : '프로필 사진을 등록해주세요'}
-          </Text>
+          />
         </View>
 
         {/* 이름 */}
-        <View className="mb-5">
-          <TextField
+        <View className="mb-8">
+          <Input
             label="이름"
-            placeholder="이름을 입력해주세요"
+            placeholder="프로필 이름을 입력해주세요"
             value={form.nickname}
             onChangeText={handleNicknameChange}
             maxLength={10}
@@ -124,20 +106,20 @@ export default function Step1BasicInfoView() {
         </View>
 
         {/* 성별 */}
-        <View className="mb-5">
-          <Text className="mb-1.5 text-sm font-medium text-text-gray3">성별</Text>
+        <View className="mb-8">
+          <Text className="mb-3 text-base font-medium text-text-black">성별</Text>
           <View className="flex-row gap-3">
             <Pressable
               onPress={() => updateForm({ gender: 'M' })}
-              className={`flex-1 h-14 rounded-xl items-center justify-center border ${
+              className={`px-6 h-11 rounded-lg items-center justify-center border ${
                 form.gender === 'M'
                   ? 'bg-primary border-primary'
                   : 'bg-white border-text-gray6'
               }`}
             >
               <Text
-                className={`text-base font-medium ${
-                  form.gender === 'M' ? 'text-white' : 'text-text-gray3'
+                className={`text-sm font-medium ${
+                  form.gender === 'M' ? 'text-white' : 'text-text-gray4'
                 }`}
               >
                 남성
@@ -145,15 +127,15 @@ export default function Step1BasicInfoView() {
             </Pressable>
             <Pressable
               onPress={() => updateForm({ gender: 'F' })}
-              className={`flex-1 h-14 rounded-xl items-center justify-center border ${
+              className={`px-6 h-11 rounded-lg items-center justify-center border ${
                 form.gender === 'F'
                   ? 'bg-primary border-primary'
                   : 'bg-white border-text-gray6'
               }`}
             >
               <Text
-                className={`text-base font-medium ${
-                  form.gender === 'F' ? 'text-white' : 'text-text-gray3'
+                className={`text-sm font-medium ${
+                  form.gender === 'F' ? 'text-white' : 'text-text-gray4'
                 }`}
               >
                 여성
@@ -161,17 +143,6 @@ export default function Step1BasicInfoView() {
             </Pressable>
           </View>
         </View>
-
-        {/* 자기소개 */}
-        <Textbox
-          label="한줄 자기소개"
-          placeholder="자신을 소개하는 한 줄을 작성해주세요 (10~100자)"
-          value={form.bio}
-          onChangeText={handleBioChange}
-          maxLength={100}
-          minHeight={80}
-          error={bioError}
-        />
 
         <View className="h-24" />
       </ScrollView>

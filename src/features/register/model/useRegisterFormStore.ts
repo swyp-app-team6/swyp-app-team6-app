@@ -5,7 +5,7 @@ import type { RegisterFormState, TMIAnswer } from './types';
 
 /**
  * 프로필 등록 폼 스토어 상태
- * - currentStep: 현재 단계 (0~4)
+ * - currentStep: 현재 단계 (0~5, 총 6단계)
  * - form: 폼 데이터 객체
  */
 interface RegisterFormStore {
@@ -37,7 +37,7 @@ const INITIAL_FORM: RegisterFormState = {
 /**
  * # useRegisterFormStore
  * ---
- * - 간단설명: 프로필 등록 5단계 폼 상태를 관리하는 Zustand 스토어
+ * - 간단설명: 프로필 등록 6단계 폼 상태를 관리하는 Zustand 스토어
  * - 제약사항 및 특이사항:
  *   - form 객체 1개로 모든 필드 통합 관리
  *   - immer middleware로 직접 수정 패턴 사용
@@ -53,21 +53,21 @@ const useRegisterFormStore = create<RegisterFormStore>()(
     form: { ...INITIAL_FORM },
 
     /**
-     * 현재 단계를 설정 (0~4 범위 클램프)
+     * 현재 단계를 설정 (0~5 범위 클램프)
      * @param step 이동할 단계 번호
      */
     setStep: (step: number) => {
       set((state) => {
-        state.currentStep = Math.max(0, Math.min(3, step));
+        state.currentStep = Math.max(0, Math.min(5, step));
       });
     },
 
     /**
-     * 다음 단계로 이동 (최대 4)
+     * 다음 단계로 이동 (최대 5)
      */
     nextStep: () => {
       set((state) => {
-        if (state.currentStep < 3) {
+        if (state.currentStep < 5) {
           state.currentStep += 1;
         }
       });
@@ -152,7 +152,6 @@ const useRegisterFormStore = create<RegisterFormStore>()(
      * 1단계 유효성 검사 (필수 정보)
      * - 이름 2~10자, 한글/영문만
      * - 성별 선택 필수
-     * - 자기소개 10~100자
      * - 프로필 사진은 선택사항
      */
     isStep1Valid: () => {
@@ -160,9 +159,7 @@ const useRegisterFormStore = create<RegisterFormStore>()(
       const nicknameRegex = /^[가-힣a-zA-Z]{2,10}$/;
       return (
         nicknameRegex.test(form.nickname) &&
-        form.gender !== null &&
-        form.bio.length >= 10 &&
-        form.bio.length <= 100
+        form.gender !== null
       );
     },
 
