@@ -34,14 +34,15 @@ interface Props {
  * <RegisterFormView onViewProfile={...} onGoHome={...} />
  */
 export default function RegisterFormView({ onViewProfile, onGoHome }: Props) {
-  const { currentStep, form, reset } = useRegisterFormStore();
+  const { currentStep, reset } = useRegisterFormStore();
   const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
     return () => {
       reset();
     };
-  }, [reset]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /** 
    * 프로필 등록 제출 (API 호출 없이 완료 처리) 

@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-import type { Interest } from '@/entities/user';
 import type { RegisterFormState, TMIAnswer } from './types';
 
 /**
@@ -62,16 +61,16 @@ const useRegisterFormStore = create<RegisterFormStore>()(
      */
     setStep: (step: number) => {
       set((state) => {
-        state.currentStep = Math.max(0, Math.min(5, step));
+        state.currentStep = Math.max(0, Math.min(6, step));
       });
     },
 
     /**
-     * 다음 단계로 이동 (최대 5)
+     * 다음 단계로 이동 (최대 6)
      */
     nextStep: () => {
       set((state) => {
-        if (state.currentStep < 5) {
+        if (state.currentStep < 6) {
           state.currentStep += 1;
         }
       });
