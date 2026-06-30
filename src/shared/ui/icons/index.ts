@@ -13,4 +13,5 @@ export { default as GoogleIcon } from './GoogleIcon';
 export { default as AppleIcon } from './AppleIcon';
 export { default as CameraIcon } from './CameraIcon';
 export { default as BellIcon } from './BellIcon';
+export { default as ChevronDownIcon } from './ChevronDownIcon';
 export type { IconProps } from './types';

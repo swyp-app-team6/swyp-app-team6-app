@@ -3,9 +3,10 @@ import { View } from 'react-native';
 import { StepView, ProgressBar } from '@/shared/ui';
 import useRegisterFormStore from '../model/useRegisterFormStore';
 import Step1BasicInfoView from './Step1BasicInfoView';
-import Step2InterestsView from './Step2InterestsView';
-import Step3TMIView from './Step4TMIView';
-import Step4PreviewView from './Step5PreviewView';
+import Step2DetailInfoView from './Step2DetailInfoView';
+import Step3InterestsView from './Step2InterestsView';
+import Step4TMIView from './Step4TMIView';
+import Step5PreviewView from './Step5PreviewView';
 import RegisterCompleteView from './RegisterCompleteView';
 
 interface Props {
@@ -71,13 +72,16 @@ export default function RegisterFormView({ onViewProfile, onGoHome }: Props) {
           <Step1BasicInfoView />
         </StepView.Step>
         <StepView.Step>
-          <Step2InterestsView />
+          <Step2DetailInfoView />
         </StepView.Step>
         <StepView.Step>
-          <Step3TMIView />
+          <Step3InterestsView />
         </StepView.Step>
         <StepView.Step>
-          <Step4PreviewView onSubmit={handleSubmit} loading={false} />
+          <Step4TMIView />
+        </StepView.Step>
+        <StepView.Step>
+          <Step5PreviewView onSubmit={handleSubmit} loading={false} />
         </StepView.Step>
       </StepView>
     </View>

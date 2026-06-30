@@ -6,7 +6,10 @@ import type { Interest } from '@/entities/user';
  * - profileImageUri: 로컬 이미지 URI (미리보기용)
  * - profileImageKey: S3 업로드 후 발급된 이미지 키
  * - gender: 성별 (M=남성, F=여성)
- * - bio: 한줄 자기소개 (10~100자)
+ * - age: 만 나이
+ * - jobField: 직무분야 (직무/직업/직장, 최대 10자)
+ * - region: 활동 지역
+ * - bio: 한줄 자기소개 (최대 100자)
  * - interests: 관심사 목록 (3~5개)
  * - tmiAnswers: TMI 답변 목록
  */
@@ -15,10 +18,38 @@ export interface RegisterFormState {
   profileImageUri: string | null;
   profileImageKey: string | null;
   gender: 'M' | 'F' | null;
+  age: string;
+  jobField: string;
+  region: string;
   bio: string;
   interests: Interest[];
   tmiAnswers: TMIAnswer[];
 }
+
+/**
+ * 활동 지역 옵션 목록
+ * - value: API에 전송하는 지역 코드
+ * - label: 화면에 표시하는 한국어 라벨
+ */
+export const REGION_OPTIONS: { value: string; label: string }[] = [
+  { value: 'SEOUL', label: '서울' },
+  { value: 'GYEONGGI', label: '경기' },
+  { value: 'INCHEON', label: '인천' },
+  { value: 'BUSAN', label: '부산' },
+  { value: 'DAEGU', label: '대구' },
+  { value: 'DAEJEON', label: '대전' },
+  { value: 'GWANGJU', label: '광주' },
+  { value: 'ULSAN', label: '울산' },
+  { value: 'SEJONG', label: '세종' },
+  { value: 'GANGWON', label: '강원' },
+  { value: 'CHUNGBUK', label: '충북' },
+  { value: 'CHUNGNAM', label: '충남' },
+  { value: 'JEONBUK', label: '전북' },
+  { value: 'JEONNAM', label: '전남' },
+  { value: 'GYEONGBUK', label: '경북' },
+  { value: 'GYEONGNAM', label: '경남' },
+  { value: 'JEJU', label: '제주' },
+];
 
 /**
  * TMI 카테고리
