@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, ScrollView, Pressable } from 'react-native';
+import { View, Text, ScrollView, Pressable, Alert } from 'react-native';
 import { BottomCTA, Button } from '@/shared/ui';
 import useRegisterFormStore from '../model/useRegisterFormStore';
 import { INTEREST_OPTIONS } from '../model/types';
@@ -181,7 +181,10 @@ export default function Step5PreviewView({ onSubmit, loading }: Props) {
       <BottomCTA>
         <Button
           title="프로필 등록 완료하기"
-          onPress={onSubmit}
+          onPress={() => {
+            Alert.alert('현재 저장 데이터', JSON.stringify(form, null, 2));
+            onSubmit();
+          }}
           loading={loading}
         />
       </BottomCTA>
