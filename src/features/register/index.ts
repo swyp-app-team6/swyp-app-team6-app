@@ -1,5 +1,8 @@
 export { default as RegisterFormView } from './ui/RegisterFormView';
 export { default as CosmicTypeTestView } from './ui/CosmicTypeTestView';
+export { default as CosmicTypeResultView } from './ui/CosmicTypeResultView';
+export { default as CosmicResultFrontCard } from './ui/CosmicResultFrontCard';
+export { default as CosmicResultBackCard } from './ui/CosmicResultBackCard';
 export { default as MyProfileView } from './ui/MyProfileView';
 export { default as useRegisterMutation } from './api/useRegisterMutation';
 export { default as useRegisterFormStore } from './model/useRegisterFormStore';
