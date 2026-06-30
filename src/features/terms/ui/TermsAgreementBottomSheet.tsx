@@ -1,14 +1,8 @@
 import React, { forwardRef, useCallback, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import {
-  BottomSheetBackdrop,
-  BottomSheetModal,
-  BottomSheetView,
-} from '@gorhom/bottom-sheet';
-import type { BottomSheetBackdropProps } from '@gorhom/bottom-sheet';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useImperativeHandle, useRef } from 'react';
-import { Button, Checkbox } from '@/shared/ui';
+import { Button, Checkbox, SafeBottomSheetModal } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
 
 interface Props {
@@ -38,7 +32,6 @@ interface Props {
 const TermsAgreementBottomSheet = forwardRef<BottomSheetHandle, Props>(
   ({ onAgree, onDismiss }, ref) => {
     const modalRef = useRef<BottomSheetModal>(null);
-    const { bottom } = useSafeAreaInsets();
 
     const [termsOfService, setTermsOfService] = useState(false);
     const [privacyPolicy, setPrivacyPolicy] = useState(false);
@@ -70,103 +63,84 @@ const TermsAgreementBottomSheet = forwardRef<BottomSheetHandle, Props>(
       onAgree();
     }, [onAgree]);
 
-    const renderBackdrop = useCallback(
-      (props: BottomSheetBackdropProps) => (
-        <BottomSheetBackdrop
-          {...props}
-          disappearsOnIndex={-1}
-          appearsOnIndex={0}
-          pressBehavior="close"
-        />
-      ),
-      [],
-    );
-
     return (
-      <BottomSheetModal
+      <SafeBottomSheetModal
         ref={modalRef}
-        enableDynamicSizing
-        backdropComponent={renderBackdrop}
         onDismiss={onDismiss}
       >
-        <BottomSheetView>
-          {/* 헤더: X 닫기 버튼 */}
-          <View className="flex-row justify-end px-5 pt-1 pb-1">
-            <Pressable
-              onPress={() => modalRef.current?.dismiss()}
-              hitSlop={8}
-              accessibilityLabel="닫기"
-            >
-              <Text className="text-2xl text-gray-400">✕</Text>
+        {/* 헤더: X 닫기 버튼 */}
+        <View className="flex-row justify-end px-5 pt-1 pb-1">
+          <Pressable
+            onPress={() => modalRef.current?.dismiss()}
+            hitSlop={8}
+            accessibilityLabel="닫기"
+          >
+            <Text className="text-2xl text-gray-400">✕</Text>
+          </Pressable>
+        </View>
+
+        {/* 타이틀 */}
+        <View className="px-5 pb-4">
+          <Text className="text-xl font-bold text-gray-900 leading-7">
+            {'서비스 이용을 위해\n이용약관 동의가 필요해요'}
+          </Text>
+        </View>
+
+        {/* 약관 항목 목록 */}
+        <View className="px-5 gap-2">
+          {/* [필수] 서비스 이용약관 동의 */}
+          <View className="flex-row items-center justify-between rounded-xl border border-gray-200 px-4 py-3.5">
+            <Checkbox
+              checked={termsOfService}
+              onValueChange={setTermsOfService}
+              label="[필수] 서비스 이용약관 동의"
+            />
+            <Pressable hitSlop={8}>
+              <Text className="text-sm text-gray-400 underline">보기</Text>
             </Pressable>
           </View>
 
-          {/* 타이틀 */}
-          <View className="px-5 pb-4">
-            <Text className="text-xl font-bold text-gray-900 leading-7">
-              {'서비스 이용을 위해\n이용약관 동의가 필요해요'}
-            </Text>
-          </View>
-
-          {/* 약관 항목 목록 */}
-          <View className="px-5 gap-2">
-            {/* [필수] 서비스 이용약관 동의 */}
-            <View className="flex-row items-center justify-between rounded-xl border border-gray-200 px-4 py-3.5">
-              <Checkbox
-                checked={termsOfService}
-                onValueChange={setTermsOfService}
-                label="[필수] 서비스 이용약관 동의"
-              />
-              <Pressable hitSlop={8}>
-                <Text className="text-sm text-gray-400 underline">보기</Text>
-              </Pressable>
-            </View>
-
-            {/* [필수] 개인정보 처리방침 동의 */}
-            <View className="flex-row items-center justify-between rounded-xl border border-gray-200 px-4 py-3.5">
-              <Checkbox
-                checked={privacyPolicy}
-                onValueChange={setPrivacyPolicy}
-                label="[필수] 개인정보 처리방침 동의"
-              />
-              <Pressable hitSlop={8}>
-                <Text className="text-sm text-gray-400 underline">보기</Text>
-              </Pressable>
-            </View>
-
-            {/* [필수] 만 14세 이상입니다 */}
-            <View className="flex-row items-center rounded-xl border border-gray-200 px-4 py-3.5">
-              <Checkbox
-                checked={ageConfirm}
-                onValueChange={setAgeConfirm}
-                label="[필수] 만 14세 이상입니다"
-              />
-            </View>
-          </View>
-
-          {/* 이용약관에 모두 동의 */}
-          <View className="px-5 pt-4 pb-2">
+          {/* [필수] 개인정보 처리방침 동의 */}
+          <View className="flex-row items-center justify-between rounded-xl border border-gray-200 px-4 py-3.5">
             <Checkbox
-              checked={allChecked}
-              onValueChange={handleToggleAll}
-              label="이용약관에 모두 동의"
-              className="py-1"
+              checked={privacyPolicy}
+              onValueChange={setPrivacyPolicy}
+              label="[필수] 개인정보 처리방침 동의"
             />
+            <Pressable hitSlop={8}>
+              <Text className="text-sm text-gray-400 underline">보기</Text>
+            </Pressable>
           </View>
 
-          {/* 동의 완료하기 CTA */}
-          <View
-            className="px-5 pt-3"
-            style={{ paddingBottom: Math.max(bottom, 16) }}
-          >
-            <Button
-              title="동의 완료하기"
-              disabled={!allChecked}
-              onPress={handleAgree}
+          {/* [필수] 만 14세 이상입니다 */}
+          <View className="flex-row items-center rounded-xl border border-gray-200 px-4 py-3.5">
+            <Checkbox
+              checked={ageConfirm}
+              onValueChange={setAgeConfirm}
+              label="[필수] 만 14세 이상입니다"
             />
           </View>
-        </BottomSheetView>
-      </BottomSheetModal>
+        </View>
+
+        {/* 이용약관에 모두 동의 */}
+        <View className="px-5 pt-4 pb-2">
+          <Checkbox
+            checked={allChecked}
+            onValueChange={handleToggleAll}
+            label="이용약관에 모두 동의"
+            className="py-1"
+          />
+        </View>
+
+        {/* 동의 완료하기 CTA */}
+        <View className="px-5 pt-3">
+          <Button
+            title="동의 완료하기"
+            disabled={!allChecked}
+            onPress={handleAgree}
+          />
+        </View>
+      </SafeBottomSheetModal>
     );
   },
 );

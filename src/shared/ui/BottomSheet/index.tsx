@@ -5,10 +5,11 @@ import React, {
   useRef,
 } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import useSafePaddingBottom from '@/shared/utils/useSafePaddingBottom';
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
+  BottomSheetScrollView,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import type { BottomSheetBackdropProps } from '@gorhom/bottom-sheet';
@@ -62,7 +63,7 @@ interface Props {
 const BottomSheetComponent = forwardRef<BottomSheetHandle, Props>(
   ({ title, showClose = true, onClose, snapPoints, children, styleClass }, ref) => {
     const modalRef = useRef<BottomSheetModal>(null);
-    const { bottom } = useSafeAreaInsets();
+    const safePadding = useSafePaddingBottom();
 
     useImperativeHandle(ref, () => ({
       open: () => modalRef.current?.present(),
@@ -94,7 +95,8 @@ const BottomSheetComponent = forwardRef<BottomSheetHandle, Props>(
         onDismiss={handleDismiss}
         keyboardBehavior="interactive"
         keyboardBlurBehavior="restore"
-        android_keyboardInputMode="adjustResize"
+        android_keyboardInputMode="adjustPan"
+        enablePanDownToClose
       >
         <BottomSheetView className={cn(styleClass?.root)}>
           {(title || showClose) && (
@@ -118,10 +120,15 @@ const BottomSheetComponent = forwardRef<BottomSheetHandle, Props>(
               )}
             </View>
           )}
-          <View className={cn('px-5', styleClass?.content)}>
-            {children}
-          </View>
-          <View style={{ height: bottom + 16 }} />
+          <BottomSheetScrollView
+            keyboardShouldPersistTaps="handled"
+            bounces={false}
+          >
+            <View className={cn('px-5', styleClass?.content)}>
+              {children}
+            </View>
+            <View style={{ height: safePadding.paddingBottom + 16 }} />
+          </BottomSheetScrollView>
         </BottomSheetView>
       </BottomSheetModal>
     );

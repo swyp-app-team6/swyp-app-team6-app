@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import useSafePaddingBottom from '@/shared/utils/useSafePaddingBottom';
 import { cn } from '@/shared/lib/cn';
 
 interface Props {
@@ -26,12 +26,12 @@ interface Props {
  * ```
  */
 export default function BottomCTA({ children, styleClass }: Props) {
-  const { bottom } = useSafeAreaInsets();
+  const safePadding = useSafePaddingBottom();
 
   return (
     <View
       className={cn('bg-white px-5 pt-3 border-t border-gray-100', styleClass?.root)}
-      style={{ paddingBottom: Math.max(bottom, 16) }}
+      style={{ paddingBottom: Math.max(safePadding.paddingBottom, 16) }}
     >
       {children}
     </View>

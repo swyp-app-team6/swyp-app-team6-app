@@ -35,4 +35,5 @@ export { default as ChooseButton, type ChooseButtonProps } from './ChooseButton'
 export { default as FavTag, type FavTagProps } from './FavTag';
 export { default as CameraUploadZone } from './CameraUploadZone';
 export { default as SelectedTMIPreviewButton } from './SelectedTMIPreviewButton';
+export { default as SafeBottomSheetModal } from './SafeBottomSheetModal';
 export { TodoIcon, ProfileIcon, GalleryIcon, PlaygroundIcon, SearchIcon, QRIcon, LoginIcon, HomeIcon, CardIcon, MyPageIcon, KakaoIcon, GoogleIcon, AppleIcon, CameraIcon, type IconProps } from './icons';

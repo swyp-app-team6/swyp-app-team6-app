@@ -1,13 +1,8 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import {
-  BottomSheetBackdrop,
-  BottomSheetModal,
-  BottomSheetView,
-} from '@gorhom/bottom-sheet';
-import type { BottomSheetBackdropProps } from '@gorhom/bottom-sheet';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { cn } from '@/shared/lib/cn';
+import SafeBottomSheetModal from '@/shared/ui/SafeBottomSheetModal';
 
 interface StyleClass {
   trigger?: string;
@@ -33,7 +28,7 @@ interface Props {
  * ---
  * - 간단설명: 바텀시트 기반 드롭다운 옵션 선택 컴포넌트
  * - 제약사항 및 특이사항:
- *   - @gorhom/bottom-sheet BottomSheetModal 기반
+ *   - SafeBottomSheetModal 기반
  *   - 선택된 항목은 보라색 강조 표시
  *   - SafeArea 하단 여백 자동 처리
  * ---
@@ -54,23 +49,10 @@ interface Props {
  */
 function Selectbox({ value, options, onSelect, placeholder, styleClass }: Props) {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
-  const { bottom } = useSafeAreaInsets();
   const selected = options.find(o => o.value === value);
 
   const handleOpen = () => bottomSheetRef.current?.present();
   const handleClose = () => bottomSheetRef.current?.dismiss();
-
-  const renderBackdrop = useCallback(
-    (props: BottomSheetBackdropProps) => (
-      <BottomSheetBackdrop
-        {...props}
-        disappearsOnIndex={-1}
-        appearsOnIndex={0}
-        pressBehavior="close"
-      />
-    ),
-    [],
-  );
 
   return (
     <>
@@ -88,12 +70,8 @@ function Selectbox({ value, options, onSelect, placeholder, styleClass }: Props)
         <Text className="text-gray-400">▾</Text>
       </Pressable>
 
-      <BottomSheetModal
-        ref={bottomSheetRef}
-        enableDynamicSizing
-        backdropComponent={renderBackdrop}
-      >
-        <BottomSheetView className={cn(styleClass?.content)}>
+      <SafeBottomSheetModal ref={bottomSheetRef}>
+        <View className={cn(styleClass?.content)}>
           {options.map(item => (
             <Pressable
               key={item.value}
@@ -117,10 +95,8 @@ function Selectbox({ value, options, onSelect, placeholder, styleClass }: Props)
               </Text>
             </Pressable>
           ))}
-          {/* safe area spacer: bottom inset + 16px gutter */}
-          <View style={{ height: bottom + 16 }} />
-        </BottomSheetView>
-      </BottomSheetModal>
+        </View>
+      </SafeBottomSheetModal>
     </>
   );
 }

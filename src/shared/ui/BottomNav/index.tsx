@@ -1,6 +1,6 @@
 import React from 'react';
 import { Platform, Text, TouchableOpacity, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import useSafePaddingBottom from '@/shared/utils/useSafePaddingBottom';
 import { cn } from '@/shared/lib/cn';
 
 /** 하단 네비게이션 탭 아이템 */
@@ -51,22 +51,18 @@ interface Props {
 }
 
 export default function BottomNav({ items, activeRoute, onPress, styleClass }: Props) {
-  const { bottom } = useSafeAreaInsets();
-
+  const safePadding = useSafePaddingBottom();
   return (
     <View
       className={cn('h-16 flex-row bg-white', styleClass?.root)}
       style={[
-        { paddingBottom: bottom || 8 },
+        { paddingBottom: safePadding.paddingBottom },
         Platform.select({
           ios: {
             shadowColor: '#000',
             shadowOffset: { width: 0, height: -2 },
             shadowOpacity: 0.1,
             shadowRadius: 4,
-          },
-          android: {
-            elevation: 8,
           },
         }),
       ]}

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, Pressable } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
+import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Button } from '@/shared/ui';
 import { REGION_OPTIONS, REGION_SUB_AREAS } from '../model/types';
 
@@ -65,7 +66,7 @@ export default function RegionPicker({ selectedRegion, selectedSubArea, onConfir
     <View>
       <View className="flex-row h-[288px]">
         {/* 시/도 컬럼 */}
-        <ScrollView className="w-[120px]" showsVerticalScrollIndicator={false}>
+        <BottomSheetScrollView className="w-[120px]" showsVerticalScrollIndicator={false}>
           {REGION_OPTIONS.map((option) => {
             const isActive = option.label === activeProvince;
             return (
@@ -88,13 +89,13 @@ export default function RegionPicker({ selectedRegion, selectedSubArea, onConfir
               </Pressable>
             );
           })}
-        </ScrollView>
+        </BottomSheetScrollView>
 
         {/* 구분선 */}
         <View className="w-px bg-text-gray6 self-stretch" />
 
         {/* 하위 지역 컬럼 */}
-        <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+        <BottomSheetScrollView className="flex-1" showsVerticalScrollIndicator={false}>
           {subAreas.map((area) => {
             const currentRegionValue = REGION_OPTIONS.find((o) => o.label === activeProvince)?.value;
             const isActive = tempRegion === currentRegionValue && tempSubArea === area;
@@ -118,11 +119,11 @@ export default function RegionPicker({ selectedRegion, selectedSubArea, onConfir
               </Pressable>
             );
           })}
-        </ScrollView>
+        </BottomSheetScrollView>
       </View>
 
       {/* 선택완료 CTA */}
-      <View className="pt-3">
+      <View className="">
         <Button
           title="선택완료"
           onPress={handleConfirm}

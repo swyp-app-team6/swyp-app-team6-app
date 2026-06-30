@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ViewStyle } from 'react-native';
+import { Platform, View, ViewStyle } from 'react-native';
 import { cn } from '@/shared/lib/cn';
 import BottomNav, { type BottomNavItem } from '@/shared/ui/BottomNav';
 
@@ -51,7 +51,10 @@ Layout.Header = function LayoutHeader({ children, styleClass, style }: Props) {
 
 Layout.Body = function LayoutBody({ children, styleClass }: Props) {
   return (
-    <View className={cn('flex-1', styleClass?.root)}>
+    <View
+      className={cn('flex-1', styleClass?.root)}
+      style={Platform.OS === 'android' ? { paddingBottom: 16 } : undefined}
+    >
       {children}
     </View>
   );

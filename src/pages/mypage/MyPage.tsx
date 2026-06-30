@@ -30,7 +30,7 @@ function MyPage() {
       await clearCondition();
       navigation.reset({
         index: 0,
-        routes: [{ name: 'login' }],
+        routes: [{ name: 'home' }],
       });
     } catch (e) {
       console.error(e);

@@ -1,13 +1,7 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useRef } from 'react';
 import { View, Text, ScrollView, Pressable } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import {
-  BottomSheetBackdrop,
-  BottomSheetModal,
-  BottomSheetView,
-} from '@gorhom/bottom-sheet';
-import type { BottomSheetBackdropProps } from '@gorhom/bottom-sheet';
-import { Input, BottomCTA, Button } from '@/shared/ui';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { Input, BottomCTA, Button, SafeBottomSheetModal } from '@/shared/ui';
 import useRegisterFormStore from '../model/useRegisterFormStore';
 import { REGION_OPTIONS } from '../model/types';
 import RegionPicker from './RegionPicker';
@@ -28,7 +22,6 @@ import RegionPicker from './RegionPicker';
 export default function Step2DetailInfoView() {
   const { form, updateForm, nextStep, isStep2Valid } = useRegisterFormStore();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
-  const { bottom } = useSafeAreaInsets();
 
   /** 나이 변경 핸들러 */
   const handleAgeChange = (text: string) => {
@@ -58,18 +51,6 @@ export default function Step2DetailInfoView() {
   };
 
   const regionLabel = getRegionDisplayLabel();
-
-  const renderBackdrop = useCallback(
-    (props: BottomSheetBackdropProps) => (
-      <BottomSheetBackdrop
-        {...props}
-        disappearsOnIndex={-1}
-        appearsOnIndex={0}
-        pressBehavior="close"
-      />
-    ),
-    [],
-  );
 
   return (
     <View className="flex-1 bg-white">
@@ -128,27 +109,24 @@ export default function Step2DetailInfoView() {
       </BottomCTA>
 
       {/* 지역 선택 바텀시트 */}
-      <BottomSheetModal
+      <SafeBottomSheetModal
         ref={bottomSheetRef}
         snapPoints={['50%']}
-        backdropComponent={renderBackdrop}
+        enableDynamicSizing={false}
       >
-        <BottomSheetView>
-          <View className="px-5 pb-3 pt-1">
-            <Text className="text-xl font-bold text-text-black leading-7">
-              활동 지역을 선택해주세요
-            </Text>
-          </View>
-          <View className="px-5">
-            <RegionPicker
-              selectedRegion={form.region}
-              selectedSubArea={form.subArea}
-              onConfirm={handleRegionConfirm}
-            />
-          </View>
-          <View style={{ height: bottom + 16 }} />
-        </BottomSheetView>
-      </BottomSheetModal>
+        <View className="px-5 pb-3 pt-1">
+          <Text className="text-xl font-bold text-text-black leading-7">
+            활동 지역을 선택해주세요
+          </Text>
+        </View>
+        <View className="px-5">
+          <RegionPicker
+            selectedRegion={form.region}
+            selectedSubArea={form.subArea}
+            onConfirm={handleRegionConfirm}
+          />
+        </View>
+      </SafeBottomSheetModal>
     </View>
   );
 }

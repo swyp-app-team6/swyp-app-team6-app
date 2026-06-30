@@ -10,7 +10,7 @@ import { PermissionGuideBottomSheet } from '@/features/permissionGuide';
 import LoginTroubleBottomSheet from '@/features/login/ui/LoginTroubleBottomSheet';
 import { UserAPI } from '@/entities/user';
 import useConditionStateStore from '@/shared/model/conditionStateStore';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import useSafePaddingBottom from '@/shared/utils/useSafePaddingBottom';
 
 /**
  * # LoginPage
@@ -28,7 +28,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 function LoginPage() {
   const navigation = useNavigation<NavigationPropType>();
   const { mutateAsync: googleLogin, isPending: isGooglePending } = useGoogleLoginMutation();
-  const { bottom } = useSafeAreaInsets();
+  const safePadding = useSafePaddingBottom();
   const {
     isAgreedToTerms,
     isPermissionAllowed,
@@ -45,7 +45,7 @@ function LoginPage() {
     try {
       await UserAPI.fetchProfile();
       navigation.reset({ index: 0, routes: [{ name: 'home' }] });
-    } catch (error: any) {
+    } catch {
     }
   };
 
@@ -101,7 +101,7 @@ function LoginPage() {
       </View>
 
       {/* 소셜 로그인 버튼 */}
-      <View className="px-5 gap-3" style={{ paddingBottom: bottom || 40 }}>
+      <View className="px-5 gap-3" style={{ paddingBottom: safePadding.paddingBottom || 40 }}>
         <GoogleLoginButton onPress={handleGoogleLogin} loading={isGooglePending} />
         <AppleLoginButton onPress={() => { }} />
 
