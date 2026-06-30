@@ -1,56 +1,23 @@
-import React, { useCallback, useRef } from 'react';
+import React from 'react';
 import { Image, Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Header, Layout, MyPageIcon, CameraIcon } from '@/shared/ui';
-import type { BottomSheetHandle } from '@/shared/ui';
+import { Header, Layout, MyPageIcon } from '@/shared/ui';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
-import { PermissionGuideBottomSheet } from '@/features/permissionGuide';
-import usePermissionStore from '@/widgets/permissions/model/usePermissionStore';
 import type { NavigationPropType } from '@/shared/types';
 
 /**
  * # HomePage
  * ---
- * - 간단설명: 로그인 후 진입하는 홈 화면 — Orbits 로고, 환영 메시지, 카메라 버튼, 프로필 카드 영역 표시
+ * - 간단설명: 로그인 후 진입하는 홈 화면 — Orbits 로고, 환영 메시지, 프로필 카드 영역 표시
  * - 제약사항 및 특이사항:
  *   - 프로필 카드가 없는 경우 빈 카드(추가 유도) UI 표시
  *   - 우측 상단 아이콘으로 마이페이지 이동
- *   - 카메라 버튼으로 QR 코드 스캔 (권한 미허용 시 안내 팝업)
  *   - 하단 네비게이션은 withLayout HOC가 자동 제공
  * ---
  */
 function HomePage() {
   const navigation = useNavigation<NavigationPropType>();
-  const permissionSheetRef = useRef<BottomSheetHandle>(null);
-  const { checkCameraPermission, requestCameraPermission } =
-    usePermissionStore();
-
-  /**
-   * 카메라 버튼 클릭 핸들러
-   * - 권한 granted → QR 스캔 화면 이동
-   * - 권한 미허용 → 권한 안내 팝업 표시
-   */
-  const handleCameraPress = useCallback(async () => {
-    await checkCameraPermission();
-    const currentStatus = usePermissionStore.getState().cameraStatus;
-    if (currentStatus === 'granted') {
-      navigation.navigate('qr');
-    } else {
-      permissionSheetRef.current?.open();
-    }
-  }, [checkCameraPermission, navigation]);
-
-  /**
-   * 권한 안내 팝업 확인 → 권한 요청 → 허용 시 QR 이동
-   */
-  const handlePermissionConfirm = useCallback(async () => {
-    await requestCameraPermission();
-    const currentStatus = usePermissionStore.getState().cameraStatus;
-    if (currentStatus === 'granted') {
-      navigation.navigate('qr');
-    }
-  }, [requestCameraPermission, navigation]);
 
   return (
     <>
@@ -74,17 +41,8 @@ function HomePage() {
           {'오르비츠와 함께 새로운 만남을\n시작할 준비가 되셨나요?'}
         </Text>
 
-        {/* 카메라 버튼 */}
-        <Pressable
-          onPress={handleCameraPress}
-          className="mt-4 self-end rounded-full bg-primary p-3"
-          accessibilityLabel="QR 코드 스캔"
-        >
-          <CameraIcon size={24} color="#ffffff" />
-        </Pressable>
-
         {/* 내 프로필 카드 섹션 */}
-        <View className="mt-4 items-center">
+        <View className="mt-8 items-center">
           {/* 내 프로필 카드 타이틀 */}
           <View className="w-full flex-row items-center gap-1">
             <Text className="text-[16px] font-semibold leading-[22px] tracking-tight text-primary">
@@ -118,12 +76,6 @@ function HomePage() {
           </Pressable>
         </View>
       </Layout.Body>
-
-      {/* 앱 접근 권한 안내 바텀시트 */}
-      <PermissionGuideBottomSheet
-        ref={permissionSheetRef}
-        onConfirm={handlePermissionConfirm}
-      />
     </>
   );
 }
