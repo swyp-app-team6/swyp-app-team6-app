@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { View, Text, ScrollView, Pressable } from 'react-native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import Config from 'react-native-config';
 import { Input, BottomCTA, Button, SafeBottomSheetModal } from '@/shared/ui';
 import useRegisterFormStore from '../model/useRegisterFormStore';
 import { REGION_OPTIONS } from '../model/types';
@@ -103,7 +104,7 @@ export default function Step2DetailInfoView() {
       <BottomCTA>
         <Button
           title="다음으로"
-          disabled={!isStep2Valid()}
+          disabled={Config.PROJECT_ENV === 'local' ? false : !isStep2Valid()}
           onPress={nextStep}
         />
       </BottomCTA>

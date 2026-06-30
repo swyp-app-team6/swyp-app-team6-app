@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
+import Config from 'react-native-config';
 import { FavTag, BottomCTA, Button } from '@/shared/ui';
 import useRegisterFormStore from '../model/useRegisterFormStore';
 import { INTEREST_OPTIONS } from '../model/types';
@@ -71,7 +72,7 @@ export default function Step2InterestsView() {
       <BottomCTA>
         <Button
           title="다음으로"
-          disabled={!isValid}
+          disabled={Config.PROJECT_ENV === 'local' ? false : !isValid}
           onPress={nextStep}
         />
       </BottomCTA>

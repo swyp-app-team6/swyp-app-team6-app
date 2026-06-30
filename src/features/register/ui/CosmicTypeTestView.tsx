@@ -1,12 +1,16 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text, ScrollView, Pressable } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
+import Config from 'react-native-config';
 import { BottomCTA, Button } from '@/shared/ui';
 import { Modal } from '@/shared/ui/Modal';
 import {
   COSMIC_TYPE_QUESTIONS,
   type CosmicTypeQuestion,
 } from '../model/cosmicTypeData';
+import { COSMIC_TYPE_RESULTS } from '../model/cosmicTypeResults';
+import useRegisterFormStore from '../model/useRegisterFormStore';
+import CosmicTypeResultView from './CosmicTypeResultView';
 
 interface Props {
   /** 테스트 완료 시 호출되는 콜백 */
@@ -36,7 +40,9 @@ export default function CosmicTypeTestView({ onComplete }: Props) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [showIncompleteModal, setShowIncompleteModal] = useState(false);
+  const [showResult, setShowResult] = useState(false);
   const [firstUnansweredIndex, setFirstUnansweredIndex] = useState(0);
+  const { form } = useRegisterFormStore();
 
   const currentQuestion: CosmicTypeQuestion = questions[currentIndex];
   const selectedAnswer = answers[currentQuestion.id];
@@ -70,22 +76,35 @@ export default function CosmicTypeTestView({ onComplete }: Props) {
     [currentQuestion.id, currentIndex, totalQuestions],
   );
 
-  /** 테스트 완료 핸들러 */
+  /** 테스트 완료 핸들러 - 결과 카드 뷰 표시 */
   const handleComplete = useCallback(() => {
     if (isAllAnswered) {
-      onComplete();
+      setShowResult(true);
       return;
     }
     const unansweredIdx = questions.findIndex((q) => !answers[q.id]);
     setFirstUnansweredIndex(unansweredIdx);
     setShowIncompleteModal(true);
-  }, [isAllAnswered, onComplete, questions, answers]);
+  }, [isAllAnswered, questions, answers]);
 
   /** 미응답 질문으로 이동 */
   const goToUnanswered = useCallback(() => {
     setShowIncompleteModal(false);
     setCurrentIndex(firstUnansweredIndex);
   }, [firstUnansweredIndex]);
+
+  // TODO: 추후 답변 기반 유형 판별 로직 적용 (현재 더미로 슈팅스타 형 고정)
+  const resultType = COSMIC_TYPE_RESULTS.SHOOTING_STAR;
+
+  if (showResult) {
+    return (
+      <CosmicTypeResultView
+        result={resultType}
+        nickname={form.nickname || '사용자'}
+        onApply={onComplete}
+      />
+    );
+  }
 
   return (
     <View className="flex-1">
@@ -193,8 +212,8 @@ export default function CosmicTypeTestView({ onComplete }: Props) {
       {/* 하단 CTA */}
       <BottomCTA>
         <Button
-          title="테스트 완료"
-          disabled={!isAllAnswered}
+          title="결과보기"
+          disabled={Config.PROJECT_ENV === 'local' ? false : !isAllAnswered}
           onPress={handleComplete}
         />
       </BottomCTA>

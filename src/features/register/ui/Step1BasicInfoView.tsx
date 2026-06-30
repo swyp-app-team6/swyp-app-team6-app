@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
+import Config from 'react-native-config';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Input, BottomCTA, Button, CameraUploadZone } from '@/shared/ui';
 import { UserAPI } from '@/entities/user';
@@ -122,7 +123,7 @@ export default function Step1BasicInfoView() {
       <BottomCTA>
         <Button
           title="다음으로"
-          disabled={!isStep1Valid()}
+          disabled={Config.PROJECT_ENV === 'local' ? false : !isStep1Valid()}
           onPress={nextStep}
         />
       </BottomCTA>
