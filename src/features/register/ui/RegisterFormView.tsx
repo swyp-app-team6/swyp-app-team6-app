@@ -5,8 +5,10 @@ import useRegisterFormStore from '../model/useRegisterFormStore';
 import Step1BasicInfoView from './Step1BasicInfoView';
 import Step2DetailInfoView from './Step2DetailInfoView';
 import Step3InterestsView from './Step2InterestsView';
-import Step4TMIView from './Step4TMIView';
-import Step5PreviewView from './Step5PreviewView';
+import Step4BioView from './Step3BioView';
+import Step5TypeTestView from './Step3TypeTestView';
+import Step6TMIView from './Step4TMIView';
+import Step7PreviewView from './Step5PreviewView';
 import RegisterCompleteView from './RegisterCompleteView';
 
 interface Props {
@@ -19,9 +21,9 @@ interface Props {
 /**
  * # RegisterFormView
  * ---
- * - 간단설명: 프로필 등록 6단계 폼 오케스트레이터
+ * - 간단설명: 프로필 등록 7단계 폼 오케스트레이터
  * - 제약사항 및 특이사항:
- *   - StepView로 6단계 슬라이드 전환
+ *   - StepView로 7단계 슬라이드 전환
  *   - ProgressBar로 상단 진행률 표시
  *   - 등록 완료 시 RegisterCompleteView로 교체
  *   - 언마운트 시 스토어 자동 리셋
@@ -62,8 +64,8 @@ export default function RegisterFormView({ onViewProfile, onGoHome }: Props) {
     <View className="flex-1">
       <View className="px-5 pt-3 pb-2">
         <ProgressBar
-          value={Math.round((currentStep + 1) * (100 / 6))}
-          steps={6}
+          value={Math.round((currentStep + 1) * (100 / 7))}
+          steps={7}
         />
       </View>
 
@@ -78,10 +80,16 @@ export default function RegisterFormView({ onViewProfile, onGoHome }: Props) {
           <Step3InterestsView />
         </StepView.Step>
         <StepView.Step>
-          <Step4TMIView />
+          <Step4BioView />
         </StepView.Step>
         <StepView.Step>
-          <Step5PreviewView onSubmit={handleSubmit} loading={false} />
+          <Step5TypeTestView />
+        </StepView.Step>
+        <StepView.Step>
+          <Step6TMIView />
+        </StepView.Step>
+        <StepView.Step>
+          <Step7PreviewView onSubmit={handleSubmit} loading={false} />
         </StepView.Step>
       </StepView>
     </View>

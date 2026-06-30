@@ -32,6 +32,7 @@ const INITIAL_FORM: RegisterFormState = {
   age: '',
   jobField: '',
   region: '',
+  subArea: '',
   bio: '',
   interests: [],
   tmiAnswers: [],
@@ -162,9 +163,7 @@ const useRegisterFormStore = create<RegisterFormStore>()(
      */
     isStep1Valid: () => {
       const { form } = get();
-      const nicknameRegex = /^[가-힣a-zA-Z]{2,10}$/;
       return (
-        nicknameRegex.test(form.nickname) &&
         form.gender !== null
       );
     },

@@ -26,8 +26,6 @@ export default function Step1BasicInfoView() {
   const [uploading, setUploading] = useState(false);
   const [nicknameError, setNicknameError] = useState<string | undefined>();
 
-  const nicknameRegex = /^[가-힣a-zA-Z]{2,10}$/;
-
   /** 프로필 사진 선택 및 업로드 */
   const handleSelectImage = async () => {
     if (galleryStatus !== 'granted' && galleryStatus !== 'limited') {
@@ -65,13 +63,8 @@ export default function Step1BasicInfoView() {
 
   /** 이름 변경 핸들러 */
   const handleNicknameChange = (text: string) => {
-    const trimmed = text.replace(/\s/g, '');
-    updateForm({ nickname: trimmed });
-
-    if (trimmed.length > 0 && !nicknameRegex.test(trimmed)) {
-      setNicknameError('2~10자의 한글 또는 영문만 입력 가능합니다');
-    } else {
-      setNicknameError(undefined);
+    if (text.length <= 10) {
+      updateForm({ nickname: text });
     }
   };
 
@@ -111,32 +104,28 @@ export default function Step1BasicInfoView() {
           <View className="flex-row gap-3">
             <Pressable
               onPress={() => updateForm({ gender: 'M' })}
-              className={`px-6 h-11 rounded-lg items-center justify-center border ${
-                form.gender === 'M'
-                  ? 'bg-primary border-primary'
-                  : 'bg-white border-text-gray6'
-              }`}
+              className={`px-6 h-11 rounded-lg items-center justify-center border ${form.gender === 'M'
+                ? 'bg-primary border-primary'
+                : 'bg-white border-text-gray6'
+                }`}
             >
               <Text
-                className={`text-sm font-medium ${
-                  form.gender === 'M' ? 'text-white' : 'text-text-gray4'
-                }`}
+                className={`text-sm font-medium ${form.gender === 'M' ? 'text-white' : 'text-text-gray4'
+                  }`}
               >
                 남성
               </Text>
             </Pressable>
             <Pressable
               onPress={() => updateForm({ gender: 'F' })}
-              className={`px-6 h-11 rounded-lg items-center justify-center border ${
-                form.gender === 'F'
-                  ? 'bg-primary border-primary'
-                  : 'bg-white border-text-gray6'
-              }`}
+              className={`px-6 h-11 rounded-lg items-center justify-center border ${form.gender === 'F'
+                ? 'bg-primary border-primary'
+                : 'bg-white border-text-gray6'
+                }`}
             >
               <Text
-                className={`text-sm font-medium ${
-                  form.gender === 'F' ? 'text-white' : 'text-text-gray4'
-                }`}
+                className={`text-sm font-medium ${form.gender === 'F' ? 'text-white' : 'text-text-gray4'
+                  }`}
               >
                 여성
               </Text>
