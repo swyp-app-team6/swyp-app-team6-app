@@ -6,6 +6,7 @@ import { runOnJS } from 'react-native-reanimated';
 import { Button, Layout, StepView } from '@/shared/ui';
 import type { NavigationPropType } from '@/shared/types';
 import useConditionStateStore from '@/shared/model/conditionStateStore';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 /** 온보딩 슬라이드 데이터 (4단계) */
 const ONBOARDING_SLIDES = [
@@ -42,6 +43,7 @@ const ONBOARDING_SLIDES = [
 function OnboardingPage() {
   const navigation = useNavigation<NavigationPropType>();
   const { setHasSeenOnboarding } = useConditionStateStore();
+  const { top } = useSafeAreaInsets();
   const [currentStep, setCurrentStep] = useState(0);
   const isLastStep = currentStep === ONBOARDING_SLIDES.length - 1;
 
@@ -78,7 +80,7 @@ function OnboardingPage() {
     <Layout styleClass={{ root: 'bg-white' }}>
       {/* 슬라이드 영역 */}
       <GestureDetector gesture={swipeGesture}>
-        <View className="flex-1">
+        <View className="flex-1" style={{ paddingTop: top }}>
           <StepView currentStep={currentStep}>
             {ONBOARDING_SLIDES.map((slide, index) => (
               <StepView.Step key={index}>

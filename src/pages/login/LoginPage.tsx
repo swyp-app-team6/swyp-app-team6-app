@@ -46,11 +46,6 @@ function LoginPage() {
       await UserAPI.fetchProfile();
       navigation.reset({ index: 0, routes: [{ name: 'home' }] });
     } catch (error: any) {
-      if (error?.response?.status === 404) {
-        navigation.reset({ index: 0, routes: [{ name: 'registerProfile' }] });
-      } else {
-        navigation.reset({ index: 0, routes: [{ name: 'home' }] });
-      }
     }
   };
 
@@ -76,18 +71,18 @@ function LoginPage() {
     if (isPermissionAllowed) {
       setTimeout(() => permissionRef.current?.open(), 300);
     } else {
-      navigateByProfile();
+      navigation.reset({ index: 0, routes: [{ name: 'home' }] });
     }
   };
 
-  /** 접근권한 확인 완료 → 프로필 체크 후 분기 */
+  /** 접근권한 확인 완료 → home으로 이동 */
   const handlePermissionConfirm = async () => {
     await setIsPermissionAllowed(false);
-    navigateByProfile();
+    navigation.reset({ index: 0, routes: [{ name: 'home' }] });
   };
 
   return (
-    <Layout styleClass={{ root: 'bg-white' }}>
+    <Layout styleClass={{ root: 'bg-primary' }}>
       {/* 로고 영역 */}
       <View className="flex-1 justify-center items-center">
         <Image
@@ -100,7 +95,7 @@ function LoginPage() {
           className="w-52 h-14"
           resizeMode="contain"
         />
-        <Text className="text-base text-gray-500 mt-4">
+        <Text className="text-base text-white/80 mt-4">
           대화를 여는 프로필 카드
         </Text>
       </View>
@@ -108,7 +103,7 @@ function LoginPage() {
       {/* 소셜 로그인 버튼 */}
       <View className="px-5 gap-3" style={{ paddingBottom: bottom || 40 }}>
         <GoogleLoginButton onPress={handleGoogleLogin} loading={isGooglePending} />
-        <AppleLoginButton onPress={() => {}} />
+        <AppleLoginButton onPress={() => { }} />
 
         {/* 로그인 문제 링크 */}
         <View className="items-center pt-2">
