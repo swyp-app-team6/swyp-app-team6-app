@@ -4,6 +4,8 @@ import * as Sentry from '@sentry/react-native';
 import {
   Accordion,
   AlertModal,
+  Dialog,
+  openDialog,
   Anim,
   Avatar,
   Badge,
@@ -359,6 +361,37 @@ export default function ComponentPlaygroundPage() {
             }}
             onCancel={() => setAlertVisible(false)}
           />
+        </Section>
+
+        {/* ── Dialog ────────────────────────────────────────────────────────── */}
+        <Section title="Dialog — 전역 alert/confirm 다이얼로그 (함수 호출)">
+          <View className="gap-2">
+            <Button
+              title="Alert 다이얼로그"
+              variant="secondary"
+              onPress={() =>
+                openDialog({
+                  title: '알림',
+                  message: '저장이 완료되었습니다.',
+                })
+              }
+            />
+            <Button
+              title="Confirm 다이얼로그"
+              variant="secondary"
+              onPress={() =>
+                openDialog({
+                  type: 'confirm',
+                  title: '삭제 확인',
+                  message: '정말 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.',
+                  okLabel: '삭제',
+                  okVariant: 'secondary',
+                  okFn: () => Alert.alert('삭제됨', '항목이 삭제되었습니다.'),
+                })
+              }
+            />
+          </View>
+          <Dialog />
         </Section>
 
         {/* ── BottomSheet ────────────────────────────────────────────────────── */}
