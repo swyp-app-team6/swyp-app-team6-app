@@ -126,19 +126,19 @@ export interface TMIAnswer {
  * - value: API에 전송하는 Interest 값
  * - label: 화면에 표시하는 한국어 라벨
  */
-export const INTEREST_OPTIONS: { value: Interest; label: string }[] = [
-  { value: 'TRAVEL', label: '여행' },
-  { value: 'SPORTS', label: '운동' },
-  { value: 'FOOD', label: '맛집/카페' },
-  { value: 'BOOKS', label: '독서' },
-  { value: 'GAME', label: '게임' },
-  { value: 'SELF_DEVELOPMENT', label: '자기계발' },
-  { value: 'INVESTING', label: '재테크' },
-  { value: 'CULTURE', label: '콘서트/뮤지컬' },
-  { value: 'CONTENTS', label: '영화/드라마' },
-  { value: 'CAMPING', label: '캠핑/드라이브' },
-  { value: 'MUSIC', label: '음악' },
-  { value: 'LANGUAGE', label: '외국어' },
+export const INTEREST_OPTIONS: { value: Interest; label: string; emoji: string }[] = [
+  { value: 'TRAVEL', label: '여행', emoji: '✈️' },
+  { value: 'SPORTS', label: '운동', emoji: '🏃' },
+  { value: 'FOOD', label: '맛집/카페', emoji: '🍽️' },
+  { value: 'BOOKS', label: '독서', emoji: '📚' },
+  { value: 'GAME', label: '게임', emoji: '🎮' },
+  { value: 'SELF_DEVELOPMENT', label: '자기계발', emoji: '📝' },
+  { value: 'INVESTING', label: '재테크', emoji: '💰' },
+  { value: 'CULTURE', label: '콘서트/뮤지컬', emoji: '🎭' },
+  { value: 'CONTENTS', label: '영화/드라마', emoji: '🎬' },
+  { value: 'CAMPING', label: '캠핑/드라이브', emoji: '⛺' },
+  { value: 'MUSIC', label: '음악', emoji: '🎵' },
+  { value: 'LANGUAGE', label: '외국어', emoji: '🇺🇸' },
 ];
 
 /**

@@ -1,4 +1,6 @@
 export { default as useAuthStore } from './model/authStore';
+export { default as useProfileDataStore } from './model/profileDataStore';
+export type { ProfileData } from './model/profileDataStore';
 export type {
   User,
   AuthTokens,

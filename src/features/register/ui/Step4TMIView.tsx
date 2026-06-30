@@ -2,6 +2,7 @@ import React, { useRef, useState, useMemo } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { TMICard, BottomCTA, Button, ChipSelect, Textbox } from '@/shared/ui';
 import BottomSheet, { type BottomSheetHandle } from '@/shared/ui/BottomSheet';
+import { useProfileDataStore } from '@/entities/user';
 import useRegisterFormStore from '../model/useRegisterFormStore';
 import { TMI_QUESTIONS } from '../model/tmiData';
 import { TMI_CATEGORY_OPTIONS, type TMICategory, type TMIQuestion } from '../model/types';
@@ -15,12 +16,14 @@ import { TMI_CATEGORY_OPTIONS, type TMICategory, type TMIQuestion } from '../mod
  *   - 선택형: 바텀시트에서 선택지 중 1개 탭
  *   - 서술형: 바텀시트에서 텍스트 직접 입력 (5~100자)
  *   - 입력 없이 건너뛰기 가능
+ *   - "다음으로" 클릭 시 form 데이터 전체를 useProfileDataStore에 저장 후 다음 단계로 이동
  * ---
  * @example
  * <Step4TMIView />
  */
 export default function Step4TMIView() {
   const { form, addTMIAnswer, removeTMIAnswer, nextStep } = useRegisterFormStore();
+  const { setProfileData } = useProfileDataStore();
   const [selectedCategory, setSelectedCategory] = useState<TMICategory>('ALL');
   const [activeQuestion, setActiveQuestion] = useState<TMIQuestion | null>(null);
   const [textInput, setTextInput] = useState('');
@@ -124,7 +127,25 @@ export default function Step4TMIView() {
       </ScrollView>
 
       <BottomCTA>
-        <Button title="다음으로" onPress={nextStep} />
+        <Button
+          title="다음으로"
+          onPress={() => {
+            setProfileData({
+              nickname: form.nickname,
+              profileImageUri: form.profileImageUri,
+              profileImageKey: form.profileImageKey,
+              gender: form.gender,
+              age: form.age,
+              jobField: form.jobField,
+              region: form.region,
+              subArea: form.subArea,
+              bio: form.bio,
+              interests: [...form.interests],
+              tmiAnswers: form.tmiAnswers.map((a) => ({ ...a })),
+            });
+            nextStep();
+          }}
+        />
       </BottomCTA>
 
       {/* 답변 바텀시트 */}
