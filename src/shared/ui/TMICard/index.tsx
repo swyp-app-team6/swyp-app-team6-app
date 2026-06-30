@@ -71,7 +71,7 @@ export default function TMICard({
     <Container
       {...(onPress ? { onPress, accessibilityRole: 'button' as const } : {})}
       className={cn(
-        'w-full rounded-2xl p-4 border',
+        'w-full rounded-xl p-4 border',
         selected ? 'border-primary bg-primary-lightest' : 'border-text-gray6 bg-white',
         styleClass?.root,
       )}
@@ -84,7 +84,7 @@ export default function TMICard({
 
       <Text
         className={cn(
-          'text-sm font-medium text-text-black',
+          'text-base font-medium text-text-black',
           styleClass?.question,
         )}
         numberOfLines={answer ? 2 : undefined}
@@ -92,14 +92,12 @@ export default function TMICard({
         {question}
       </Text>
 
-      {answer && (
-        <Text
-          className={cn('mt-2 text-sm text-text-gray3', styleClass?.answer)}
-          numberOfLines={3}
-        >
-          {answer}
-        </Text>
-      )}
+      <Text
+        className={cn('mt-2 text-sm font-normal text-text-gray4', styleClass?.answer)}
+        numberOfLines={3}
+      >
+        {answer ?? '답변 없음'}
+      </Text>
     </Container>
   );
 }

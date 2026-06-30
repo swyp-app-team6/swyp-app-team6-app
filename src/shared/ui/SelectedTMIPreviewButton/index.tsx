@@ -50,7 +50,7 @@ export default function SelectedTMIPreviewButton({
       )}
     >
       <Text className="text-sm font-medium text-white tracking-tight">
-        {count}개 선택됨
+        TMI {count}개 선택됨
       </Text>
       <View className="flex-row items-center">
         <Text className="text-[13px] font-medium text-white tracking-tight">

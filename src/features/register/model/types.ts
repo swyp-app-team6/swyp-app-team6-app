@@ -149,7 +149,7 @@ export const INTEREST_OPTIONS: { value: Interest; label: string; emoji: string }
 export const TMI_CATEGORY_OPTIONS: { value: TMICategory; label: string }[] = [
   { value: 'ALL', label: '전체' },
   { value: 'EITHER_OR', label: '양자택일' },
-  { value: 'FILL_BLANK', label: '빈칸 채우기' },
-  { value: 'COUPLE_DEBATE', label: '커플 논쟁' },
-  { value: 'BALANCE_GAME', label: '밸런스 게임' },
+  { value: 'FILL_BLANK', label: '빈칸채우기' },
+  { value: 'COUPLE_DEBATE', label: '커플논쟁' },
+  { value: 'BALANCE_GAME', label: '밸런스게임' },
 ];

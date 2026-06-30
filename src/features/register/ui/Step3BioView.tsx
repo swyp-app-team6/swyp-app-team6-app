@@ -47,9 +47,6 @@ export default function Step3BioView() {
           onChangeText={handleBioChange}
           maxLength={100}
           minHeight={200}
-          styleClass={{
-            input: 'bg-text-gray7 border-0',
-          }}
         />
 
         <View className="h-24" />

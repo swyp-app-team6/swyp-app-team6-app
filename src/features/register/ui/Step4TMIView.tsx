@@ -1,6 +1,8 @@
 import React, { useRef, useState, useMemo } from 'react';
-import { View, Text, ScrollView } from 'react-native';
-import { TMICard, BottomCTA, Button, ChipSelect, Textbox } from '@/shared/ui';
+import { Pressable, View, Text, ScrollView } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
+import { TMICard, BottomCTA, Button, ChipSelect, Textbox, SelectedTMIPreviewButton } from '@/shared/ui';
+import Tag from '@/shared/ui/Tag';
 import BottomSheet, { type BottomSheetHandle } from '@/shared/ui/BottomSheet';
 import { useProfileDataStore } from '@/entities/user';
 import useRegisterFormStore from '../model/useRegisterFormStore';
@@ -27,7 +29,9 @@ export default function Step4TMIView() {
   const [selectedCategory, setSelectedCategory] = useState<TMICategory>('ALL');
   const [activeQuestion, setActiveQuestion] = useState<TMIQuestion | null>(null);
   const [textInput, setTextInput] = useState('');
+  const [choiceInput, setChoiceInput] = useState<string | null>(null);
   const sheetRef = useRef<BottomSheetHandle>(null);
+  const previewSheetRef = useRef<BottomSheetHandle>(null);
 
   /** 카테고리 필터링된 질문 목록 */
   const filteredQuestions = useMemo(() => {
@@ -44,15 +48,22 @@ export default function Step4TMIView() {
     }
     setActiveQuestion(question);
     setTextInput('');
+    setChoiceInput(null);
     sheetRef.current?.open();
   };
 
-  /** 선택형 답변 선택 */
-  const handleChoiceSelect = (answer: string) => {
-    if (!activeQuestion) return;
-    addTMIAnswer({ questionId: activeQuestion.id, answer });
+  /** 선택형 옵션 토글 */
+  const handleChoiceToggle = (option: string) => {
+    setChoiceInput((prev) => (prev === option ? null : option));
+  };
+
+  /** 선택형 답변 확정 */
+  const handleChoiceSubmit = () => {
+    if (!activeQuestion || !choiceInput) return;
+    addTMIAnswer({ questionId: activeQuestion.id, answer: choiceInput });
     sheetRef.current?.close();
     setActiveQuestion(null);
+    setChoiceInput(null);
   };
 
   /** 서술형 답변 제출 */
@@ -74,12 +85,25 @@ export default function Step4TMIView() {
     return TMI_CATEGORY_OPTIONS.find((c) => c.value === category)?.label ?? '';
   };
 
+  /** 선택된 TMI 질문+답변 목록 */
+  const selectedTMIList = useMemo(() => {
+    return form.tmiAnswers.map((a) => {
+      const question = TMI_QUESTIONS.find((q) => q.id === a.questionId);
+      return {
+        questionId: a.questionId,
+        category: question?.category ?? 'ALL',
+        question: question?.question ?? '',
+        answer: a.answer,
+      };
+    });
+  }, [form.tmiAnswers]);
+
   return (
     <View className="flex-1 bg-white">
       <ScrollView className="flex-1 pt-6" showsVerticalScrollIndicator={false}>
         <View className="px-5">
-          <Text className="text-xl font-bold text-text-black mb-2">
-            TMI를 등록
+          <Text className="text-xl font-bold text-text-black leading-7">
+            {'프로필을 꾸밀 나만의 TMI를\n선택하고 답변해주세요'}
           </Text>
         </View>
 
@@ -87,7 +111,7 @@ export default function Step4TMIView() {
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          className="mb-4"
+          className="mt-6 mb-4"
           contentContainerStyle={{ gap: 8, paddingHorizontal: 20 }}
         >
           {TMI_CATEGORY_OPTIONS.map((cat) => (
@@ -104,29 +128,45 @@ export default function Step4TMIView() {
         <View className="px-5 gap-3">
           {filteredQuestions.map((question) => {
             const answer = getAnswer(question.id);
+            const isSelected = !!answer;
             return (
-              <TMICard
-                key={question.id}
-                tag={getCategoryLabel(question.category)}
-                question={question.question}
-                answer={answer}
-                selected={!!answer}
-                onPress={() => handleQuestionPress(question)}
-              />
+              <View key={question.id} className="flex-row items-start gap-3">
+                {/* 체크박스 */}
+                <View className="w-6 h-6 items-center justify-center mt-4">
+                  <View
+                    className={`w-[18px] h-[18px] rounded-[4px] border-2 ${
+                      isSelected
+                        ? 'bg-primary border-primary'
+                        : 'bg-white border-[#BFBFBF]'
+                    }`}
+                  />
+                </View>
+                {/* 카드 */}
+                <View className="flex-1">
+                  <TMICard
+                    tag={getCategoryLabel(question.category)}
+                    question={question.question}
+                    answer={answer}
+                    selected={isSelected}
+                    onPress={() => handleQuestionPress(question)}
+                  />
+                </View>
+              </View>
             );
           })}
         </View>
 
-        {form.tmiAnswers.length > 0 && (
-          <Text className="text-xs text-text-gray4 text-center mt-4 mb-2">
-            {form.tmiAnswers.length}개의 TMI를 선택했어요
-          </Text>
-        )}
-
-        <View className="h-24" />
+        <View className="h-40" />
       </ScrollView>
 
       <BottomCTA>
+        {form.tmiAnswers.length > 0 && (
+          <SelectedTMIPreviewButton
+            count={form.tmiAnswers.length}
+            onPress={() => previewSheetRef.current?.open()}
+            styleClass={{ root: 'mb-3' }}
+          />
+        )}
         <Button
           title="다음으로"
           onPress={() => {
@@ -151,22 +191,74 @@ export default function Step4TMIView() {
       {/* 답변 바텀시트 */}
       <BottomSheet
         ref={sheetRef}
-        title={activeQuestion?.question ?? ''}
-        onClose={() => setActiveQuestion(null)}
+        showClose
+        onClose={() => {
+          setActiveQuestion(null);
+          setChoiceInput(null);
+        }}
       >
         {activeQuestion?.answerType === 'CHOICE' && activeQuestion.options ? (
-          <View className="gap-3 pb-4">
-            {activeQuestion.options.map((option) => (
-              <Button
-                key={option}
-                title={option}
-                variant="secondary"
-                onPress={() => handleChoiceSelect(option)}
+          <View className="gap-4 pb-4">
+            {/* 태그 + 질문 헤더 */}
+            <View className="gap-4">
+              <Tag
+                label={getCategoryLabel(activeQuestion.category)}
+                variant="primary"
               />
-            ))}
+              <Text className="text-xl font-bold text-text-black leading-7">
+                {activeQuestion.question}
+              </Text>
+            </View>
+
+            {/* 선택지 목록 */}
+            {activeQuestion.options.map((option) => {
+              const isActive = choiceInput === option;
+              return (
+                <Pressable
+                  key={option}
+                  onPress={() => handleChoiceToggle(option)}
+                  className={`h-[52px] flex-row items-center justify-between rounded-xl px-4 ${
+                    isActive
+                      ? 'bg-primary-lightest border border-primary'
+                      : 'bg-[#F5F5F5]'
+                  }`}
+                >
+                  <Text
+                    className={`flex-1 text-sm ${
+                      isActive
+                        ? 'font-semibold text-primary'
+                        : 'font-medium text-text-black'
+                    }`}
+                  >
+                    {option}
+                  </Text>
+                  {isActive && <CheckIcon />}
+                </Pressable>
+              );
+            })}
+
+            {/* 답변 완료 버튼 */}
+            <Button
+              title="답변 완료"
+              disabled={!choiceInput}
+              onPress={handleChoiceSubmit}
+            />
           </View>
         ) : (
           <View className="pb-4">
+            {/* 태그 + 질문 헤더 */}
+            <View className="gap-4 mb-4">
+              {activeQuestion && (
+                <Tag
+                  label={getCategoryLabel(activeQuestion.category)}
+                  variant="primary"
+                />
+              )}
+              <Text className="text-xl font-bold text-text-black leading-7">
+                {activeQuestion?.question ?? ''}
+              </Text>
+            </View>
+
             <Textbox
               value={textInput}
               onChangeText={setTextInput}
@@ -175,11 +267,8 @@ export default function Step4TMIView() {
               minHeight={80}
               isBottomSheet
             />
-            <Text className="text-xs text-text-gray4 text-right mt-1">
-              {textInput.length}/100
-            </Text>
             <Button
-              title="확인"
+              title="답변 완료"
               disabled={textInput.length < 5}
               onPress={handleTextSubmit}
               className="mt-3"
@@ -187,6 +276,40 @@ export default function Step4TMIView() {
           </View>
         )}
       </BottomSheet>
+
+      {/* 선택한 TMI 미리보기 바텀시트 */}
+      <BottomSheet
+        ref={previewSheetRef}
+        title="선택한 TMI 미리보기"
+        snapPoints={['60%']}
+      >
+        <View className="gap-3 pb-4">
+          {selectedTMIList.map((item) => (
+            <TMICard
+              key={item.questionId}
+              tag={getCategoryLabel(item.category as TMICategory)}
+              question={item.question}
+              answer={item.answer}
+              selected
+            />
+          ))}
+        </View>
+      </BottomSheet>
     </View>
+  );
+}
+
+/** 선택 체크 아이콘 (#7832D5) */
+function CheckIcon() {
+  return (
+    <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M7.2 12l3.6 3.6 6-6"
+        stroke="#7832D5"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
   );
 }

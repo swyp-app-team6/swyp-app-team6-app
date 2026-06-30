@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Text, TextInput, View, type TextInputProps } from 'react-native';
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { cn } from '@/shared/lib/cn';
@@ -53,15 +53,20 @@ export default function Textbox({
   isBottomSheet,
   styleClass,
   value,
+  onChangeText: parentOnChangeText,
   ...rest
 }: Props) {
   const [length, setLength] = useState(value?.length ?? 0);
   const InputComponent = isBottomSheet ? BottomSheetTextInput : TextInput;
 
-  const handleChangeText = (text: string) => {
+  /** 최신 parentOnChangeText를 ref로 보관하여 콜백 안정성 확보 */
+  const parentOnChangeTextRef = useRef(parentOnChangeText);
+  parentOnChangeTextRef.current = parentOnChangeText;
+
+  const handleChangeText = useCallback((text: string) => {
     setLength(text.length);
-    rest.onChangeText?.(text);
-  };
+    parentOnChangeTextRef.current?.(text);
+  }, []);
 
   const { valueProps, onChangeText } = useKoreanSafeValue(value, handleChangeText);
 
@@ -78,8 +83,8 @@ export default function Textbox({
         maxLength={maxLength}
         placeholderTextColor="#BFBFBF"
         className={cn(
-          'rounded-xl border bg-white p-4 text-base text-text-black',
-          error ? 'border-red-500' : 'border-text-gray6',
+          'rounded-xl bg-text-gray7 border-0 p-4 text-base text-text-black',
+          error ? 'border-red-500' : '',
           styleClass?.input,
         )}
         style={{ minHeight }}
