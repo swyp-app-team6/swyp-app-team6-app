@@ -23,7 +23,7 @@ export default function WriteReviewPage() {
   const route = useRoute<RouteProp<NavigatorType, 'writeReview'>>();
   const { profileId } = route.params;
 
-  const handleSubmit = (_reviewText: string) => {
+  const handleSubmit = (_rating: string, _reviewText: string) => {
     // TODO: API 연동 시 실제 등록 처리
     openDialog({
       type: 'alert',

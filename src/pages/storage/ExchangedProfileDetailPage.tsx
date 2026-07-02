@@ -25,7 +25,7 @@ export default function ExchangedProfileDetailPage() {
 
   return (
     <>
-      <Header title="프로필 상세보기" />
+      <Header title="교환한 프로필 보기" />
       <ExchangedProfileView
         profileId={profileId}
         onNavigateToReview={() =>
