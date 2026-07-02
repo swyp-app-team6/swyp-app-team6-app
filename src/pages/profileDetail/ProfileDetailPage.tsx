@@ -1,29 +1,55 @@
 import React from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { View, ScrollView } from 'react-native';
 import { Header } from '@/shared/ui';
-import { MyProfileView } from '@/features/register';
-import type { NavigationPropType } from '@/shared/types';
+import { useProfileDataStore } from '@/entities/user';
+import ProfileCard from '@/features/register/ui/ProfileCard';
+import BasicInfoSection from '@/features/register/ui/BasicInfoSection';
+import InterestsSection from '@/features/register/ui/InterestsSection';
+import BioSection from '@/features/register/ui/BioSection';
+import CosmicTypeSection from '@/features/register/ui/CosmicTypeSection';
+import TmiSection from '@/features/register/ui/TmiSection';
 
 /**
  * # ProfileDetailPage
  * ---
  * - 간단설명: 내 프로필 카드 상세보기 페이지
  * - 제약사항 및 특이사항:
- *   - MyProfileView를 읽기 전용으로 표시
+ *   - 프로필 카드 + 모든 정보 섹션을 탭 없이 세로로 나열
  *   - 뒤로가기 버튼으로 이전 화면 복귀
  *   - withLayout 미적용 (독립 스택 화면)
  * ---
  */
 export default function ProfileDetailPage() {
-  const navigation = useNavigation<NavigationPropType>();
+  const { data: form } = useProfileDataStore();
 
   return (
-    <>
+    <View className="flex-1 bg-white">
       <Header title="내 프로필 카드" showBack />
-      <MyProfileView
-        onSubmit={() => navigation.goBack()}
-        loading={false}
-      />
-    </>
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+        {/* ── 프로필 카드 ── */}
+        <View className="items-center pt-6 pb-4">
+          <ProfileCard
+            profileImageUri={form.profileImageUri}
+            nickname={form.nickname}
+            age={form.age}
+            interests={form.interests}
+          />
+        </View>
+
+        {/* ── 정보 섹션 (모두 세로 나열) ── */}
+        <View className="px-5 pb-10 gap-5">
+          <BasicInfoSection
+            age={form.age}
+            region={form.region}
+            subArea={form.subArea}
+            jobField={form.jobField}
+          />
+          <InterestsSection interests={form.interests} />
+          <BioSection bio={form.bio} />
+          <CosmicTypeSection />
+          <TmiSection tmiAnswers={form.tmiAnswers} />
+        </View>
+      </ScrollView>
+    </View>
   );
 }
