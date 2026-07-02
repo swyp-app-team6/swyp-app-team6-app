@@ -13,6 +13,7 @@ import CosmicTypeSection from '@/features/register/ui/CosmicTypeSection';
 import InfoCard from '@/features/register/ui/InfoCard';
 import InterestTag from '@/features/register/ui/InterestTag';
 import ReportBottomSheet from './ReportBottomSheet';
+import { useNavigation } from '@react-navigation/native';
 
 interface Props {
   /** 프로필 ID */
@@ -43,6 +44,7 @@ export default function ExchangedProfileView({
   profileId,
   onNavigateToReview,
 }: Props) {
+  const navigation = useNavigation();
   const reportRef = useRef<BottomSheetHandle>(null);
   const [isBlocked, setIsBlocked] = useState(false);
 
@@ -64,11 +66,13 @@ export default function ExchangedProfileView({
   const handleBlock = () => {
     openDialog({
       type: 'confirm',
-      title: '차단할까요?',
-      message: '차단하면 서로의 프로필이 블러 처리됩니다.',
+      title: '김실명 님을 차단할까요?',
+      message: '더 이상 서로의 프로필이 보이지 않아요.',
       okLabel: '차단',
       cancelLabel: '취소',
-      okFn: () => setIsBlocked(true),
+      okFn: () => {
+        navigation.goBack();
+      },
     });
   };
 
