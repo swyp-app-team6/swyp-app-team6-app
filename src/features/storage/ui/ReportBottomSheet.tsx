@@ -100,17 +100,14 @@ const ReportBottomSheet = forwardRef<BottomSheetHandle, Props>(
           {REPORT_TYPE_OPTIONS.map((option) => {
             const isChecked = selectedTypes.includes(option.value);
             return (
-              <Pressable
+              <View
                 key={option.value}
-                onPress={() => toggleType(option.value)}
                 className="flex-row items-center gap-3 py-3 px-4 rounded-xl"
                 style={{
                   backgroundColor: isChecked ? '#F5EDFF' : '#F8F8F8',
                   borderWidth: 1,
                   borderColor: isChecked ? '#8C39FB' : '#E3E3E3',
                 }}
-                accessibilityRole="checkbox"
-                accessibilityState={{ checked: isChecked }}
               >
                 <Checkbox
                   checked={isChecked}
@@ -125,7 +122,7 @@ const ReportBottomSheet = forwardRef<BottomSheetHandle, Props>(
                 >
                   {option.label}
                 </Text>
-              </Pressable>
+              </View>
             );
           })}
         </View>
