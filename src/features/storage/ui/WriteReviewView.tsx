@@ -1,7 +1,8 @@
-import React, { useMemo, useState } from 'react';
+import React, { useRef, useMemo, useState } from 'react';
 import { Image, Pressable, ScrollView, Text, View } from 'react-native';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import LinearGradient from 'react-native-linear-gradient';
-import { Badge, BottomCTA, Button, Textbox } from '@/shared/ui';
+import { Badge, BottomCTA, Button, SafeBottomSheetModal, Textbox } from '@/shared/ui';
 import { ChevronDownIcon } from '@/shared/ui/icons';
 import { MOCK_STORAGE_PROFILE_DETAILS } from '@/entities/storage';
 import InterestTag from '@/features/register/ui/InterestTag';
@@ -46,8 +47,8 @@ export default function WriteReviewView({
   loading,
 }: Props) {
   const [selectedRating, setSelectedRating] = useState<string | null>(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [reviewText, setReviewText] = useState('');
+  const ratingSheetRef = useRef<BottomSheetModal>(null);
 
   const profile = useMemo(
     () => MOCK_STORAGE_PROFILE_DETAILS.find((p) => p.id === profileId),
@@ -133,59 +134,21 @@ export default function WriteReviewView({
           </View>
         )}
 
-        {/* 만족도 셀렉트 */}
+        {/* 만족도 셀렉트 트리거 */}
         <View className="px-5 pb-4">
-          <View
-            className="rounded-xl overflow-hidden"
+          <Pressable
+            className="flex-row items-center justify-between p-4 bg-[#F5F5F5] rounded-xl"
             style={{ borderWidth: 1, borderColor: '#E3E3E3' }}
+            onPress={() => ratingSheetRef.current?.present()}
           >
-            {/* 드롭다운 헤더 */}
-            <Pressable
-              className="flex-row items-center justify-between p-4 bg-[#F5F5F5] rounded-xl"
-              onPress={() => setIsDropdownOpen((prev) => !prev)}
+            <Text
+              className="flex-1 text-sm font-medium"
+              style={{ color: selectedLabel ? '#1A1A1A' : '#71717A' }}
             >
-              <Text
-                className="flex-1 text-sm font-medium"
-                style={{ color: selectedLabel ? '#1A1A1A' : '#71717A' }}
-              >
-                {selectedLabel ?? '만남은 어떠셨나요?'}
-              </Text>
-              <View
-                style={{
-                  transform: [{ rotate: isDropdownOpen ? '180deg' : '0deg' }],
-                }}
-              >
-                <ChevronDownIcon size={24} color="#111111" />
-              </View>
-            </Pressable>
-
-            {/* 드롭다운 옵션 목록 */}
-            {isDropdownOpen &&
-              REVIEW_OPTIONS.map((option) => (
-                <Pressable
-                  key={option.value}
-                  className="px-6 py-4"
-                  style={{
-                    backgroundColor:
-                      selectedRating === option.value ? '#F5EDFF' : '#FFFFFF',
-                  }}
-                  onPress={() => {
-                    setSelectedRating(option.value);
-                    setIsDropdownOpen(false);
-                  }}
-                >
-                  <Text
-                    className="text-sm font-medium"
-                    style={{
-                      color:
-                        selectedRating === option.value ? '#8C39FB' : '#18181B',
-                    }}
-                  >
-                    {option.label}
-                  </Text>
-                </Pressable>
-              ))}
-          </View>
+              {selectedLabel ?? '만남은 어떠셨나요?'}
+            </Text>
+            <ChevronDownIcon size={24} color="#111111" />
+          </Pressable>
         </View>
 
         {/* 후기 텍스트 입력 */}
@@ -212,6 +175,40 @@ export default function WriteReviewView({
           loading={loading}
         />
       </BottomCTA>
+
+      {/* 만족도 선택 바텀시트 */}
+      <SafeBottomSheetModal ref={ratingSheetRef}>
+        <View className="px-5 pt-2 pb-2">
+          <Text className="text-lg font-bold text-[#1A1A1A]">
+            만남은 어떠셨나요?
+          </Text>
+        </View>
+        {REVIEW_OPTIONS.map((option) => {
+          const isSelected = selectedRating === option.value;
+          return (
+            <Pressable
+              key={option.value}
+              className="px-6 py-4"
+              style={{
+                backgroundColor: isSelected ? '#F5EDFF' : '#FFFFFF',
+              }}
+              onPress={() => {
+                setSelectedRating(option.value);
+                ratingSheetRef.current?.dismiss();
+              }}
+            >
+              <Text
+                className="text-sm font-medium"
+                style={{
+                  color: isSelected ? '#8C39FB' : '#18181B',
+                }}
+              >
+                {option.label}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </SafeBottomSheetModal>
     </View>
   );
 }
