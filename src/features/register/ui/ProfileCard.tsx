@@ -1,7 +1,8 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import { View, Text, Image, Pressable } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { Badge, QRIcon } from '@/shared/ui';
+import { ProfileShareQRModal } from '@/features/profileShare';
 import InterestTag from './InterestTag';
 
 /**
@@ -12,7 +13,7 @@ import InterestTag from './InterestTag';
  *   - 프로필 이미지가 카드 전체를 채움
  *   - 하단에 LinearGradient 오버레이로 이름/나이/관심사 표시
  *   - 좌상단에 유형 배지 표시
- *   - showQR=true 시 우상단에 QR 공유 버튼 표시
+ *   - showQR=true 시 우상단에 QR 공유 버튼 + QR 모달 포함
  *   - 배경색: #F5EDFF, 테두리: #EADCFF
  * ---
  * @param profileImageUri 프로필 이미지 URI
@@ -20,10 +21,9 @@ import InterestTag from './InterestTag';
  * @param age 나이
  * @param interests 관심사 목록
  * @param showQR QR 공유 버튼 표시 여부
- * @param onPressQR QR 공유 버튼 클릭 콜백
  * ---
  * @example
- * <ProfileCard profileImageUri="..." nickname="홍길동" age={25} interests={['TRAVEL']} showQR onPressQR={() => {}} />
+ * <ProfileCard profileImageUri="..." nickname="홍길동" age={25} interests={['TRAVEL']} showQR />
  */
 const ProfileCard = memo(function ProfileCard({
   profileImageUri,
@@ -31,15 +31,15 @@ const ProfileCard = memo(function ProfileCard({
   age,
   interests,
   showQR,
-  onPressQR,
 }: {
   profileImageUri?: string | null;
   nickname?: string;
   age?: string;
   interests: string[];
   showQR?: boolean;
-  onPressQR?: () => void;
 }) {
+  const [qrVisible, setQrVisible] = useState(false);
+
   return (
     <View
       className="w-[284px] h-[392px] rounded-xl overflow-hidden"
@@ -80,7 +80,7 @@ const ProfileCard = memo(function ProfileCard({
         {showQR && (
           <Pressable
             hitSlop={8}
-            onPress={onPressQR}
+            onPress={() => setQrVisible(true)}
             accessibilityLabel="프로필 카드 QR 공유"
           >
             <QRIcon size={24} color="#FFFFFF" />
@@ -115,6 +115,11 @@ const ProfileCard = memo(function ProfileCard({
           </View>
         )}
       </View>
+
+      {/* QR 공유 모달 */}
+      {showQR && (
+        <ProfileShareQRModal visible={qrVisible} onClose={() => setQrVisible(false)} />
+      )}
     </View>
   );
 });

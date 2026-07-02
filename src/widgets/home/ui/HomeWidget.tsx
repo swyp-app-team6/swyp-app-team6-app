@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import ProfileCard from '@/features/register/ui/ProfileCard';
-import { ProfileShareQRModal } from '@/features/profileShare';
 import type { NavigationPropType } from '@/shared/types';
 import HomeCardBack from './HomeCardBack';
 import { HAS_PROFILE, MOCK_HOME_PROFILE } from '../model/mockData';
@@ -22,7 +21,6 @@ import { HAS_PROFILE, MOCK_HOME_PROFILE } from '../model/mockData';
 export default function HomeWidget() {
   const navigation = useNavigation<NavigationPropType>();
   const [isFlipped, setIsFlipped] = useState(false);
-  const [showQR, setShowQR] = useState(false);
 
   return (
     <View className="mt-8 items-center">
@@ -64,7 +62,6 @@ export default function HomeWidget() {
           age={MOCK_HOME_PROFILE.age}
           interests={MOCK_HOME_PROFILE.interests}
           showQR
-          onPressQR={() => setShowQR(true)}
         />
       ) : (
         /* 프로필 카드 뒷면 */
@@ -97,8 +94,6 @@ export default function HomeWidget() {
         </>
       )}
 
-      {/* QR 공유 모달 */}
-      <ProfileShareQRModal visible={showQR} onClose={() => setShowQR(false)} />
     </View>
   );
 }

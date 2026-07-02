@@ -32,9 +32,6 @@ function HomePage() {
         }
         right={
           <View className="flex-row items-center gap-3">
-            <Pressable hitSlop={8}>
-              <BellIcon size={24} color="#9ca3af" />
-            </Pressable>
             <Pressable hitSlop={8} onPress={() => navigation.navigate('mypage')}>
               <MyPageIcon size={24} color="#9ca3af" />
             </Pressable>
