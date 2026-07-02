@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { QRIcon } from '@/shared/ui';
 import ProfileCard from '@/features/register/ui/ProfileCard';
 import { ProfileShareQRModal } from '@/features/profileShare';
 import type { NavigationPropType } from '@/shared/types';
@@ -27,7 +26,7 @@ export default function HomeWidget() {
 
   return (
     <View className="mt-8 items-center">
-      {/* 프로필 존재 시: 타이틀 + QR 공유 버튼 */}
+      {/* 프로필 존재 시: 타이틀 */}
       {HAS_PROFILE && (
         <View className="w-full flex-row items-center justify-between mb-5">
           <View className="flex-row items-center gap-1">
@@ -38,13 +37,6 @@ export default function HomeWidget() {
               님의 프로필 카드
             </Text>
           </View>
-          <Pressable
-            hitSlop={8}
-            onPress={() => setShowQR(true)}
-            accessibilityLabel="프로필 카드 QR 공유"
-          >
-            <QRIcon size={24} color="#9ca3af" />
-          </Pressable>
         </View>
       )}
 
@@ -71,23 +63,25 @@ export default function HomeWidget() {
           nickname={MOCK_HOME_PROFILE.nickname}
           age={MOCK_HOME_PROFILE.age}
           interests={MOCK_HOME_PROFILE.interests}
+          showQR
+          onPressQR={() => setShowQR(true)}
         />
       ) : (
         /* 프로필 카드 뒷면 */
         <HomeCardBack cosmicType={MOCK_HOME_PROFILE.cosmicType} />
       )}
 
-      {/* 프로필 존재 시: 뒤집기 + 전체보기 버튼 */}
+      {/* 프로필 존재 시: 뒷면 보기 + 전체보기 버튼 */}
       {HAS_PROFILE && (
         <>
-          {/* 뒤집기 버튼 */}
+          {/* 뒷면 보기 버튼 */}
           <Pressable
             onPress={() => setIsFlipped((prev) => !prev)}
             className="mt-4 flex-row items-center gap-1 rounded-[20px] px-3 py-2"
           >
             <Text className="text-[16px] text-text-gray4">↻</Text>
             <Text className="text-[12px] tracking-tight text-text-gray4">
-              뒤집기
+              뒷면 보기
             </Text>
           </Pressable>
 

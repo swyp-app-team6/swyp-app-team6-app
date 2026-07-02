@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, Pressable } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { Badge } from '@/shared/ui';
+import { Badge, QRIcon } from '@/shared/ui';
 import InterestTag from './InterestTag';
 
 /**
@@ -12,26 +12,33 @@ import InterestTag from './InterestTag';
  *   - 프로필 이미지가 카드 전체를 채움
  *   - 하단에 LinearGradient 오버레이로 이름/나이/관심사 표시
  *   - 좌상단에 유형 배지 표시
+ *   - showQR=true 시 우상단에 QR 공유 버튼 표시
  *   - 배경색: #F5EDFF, 테두리: #EADCFF
  * ---
  * @param profileImageUri 프로필 이미지 URI
  * @param nickname 닉네임
  * @param age 나이
  * @param interests 관심사 목록
+ * @param showQR QR 공유 버튼 표시 여부
+ * @param onPressQR QR 공유 버튼 클릭 콜백
  * ---
  * @example
- * <ProfileCard profileImageUri="..." nickname="홍길동" age={25} interests={['TRAVEL']} />
+ * <ProfileCard profileImageUri="..." nickname="홍길동" age={25} interests={['TRAVEL']} showQR onPressQR={() => {}} />
  */
 const ProfileCard = memo(function ProfileCard({
   profileImageUri,
   nickname,
   age,
   interests,
+  showQR,
+  onPressQR,
 }: {
   profileImageUri?: string | null;
   nickname?: string;
   age?: string;
   interests: string[];
+  showQR?: boolean;
+  onPressQR?: () => void;
 }) {
   return (
     <View
@@ -67,9 +74,18 @@ const ProfileCard = memo(function ProfileCard({
         style={{ height: 232 }}
       />
 
-      {/* 좌상단 유형 배지 */}
-      <View className="absolute top-5 left-5">
+      {/* 상단: 유형 배지 + QR 버튼 */}
+      <View className="absolute top-5 left-5 right-5 flex-row items-center justify-between">
         <Badge level="star" />
+        {showQR && (
+          <Pressable
+            hitSlop={8}
+            onPress={onPressQR}
+            accessibilityLabel="프로필 카드 QR 공유"
+          >
+            <QRIcon size={24} color="#FFFFFF" />
+          </Pressable>
+        )}
       </View>
 
       {/* 하단 정보 (이름 + 나이 + 관심사 태그) */}
