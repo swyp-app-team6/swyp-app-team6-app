@@ -2,7 +2,7 @@ import React, { forwardRef, useCallback, useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useImperativeHandle, useRef } from 'react';
-import { Button, SafeBottomSheetModal } from '@/shared/ui';
+import { Button, Checkbox, SafeBottomSheetModal } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
 
 /** 신고 유형 옵션 */
@@ -15,7 +15,7 @@ const REPORT_TYPE_OPTIONS = [
 
 interface Props {
   /** 신고 제출 시 호출되는 콜백 */
-  onSubmit: (reportType: string, detail?: string) => void;
+  onSubmit: (reportTypes: string[], detail?: string) => void;
 }
 
 /**
@@ -23,11 +23,11 @@ interface Props {
  * ---
  * - 간단설명: 신고 사유 선택 바텀시트 컴포넌트
  * - 제약사항 및 특이사항:
- *   - 신고 유형 라디오 선택 (단일 선택)
+ *   - 신고 유형 체크박스 복수 선택
  *   - "기타" 선택 시 텍스트 입력 영역 노출
  *   - ref를 통해 open/close 제어
  * ---
- * @param onSubmit 신고 제출 시 콜백 (신고유형, 기타사유)
+ * @param onSubmit 신고 제출 시 콜백 (신고유형 배열, 기타사유)
  * ---
  * @example
  * ```tsx
@@ -38,26 +38,39 @@ interface Props {
 const ReportBottomSheet = forwardRef<BottomSheetHandle, Props>(
   ({ onSubmit }, ref) => {
     const modalRef = useRef<BottomSheetModal>(null);
-    const [selectedType, setSelectedType] = useState<string | null>(null);
+    const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
     const [otherText, setOtherText] = useState('');
 
     useImperativeHandle(ref, () => ({
       open: () => {
-        setSelectedType(null);
+        setSelectedTypes([]);
         setOtherText('');
         modalRef.current?.present();
       },
       close: () => modalRef.current?.dismiss(),
     }));
 
-    const handleSubmit = useCallback(() => {
-      if (!selectedType) return;
-      onSubmit(selectedType, selectedType === 'other' ? otherText : undefined);
-      modalRef.current?.dismiss();
-    }, [onSubmit, selectedType, otherText]);
+    const toggleType = useCallback((value: string) => {
+      setSelectedTypes((prev) =>
+        prev.includes(value)
+          ? prev.filter((v) => v !== value)
+          : [...prev, value],
+      );
+    }, []);
 
+    const handleSubmit = useCallback(() => {
+      if (selectedTypes.length === 0) return;
+      onSubmit(
+        selectedTypes,
+        selectedTypes.includes('other') ? otherText : undefined,
+      );
+      modalRef.current?.dismiss();
+    }, [onSubmit, selectedTypes, otherText]);
+
+    const hasOther = selectedTypes.includes('other');
     const isSubmitDisabled =
-      !selectedType || (selectedType === 'other' && otherText.trim().length === 0);
+      selectedTypes.length === 0 ||
+      (hasOther && otherText.trim().length === 0);
 
     return (
       <SafeBottomSheetModal ref={modalRef}>
@@ -82,42 +95,32 @@ const ReportBottomSheet = forwardRef<BottomSheetHandle, Props>(
           </Text>
         </View>
 
-        {/* 신고 유형 라디오 목록 */}
+        {/* 신고 유형 체크박스 목록 */}
         <View className="px-5 gap-2 mb-4">
           {REPORT_TYPE_OPTIONS.map((option) => {
-            const isSelected = selectedType === option.value;
+            const isChecked = selectedTypes.includes(option.value);
             return (
               <Pressable
                 key={option.value}
-                onPress={() => setSelectedType(option.value)}
+                onPress={() => toggleType(option.value)}
                 className="flex-row items-center gap-3 py-3 px-4 rounded-xl"
                 style={{
-                  backgroundColor: isSelected ? '#F5EDFF' : '#F8F8F8',
+                  backgroundColor: isChecked ? '#F5EDFF' : '#F8F8F8',
                   borderWidth: 1,
-                  borderColor: isSelected ? '#8C39FB' : '#E3E3E3',
+                  borderColor: isChecked ? '#8C39FB' : '#E3E3E3',
                 }}
-                accessibilityRole="radio"
-                accessibilityState={{ selected: isSelected }}
+                accessibilityRole="checkbox"
+                accessibilityState={{ checked: isChecked }}
               >
-                <View
-                  className="w-5 h-5 rounded-full items-center justify-center"
-                  style={{
-                    borderWidth: 2,
-                    borderColor: isSelected ? '#8C39FB' : '#CCCCCC',
-                  }}
-                >
-                  {isSelected && (
-                    <View
-                      className="w-2.5 h-2.5 rounded-full"
-                      style={{ backgroundColor: '#8C39FB' }}
-                    />
-                  )}
-                </View>
+                <Checkbox
+                  checked={isChecked}
+                  onValueChange={() => toggleType(option.value)}
+                />
                 <Text
                   className="text-base"
                   style={{
-                    color: isSelected ? '#8C39FB' : '#4E4E4E',
-                    fontWeight: isSelected ? '600' : '400',
+                    color: isChecked ? '#8C39FB' : '#4E4E4E',
+                    fontWeight: isChecked ? '600' : '400',
                   }}
                 >
                   {option.label}
@@ -128,7 +131,7 @@ const ReportBottomSheet = forwardRef<BottomSheetHandle, Props>(
         </View>
 
         {/* 기타 텍스트 입력 */}
-        {selectedType === 'other' && (
+        {hasOther && (
           <View className="px-5 mb-4">
             <TextInput
               value={otherText}

@@ -134,11 +134,13 @@ export default function WriteReviewView({
           </View>
         )}
 
-        {/* 만족도 셀렉트 트리거 */}
-        <View className="px-5 pb-4">
+        {/* 만족도 셀렉트 */}
+        <View className="px-5 pb-6 gap-3">
+          <Text className="text-base font-medium text-[#18181B]">
+            전체적인 만남은 어떠셨나요?
+          </Text>
           <Pressable
             className="flex-row items-center justify-between p-4 bg-[#F5F5F5] rounded-xl"
-            style={{ borderWidth: 1, borderColor: '#E3E3E3' }}
             onPress={() => ratingSheetRef.current?.present()}
           >
             <Text
@@ -151,15 +153,22 @@ export default function WriteReviewView({
           </Pressable>
         </View>
 
-        {/* 후기 텍스트 입력 */}
+        {/* 메모 입력 */}
         <View className="px-5 pb-6">
+          <View className="flex-row items-center gap-1 mb-3">
+            <Text className="text-base font-medium text-[#18181B]">
+              메모를 남겨주세요
+            </Text>
+            <Text className="text-sm font-medium text-[#71717A]">
+              (나만 볼 수 있어요)
+            </Text>
+          </View>
           <Textbox
-            label="후기 작성"
             value={reviewText}
             onChangeText={setReviewText}
-            placeholder="상대방과의 만남은 어떠셨나요? 나만 보는 후기를 작성해보세요."
-            maxLength={500}
-            minHeight={150}
+            placeholder="나만 볼 수 있으니 편하게 남겨주세요!"
+            maxLength={300}
+            minHeight={112}
           />
         </View>
 

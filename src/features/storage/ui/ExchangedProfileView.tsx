@@ -10,7 +10,6 @@ import BasicInfoSection from '@/features/register/ui/BasicInfoSection';
 import InterestsSection from '@/features/register/ui/InterestsSection';
 import BioSection from '@/features/register/ui/BioSection';
 import CosmicTypeSection from '@/features/register/ui/CosmicTypeSection';
-import TmiSection from '@/features/register/ui/TmiSection';
 import InfoCard from '@/features/register/ui/InfoCard';
 import InterestTag from '@/features/register/ui/InterestTag';
 import ReportBottomSheet from './ReportBottomSheet';
@@ -73,7 +72,7 @@ export default function ExchangedProfileView({
     });
   };
 
-  const handleReport = (_reportType: string, _detail?: string) => {
+  const handleReport = (_reportTypes: string[], _detail?: string) => {
     openDialog({
       type: 'alert',
       title: '신고가 접수되었습니다',
@@ -203,7 +202,7 @@ export default function ExchangedProfileView({
         </View>
 
         {/* 프로필 전체보기 아코디언 */}
-        <View className="px-5 pb-6">
+        <View className="pb-6">
           <Accordion.Root>
             <Accordion.Item
               itemKey="fullProfile"
@@ -213,7 +212,6 @@ export default function ExchangedProfileView({
               <InterestsSection interests={profile.interests} />
               <BioSection bio={profile.bio} />
               <CosmicTypeSection />
-              <TmiSection tmiAnswers={profile.tmiAnswers} />
             </Accordion.Item>
           </Accordion.Root>
         </View>
