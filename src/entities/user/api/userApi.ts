@@ -139,10 +139,14 @@ export class UserAPI {
     me: () => ({
       queryKey: ['me'],
       queryFn: () => UserAPI.fetchUserInfo(),
+      // @ts-expect-error createQueryKeys 타입 제한으로 staleTime 할당 불가
+      staleTime: Infinity,
     }),
     profile: () => ({
       queryKey: ['profile'],
       queryFn: () => UserAPI.fetchProfile(),
+      // @ts-expect-error createQueryKeys 타입 제한으로 staleTime 할당 불가
+      staleTime: Infinity,
     }),
   });
 }

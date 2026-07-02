@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Input } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
 import PullToRefreshWrapper from '@/shared/ui/PullToRefreshWrapper';
-import { SearchIcon } from '@/shared/ui/icons';
+import { HeartIcon, SearchIcon } from '@/shared/ui/icons';
 import { openDialog } from '@/shared/ui/Dialog';
 import { MOCK_STORAGE_PROFILES, COSMIC_TYPE_LABEL } from '@/entities/storage';
 import type { StorageProfile } from '@/entities/storage';
@@ -36,6 +36,7 @@ export default function StorageAllWidget() {
   const [profiles, setProfiles] = useState<StorageProfile[]>(MOCK_STORAGE_PROFILES);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const [isFavoriteOnly, setIsFavoriteOnly] = useState(false);
   const [filter, setFilter] = useState<StorageFilterState>({
     regions: [],
     cosmicTypes: [],
@@ -56,12 +57,16 @@ export default function StorageAllWidget() {
       });
     }
 
+    if (isFavoriteOnly) {
+      result = result.filter((p) => p.isFavorited);
+    }
+
     if (filter.cosmicTypes.length > 0) {
       result = result.filter((p) => filter.cosmicTypes.includes(p.cosmicType));
     }
 
     return result;
-  }, [searchQuery, profiles, filter]);
+  }, [searchQuery, profiles, isFavoriteOnly, filter]);
 
   const handleToggleFavorite = (id: number) => {
     setProfiles((prev) =>
@@ -160,13 +165,27 @@ export default function StorageAllWidget() {
               </Text>
             </View>
             {!isEditMode && (
-              <Pressable
-                className="flex-row items-center gap-1"
-                onPress={() => filterRef.current?.open()}
-              >
-                <FilterIcon size={20} color="#8C39FB" />
-                <Text className="text-sm text-[#1A1A1A]">필터</Text>
-              </Pressable>
+              <>
+                <Pressable
+                  className="flex-row items-center gap-1"
+                  onPress={() => setIsFavoriteOnly((prev) => !prev)}
+                >
+                  <HeartIcon size={16} filled={isFavoriteOnly} />
+                  <Text
+                    className="text-sm"
+                    style={{ color: isFavoriteOnly ? '#8C39FB' : '#1A1A1A' }}
+                  >
+                    좋아요
+                  </Text>
+                </Pressable>
+                <Pressable
+                  className="flex-row items-center gap-1"
+                  onPress={() => filterRef.current?.open()}
+                >
+                  <FilterIcon size={20} color="#8C39FB" />
+                  <Text className="text-sm text-[#1A1A1A]">필터</Text>
+                </Pressable>
+              </>
             )}
           </View>
           {!isEditMode && (
