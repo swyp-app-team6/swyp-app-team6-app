@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Button, Header, Layout } from '@/shared/ui';
+import { AppVersion, Button, Header, Layout } from '@/shared/ui';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
 import useAuthStore from '@/entities/user/model/authStore';
@@ -58,6 +58,11 @@ function MyPage() {
             variant="ghost"
             onPress={() => navigation.navigate('withdrawal')}
           />
+        </View>
+
+        {/* 앱 버전 */}
+        <View className="mt-auto pb-6">
+          <AppVersion />
         </View>
       </Layout.Body>
     </>
