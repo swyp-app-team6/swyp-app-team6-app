@@ -1,15 +1,15 @@
 import React, { forwardRef, useCallback, useState } from 'react';
-import { Pressable, Text, TextInput, View } from 'react-native';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { Pressable, Text, View } from 'react-native';
+import { BottomSheetModal, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { useImperativeHandle, useRef } from 'react';
 import { Button, Checkbox, SafeBottomSheetModal } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
 
 /** 신고 유형 옵션 */
 const REPORT_TYPE_OPTIONS = [
-  { label: '불쾌한 언행', value: 'offensive' },
-  { label: '허위 프로필', value: 'fake_profile' },
-  { label: '스팸/광고', value: 'spam' },
+  { label: '부적절한 언행/욕설', value: 'offensive' },
+  { label: '사기/금전 요구', value: 'scam' },
+  { label: '허위 프로필(사진 도용, 사칭)', value: 'fake_profile' },
   { label: '기타', value: 'other' },
 ];
 
@@ -133,8 +133,8 @@ const ReportBottomSheet = forwardRef<BottomSheetHandle, Props>(
         {/* 기타 텍스트 입력 */}
         {hasOther && (
           <View className="px-5 mb-4">
-            <TextInput
-              value={otherText}
+            <BottomSheetTextInput
+              defaultValue={otherText}
               onChangeText={setOtherText}
               placeholder="신고 사유를 입력해주세요"
               placeholderTextColor="#AAAAAA"
