@@ -15,7 +15,7 @@ interface Props {
  * - 제약사항 및 특이사항:
  *   - 284x392 크기, 보라색(#7843ED) 배경
  *   - 일러스트 placeholder + 유형명 + 설명 + 키워드 태그 3개
- *   - 뒤집기/전체보기 버튼은 부모(HomeWidget)에서 렌더링
+ *   - 뒷면 보기/전체보기 버튼은 부모(HomeWidget)에서 렌더링
  * ---
  * @param cosmicType 코스믹 유형 코드
  * ---

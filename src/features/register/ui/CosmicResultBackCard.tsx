@@ -114,7 +114,7 @@ export default function CosmicResultBackCard({ result, onFlip }: Props) {
   );
 }
 
-/** 뒤집기 아이콘 */
+/** 뒷면 보기 아이콘 */
 function FlipIcon() {
   return (
     <Svg width={20} height={20} viewBox="0 0 20 20" fill="none">
