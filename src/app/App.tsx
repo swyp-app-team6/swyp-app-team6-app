@@ -5,13 +5,12 @@ import BootSplash from 'react-native-bootsplash';
 import StackRouter from '@/shared/router/StackRouter';
 import AppProviders from '@/app/providers/AppProviders';
 import Toast from 'react-native-toast-message';
+import Dialog from '@/shared/ui/Dialog';
 import { setupInterceptors } from '../shared/api';
 import useAuthStore from '@/entities/user/model/authStore';
-import { UserAPI } from '@/entities/user';
 import usePermissionStore from '@/widgets/permissions/model/usePermissionStore';
 import useConditionStateStore from '@/shared/model/conditionStateStore';
 import type { NavigatorType } from '@/shared/types';
-import { Alert } from 'react-native';
 
 /**
  * navigation 화면 타입
@@ -41,11 +40,11 @@ function App() {
   useEffect(() => {
     (async () => {
       try {
-        const { initTokenFromStorage, fetchUserInfo } = useAuthStore.getState();
+        const { initTokenFromStorage } = useAuthStore.getState();
         const { checkCameraPermission, checkGalleryPermission } = usePermissionStore.getState();
         const { initFromStorage } = useConditionStateStore.getState();
 
-        const [hasTokens] = await Promise.all([
+        const [_hasTokens] = await Promise.all([
           initTokenFromStorage(),
           initFromStorage(),
         ]);
@@ -74,6 +73,7 @@ function App() {
   return (
     <AppProviders>
       <StackRouter initialRouteName={initialRoute} />
+      <Dialog />
       <Toast />
     </AppProviders>
   );
