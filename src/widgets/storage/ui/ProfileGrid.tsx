@@ -8,6 +8,8 @@ interface ProfileGridProps {
   profiles: StorageProfile[];
   /** 즐겨찾기 토글 콜백 */
   onToggleFavorite: (id: number) => void;
+  /** 프로필 카드 클릭 콜백 */
+  onPressProfile?: (id: number) => void;
   /** 편집 모드 여부 */
   isEditMode?: boolean;
   /** 선택된 프로필 ID Set */
@@ -37,6 +39,7 @@ interface ProfileGridProps {
 export default function ProfileGrid({
   profiles,
   onToggleFavorite,
+  onPressProfile,
   isEditMode = false,
   selectedIds,
   onToggleSelect,
@@ -53,6 +56,7 @@ export default function ProfileGrid({
         <ProfileCard
           profile={item}
           onToggleFavorite={onToggleFavorite}
+          onPress={onPressProfile}
           isEditMode={isEditMode}
           isSelected={selectedIds?.has(item.id) ?? false}
           onToggleSelect={onToggleSelect}

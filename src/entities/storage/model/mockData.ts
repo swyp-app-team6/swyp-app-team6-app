@@ -1,4 +1,4 @@
-import type { StorageProfile } from './types';
+import type { StorageProfile, StorageProfileDetail } from './types';
 
 /**
  * 보관함 목업 프로필 데이터 (10건)
@@ -103,5 +103,64 @@ export const MOCK_STORAGE_PROFILES: StorageProfile[] = [
     cosmicType: 'galaxy',
     imageUri: 'https://picsum.photos/seed/10/208/220',
     isFavorited: false,
+  },
+];
+
+/**
+ * 보관함 프로필 상세 목업 데이터
+ * - MOCK_STORAGE_PROFILES 기반으로 상세 필드 추가
+ */
+export const MOCK_STORAGE_PROFILE_DETAILS: StorageProfileDetail[] = [
+  {
+    ...MOCK_STORAGE_PROFILES[0],
+    interests: ['TRAVEL', 'FOOD', 'MUSIC', 'MOVIE'],
+    commonInterests: ['TRAVEL', 'MUSIC'],
+    bio: '여행과 음악을 좋아하는 뷰티마케터입니다 :)',
+    region: 'GYEONGGI',
+    subArea: '안양시',
+    jobField: '뷰티마케터',
+    tmiAnswers: [
+      { questionId: 'q1', answer: '다른 친구를 부른다' },
+      { questionId: 'q2', answer: '예상치 못한 꽃다발' },
+    ],
+    cosmicTypeDesc: '사랑이 시작되면 누구보다 빠르게 빛나는 사람',
+  },
+  {
+    ...MOCK_STORAGE_PROFILES[1],
+    interests: ['EXERCISE', 'SELF_DEV', 'CONCERT'],
+    commonInterests: ['EXERCISE'],
+    bio: '운동과 자기계발을 즐기는 모델입니다.',
+    region: 'SEOUL',
+    subArea: '동안구',
+    jobField: '모델',
+    tmiAnswers: [
+      { questionId: 'q1', answer: '혼자만의 시간을 즐긴다' },
+    ],
+    cosmicTypeDesc: '서로를 존중하며 함께 성장하는 독립적인 연애',
+  },
+  {
+    ...MOCK_STORAGE_PROFILES[2],
+    interests: ['GAME', 'READING', 'MOVIE'],
+    commonInterests: ['READING', 'MOVIE'],
+    bio: '코딩과 독서를 좋아하는 개발자입니다.',
+    region: 'BUSAN',
+    subArea: '해운대구',
+    jobField: '백엔드 개발자',
+    tmiAnswers: [
+      { questionId: 'q1', answer: '이유부터 궁금하다' },
+      { questionId: 'q3', answer: '말보다 행동' },
+    ],
+    cosmicTypeDesc: '믿음과 배려로 오래 함께하는 잔잔한 연애',
+  },
+  {
+    ...MOCK_STORAGE_PROFILES[3],
+    interests: ['MUSIC', 'CONCERT', 'CAMPING'],
+    commonInterests: [],
+    bio: '음악이 삶의 전부인 보컬 트레이너입니다.',
+    region: 'CHUNGCHEONG',
+    subArea: '유성구',
+    jobField: '보컬 트레이너',
+    tmiAnswers: [],
+    cosmicTypeDesc: '서로를 존중하며 함께 성장하는 독립적인 연애',
   },
 ];

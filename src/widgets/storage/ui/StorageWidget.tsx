@@ -102,6 +102,9 @@ export default function StorageWidget() {
         <ProfileGrid
           profiles={previewProfiles}
           onToggleFavorite={handleToggleFavorite}
+          onPressProfile={(id) =>
+            navigation.navigate('exchangedProfileDetail', { profileId: id })
+          }
         />
       )}
     </PullToRefreshWrapper>

@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { Input } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
 import PullToRefreshWrapper from '@/shared/ui/PullToRefreshWrapper';
@@ -7,6 +8,7 @@ import { SearchIcon } from '@/shared/ui/icons';
 import { openDialog } from '@/shared/ui/Dialog';
 import { MOCK_STORAGE_PROFILES, COSMIC_TYPE_LABEL } from '@/entities/storage';
 import type { StorageProfile } from '@/entities/storage';
+import type { NavigationPropType } from '@/shared/types';
 import {
   StorageFilterBottomSheet,
   type StorageFilterState,
@@ -29,6 +31,7 @@ import FilterIcon from './FilterIcon';
  * <StorageAllWidget />
  */
 export default function StorageAllWidget() {
+  const navigation = useNavigation<NavigationPropType>();
   const [searchQuery, setSearchQuery] = useState('');
   const [profiles, setProfiles] = useState<StorageProfile[]>(MOCK_STORAGE_PROFILES);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -190,6 +193,9 @@ export default function StorageAllWidget() {
         <ProfileGrid
           profiles={filteredProfiles}
           onToggleFavorite={handleToggleFavorite}
+          onPressProfile={(id) =>
+            navigation.navigate('exchangedProfileDetail', { profileId: id })
+          }
           isEditMode={isEditMode}
           selectedIds={selectedIds}
           onToggleSelect={handleToggleSelect}

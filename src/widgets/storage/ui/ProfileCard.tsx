@@ -11,6 +11,8 @@ interface ProfileCardProps {
   profile: StorageProfile;
   /** 즐겨찾기 토글 콜백 */
   onToggleFavorite: (id: number) => void;
+  /** 카드 클릭 콜백 */
+  onPress?: (id: number) => void;
   /** 편집 모드 여부 */
   isEditMode?: boolean;
   /** 선택 여부 (편집 모드) */
@@ -41,6 +43,7 @@ interface ProfileCardProps {
 export default function ProfileCard({
   profile,
   onToggleFavorite,
+  onPress,
   isEditMode = false,
   isSelected = false,
   onToggleSelect,
@@ -48,7 +51,11 @@ export default function ProfileCard({
   const typeLabel = COSMIC_TYPE_LABEL[profile.cosmicType];
 
   return (
-    <View className="flex-1 overflow-hidden rounded-xl pb-3">
+    <Pressable
+      className="flex-1 overflow-hidden rounded-xl pb-3"
+      onPress={() => onPress?.(profile.id)}
+      disabled={isEditMode}
+    >
       {/* 프로필 이미지 */}
       <View className="h-[184px] overflow-hidden rounded-lg">
         <Image
@@ -100,6 +107,6 @@ export default function ProfileCard({
           </Text>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 }
