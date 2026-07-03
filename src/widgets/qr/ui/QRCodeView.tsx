@@ -6,7 +6,7 @@ import QRCode from 'react-native-qrcode-svg';
  * 데이터 기반으로 생성된 QR코드
  * qrData: 생성할 데이터 (보통 직렬화된 객체 형식)
  */
-export default function QRCodeView({ qrData }: {
+export default function QRCodeView({ qrData = '' }: {
   qrData: string | null;
 }) {
 

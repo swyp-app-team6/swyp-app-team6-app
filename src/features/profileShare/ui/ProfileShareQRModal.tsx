@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Modal, Pressable, Text, View } from 'react-native';
 import { Button } from '@/shared/ui';
-import { QRIcon } from '@/shared/ui/icons';
+import QRCode from 'react-native-qrcode-svg';
+import { generateMockQRPayload } from '@/features/exchange';
 
 /** QR 유효 시간 (초) */
 const QR_EXPIRY_SECONDS = 60;
@@ -28,9 +29,19 @@ interface Props {
  * @example
  * <ProfileShareQRModal visible={showQR} onClose={() => setShowQR(false)} />
  */
+/** 목 사용자 ID (추후 실제 유저 ID로 교체) */
+const MOCK_USER_ID = 1;
+
 export default function ProfileShareQRModal({ visible, onClose }: Props) {
   const [remainSeconds, setRemainSeconds] = useState(QR_EXPIRY_SECONDS);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  /** 모달이 열릴 때마다 새 QR 페이로드 생성 */
+  const qrData = useMemo(
+    () => (visible ? JSON.stringify(generateMockQRPayload(MOCK_USER_ID)) : ''),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [visible, remainSeconds === QR_EXPIRY_SECONDS],
+  );
 
   const clearTimer = useCallback(() => {
     if (timerRef.current) {
@@ -85,8 +96,7 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
                   borderColor: '#F5F5F5',
                 }}
               >
-                {/* TODO: 실제 QR 코드 생성 로직으로 교체 */}
-                <QRIcon size={80} color="#000000" />
+                <QRCode value={qrData} size={100} />
               </View>
 
               {/* 카운트다운 */}
