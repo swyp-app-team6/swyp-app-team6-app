@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react';
-import { View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useCameraDevice } from 'react-native-vision-camera';
+import { generateMockQRPayload } from '@/features/exchange';
 import QRScanView from './QRScanView';
 import {
   ExchangeConfirmModal,
@@ -73,6 +74,18 @@ export default function QRScanWidget() {
       ) : (
         <View className="flex-1 items-center justify-center">
           {/* 카메라 없음 — QRScanView 내부에서 권한 처리 */}
+        </View>
+      )}
+
+      {/* TODO: 테스트용 스캔완료 버튼 — 추후 제거 */}
+      {step === 'idle' && (
+        <View className="absolute bottom-24 left-0 right-0 items-center">
+          <Pressable
+            className="rounded-xl bg-primary px-6 py-3"
+            onPress={() => onScanComplete(JSON.stringify(generateMockQRPayload(1)))}
+          >
+            <Text className="text-base font-bold text-white">스캔완료 (테스트)</Text>
+          </Pressable>
         </View>
       )}
 
