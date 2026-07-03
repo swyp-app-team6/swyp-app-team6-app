@@ -103,10 +103,8 @@ export default function ExchangeResultPage() {
       {/* 하단 CTA */}
       <View className="px-5 pb-6 pt-3">
         <View className="flex-row gap-3">
-          <Button title="홈으로" variant="secondary" onPress={handleGoHome} />
-          <View className="flex-1">
-            <Button title="교환한 프로필 보기" variant="primary" onPress={handleViewProfile} />
-          </View>
+          <Button className="w-1/3" title="홈으로" variant="secondary" onPress={handleGoHome} />
+          <Button className="w-2/3" title="교환한 프로필 보기" variant="primary" onPress={handleViewProfile} />
         </View>
       </View>
     </View>
