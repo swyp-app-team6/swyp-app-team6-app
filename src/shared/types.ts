@@ -23,6 +23,7 @@ export type NavigatorType = {
   storage: undefined;
   storageAll: undefined;
   profileDetail: undefined;
+  exchangeResult: undefined;
   exchangedProfileDetail: { profileId: number };
   writeReview: { profileId: number };
   withdrawal: undefined;

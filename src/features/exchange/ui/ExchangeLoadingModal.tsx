@@ -28,8 +28,8 @@ export default function ExchangeLoadingModal({ visible }: Props) {
       >
         <View className="w-[200px] items-center rounded-2xl bg-white px-5 py-8">
           <ActivityIndicator size="large" color="#8C39FB" />
-          <Text className="mt-4 text-center text-[14px] font-medium leading-[20px] text-text-black">
-            교환 대기 중...
+          <Text className="mt-4 text-center text-base font-bold leading-[24px] text-text-black">
+            상대방과 프로필 교환을 기다리고 있어요!
           </Text>
         </View>
       </View>

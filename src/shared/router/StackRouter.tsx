@@ -15,6 +15,7 @@ import StorageAllPage from '@/pages/storage/StorageAllPage';
 import ExchangedProfileDetailPage from '@/pages/storage/ExchangedProfileDetailPage';
 import WriteReviewPage from '@/pages/storage/WriteReviewPage';
 import ProfileDetailPage from '@/pages/profileDetail/ProfileDetailPage';
+import ExchangeResultPage from '@/pages/exchangeResult/ExchangeResultPage';
 import { NavigatorType } from '../types';
 import ComponentPlaygroundPage from '../../pages/playground/ComponentPlaygroundPage';
 import Config from 'react-native-config';
@@ -50,6 +51,7 @@ export default function StackRouter({ initialRouteName = 'home' }: StackRouterPr
         <Stack.Screen name='qr' component={QRPage} options={{ animation: 'none' }} />
         <Stack.Screen name='storage' component={StoragePage} options={{ animation: 'none' }} />
         <Stack.Screen name='storageAll' component={StorageAllPage} />
+        <Stack.Screen name='exchangeResult' component={ExchangeResultPage} />
         <Stack.Screen name='exchangedProfileDetail' component={ExchangedProfileDetailPage} />
         <Stack.Screen name='writeReview' component={WriteReviewPage} />
         <Stack.Screen name='profileDetail' component={ProfileDetailPage} />

@@ -17,8 +17,8 @@ interface ExchangeFlowState {
   onScanComplete: (rawValue: string) => void;
   /** 미리보기 단계로 전환 */
   goToPreview: () => void;
-  /** 교환 시작 — 로딩 후 결과 단계로 전환 */
-  startExchange: () => void;
+  /** 교환 시작 — 로딩 후 결과 단계로 전환, 완료 시 onComplete 콜백 호출 */
+  startExchange: (onComplete?: () => void) => void;
   /** 교환 철회 — idle로 리셋 */
   cancelExchange: () => void;
   /** 전체 상태 초기화 */
@@ -75,7 +75,7 @@ const useExchangeFlowStore = create<ExchangeFlowState>((set, get) => ({
     set({ step: 'preview' });
   },
 
-  startExchange: () => {
+  startExchange: (onComplete?: () => void) => {
     set({ step: 'loading' });
 
     setTimeout(() => {
@@ -88,6 +88,7 @@ const useExchangeFlowStore = create<ExchangeFlowState>((set, get) => ({
       );
 
       set({ commonInterests: common, step: 'result' });
+      onComplete?.();
     }, 2000);
   },
 

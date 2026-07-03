@@ -8,10 +8,8 @@ import {
   ExchangeConfirmModal,
   ExchangePreviewModal,
   ExchangeLoadingModal,
-  ExchangeResultModal,
   useExchangeFlowStore,
 } from '@/features/exchange';
-import { MOCK_HOME_PROFILE } from '@/widgets/home/model/mockData';
 import type { NavigationPropType } from '@/shared/types';
 
 /**
@@ -21,6 +19,7 @@ import type { NavigationPropType } from '@/shared/types';
  * - 제약사항 및 특이사항:
  *   - QRScanView로 카메라 직접 렌더링 (탭 없음)
  *   - useExchangeFlowStore의 step에 따라 교환 모달 표시
+ *   - result 단계에서는 ExchangeResultPage로 네비게이션
  *   - 모달 표시 중 카메라 비활성화
  * ---
  * @example
@@ -31,34 +30,23 @@ export default function QRScanWidget() {
   const device = useCameraDevice('back');
 
   const step = useExchangeFlowStore((s) => s.step);
-  const scannedProfile = useExchangeFlowStore((s) => s.scannedProfile);
-  const commonInterests = useExchangeFlowStore((s) => s.commonInterests);
   const onScanComplete = useExchangeFlowStore((s) => s.onScanComplete);
   const goToPreview = useExchangeFlowStore((s) => s.goToPreview);
   const startExchange = useExchangeFlowStore((s) => s.startExchange);
   const cancelExchange = useExchangeFlowStore((s) => s.cancelExchange);
-  const reset = useExchangeFlowStore((s) => s.reset);
+
+  /** 교환하기 → 로딩 후 결과 페이지로 이동 */
+  const handleStartExchange = useCallback(() => {
+    startExchange(() => {
+      navigation.navigate('exchangeResult');
+    });
+  }, [startExchange, navigation]);
 
   /** 철회하기 → 홈으로 이동 */
   const handleCancel = useCallback(() => {
     cancelExchange();
     navigation.navigate('home');
   }, [cancelExchange, navigation]);
-
-  /** 홈으로 버튼 */
-  const handleGoHome = useCallback(() => {
-    reset();
-    navigation.navigate('home');
-  }, [reset, navigation]);
-
-  /** 교환한 프로필 보기 */
-  const handleViewProfile = useCallback(() => {
-    const profileId = scannedProfile?.id;
-    reset();
-    if (profileId) {
-      navigation.navigate('exchangedProfileDetail', { profileId });
-    }
-  }, [reset, scannedProfile, navigation]);
 
   return (
     <View className="flex-1">
@@ -99,22 +87,11 @@ export default function QRScanWidget() {
       {/* 내 프로필 미리보기 모달 */}
       <ExchangePreviewModal
         visible={step === 'preview'}
-        onExchange={startExchange}
+        onExchange={handleStartExchange}
       />
 
       {/* 로딩 모달 */}
       <ExchangeLoadingModal visible={step === 'loading'} />
-
-      {/* 공통관심사 결과 모달 */}
-      <ExchangeResultModal
-        visible={step === 'result'}
-        commonInterests={commonInterests}
-        theirInterests={scannedProfile?.interests ?? []}
-        theirName={scannedProfile?.name ?? ''}
-        myName={MOCK_HOME_PROFILE.nickname}
-        onGoHome={handleGoHome}
-        onViewProfile={handleViewProfile}
-      />
     </View>
   );
 }
