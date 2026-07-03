@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { AppErrorFallback } from './ErrorBoundaryProvider';
+import ErrorBoundaryProvider, { AppErrorFallback } from './ErrorBoundaryProvider';
 import QueryProvider from './QueryProvider';
 import * as Sentry from "@sentry/react-native";
 
@@ -19,20 +19,22 @@ import * as Sentry from "@sentry/react-native";
  */
 export default function AppProviders({ children }: { children: React.ReactNode }) {
   return (
-    <Sentry.ErrorBoundary
-      fallback={({ resetError }) => <AppErrorFallback resetErrorBoundary={resetError} />}
-    >
-      <GestureHandlerRootView style={styles.root}>
-        <SafeAreaProvider>
-          {/* TODO: fallback UI 정식으로 나오면 재정의 */}
-          <QueryProvider>
-            <BottomSheetModalProvider>
-              {children}
-            </BottomSheetModalProvider>
-          </QueryProvider>
-        </SafeAreaProvider>
-      </GestureHandlerRootView>
-    </Sentry.ErrorBoundary>
+    <ErrorBoundaryProvider>
+      <Sentry.ErrorBoundary
+        fallback={({ resetError }) => <AppErrorFallback resetErrorBoundary={resetError} />}
+      >
+        <GestureHandlerRootView style={styles.root}>
+          <SafeAreaProvider>
+            {/* TODO: fallback UI 정식으로 나오면 재정의 */}
+            <QueryProvider>
+              <BottomSheetModalProvider>
+                {children}
+              </BottomSheetModalProvider>
+            </QueryProvider>
+          </SafeAreaProvider>
+        </GestureHandlerRootView>
+      </Sentry.ErrorBoundary>
+    </ErrorBoundaryProvider>
   );
 }
 

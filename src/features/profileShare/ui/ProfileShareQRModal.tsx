@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Modal, Pressable, Text, View } from 'react-native';
 import { Button } from '@/shared/ui';
-import { QRIcon } from '@/shared/ui/icons';
+import QRCode from 'react-native-qrcode-svg';
 
 /** QR 유효 시간 (초) */
 const QR_EXPIRY_SECONDS = 60;
@@ -28,6 +28,9 @@ interface Props {
  * @example
  * <ProfileShareQRModal visible={showQR} onClose={() => setShowQR(false)} />
  */
+/** QR 코드에 인코딩할 데이터 (추후 API 연동 시 동적 값으로 교체) */
+const QR_DATA = 'swyp_exchange_profile';
+
 export default function ProfileShareQRModal({ visible, onClose }: Props) {
   const [remainSeconds, setRemainSeconds] = useState(QR_EXPIRY_SECONDS);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -85,8 +88,7 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
                   borderColor: '#F5F5F5',
                 }}
               >
-                {/* TODO: 실제 QR 코드 생성 로직으로 교체 */}
-                <QRIcon size={80} color="#000000" />
+                <QRCode value={QR_DATA} size={100} />
               </View>
 
               {/* 카운트다운 */}
