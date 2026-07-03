@@ -1,6 +1,5 @@
 import React from 'react';
 import { View } from 'react-native';
-import QRCode from 'react-native-qrcode-svg';
 
 /**
  * 데이터 기반으로 생성된 QR코드
@@ -16,7 +15,7 @@ export default function QRCodeView({ qrData = '' }: {
 
   return (
     <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-      <QRCode value={qrData} size={200} testID="qr-code" />
+      {/* <QRCode value={qrData} size={200} testID="qr-code" /> */}
     </View>
   )
 }
