@@ -21,6 +21,16 @@ export interface GoogleLoginResponse {
 }
 
 /**
+ * Apple 로그인 API 응답
+ * - access_token: 액세스 토큰 (snake_case)
+ * - refresh_token: 리프레시 토큰 (snake_case)
+ */
+export interface AppleLoginResponse {
+  access_token: string;
+  refresh_token: string;
+}
+
+/**
  * # UserAPI
  * ---
  * - 간단설명: 사용자·인증 관련 API를 정적 메서드로 관리하는 클래스
@@ -42,6 +52,22 @@ export class UserAPI {
    */
   static googleLogin(idToken: string) {
     return API.post<GoogleLoginResponse>('/auth/google/app', { idToken }, { skipAuth: true });
+  }
+
+  /**
+   * # appleLogin
+   * ---
+   * - 간단설명: Apple identityToken을 검증하고 서비스 토큰을 반환
+   * ---
+   * @param identityToken Apple에서 발급받은 identityToken
+   * @param authorizationCode Apple에서 발급받은 authorizationCode (선택)
+   */
+  static appleLogin(identityToken: string, authorizationCode?: string) {
+    return API.post<AppleLoginResponse>(
+      '/auth/apple/token',
+      { identityToken, authorizationCode },
+      { skipAuth: true },
+    );
   }
 
   /**

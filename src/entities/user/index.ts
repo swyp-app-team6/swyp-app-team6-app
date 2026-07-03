@@ -12,4 +12,4 @@ export type {
   UploadContentType,
 } from './model/types';
 export { UserAPI } from './api/userApi';
-export type { GoogleLoginResponse } from './api/userApi';
+export type { GoogleLoginResponse, AppleLoginResponse } from './api/userApi';

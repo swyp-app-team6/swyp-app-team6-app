@@ -1,10 +1,12 @@
 import React, { useRef } from 'react';
-import { Image, Pressable, Text, View } from 'react-native';
+import { Image, Platform, Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { appleAuthAndroid } from '@invertase/react-native-apple-authentication';
 import { AppleLoginButton, GoogleLoginButton, Layout } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
 import type { NavigationPropType } from '@/shared/types';
 import useGoogleLoginMutation from '@/features/login/googleLogin/api/useGoogleLoginMutation';
+import useAppleLoginMutation from '@/features/login/appleLogin/api/useAppleLoginMutation';
 import { TermsAgreementBottomSheet } from '@/features/terms';
 import { PermissionGuideBottomSheet } from '@/features/permissionGuide';
 import LoginTroubleBottomSheet from '@/features/login/ui/LoginTroubleBottomSheet';
@@ -28,6 +30,7 @@ import useSafePaddingBottom from '@/shared/utils/useSafePaddingBottom';
 function LoginPage() {
   const navigation = useNavigation<NavigationPropType>();
   const { mutateAsync: googleLogin, isPending: isGooglePending } = useGoogleLoginMutation();
+  const { mutateAsync: appleLogin, isPending: isApplePending } = useAppleLoginMutation();
   const safePadding = useSafePaddingBottom();
   const {
     isAgreedToTerms,
@@ -64,6 +67,14 @@ function LoginPage() {
     await googleLogin();
     handleLoginSuccess();
   };
+
+  const handleAppleLogin = async () => {
+    await appleLogin();
+    handleLoginSuccess();
+  };
+
+  /** Apple 로그인 버튼 노출 여부 (iOS: 항상, Android: API 19+ 지원 시) */
+  const showAppleLogin = Platform.OS === 'ios' || appleAuthAndroid.isSupported;
 
   /** 이용약관 동의 완료 → 접근권한 바텀시트 노출 */
   const handleTermsAgree = async () => {
@@ -102,8 +113,10 @@ function LoginPage() {
 
       {/* 소셜 로그인 버튼 */}
       <View className="px-5 gap-3" style={{ paddingBottom: safePadding.paddingBottom || 40 }}>
-        <GoogleLoginButton onPress={handleGoogleLogin} loading={isGooglePending} />
-        <AppleLoginButton onPress={() => { }} />
+        <GoogleLoginButton onPress={handleGoogleLogin} loading={isGooglePending} disabled={isApplePending} />
+        {showAppleLogin && (
+          <AppleLoginButton onPress={handleAppleLogin} loading={isApplePending} disabled={isGooglePending} />
+        )}
 
         {/* 로그인 문제 링크 */}
         <View className="items-center pt-2">
