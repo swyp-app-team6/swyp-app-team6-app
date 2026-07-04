@@ -1,4 +1,3 @@
-export { default as TodoIcon } from './TodoIcon';
 export { default as ProfileIcon } from './ProfileIcon';
 export { default as GalleryIcon } from './GalleryIcon';
 export { default as PlaygroundIcon } from './PlaygroundIcon';

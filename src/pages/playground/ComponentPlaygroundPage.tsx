@@ -53,7 +53,6 @@ import {
   Textbox,
   TMICard,
   Toast,
-  TodoIcon,
   type BottomSheetHandle,
 } from '@/shared/ui';
 
@@ -799,7 +798,6 @@ export default function ComponentPlaygroundPage() {
           <View className="flex-row flex-wrap gap-6">
             {[
               { label: 'CameraIcon', node: <CameraIcon size={28} color="#374151" /> },
-              { label: 'TodoIcon', node: <TodoIcon size={28} color="#374151" /> },
               { label: 'ProfileIcon', node: <ProfileIcon size={28} color="#374151" /> },
               { label: 'GalleryIcon', node: <GalleryIcon size={28} color="#374151" /> },
               { label: 'PlaygroundIcon', node: <PlaygroundIcon size={28} color="#374151" /> },

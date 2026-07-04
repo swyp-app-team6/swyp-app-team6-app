@@ -11,12 +11,10 @@
 import { HttpHandler } from 'msw';
 import { authHandlers } from './domains/authHandlers';
 import { userHandlers } from './domains/userHandlers';
-import { todoHandlers } from './domains/todoHandlers';
 import { uploadHandlers } from './domains/uploadHandlers';
 
 export const handlers: HttpHandler[] = [
   ...authHandlers,
   ...userHandlers,
-  ...todoHandlers,
   ...uploadHandlers,
 ];
