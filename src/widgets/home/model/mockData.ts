@@ -1,5 +1,5 @@
 import type { CosmicType } from '@/features/register/model/cosmicTypeResults';
-import type { Interest } from '@/entities/user/model/types';
+import { INTEREST } from '@/entities/user/model/types';
 
 /**
  * 홈 화면 프로필 목 데이터 타입
@@ -17,7 +17,7 @@ interface MockHomeProfile {
   /** 프로필 이미지 URI */
   profileImageUri: string | null;
   /** 관심사 목록 */
-  interests: Interest[];
+  interests: INTEREST[];
   /** 코스믹 유형 */
   cosmicType: CosmicType;
 }
@@ -45,6 +45,6 @@ export const MOCK_HOME_PROFILE: MockHomeProfile = {
   nickname: '김오르비',
   age: '25',
   profileImageUri: null,
-  interests: ['TRAVEL', 'MUSIC', 'FOOD'],
+  interests: [INTEREST.TRAVEL, INTEREST.MUSIC, INTEREST.FOOD],
   cosmicType: 'SHOOTING_STAR',
 };

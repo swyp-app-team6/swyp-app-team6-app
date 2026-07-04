@@ -18,7 +18,7 @@ import { INTEREST_OPTIONS } from '../model/types';
 export default function ProfilePreviewCard() {
   const { form } = useRegisterFormStore();
 
-  /** Interest 값을 한국어 라벨로 변환 */
+  /** INTEREST 값을 한국어 라벨로 변환 */
   const getInterestLabel = (value: string) => {
     return INTEREST_OPTIONS.find((o) => o.value === value)?.label ?? value;
   };

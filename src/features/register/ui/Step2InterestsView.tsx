@@ -4,7 +4,7 @@ import Config from 'react-native-config';
 import { FavTag, BottomCTA, Button } from '@/shared/ui';
 import useRegisterFormStore from '../model/useRegisterFormStore';
 import { INTEREST_OPTIONS } from '../model/types';
-import type { Interest } from '@/entities/user';
+import type { INTEREST } from '@/entities/user';
 
 /** 최대 선택 가능 관심사 수 */
 const MAX_INTERESTS = 5;
@@ -26,7 +26,7 @@ export default function Step2InterestsView() {
   const { form, updateForm, nextStep } = useRegisterFormStore();
 
   /** 관심사 토글 핸들러 */
-  const handleToggle = (value: Interest) => {
+  const handleToggle = (value: INTEREST) => {
     const current = form.interests;
     if (current.includes(value)) {
       updateForm({ interests: current.filter((v) => v !== value) });

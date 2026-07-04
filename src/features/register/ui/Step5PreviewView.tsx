@@ -37,7 +37,7 @@ export default function Step5PreviewView({ onSubmit, loading }: Props) {
   const [activeTab, setActiveTab] = useState<TabType>('기본정보');
   const scrollRef = useRef<ScrollView>(null);
 
-  /** Interest 값을 한국어 라벨로 변환 */
+  /** INTEREST 값을 한국어 라벨로 변환 */
   const getInterestLabel = (value: string) => {
     return INTEREST_OPTIONS.find((o) => o.value === value)?.label ?? value;
   };

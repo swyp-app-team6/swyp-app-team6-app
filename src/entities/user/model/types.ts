@@ -1,3 +1,7 @@
+import { INTEREST, CosmicType, TMIQuestionType } from '@/shared/enums';
+
+export { INTEREST, CosmicType, TMIQuestionType };
+
 /**
  * 사용자 정보 (/users/me 응답)
  * - id: 사용자 고유 ID
@@ -16,35 +20,6 @@ export interface AuthTokens {
   accessToken: string;
   refreshToken: string;
 }
-
-/**
- * 관심사 목록
- * - TRAVEL = 여행
- * - SPORTS = 스포츠
- * - MUSIC = 음악
- * - CONTENTS = 콘텐츠
- * - FOOD = 음식
- * - CULTURE = 문화
- * - BOOKS = 독서
- * - GAME = 게임
- * - SELF_DEVELOPMENT = 자기계발
- * - INVESTING = 투자
- * - CAMPING = 캠핑/드라이브
- * - LANGUAGE = 외국어
- */
-export type Interest =
-  | 'TRAVEL'
-  | 'SPORTS'
-  | 'MUSIC'
-  | 'CONTENTS'
-  | 'FOOD'
-  | 'CULTURE'
-  | 'BOOKS'
-  | 'GAME'
-  | 'SELF_DEVELOPMENT'
-  | 'INVESTING'
-  | 'CAMPING'
-  | 'LANGUAGE';
 
 /**
  * 프로필 등록 요청 (POST /profile)
@@ -67,7 +42,7 @@ export interface ProfileRegisterRequest {
   age: number;
   region: string;
   job: string;
-  interests: Interest[];
+  interests: INTEREST[];
   bio?: string;
   cosmic_type?: CosmicType;
   choice_template?: ChoiceTemplate[];
@@ -93,7 +68,7 @@ export interface ProfileUpdateRequest {
   age?: number;
   region?: string;
   job?: string;
-  interests?: Interest[];
+  interests?: INTEREST[];
   bio?: string;
   cosmic_type?: CosmicType;
   choice_template?: ChoiceTemplate[];
@@ -106,29 +81,10 @@ export interface ProfileUpdateRequest {
  * - label: 화면에 표시할 라벨 텍스트
  */
 export interface InterestTypeLabel {
-  type: Interest;
+  type: INTEREST;
   label: string;
 }
 
-/**
- * 코스믹 유형
- * - 코스믹 유형테스트 결과로 나온 사용자의 성격
- * - GALAXY = 은하
- * - SHOOTING_STAR = 별똥별
- * - LUNA = 루나
- * - SOLA = 솔라
- */
-export type CosmicType = 'GALAXY' | 'SHOOTING_STAR' | 'LUNA' | 'SOLA';
-
-/**
- * 질문 유형
- * - 프로필 등록 TMI 질문의 질문유형
- * - BINARY = 이분법
- * - BLANK = 빈칸 채우기
- * - DISCUSSION = 토론
- * - BALANCE_GAME = 밸런스 게임
- */
-export type TMIQuestionType = 'BINARY' | 'BLANK' | 'DISCUSSION' | 'BALANCE_GAME';
 
 /**
  * 선택형 템플릿

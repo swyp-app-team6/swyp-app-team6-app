@@ -1,4 +1,4 @@
-import type { Interest } from '@/entities/user';
+import { INTEREST } from '@/entities/user';
 
 /**
  * 프로필 등록 폼 상태
@@ -24,7 +24,7 @@ export interface RegisterFormState {
   region: string;
   subArea: string;
   bio: string;
-  interests: Interest[];
+  interests: INTEREST[];
   tmiAnswers: TMIAnswer[];
 }
 
@@ -123,22 +123,22 @@ export interface TMIAnswer {
 
 /**
  * 관심사 옵션 목록 (PRD 12개)
- * - value: API에 전송하는 Interest 값
+ * - value: API에 전송하는 INTEREST 값
  * - label: 화면에 표시하는 한국어 라벨
  */
-export const INTEREST_OPTIONS: { value: Interest; label: string; emoji: string }[] = [
-  { value: 'TRAVEL', label: '여행', emoji: '✈️' },
-  { value: 'SPORTS', label: '운동', emoji: '🏃' },
-  { value: 'FOOD', label: '맛집/카페', emoji: '🍽️' },
-  { value: 'BOOKS', label: '독서', emoji: '📚' },
-  { value: 'GAME', label: '게임', emoji: '🎮' },
-  { value: 'SELF_DEVELOPMENT', label: '자기계발', emoji: '📝' },
-  { value: 'INVESTING', label: '재테크', emoji: '💰' },
-  { value: 'CULTURE', label: '콘서트/뮤지컬', emoji: '🎭' },
-  { value: 'CONTENTS', label: '영화/드라마', emoji: '🎬' },
-  { value: 'CAMPING', label: '캠핑/드라이브', emoji: '⛺' },
-  { value: 'MUSIC', label: '음악', emoji: '🎵' },
-  { value: 'LANGUAGE', label: '외국어', emoji: '🇺🇸' },
+export const INTEREST_OPTIONS: { value: INTEREST; label: string; emoji: string }[] = [
+  { value: INTEREST.TRAVEL, label: '여행', emoji: '✈️' },
+  { value: INTEREST.SPORTS, label: '운동', emoji: '🏃' },
+  { value: INTEREST.FOOD, label: '맛집/카페', emoji: '🍽️' },
+  { value: INTEREST.BOOKS, label: '독서', emoji: '📚' },
+  { value: INTEREST.GAME, label: '게임', emoji: '🎮' },
+  { value: INTEREST.SELF_DEVELOPMENT, label: '자기계발', emoji: '📝' },
+  { value: INTEREST.INVESTING, label: '재테크', emoji: '💰' },
+  { value: INTEREST.CULTURE, label: '콘서트/뮤지컬', emoji: '🎭' },
+  { value: INTEREST.CONTENTS, label: '영화/드라마', emoji: '🎬' },
+  { value: INTEREST.CAMPING, label: '캠핑/드라이브', emoji: '⛺' },
+  { value: INTEREST.MUSIC, label: '음악', emoji: '🎵' },
+  { value: INTEREST.LANGUAGE, label: '외국어', emoji: '🇺🇸' },
 ];
 
 /**

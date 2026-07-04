@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-import type { Interest } from './types';
+import type { INTEREST } from './types';
 
 /**
  * TMI 답변
@@ -36,7 +36,7 @@ export interface ProfileData {
   region: string;
   subArea: string;
   bio: string;
-  interests: Interest[];
+  interests: INTEREST[];
   tmiAnswers: TMIAnswer[];
 }
 
