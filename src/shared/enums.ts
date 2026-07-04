@@ -1,5 +1,6 @@
 /**
  * 관심사 목록
+ * - 프로필 등록: 관심사 선택 시 선택할수있는 관심사 유형
  * - TRAVEL = 여행
  * - SPORTS = 스포츠
  * - MUSIC = 음악
@@ -42,20 +43,20 @@ export enum INTEREST {
 
 /**
  * 코스믹 유형
- * - 코스믹 유형테스트 결과로 나온 사용자의 성격
- * - GALAXY = 은하
- * - SHOOTING_STAR = 별똥별
- * - LUNA = 루나
- * - SOLA = 솔라
+ * - 코스믹 유형테스트 결과로 나온 사용자의 유형
+ * - GALAXY = 갤럭시 형
+ * - SHOOTING_STAR = 슈팅스타 형
+ * - LUNA = 루나 형
+ * - SOLA = 솔라 형
  */
 export enum CosmicType {
-  /** 은하 */
+  /** 갤럭시 형 */
   GALAXY = 'GALAXY',
-  /** 별똥별 */
+  /** 슈팅스타 형 */
   SHOOTING_STAR = 'SHOOTING_STAR',
-  /** 루나 */
+  /** 루나 형 */
   LUNA = 'LUNA',
-  /** 솔라 */
+  /** 솔라 형 */
   SOLA = 'SOLA',
 }
 
@@ -68,11 +69,11 @@ export enum CosmicType {
  * - BALANCE_GAME = 밸런스 게임
  */
 export enum TMIQuestionType {
-  /** 이분법 */
+  /** 양자택일 */
   BINARY = 'BINARY',
   /** 빈칸 채우기 */
   BLANK = 'BLANK',
-  /** 토론 */
+  /** 커플논쟁 */
   DISCUSSION = 'DISCUSSION',
   /** 밸런스 게임 */
   BALANCE_GAME = 'BALANCE_GAME',
