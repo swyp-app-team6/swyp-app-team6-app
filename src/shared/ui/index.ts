@@ -39,3 +39,5 @@ export { default as SelectedTMIPreviewButton } from './SelectedTMIPreviewButton'
 export { default as SafeBottomSheetModal } from './SafeBottomSheetModal';
 export { ProfileIcon, GalleryIcon, PlaygroundIcon, SearchIcon, QRIcon, LoginIcon, HomeIcon, CardIcon, MyPageIcon, KakaoIcon, GoogleIcon, AppleIcon, CameraIcon, HeartIcon, StorageIcon, BellIcon, type IconProps } from './icons';
 export { default as AppVersion } from './AppVersion';
+export { default as LoadSuspense } from './LoadSuspense';
+export { default as ErrorBoundary } from './ErrorBoundary';

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { StepView, ProgressBar } from '@/shared/ui';
+import { StepView, ProgressBar, ErrorBoundary, LoadSuspense } from '@/shared/ui';
 import useRegisterFormStore from '../model/useRegisterFormStore';
 import Step1BasicInfoView from './Step1BasicInfoView';
 import Step2DetailInfoView from './Step2DetailInfoView';
@@ -78,16 +78,28 @@ export default function RegisterFormView({ onViewProfile, onGoHome }: Props) {
           <Step2DetailInfoView />
         </StepView.Step>
         <StepView.Step>
-          <Step3InterestsView />
+          <ErrorBoundary>
+            <LoadSuspense>
+              <Step3InterestsView />
+            </LoadSuspense>
+          </ErrorBoundary>
         </StepView.Step>
         <StepView.Step>
           <Step4BioView />
         </StepView.Step>
         <StepView.Step>
-          <CosmicTypeTestView onComplete={nextStep} />
+          <ErrorBoundary>
+            <LoadSuspense>
+              <CosmicTypeTestView onComplete={nextStep} />
+            </LoadSuspense>
+          </ErrorBoundary>
         </StepView.Step>
         <StepView.Step>
-          <Step6TMIView />
+          <ErrorBoundary>
+            <LoadSuspense>
+              <Step6TMIView />
+            </LoadSuspense>
+          </ErrorBoundary>
         </StepView.Step>
         <StepView.Step>
           <Step7PreviewView onSubmit={handleSubmit} loading={false} />
