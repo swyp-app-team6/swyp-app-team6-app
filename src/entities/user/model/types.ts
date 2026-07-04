@@ -111,7 +111,8 @@ export interface InterestTypeLabel {
 }
 
 /**
- * 우주 유형
+ * 코스믹 유형
+ * - 코스믹 유형테스트 결과로 나온 사용자의 성격
  * - GALAXY = 은하
  * - SHOOTING_STAR = 별똥별
  * - LUNA = 루나
@@ -121,12 +122,13 @@ export type CosmicType = 'GALAXY' | 'SHOOTING_STAR' | 'LUNA' | 'SOLA';
 
 /**
  * 질문 유형
+ * - 프로필 등록 TMI 질문의 질문유형
  * - BINARY = 이분법
  * - BLANK = 빈칸 채우기
  * - DISCUSSION = 토론
  * - BALANCE_GAME = 밸런스 게임
  */
-export type QuestionType = 'BINARY' | 'BLANK' | 'DISCUSSION' | 'BALANCE_GAME';
+export type TMIQuestionType = 'BINARY' | 'BLANK' | 'DISCUSSION' | 'BALANCE_GAME';
 
 /**
  * 선택형 템플릿
@@ -138,7 +140,7 @@ export type QuestionType = 'BINARY' | 'BLANK' | 'DISCUSSION' | 'BALANCE_GAME';
  */
 export interface ChoiceTemplate {
   question_id?: number;
-  question_type: QuestionType;
+  question_type: TMIQuestionType;
   question: string;
   answer_id?: number;
   answer: string;
@@ -153,7 +155,7 @@ export interface ChoiceTemplate {
  */
 export interface ShortTemplate {
   question_id?: number;
-  question_type: QuestionType;
+  question_type: TMIQuestionType;
   question: string;
   answer: string;
 }

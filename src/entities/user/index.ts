@@ -17,7 +17,7 @@ export { ProfileAPI } from './api/profileApi';
 export type {
   InterestTypeLabel,
   CosmicType,
-  QuestionType,
+  TMIQuestionType,
   ChoiceTemplate,
   ShortTemplate,
   QrResponse,
