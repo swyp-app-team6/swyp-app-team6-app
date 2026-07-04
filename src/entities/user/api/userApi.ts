@@ -101,9 +101,10 @@ export class UserAPI {
   static query = createQueryKeys('users', {
     me: () => ({
       queryKey: ['me'],
-      queryFn: () => UserAPI.fetchUserInfo(),
-      // @ts-expect-error createQueryKeys 타입 제한으로 staleTime 할당 불가
-      staleTime: Infinity,
+      queryFn: async () => {
+        const { data } = await UserAPI.fetchUserInfo();
+        return data;
+      },
     }),
   });
 }

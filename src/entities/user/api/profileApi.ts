@@ -105,17 +105,24 @@ export class ProfileAPI {
   static query = createQueryKeys('profile', {
     me: () => ({
       queryKey: ['me'],
-      queryFn: () => ProfileAPI.fetchProfile(),
-      // @ts-expect-error createQueryKeys 타입 제한으로 staleTime 할당 불가
-      staleTime: Infinity,
+      queryFn: async () => {
+        const { data } = await ProfileAPI.fetchProfile();
+        return data;
+      },
     }),
     byUuid: (uuid: string) => ({
       queryKey: [uuid],
-      queryFn: () => ProfileAPI.fetchProfileByUuid(uuid),
+      queryFn: async () => {
+        const { data } = await ProfileAPI.fetchProfileByUuid(uuid);
+        return data;
+      },
     }),
     qr: () => ({
       queryKey: ['qr'],
-      queryFn: () => ProfileAPI.fetchQrUuid(),
+      queryFn: async () => {
+        const { data } = await ProfileAPI.fetchQrUuid();
+        return data;
+      },
     }),
   });
 }

@@ -21,7 +21,7 @@ export default function useRegisterMutation() {
       return ProfileAPI.registerProfile(data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
+      queryClient.invalidateQueries({ queryKey: ProfileAPI.query._def });
     },
   });
 }
