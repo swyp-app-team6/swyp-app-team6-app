@@ -45,6 +45,6 @@ export const MOCK_HOME_PROFILE: MockHomeProfile = {
   nickname: '김오르비',
   age: '25',
   profileImageUri: null,
-  interests: [INTEREST.TRAVEL, INTEREST.MUSIC, INTEREST.FOOD],
+  interests: [INTEREST.TRAVEL, INTEREST.MUSIC, INTEREST.RESTAURANT],
   cosmicType: 'SHOOTING_STAR',
 };

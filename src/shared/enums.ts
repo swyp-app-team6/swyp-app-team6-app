@@ -3,15 +3,15 @@
  * - TRAVEL = 여행
  * - SPORTS = 스포츠
  * - MUSIC = 음악
- * - CONTENTS = 콘텐츠
- * - FOOD = 음식
+ * - VIDEO = 영상
+ * - RESTAURANT = 맛집
+ * - CAFE = 카페
  * - CULTURE = 문화
- * - BOOKS = 독서
+ * - READING = 독서
  * - GAME = 게임
  * - SELF_DEVELOPMENT = 자기계발
  * - INVESTING = 투자
- * - CAMPING = 캠핑/드라이브
- * - LANGUAGE = 외국어
+ * - MOVIE = 영화
  */
 export enum INTEREST {
   /** 여행 */
@@ -20,24 +20,24 @@ export enum INTEREST {
   SPORTS = 'SPORTS',
   /** 음악 */
   MUSIC = 'MUSIC',
-  /** 콘텐츠 */
-  CONTENTS = 'CONTENTS',
-  /** 음식 */
-  FOOD = 'FOOD',
+  /** 영상 */
+  VIDEO = 'VIDEO',
+  /** 맛집 */
+  RESTAURANT = 'RESTAURANT',
+  /** 카페 */
+  CAFE = 'CAFE',
   /** 문화 */
   CULTURE = 'CULTURE',
   /** 독서 */
-  BOOKS = 'BOOKS',
+  READING = 'READING',
   /** 게임 */
   GAME = 'GAME',
   /** 자기계발 */
   SELF_DEVELOPMENT = 'SELF_DEVELOPMENT',
   /** 투자 */
   INVESTING = 'INVESTING',
-  /** 캠핑/드라이브 */
-  CAMPING = 'CAMPING',
-  /** 외국어 */
-  LANGUAGE = 'LANGUAGE',
+  /** 영화 */
+  MOVIE = 'MOVIE',
 }
 
 /**
