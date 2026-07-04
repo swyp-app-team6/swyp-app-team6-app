@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { UserAPI, type ProfileRegisterRequest } from '@/entities/user';
+import { ProfileAPI, type ProfileRegisterRequest } from '@/entities/user';
 
 /**
  * # useRegisterMutation
@@ -18,10 +18,10 @@ export default function useRegisterMutation() {
 
   return useMutation({
     mutationFn: (data: ProfileRegisterRequest) => {
-      return UserAPI.registerProfile(data);
+      return ProfileAPI.registerProfile(data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'] });
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
     },
   });
 }

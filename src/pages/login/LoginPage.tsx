@@ -10,7 +10,7 @@ import useAppleLoginMutation from '@/features/login/appleLogin/api/useAppleLogin
 import { TermsAgreementBottomSheet } from '@/features/terms';
 import { PermissionGuideBottomSheet } from '@/features/permissionGuide';
 import LoginTroubleBottomSheet from '@/features/login/ui/LoginTroubleBottomSheet';
-import { UserAPI } from '@/entities/user';
+import { ProfileAPI } from '@/entities/user';
 import useConditionStateStore from '@/shared/model/conditionStateStore';
 import useSafePaddingBottom from '@/shared/utils/useSafePaddingBottom';
 
@@ -46,7 +46,7 @@ function LoginPage() {
   /** 프로필 존재 여부를 확인하여 home 또는 register로 분기 */
   const navigateByProfile = async () => {
     try {
-      await UserAPI.fetchProfile();
+      await ProfileAPI.fetchProfile();
       navigation.reset({ index: 0, routes: [{ name: 'home' }] });
     } catch {
     }

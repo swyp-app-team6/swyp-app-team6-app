@@ -3,7 +3,7 @@ import { View, Text, ScrollView } from 'react-native';
 import Config from 'react-native-config';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Input, BottomCTA, Button, CameraUploadZone } from '@/shared/ui';
-import { UserAPI } from '@/entities/user';
+import { ProfileAPI } from '@/entities/user';
 import { usePermissionStore } from '@/widgets/permissions';
 import useRegisterFormStore from '../model/useRegisterFormStore';
 
@@ -47,7 +47,7 @@ export default function Step1BasicInfoView() {
 
     try {
       setUploading(true);
-      const { data } = await UserAPI.profileImageUpload('image/jpeg');
+      const { data } = await ProfileAPI.profileImageUpload('image/jpeg');
       const imageBlob = await fetch(uri);
       await fetch(data.uploadUrl, {
         method: 'PUT',

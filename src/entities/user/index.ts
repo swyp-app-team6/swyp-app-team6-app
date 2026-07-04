@@ -13,3 +13,12 @@ export type {
 } from './model/types';
 export { UserAPI } from './api/userApi';
 export type { GoogleLoginResponse, AppleLoginResponse } from './api/userApi';
+export { ProfileAPI } from './api/profileApi';
+export type {
+  InterestTypeLabel,
+  CosmicType,
+  QuestionType,
+  ChoiceTemplate,
+  ShortTemplate,
+  QrResponse,
+} from './model/types';

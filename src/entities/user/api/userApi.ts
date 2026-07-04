@@ -2,11 +2,6 @@ import { API } from '@/shared/api';
 import type {
   User,
   AuthTokens,
-  ProfileRegisterRequest,
-  ProfileUpdateRequest,
-  MyProfileResponse,
-  PresignResponse,
-  UploadContentType,
 } from '../model/types';
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 
@@ -102,75 +97,11 @@ export class UserAPI {
     return API.delete<void>('/user');
   }
 
-  /**
-   * # fetchProfile
-   * ---
-   * - 간단설명: 현재 로그인된 사용자의 프로필 정보를 조회
-   * ---
-   */
-  static fetchProfile() {
-    return API.get<MyProfileResponse>('/profile');
-  }
-
-  /**
-   * # registerProfile
-   * ---
-   * - 간단설명: 회원가입 시 사용자 프로필 등록
-   * - 제약사항: nickname 3~10자, bio/keyword/topic 0~20자, interests 3~5개
-   * ---
-   * @param data 프로필 등록 요청 데이터
-   */
-  static registerProfile(data: ProfileRegisterRequest) {
-    return API.post<MyProfileResponse>('/profile', data);
-  }
-
-  /**
-   * # updateProfile
-   * ---
-   * - 간단설명: 기존 프로필 정보를 부분 수정
-   * - 제약사항: nickname 3~10자, bio/keyword/topic 0~20자, interests 3~5개 (변경할 필드만 전송)
-   * ---
-   * @param data 프로필 수정 요청 데이터
-   */
-  static updateProfile(data: ProfileUpdateRequest) {
-    return API.patch<MyProfileResponse>('/profile', data);
-  }
-
-  /**
-   * # deleteProfile
-   * ---
-   * - 간단설명: 사용자 프로필 및 연관 데이터 삭제
-   * ---
-   */
-  static deleteProfile() {
-    return API.delete<void>('/profile');
-  }
-
-  /**
-   * # profileImageUpload
-   * ---
-   * - 간단설명: 프로필 이미지 업로드를 위한 presign uploadURL, imageKey 발급
-   * - 제약사항: contentType은 image/jpeg, image/png, image/webp, image/gif만 허용
-   * ---
-   * @param contentType 업로드할 파일의 Content-Type (기본값: image/jpeg)
-   */
-  static profileImageUpload(contentType: UploadContentType = 'image/jpeg') {
-    return API.post<PresignResponse>('/api/uploads/presign', null, {
-      params: { contentType },
-    });
-  }
-
   /** 쿼리 키 팩토리 */
   static query = createQueryKeys('users', {
     me: () => ({
       queryKey: ['me'],
       queryFn: () => UserAPI.fetchUserInfo(),
-      // @ts-expect-error createQueryKeys 타입 제한으로 staleTime 할당 불가
-      staleTime: Infinity,
-    }),
-    profile: () => ({
-      queryKey: ['profile'],
-      queryFn: () => UserAPI.fetchProfile(),
       // @ts-expect-error createQueryKeys 타입 제한으로 staleTime 할당 불가
       staleTime: Infinity,
     }),

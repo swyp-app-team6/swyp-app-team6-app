@@ -16,7 +16,7 @@ interface Props {
  * ---
  * - 간단설명: 닉네임 및 프로필 사진 수정 폼
  * - 제약사항 및 특이사항:
- *   - 이미지 선택 시 presigned URL 발급 (UserAPI.profileImageUpload)
+ *   - 이미지 선택 시 presigned URL 발급 (ProfileAPI.profileImageUpload)
  *   - 갤러리 권한은 usePermissionStore로 관리
  * ---
  * @param onSave 저장 완료 시 호출되는 콜백

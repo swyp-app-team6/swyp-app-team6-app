@@ -27,9 +27,9 @@ export const userHandlers = [
   }),
 
   /**
-   * 프로필 등록 — POST /profile/register
+   * 프로필 등록 — POST /profile
    */
-  http.post(`${BASE_URL}/profile/register`, async ({ request }) => {
+  http.post(`${BASE_URL}/profile`, async ({ request }) => {
     const body = (await request.json()) as ProfileRegisterRequest;
 
     const response: MyProfileResponse = {
@@ -37,10 +37,12 @@ export const userHandlers = [
       nickname: body.nickname,
       image_key: body.image_key,
       gender: body.gender,
-      bio: body.bio,
-      keyword: body.keyword,
-      topic: body.topic,
-      interests: body.interests,
+      age: body.age,
+      region: body.region,
+      job: body.job,
+      interests: body.interests.map(type => ({ type, label: type })),
+      bio: body.bio ?? '',
+      cosmic_type: body.cosmic_type,
     };
 
     return HttpResponse.json(response, { status: 201 });
