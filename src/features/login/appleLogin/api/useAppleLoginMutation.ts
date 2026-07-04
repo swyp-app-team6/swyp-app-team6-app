@@ -13,7 +13,7 @@ import type { AppleLoginResponse } from '@/entities/user';
 /**
  * # performAppleLoginIOS
  * ---
- * - 간단설명: iOS 네이티브 Apple Sign-In 수행 후 identityToken/authorizationCode 반환
+ * - 간단설명: iOS 환경에서 애플로그인 수행 후, identityToken/authorizationCode 를 리턴
  * ---
  */
 async function performAppleLoginIOS() {
@@ -42,7 +42,7 @@ async function performAppleLoginIOS() {
 /**
  * # performAppleLoginAndroid
  * ---
- * - 간단설명: Android 웹 기반 Apple Sign-In 수행 후 identityToken/authorizationCode 반환
+ * - 간단설명: Android 환경에서 애플로그인 수행 후 identityToken/authorizationCode 리턴 
  * - 제약사항 및 특이사항:
  *   - Apple Developer 콘솔에서 Service ID + Return URL 설정 필요
  *   - .env에 APPLE_SERVICE_CLIENT_ID, APPLE_REDIRECT_URI 필요
@@ -54,6 +54,7 @@ async function performAppleLoginAndroid() {
   }
 
   appleAuthAndroid.configure({
+    // TODO: clientid, redirect url 필요
     clientId: Config.APPLE_SERVICE_CLIENT_ID!,
     redirectUri: Config.APPLE_REDIRECT_URI!,
     responseType: appleAuthAndroid.ResponseType.ALL,
@@ -97,21 +98,20 @@ export default function useAppleLoginMutation() {
         Platform.OS === 'ios'
           ? await performAppleLoginIOS()
           : await performAppleLoginAndroid();
-
+      // 애플 로그인 API 수행
       const { data } = await UserAPI.appleLogin(
         identityToken,
         authorizationCode,
       );
-      return data;
-    },
-    onSuccess: async (data) => {
-      if (!data) return;
+
       const { access_token, refresh_token } = data;
       await setTokens({
         accessToken: access_token,
         refreshToken: refresh_token,
       });
       await fetchUserInfo();
+
+      return data;
     },
     onError: (error) => {
       console.error(error);
