@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Input } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
 import PullToRefreshWrapper from '@/shared/ui/PullToRefreshWrapper';
-import { HeartIcon, SearchIcon } from '@/shared/ui/icons';
+import { HeartIcon, SearchIcon, FilterIcon } from '@/shared/ui/icons';
 import { openDialog } from '@/shared/ui/Dialog';
 import { MOCK_STORAGE_PROFILES, COSMIC_TYPE_LABEL } from '@/entities/storage';
 import type { StorageProfile } from '@/entities/storage';
@@ -15,7 +15,6 @@ import {
 } from '@/features/storage';
 import ProfileGrid from './ProfileGrid';
 import EditToolbar from './EditToolbar';
-import FilterIcon from './FilterIcon';
 
 /**
  * # StorageAllWidget

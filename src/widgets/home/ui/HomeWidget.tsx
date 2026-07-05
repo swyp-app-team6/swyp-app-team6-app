@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import ProfileCard from '@/features/register/ui/ProfileCard';
+import { ProfileCreatePlusIcon, FlipIcon } from '@/shared/ui/icons';
 import type { NavigationPropType } from '@/shared/types';
 import HomeCardBack from './HomeCardBack';
 import { HAS_PROFILE, MOCK_HOME_PROFILE } from '../model/mockData';
@@ -46,8 +47,8 @@ export default function HomeWidget() {
           className="h-[392px] w-[284px] items-center justify-center rounded-xl border-2 border-primary-light bg-primary-lightest"
         >
           <View className="items-center">
-            <View className="mb-3 h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-primary-lightest">
-              <Text className="text-[16px] font-bold text-primary">+</Text>
+            <View className="mb-3">
+              <ProfileCreatePlusIcon size={40} />
             </View>
             <Text className="text-center text-[14px] font-medium leading-[20px] tracking-tight text-primary">
               {'새로운 프로필 카드를\n추가하세요'}
@@ -76,7 +77,7 @@ export default function HomeWidget() {
             onPress={() => setIsFlipped((prev) => !prev)}
             className="mt-4 flex-row items-center gap-1 rounded-[20px] px-3 py-2"
           >
-            <Text className="text-[16px] text-text-gray4">↻</Text>
+            <FlipIcon size={20} color="#888888" />
             <Text className="text-[12px] tracking-tight text-text-gray4">
               뒷면 보기
             </Text>

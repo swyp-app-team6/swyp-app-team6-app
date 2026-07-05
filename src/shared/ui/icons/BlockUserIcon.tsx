@@ -1,0 +1,27 @@
+import React from 'react';
+import Svg, { Path } from 'react-native-svg';
+import type { IconProps } from './types';
+
+/**
+ * # BlockUserIcon
+ * ---
+ * - 간단설명: 사용자 차단 아이콘 (눈에 빗금 형태)
+ * ---
+ * @param size 아이콘 크기 (기본값: 24)
+ * @param color 아이콘 색상 (기본값: #1A1A1A)
+ * ---
+ * @example
+ * <BlockUserIcon size={24} color="#1A1A1A" />
+ */
+export default function BlockUserIcon({ size = 24, color = '#1A1A1A' }: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M20.3984 19.5L5.39844 4.5M10.1984 10.4416C9.82502 10.8533 9.59844 11.394 9.59844 11.9863C9.59844 13.2761 10.673 14.3217 11.9984 14.3217C12.6096 14.3217 13.1674 14.0994 13.5911 13.7334M20.4372 14.3217C21.2635 13.0848 21.5984 12.0761 21.5984 12.0761C21.5984 12.0761 19.4138 5.1 11.9984 5.1C11.5821 5.1 11.1823 5.12199 10.7984 5.16349M17.3984 17.3494C16.021 18.2281 14.2478 18.8495 11.9984 18.8127C4.67536 18.693 2.39844 12.0761 2.39844 12.0761C2.39844 12.0761 3.45629 8.69808 6.59844 6.64332"
+        stroke={color}
+        strokeWidth={2}
+        strokeLinecap="round"
+      />
+    </Svg>
+  );
+}

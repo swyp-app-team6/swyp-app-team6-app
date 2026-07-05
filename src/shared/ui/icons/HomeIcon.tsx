@@ -2,16 +2,26 @@ import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 import type { IconProps } from './types';
 
-/** 홈 탭 아이콘 */
-export default function HomeIcon({ size = 24, color = '#000' }: IconProps) {
+/**
+ * # HomeIcon
+ * ---
+ * - 간단설명: 하단 탭 네비게이션 홈 아이콘 (집 모양)
+ * - 제약사항 및 특이사항: fill 기반, viewBox 17x17
+ * ---
+ * @param size 아이콘 크기 (기본값: 24)
+ * @param color 아이콘 색상 (기본값: #1A1A1A)
+ * ---
+ * @example
+ * <HomeIcon size={22} color="#8C39FB" />
+ */
+export default function HomeIcon({ size = 24, color = '#1A1A1A' }: IconProps) {
   return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Svg width={size} height={size} viewBox="0 0 17 17" fill="none">
       <Path
-        d="M3 10.5L12 3l9 7.5V21a1.5 1.5 0 01-1.5 1.5h-4.125a.375.375 0 01-.375-.375V16.5a3 3 0 00-6 0v5.625a.375.375 0 01-.375.375H4.5A1.5 1.5 0 013 21V10.5z"
-        stroke={color}
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M7.88143 0.171831C8.13917 -0.0572771 8.52758 -0.0572771 8.78533 0.171831L16.4384 6.97459C16.5837 7.10368 16.6667 7.28872 16.6667 7.48303V15.9865C16.6667 16.3622 16.3622 16.6667 15.9865 16.6667H10.8844C10.5087 16.6667 10.2041 16.3622 10.2041 15.9865V11.7348C10.2041 10.6649 9.40326 9.864 8.33338 9.864C7.2635 9.864 6.46262 10.6649 6.46262 11.7348V15.9864C6.46262 16.3621 6.15805 16.6667 5.78234 16.6667H0.680276C0.30457 16.6667 0 16.3622 0 15.9865V7.48303C0 7.28872 0.0830942 7.10368 0.228325 6.97459L7.88143 0.171831ZM5.10207 15.3058V11.7348C5.10207 9.91346 6.51208 8.50344 8.33338 8.50344C10.1547 8.50344 11.5647 9.91346 11.5647 11.7348V15.3062H15.3062V7.78852L8.33338 1.59045L1.36055 7.78852V15.3062L5.10207 15.3058Z"
+        fill={color}
       />
     </Svg>
   );

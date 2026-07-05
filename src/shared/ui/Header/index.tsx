@@ -3,6 +3,7 @@ import { Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Layout from '@/shared/ui/Layout';
+import { ArrowIcon } from '@/shared/ui/icons';
 
 /**
  * 앱 공통 헤더 컴포넌트. iOS 노치(safe area)를 자동 처리합니다.
@@ -43,7 +44,7 @@ export default function Header({ left, center, right, title, showBack = false }:
 
   const leftContent = showBack ? (
     <TouchableOpacity onPress={() => navigation.goBack()}>
-      <Text className="text-base text-primary">{'< 뒤로'}</Text>
+      <ArrowIcon size={24} color="#8C39FB" direction="left" />
     </TouchableOpacity>
   ) : (
     left ?? null

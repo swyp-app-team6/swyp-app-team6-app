@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { BellIcon, Header, Layout, MyPageIcon } from '@/shared/ui';
+import { Header, Layout, SettingIcon } from '@/shared/ui';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
 import { HomeWidget } from '@/widgets/home';
@@ -33,7 +33,7 @@ function HomePage() {
         right={
           <View className="flex-row items-center gap-3">
             <Pressable hitSlop={8} onPress={() => navigation.navigate('mypage')}>
-              <MyPageIcon size={24} color="#9ca3af" />
+              <SettingIcon size={24} color="#9ca3af" />
             </Pressable>
           </View>
         }

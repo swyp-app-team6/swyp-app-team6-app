@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { Image, Pressable, ScrollView, Text, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { Accordion, Badge, BottomCTA, Button } from '@/shared/ui';
+import { Accordion, Badge, BottomCTA, Button, ReportIcon, BlockUserIcon } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
 import { openDialog } from '@/shared/ui/Dialog';
 import { MOCK_STORAGE_PROFILE_DETAILS } from '@/entities/storage';
@@ -46,7 +46,7 @@ export default function ExchangedProfileView({
 }: Props) {
   const navigation = useNavigation();
   const reportRef = useRef<BottomSheetHandle>(null);
-  const [isBlocked, setIsBlocked] = useState(false);
+  const [isBlocked, _setIsBlocked] = useState(false);
 
   const profile: StorageProfileDetail | undefined = useMemo(
     () => MOCK_STORAGE_PROFILE_DETAILS.find((p) => p.id === profileId),
@@ -88,10 +88,12 @@ export default function ExchangedProfileView({
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* 신고/차단 텍스트 버튼 */}
         <View className="flex-row justify-end gap-3 px-5 pt-3 pb-1">
-          <Pressable hitSlop={8} onPress={() => reportRef.current?.open()}>
+          <Pressable hitSlop={8} onPress={() => reportRef.current?.open()} className="flex-row items-center gap-1">
+            <ReportIcon size={16} color="#888888" />
             <Text className="text-sm text-[#888888]">신고</Text>
           </Pressable>
-          <Pressable hitSlop={8} onPress={handleBlock}>
+          <Pressable hitSlop={8} onPress={handleBlock} className="flex-row items-center gap-1">
+            <BlockUserIcon size={16} color="#888888" />
             <Text className="text-sm text-[#888888]">차단</Text>
           </Pressable>
         </View>

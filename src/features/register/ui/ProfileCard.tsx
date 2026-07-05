@@ -1,7 +1,7 @@
 import React, { memo, useState } from 'react';
 import { View, Text, Image, Pressable } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { Badge, QRIcon } from '@/shared/ui';
+import { Badge, ProfileQRCodeIcon } from '@/shared/ui';
 import { ProfileShareQRModal } from '@/features/profileShare';
 import InterestTag from './InterestTag';
 
@@ -83,7 +83,7 @@ const ProfileCard = memo(function ProfileCard({
             onPress={() => setQrVisible(true)}
             accessibilityLabel="프로필 카드 QR 공유"
           >
-            <QRIcon size={24} color="#FFFFFF" />
+            <ProfileQRCodeIcon size={24} color="#FFFFFF" />
           </Pressable>
         )}
       </View>

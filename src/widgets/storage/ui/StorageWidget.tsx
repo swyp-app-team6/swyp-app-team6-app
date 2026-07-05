@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Input } from '@/shared/ui';
 import { SearchFallbackView } from '@/shared/ui/SearchFallbackView';
 import PullToRefreshWrapper from '@/shared/ui/PullToRefreshWrapper';
-import { ChevronDownIcon, SearchIcon } from '@/shared/ui/icons';
+import { ArrowIcon, SearchIcon } from '@/shared/ui/icons';
 import { MOCK_STORAGE_PROFILES, COSMIC_TYPE_LABEL } from '@/entities/storage';
 import type { StorageProfile } from '@/entities/storage';
 import type { NavigationPropType } from '@/shared/types';
@@ -85,9 +85,7 @@ export default function StorageWidget() {
             onPress={() => navigation.navigate('storageAll')}
           >
             <Text className="text-xs font-medium text-[#888888]">전체보기</Text>
-            <View style={{ transform: [{ rotate: '-90deg' }] }}>
-              <ChevronDownIcon size={16} color="#888888" />
-            </View>
+            <ArrowIcon size={16} color="#888888" direction="right" />
           </Pressable>
         )}
       </View>
