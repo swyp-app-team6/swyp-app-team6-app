@@ -1,7 +1,8 @@
-import React, { useMemo, useRef, useState } from 'react';
-import { Image, Pressable, ScrollView, Text, View } from 'react-native';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { Image, ScrollView, Text, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { Accordion, Badge, BottomCTA, Button, ReportIcon, BlockUserIcon } from '@/shared/ui';
+import { Accordion, Badge, BottomCTA, Button, PopoverMenu, ProfileActionIcon, ReportIcon, BlockUserIcon } from '@/shared/ui';
+import type { PopoverMenuItem } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
 import { openDialog } from '@/shared/ui/Dialog';
 import { MOCK_STORAGE_PROFILE_DETAILS } from '@/entities/storage';
@@ -53,17 +54,7 @@ export default function ExchangedProfileView({
     [profileId],
   );
 
-  if (!profile) {
-    return (
-      <View className="flex-1 items-center justify-center">
-        <Text className="text-base text-[#888888]">
-          프로필을 찾을 수 없습니다
-        </Text>
-      </View>
-    );
-  }
-
-  const handleBlock = () => {
+  const handleBlock = useCallback(() => {
     openDialog({
       type: 'confirm',
       title: '김실명 님을 차단할까요?',
@@ -74,7 +65,35 @@ export default function ExchangedProfileView({
         navigation.goBack();
       },
     });
-  };
+  }, [navigation]);
+
+  /** 신고/차단 팝오버 메뉴 항목 */
+  const popoverItems: PopoverMenuItem[] = useMemo(
+    () => [
+      {
+        label: '신고',
+        icon: <ReportIcon size={16} color="#888888" />,
+        onPress: () => reportRef.current?.open(),
+      },
+      {
+        label: '차단',
+        icon: <BlockUserIcon size={16} color="#888888" />,
+        onPress: handleBlock,
+        destructive: true,
+      },
+    ],
+    [handleBlock],
+  );
+
+  if (!profile) {
+    return (
+      <View className="flex-1 items-center justify-center">
+        <Text className="text-base text-[#888888]">
+          프로필을 찾을 수 없습니다
+        </Text>
+      </View>
+    );
+  }
 
   const handleReport = (_reportTypes: string[], _detail?: string) => {
     openDialog({
@@ -86,18 +105,6 @@ export default function ExchangedProfileView({
   return (
     <View className="flex-1 bg-white">
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        {/* 신고/차단 텍스트 버튼 */}
-        <View className="flex-row justify-end gap-3 px-5 pt-3 pb-1">
-          <Pressable hitSlop={8} onPress={() => reportRef.current?.open()} className="flex-row items-center gap-1">
-            <ReportIcon size={16} color="#888888" />
-            <Text className="text-sm text-[#888888]">신고</Text>
-          </Pressable>
-          <Pressable hitSlop={8} onPress={handleBlock} className="flex-row items-center gap-1">
-            <BlockUserIcon size={16} color="#888888" />
-            <Text className="text-sm text-[#888888]">차단</Text>
-          </Pressable>
-        </View>
-
         {/* 프로필 카드 */}
         <View className="items-center pb-4">
           <View
@@ -145,6 +152,14 @@ export default function ExchangedProfileView({
                 />
                 <View className="absolute top-5 left-5">
                   <Badge level={profile.cosmicType} />
+                </View>
+                {/* 신고/차단 팝오버 메뉴 */}
+                <View className="absolute top-3 right-3">
+                  <PopoverMenu items={popoverItems} align="right">
+                    <View className="w-10 h-10 items-center justify-center">
+                      <ProfileActionIcon size={28} color="#FFFFFF" orientation="vertical" />
+                    </View>
+                  </PopoverMenu>
                 </View>
                 <View className="absolute bottom-0 left-0 right-0 px-5 pb-5 gap-2">
                   <View className="flex-row items-end gap-1">
