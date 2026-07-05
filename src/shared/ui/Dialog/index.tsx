@@ -177,7 +177,7 @@ export default function Dialog() {
     <Modal visible={isOpenDialog} onClose={handleCancel} title={title}>
       {message ? (
         typeof message === 'string' ? (
-          <Text className="text-sm text-text-gray3 leading-5">{message}</Text>
+          <Text className="text-sm text-text-gray3 leading-5 text-center">{message}</Text>
         ) : (
           <View>{message}</View>
         )
@@ -190,7 +190,7 @@ export default function Dialog() {
             title={cancelLabel || '취소'}
             variant="ghost"
             onPress={handleCancel}
-            className="flex-1"
+            className="flex-1 flex align-center justify-center"
           />
         )}
         <Button
