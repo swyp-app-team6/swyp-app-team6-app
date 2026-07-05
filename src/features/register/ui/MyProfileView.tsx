@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { View, ScrollView } from 'react-native';
 import { BottomCTA, Button } from '@/shared/ui';
 import { useProfileDataStore } from '@/entities/user';
@@ -9,6 +9,7 @@ import InterestsSection from './InterestsSection';
 import BioSection from './BioSection';
 import CosmicTypeSection from './CosmicTypeSection';
 import TmiSection from './TmiSection';
+import { TMI_QUESTIONS } from '../model/tmiData';
 
 interface Props {
   /** 등록 완료 버튼 콜백 */
@@ -38,6 +39,15 @@ export default function MyProfileView({ onSubmit, loading }: Props) {
   const { data: form } = useProfileDataStore();
   const [activeTab, setActiveTab] = useState<TabType>('기본정보');
   const scrollRef = useRef<ScrollView>(null);
+
+  const tmiAnswersForDisplay = useMemo(
+    () =>
+      form.tmiAnswers.map((tmi) => ({
+        question: TMI_QUESTIONS.find((q) => q.id === tmi.questionId)?.question ?? '',
+        answer: tmi.answer,
+      })),
+    [form.tmiAnswers],
+  );
 
   return (
     <View className="flex-1 bg-white">
@@ -81,7 +91,7 @@ export default function MyProfileView({ onSubmit, loading }: Props) {
           {activeTab === '유형테스트' && <CosmicTypeSection />}
 
           {activeTab === '나만의 TMI' && (
-            <TmiSection tmiAnswers={form.tmiAnswers} />
+            <TmiSection tmiAnswers={tmiAnswersForDisplay} />
           )}
         </View>
 

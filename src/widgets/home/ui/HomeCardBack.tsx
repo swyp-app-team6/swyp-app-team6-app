@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { View, Text } from 'react-native';
-import type { CosmicType } from '@/features/register/model/cosmicTypeResults';
+import type { CosmicType } from '@/shared/enums';
 import { COSMIC_TYPE_RESULTS } from '@/features/register/model/cosmicTypeResults';
 
 interface Props {

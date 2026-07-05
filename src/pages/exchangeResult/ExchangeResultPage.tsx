@@ -4,8 +4,8 @@ import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import { Button, Header } from '@/shared/ui';
 import { useExchangeFlowStore } from '@/features/exchange';
+import { useMyProfileQuery } from '@/entities/user';
 import InterestTag from '@/features/register/ui/InterestTag';
-import { MOCK_HOME_PROFILE } from '@/widgets/home/model/mockData';
 import type { NavigationPropType } from '@/shared/types';
 
 /**
@@ -24,13 +24,14 @@ import type { NavigationPropType } from '@/shared/types';
 export default function ExchangeResultPage() {
   const navigation = useNavigation<NavigationPropType>();
 
+  const { data: profile } = useMyProfileQuery();
   const scannedProfile = useExchangeFlowStore((s) => s.scannedProfile);
   const commonInterests = useExchangeFlowStore((s) => s.commonInterests);
   const reset = useExchangeFlowStore((s) => s.reset);
 
   const hasCommon = commonInterests.length > 0;
   const theirName = scannedProfile?.name ?? '';
-  const myName = MOCK_HOME_PROFILE.nickname;
+  const myName = profile?.nickname ?? '';
   const displayInterests = hasCommon ? commonInterests : (scannedProfile?.interests ?? []);
 
   /** 홈으로 이동 */

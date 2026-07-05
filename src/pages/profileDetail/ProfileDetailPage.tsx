@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, ActivityIndicator } from 'react-native';
 import { Header } from '@/shared/ui';
-import { useProfileDataStore } from '@/entities/user';
+import { useMyProfileQuery } from '@/entities/user';
 import ProfileCard from '@/features/register/ui/ProfileCard';
 import BasicInfoSection from '@/features/register/ui/BasicInfoSection';
 import InterestsSection from '@/features/register/ui/InterestsSection';
@@ -20,7 +20,28 @@ import TmiSection from '@/features/register/ui/TmiSection';
  * ---
  */
 export default function ProfileDetailPage() {
-  const { data: form } = useProfileDataStore();
+  const { data: profile, isLoading } = useMyProfileQuery();
+
+  if (isLoading || !profile) {
+    return (
+      <View className="flex-1 bg-white items-center justify-center">
+        <Header title="내 프로필 카드" showBack />
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  const interests = profile.interests.map((i) => i.type);
+  const tmiAnswers = [
+    ...(profile.choice_template ?? []).map((t) => ({
+      question: t.question,
+      answer: t.answer,
+    })),
+    ...(profile.short_template ?? []).map((t) => ({
+      question: t.question,
+      answer: t.answer,
+    })),
+  ];
 
   return (
     <View className="flex-1 bg-white">
@@ -29,25 +50,27 @@ export default function ProfileDetailPage() {
         {/* ── 프로필 카드 ── */}
         <View className="items-center pt-6 pb-4">
           <ProfileCard
-            profileImageUri={form.profileImageUri}
-            nickname={form.nickname}
-            age={form.age}
-            interests={form.interests}
+            profileImageUri={profile.image_key}
+            nickname={profile.nickname}
+            age={String(profile.age)}
+            interests={interests}
           />
         </View>
 
         {/* ── 정보 섹션 (모두 세로 나열) ── */}
         <View className="px-5 pb-10 gap-5">
           <BasicInfoSection
-            age={form.age}
-            region={form.region}
-            subArea={form.subArea}
-            jobField={form.jobField}
+            age={String(profile.age)}
+            region={profile.region}
+            jobField={profile.job}
           />
-          <InterestsSection interests={form.interests} />
-          <BioSection bio={form.bio} />
-          <CosmicTypeSection />
-          <TmiSection tmiAnswers={form.tmiAnswers} />
+          <InterestsSection interests={interests} />
+          <BioSection bio={profile.bio} />
+          <CosmicTypeSection
+            cosmicType={profile.cosmic_type}
+            cosmicTypeDetail={profile.cosmic_type_detail}
+          />
+          <TmiSection tmiAnswers={tmiAnswers} />
         </View>
       </ScrollView>
     </View>

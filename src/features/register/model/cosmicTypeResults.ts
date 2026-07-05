@@ -1,11 +1,6 @@
-/**
- * 코스믹 유형 테스트 결과 유형
- * - SHOOTING_STAR = 슈팅스타 형
- * - GALAXY = 갤럭시 형
- * - SOLAR = 솔라 형
- * - LUNA = 루나 형
- */
-export type CosmicType = 'SHOOTING_STAR' | 'GALAXY' | 'SOLAR' | 'LUNA';
+import { CosmicType } from '@/shared/enums';
+
+export type { CosmicType };
 
 /**
  * 코스믹 유형 결과 데이터
@@ -32,8 +27,8 @@ export interface CosmicTypeResult {
  * - 추후 API 연동 시 교체
  */
 export const COSMIC_TYPE_RESULTS: Record<CosmicType, CosmicTypeResult> = {
-  SHOOTING_STAR: {
-    type: 'SHOOTING_STAR',
+  [CosmicType.SHOOTING_STAR]: {
+    type: CosmicType.SHOOTING_STAR,
     name: '슈팅스타 형',
     description: '함께 웃고 즐기는 순간이\n가장 행복한 절친 같은 연애',
     tags: ['유쾌함', '추억수집', '긍정에너지'],
@@ -47,10 +42,10 @@ export const COSMIC_TYPE_RESULTS: Record<CosmicType, CosmicTypeResult> = {
       '"너랑 있으면 시간이 진짜 빨라"',
       '"같이 있으면 너무 재밌어"',
     ],
-    bestMatches: ['SOLAR', 'GALAXY'],
+    bestMatches: [CosmicType.SOLA, CosmicType.GALAXY],
   },
-  GALAXY: {
-    type: 'GALAXY',
+  [CosmicType.GALAXY]: {
+    type: CosmicType.GALAXY,
     name: '갤럭시 형',
     description: '서로를 존중하며 함께 성장하는\n독립적인 연애',
     tags: ['자유', '믿음', '편안함'],
@@ -64,10 +59,10 @@ export const COSMIC_TYPE_RESULTS: Record<CosmicType, CosmicTypeResult> = {
       '"같이 있으면 편안해"',
       '"의존하지 않아서 좋아"',
     ],
-    bestMatches: ['LUNA', 'SHOOTING_STAR'],
+    bestMatches: [CosmicType.LUNA, CosmicType.SHOOTING_STAR],
   },
-  SOLAR: {
-    type: 'SOLAR',
+  [CosmicType.SOLA]: {
+    type: CosmicType.SOLA,
     name: '솔라 형',
     description: '사랑을 아낌없이 표현하는\n열정적인 연애',
     tags: ['애정표현', '열정', '직진'],
@@ -81,10 +76,10 @@ export const COSMIC_TYPE_RESULTS: Record<CosmicType, CosmicTypeResult> = {
       '"표현을 정말 잘 한다"',
       '"사랑받는다는 느낌이 들어"',
     ],
-    bestMatches: ['SHOOTING_STAR', 'LUNA'],
+    bestMatches: [CosmicType.SHOOTING_STAR, CosmicType.LUNA],
   },
-  LUNA: {
-    type: 'LUNA',
+  [CosmicType.LUNA]: {
+    type: CosmicType.LUNA,
     name: '루나 형',
     description: '믿음과 배려로 오래 함께하는\n잔잔한 연애',
     tags: ['신뢰', '배려', '꾸준함'],
@@ -98,6 +93,6 @@ export const COSMIC_TYPE_RESULTS: Record<CosmicType, CosmicTypeResult> = {
       '"옆에 있으면 든든해"',
       '"믿고 의지할 수 있는 사람이야"',
     ],
-    bestMatches: ['SOLAR', 'GALAXY'],
+    bestMatches: [CosmicType.SOLA, CosmicType.GALAXY],
   },
 };
