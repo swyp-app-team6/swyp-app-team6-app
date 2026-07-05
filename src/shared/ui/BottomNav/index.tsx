@@ -54,9 +54,9 @@ export default function BottomNav({ items, activeRoute, onPress, styleClass }: P
   const safePadding = useSafePaddingBottom();
   return (
     <View
-      className={cn('h-16 flex-row bg-white', styleClass?.root)}
+      className={cn('flex-row bg-white', styleClass?.root)}
       style={[
-        { paddingBottom: safePadding.paddingBottom },
+        { paddingBottom: safePadding.paddingBottom, height: 32 + safePadding.paddingBottom },
         Platform.select({
           ios: {
             shadowColor: '#000',
