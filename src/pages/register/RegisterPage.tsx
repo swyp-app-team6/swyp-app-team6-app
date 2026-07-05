@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Header, Layout, AlertModal } from '@/shared/ui';
+import { Header, Layout, AlertModal, ArrowIcon } from '@/shared/ui';
 import { RegisterFormView, useRegisterFormStore } from '@/features/register';
 import type { NavigationPropType } from '@/shared/types';
 
@@ -61,7 +61,7 @@ export default function RegisterPage() {
       <Header
         left={
           <TouchableOpacity onPress={handleBack}>
-            <Text className="text-base text-primary">{'< 뒤로'}</Text>
+            <ArrowIcon direction="left" />
           </TouchableOpacity>
         }
       />

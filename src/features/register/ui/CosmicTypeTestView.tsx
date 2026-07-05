@@ -4,10 +4,9 @@ import Svg, { Path } from 'react-native-svg';
 import Config from 'react-native-config';
 import { BottomCTA, Button } from '@/shared/ui';
 import { Modal } from '@/shared/ui/Modal';
-import { useCosmicTestQuery } from '@/entities/cosmic';
+import { useCosmicTestQuery, useCosmicTypeQuery } from '@/entities/cosmic';
 import type { CosmicTestQuestion, CosmicTestAnswer } from '@/entities/cosmic';
 import { CosmicType } from '@/shared/enums';
-import { COSMIC_TYPE_RESULTS } from '../model/cosmicTypeResults';
 import useRegisterFormStore from '../model/useRegisterFormStore';
 import CosmicTypeResultView from './CosmicTypeResultView';
 
@@ -56,7 +55,7 @@ function calculateCosmicType(
  *   - 이전/다음 화살표로 질문 탐색 가능
  *   - 모든 문항 응답 완료 시 "테스트 완료" 버튼 활성화
  *   - 미응답 문항 존재 시 팝업으로 안내
- *   - 답변 점수 합산으로 유형 판별
+ *   - 답변 점수 합산으로 유형 판별 후 API에서 상세 결과 조회
  * ---
  * @param onComplete 테스트 완료 시 호출되는 콜백
  * ---
@@ -76,18 +75,21 @@ export default function CosmicTypeTestView({ onComplete }: Props) {
   const [showIncompleteModal, setShowIncompleteModal] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [firstUnansweredIndex, setFirstUnansweredIndex] = useState(0);
-  const { form } = useRegisterFormStore();
+  const { form, updateForm } = useRegisterFormStore();
 
   const currentQuestion = questions[currentIndex];
   const selectedAnswer = currentQuestion ? selectedAnswers[currentQuestion.question_id] : undefined;
   const answeredCount = Object.keys(selectedAnswers).length;
   const isAllAnswered = totalQuestions > 0 && answeredCount === totalQuestions;
 
-  const resultType = useMemo(() => {
-    if (!isAllAnswered) return COSMIC_TYPE_RESULTS[CosmicType.SHOOTING_STAR];
-    const cosmicType = calculateCosmicType(selectedAnswers);
-    return COSMIC_TYPE_RESULTS[cosmicType] ?? COSMIC_TYPE_RESULTS[CosmicType.SHOOTING_STAR];
+  /** 모든 답변 완료 시 계산된 코스믹 유형 */
+  const calculatedType = useMemo(() => {
+    if (!isAllAnswered) return undefined;
+    return calculateCosmicType(selectedAnswers);
   }, [isAllAnswered, selectedAnswers]);
+
+  /** 코스믹 유형 상세 정보 API 조회 */
+  const { data: cosmicTypeData, isLoading: isTypeLoading } = useCosmicTypeQuery(calculatedType);
 
   /** 이전 질문으로 이동 */
   const goPrev = useCallback(() => {
@@ -134,6 +136,14 @@ export default function CosmicTypeTestView({ onComplete }: Props) {
     setCurrentIndex(firstUnansweredIndex);
   }, [firstUnansweredIndex]);
 
+  /** 카드에 적용하기 → 스토어에 유형 저장 후 다음 단계 */
+  const handleApply = useCallback(() => {
+    if (calculatedType) {
+      updateForm({ cosmicType: calculatedType });
+    }
+    onComplete();
+  }, [calculatedType, updateForm, onComplete]);
+
   if (isLoading) {
     return (
       <View className="flex-1 items-center justify-center">
@@ -143,11 +153,20 @@ export default function CosmicTypeTestView({ onComplete }: Props) {
   }
 
   if (showResult) {
+    if (isTypeLoading || !cosmicTypeData) {
+      return (
+        <View className="flex-1 items-center justify-center">
+          <ActivityIndicator size="large" />
+          <Text className="text-sm text-text-gray4 mt-2">결과를 불러오는 중...</Text>
+        </View>
+      );
+    }
+
     return (
       <CosmicTypeResultView
-        result={resultType}
+        result={cosmicTypeData}
         nickname={form.nickname || '사용자'}
-        onApply={onComplete}
+        onApply={handleApply}
       />
     );
   }

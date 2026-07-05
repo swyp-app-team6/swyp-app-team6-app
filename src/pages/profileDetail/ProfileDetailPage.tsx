@@ -68,7 +68,6 @@ export default function ProfileDetailPage() {
           <BioSection bio={profile.bio} />
           <CosmicTypeSection
             cosmicType={profile.cosmic_type}
-            cosmicTypeDetail={profile.cosmic_type_detail}
           />
           <TmiSection tmiAnswers={tmiAnswers} />
         </View>

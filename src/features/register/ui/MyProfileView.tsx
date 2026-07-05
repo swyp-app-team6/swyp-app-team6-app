@@ -9,7 +9,6 @@ import InterestsSection from './InterestsSection';
 import BioSection from './BioSection';
 import CosmicTypeSection from './CosmicTypeSection';
 import TmiSection from './TmiSection';
-import { TMI_QUESTIONS } from '../model/tmiData';
 
 interface Props {
   /** 등록 완료 버튼 콜백 */
@@ -43,7 +42,7 @@ export default function MyProfileView({ onSubmit, loading }: Props) {
   const tmiAnswersForDisplay = useMemo(
     () =>
       form.tmiAnswers.map((tmi) => ({
-        question: TMI_QUESTIONS.find((q) => q.id === tmi.questionId)?.question ?? '',
+        question: tmi.question,
         answer: tmi.answer,
       })),
     [form.tmiAnswers],

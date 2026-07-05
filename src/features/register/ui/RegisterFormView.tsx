@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Alert, View } from 'react-native';
 import { StepView, ProgressBar, ErrorBoundary, LoadSuspense } from '@/shared/ui';
+import type { ChoiceTemplate, ShortTemplate } from '@/entities/user';
 import useRegisterFormStore from '../model/useRegisterFormStore';
+import useRegisterMutation from '../api/useRegisterMutation';
+import type { RegisterFormState } from '../model/types';
 import Step1BasicInfoView from './Step1BasicInfoView';
 import Step2DetailInfoView from './Step2DetailInfoView';
 import Step3InterestsView from './Step2InterestsView';
@@ -19,6 +22,51 @@ interface Props {
 }
 
 /**
+ * # buildRegisterRequest
+ * ---
+ * - 간단설명: RegisterFormState를 ProfileRegisterRequest 형식으로 변환
+ * ---
+ * @param form 등록 폼 상태
+ */
+function buildRegisterRequest(form: RegisterFormState) {
+  const choiceTemplate: ChoiceTemplate[] = [];
+  const shortTemplate: ShortTemplate[] = [];
+
+  form.tmiAnswers.forEach((tmi) => {
+    if (tmi.answerKind === 'CHOICE') {
+      choiceTemplate.push({
+        question_id: tmi.questionId,
+        question_type: tmi.questionType,
+        question: tmi.question,
+        answer_id: tmi.answerId,
+        answer: tmi.answer,
+      });
+    } else {
+      shortTemplate.push({
+        question_id: tmi.questionId,
+        question_type: tmi.questionType,
+        question: tmi.question,
+        answer: tmi.answer,
+      });
+    }
+  });
+
+  return {
+    nickname: form.nickname,
+    image_key: form.profileImageKey ?? '',
+    gender: form.gender as 'M' | 'F',
+    age: Number(form.age),
+    region: form.region,
+    job: form.jobField,
+    interests: form.interests,
+    bio: form.bio || undefined,
+    cosmic_type: form.cosmicType ?? undefined,
+    choice_template: choiceTemplate.length > 0 ? choiceTemplate : undefined,
+    short_template: shortTemplate.length > 0 ? shortTemplate : undefined,
+  };
+}
+
+/**
  * # RegisterFormView
  * ---
  * - 간단설명: 프로필 등록 7단계 폼 오케스트레이터
@@ -27,6 +75,7 @@ interface Props {
  *   - ProgressBar로 상단 진행률 표시
  *   - 등록 완료 시 RegisterCompleteView로 교체
  *   - 언마운트 시 스토어 자동 리셋
+ *   - useRegisterMutation으로 실제 API 호출
  * ---
  * @param onViewProfile 등록 완료 후 프로필 보기 콜백
  * @param onGoHome 등록 완료 후 홈으로 이동 콜백
@@ -36,6 +85,7 @@ interface Props {
 export default function RegisterFormView({ onViewProfile, onGoHome }: Props) {
   const { currentStep, nextStep, reset } = useRegisterFormStore();
   const [isComplete, setIsComplete] = useState(false);
+  const { mutateAsync, isPending } = useRegisterMutation();
 
   useEffect(() => {
     return () => {
@@ -44,13 +94,18 @@ export default function RegisterFormView({ onViewProfile, onGoHome }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /** 
-   * 프로필 등록 제출 (API 호출 없이 완료 처리) 
-   * TODO: 프로필등록 API 연동
-   * */
-  const handleSubmit = () => {
-    setIsComplete(true);
-  };
+  /** 프로필 등록 API 호출 */
+  const handleSubmit = useCallback(async () => {
+    const form = useRegisterFormStore.getState().form;
+    const request = buildRegisterRequest(form);
+
+    try {
+      await mutateAsync(request);
+      setIsComplete(true);
+    } catch {
+      Alert.alert('등록 실패', '프로필 등록 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  }, [mutateAsync]);
 
   if (isComplete) {
     return (
@@ -102,7 +157,7 @@ export default function RegisterFormView({ onViewProfile, onGoHome }: Props) {
           </ErrorBoundary>
         </StepView.Step>
         <StepView.Step>
-          <Step7PreviewView onSubmit={handleSubmit} loading={false} />
+          <Step7PreviewView onSubmit={handleSubmit} loading={isPending} />
         </StepView.Step>
       </StepView>
     </View>

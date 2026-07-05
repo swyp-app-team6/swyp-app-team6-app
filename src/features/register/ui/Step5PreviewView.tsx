@@ -1,9 +1,8 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, ScrollView, Pressable, Alert } from 'react-native';
+import { View, Text, ScrollView, Pressable } from 'react-native';
 import { BottomCTA, Button } from '@/shared/ui';
 import useRegisterFormStore from '../model/useRegisterFormStore';
 import { INTEREST_OPTIONS } from '../model/types';
-import { TMI_QUESTIONS } from '../model/tmiData';
 import ProfilePreviewCard from './ProfilePreviewCard';
 
 /** 탭 목록 */
@@ -40,11 +39,6 @@ export default function Step5PreviewView({ onSubmit, loading }: Props) {
   /** INTEREST 값을 한국어 라벨로 변환 */
   const getInterestLabel = (value: string) => {
     return INTEREST_OPTIONS.find((o) => o.value === value)?.label ?? value;
-  };
-
-  /** TMI 질문 텍스트 가져오기 */
-  const getQuestionText = (questionId: string) => {
-    return TMI_QUESTIONS.find((q) => q.id === questionId)?.question ?? '';
   };
 
   return (
@@ -150,12 +144,12 @@ export default function Step5PreviewView({ onSubmit, loading }: Props) {
               {form.tmiAnswers.length > 0 ? (
                 <View className="gap-3">
                   {form.tmiAnswers.map((tmi) => (
-                    <View key={tmi.questionId}>
+                    <View key={`${tmi.answerKind}-${tmi.questionId}`}>
                       <Text
                         className="text-sm font-medium text-text-gray4 mb-1"
                         style={{ letterSpacing: -0.4 }}
                       >
-                        {getQuestionText(tmi.questionId)}
+                        {tmi.question}
                       </Text>
                       <Text
                         className="text-[15px] font-medium text-text-gray2"
@@ -181,10 +175,7 @@ export default function Step5PreviewView({ onSubmit, loading }: Props) {
       <BottomCTA>
         <Button
           title="프로필 등록 완료하기"
-          onPress={() => {
-            Alert.alert('현재 저장 데이터', JSON.stringify(form, null, 2));
-            onSubmit();
-          }}
+          onPress={onSubmit}
           loading={loading}
         />
       </BottomCTA>

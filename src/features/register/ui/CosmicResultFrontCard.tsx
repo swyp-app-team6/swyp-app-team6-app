@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import type { CosmicTypeResult } from '../model/cosmicTypeResults';
+import type { CosmicTypeResponse } from '@/entities/cosmic';
 
 interface Props {
-  /** 유형 결과 데이터 */
-  result: CosmicTypeResult;
+  /** 유형 결과 데이터 (API 응답) */
+  result: CosmicTypeResponse;
   /** 사용자 닉네임 */
   nickname: string;
   /** 뒷면보기 콜백 */
@@ -20,14 +20,14 @@ interface Props {
  *   - 보라 그라데이션 배경 (350x520, rounded-xl)
  *   - 닉네임 + 유형명 + 일러스트(placeholder) + 태그 3개 + 한줄설명
  *   - "뒷면보기" 버튼으로 카드 전환
- *   - result props로 결과 데이터를 주입받아 렌더링
+ *   - CosmicTypeResponse API 데이터를 주입받아 렌더링
  * ---
- * @param result 유형 결과 데이터
+ * @param result 유형 결과 데이터 (API 응답)
  * @param nickname 사용자 닉네임
  * @param onFlip 뒷면보기 콜백
  * ---
  * @example
- * <CosmicResultFrontCard result={result} nickname="홍길동" onFlip={() => setIsBack(true)} />
+ * <CosmicResultFrontCard result={cosmicData} nickname="홍길동" onFlip={() => setIsBack(true)} />
  */
 export default function CosmicResultFrontCard({
   result,
@@ -48,7 +48,7 @@ export default function CosmicResultFrontCard({
           {nickname} 님은
         </Text>
         <Text className="text-xl font-bold text-white mt-1" style={{ lineHeight: 28 }}>
-          {result.name}
+          {result.cosmic_type.label}
         </Text>
       </View>
 
@@ -86,7 +86,7 @@ export default function CosmicResultFrontCard({
           className="text-sm font-semibold text-white text-center"
           style={{ lineHeight: 19.6 }}
         >
-          {result.description}
+          {result.detail}
         </Text>
       </View>
 

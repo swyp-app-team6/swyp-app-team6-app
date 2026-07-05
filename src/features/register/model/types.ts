@@ -1,4 +1,6 @@
 import { INTEREST } from '@/entities/user';
+import type { CosmicType } from '@/shared/enums';
+import { TMIQuestionType } from '@/shared/enums';
 
 /**
  * 프로필 등록 폼 상태
@@ -12,6 +14,7 @@ import { INTEREST } from '@/entities/user';
  * - subArea: 활동 지역 하위 구/군
  * - bio: 한줄 자기소개 (최대 100자)
  * - interests: 관심사 목록 (3~5개)
+ * - cosmicType: 코스믹 유형 테스트 결과
  * - tmiAnswers: TMI 답변 목록
  */
 export interface RegisterFormState {
@@ -25,6 +28,7 @@ export interface RegisterFormState {
   subArea: string;
   bio: string;
   interests: INTEREST[];
+  cosmicType: CosmicType | null;
   tmiAnswers: TMIAnswer[];
 }
 
@@ -79,46 +83,36 @@ export const REGION_SUB_AREAS: Record<string, string[]> = {
 };
 
 /**
- * TMI 카테고리
- * - ALL = 전체
- * - EITHER_OR = 양자택일
- * - FILL_BLANK = 빈칸 채우기
- * - COUPLE_DEBATE = 커플 논쟁
- * - BALANCE_GAME = 밸런스 게임
+ * TMI 카테고리 필터 타입
+ * - 'ALL' = 전체
+ * - TMIQuestionType = API 질문 유형으로 필터링
  */
-export type TMICategory = 'ALL' | 'EITHER_OR' | 'FILL_BLANK' | 'COUPLE_DEBATE' | 'BALANCE_GAME';
-
-/**
- * TMI 질문 답변 유형
- * - CHOICE = 선택형 (선택지 중 1개 탭)
- * - TEXT = 서술형 (텍스트 직접 입력, 5~100자)
- */
-export type TMIAnswerType = 'CHOICE' | 'TEXT';
-
-/**
- * TMI 질문
- * - id: 질문 고유 ID
- * - category: 질문 카테고리
- * - question: 질문 텍스트
- * - answerType: 답변 유형 (선택형/서술형)
- * - options: 선택형일 때 선택지 목록
- */
-export interface TMIQuestion {
-  id: string;
-  category: TMICategory;
-  question: string;
-  answerType: TMIAnswerType;
-  options?: string[];
-}
+export type TMICategoryFilter = 'ALL' | TMIQuestionType;
 
 /**
  * TMI 답변
- * - questionId: 질문 ID
+ * - questionId: 질문 ID (API 기준 number)
+ * - answerKind: 답변 종류 ('CHOICE' | 'TEXT') — multiple/short 구분용
+ * - questionType: 질문 유형
+ * - question: 질문 텍스트
  * - answer: 선택한 답변 또는 입력한 텍스트
+ * - answerId: 선택형 답변 ID (선택형일 때만)
  */
 export interface TMIAnswer {
-  questionId: string;
+  questionId: number;
+  answerKind: 'CHOICE' | 'TEXT';
+  questionType: TMIQuestionType;
+  question: string;
   answer: string;
+  answerId?: number;
+}
+
+/**
+ * TMI 질문의 고유 키 생성
+ * - multiple_questions와 short_questions에서 id가 중복될 수 있으므로 answerKind를 조합
+ */
+export function tmiKey(answerKind: 'CHOICE' | 'TEXT', questionId: number): string {
+  return `${answerKind}-${questionId}`;
 }
 
 /**
@@ -143,13 +137,13 @@ export const INTEREST_OPTIONS: { value: INTEREST; label: string; emoji: string }
 
 /**
  * TMI 카테고리 필터 옵션
- * - value: TMICategory 값
+ * - value: TMICategoryFilter 값 (ALL 또는 TMIQuestionType)
  * - label: 화면에 표시하는 한국어 라벨
  */
-export const TMI_CATEGORY_OPTIONS: { value: TMICategory; label: string }[] = [
+export const TMI_CATEGORY_OPTIONS: { value: TMICategoryFilter; label: string }[] = [
   { value: 'ALL', label: '전체' },
-  { value: 'EITHER_OR', label: '양자택일' },
-  { value: 'FILL_BLANK', label: '빈칸채우기' },
-  { value: 'COUPLE_DEBATE', label: '커플논쟁' },
-  { value: 'BALANCE_GAME', label: '밸런스게임' },
+  { value: TMIQuestionType.BINARY, label: '양자택일' },
+  { value: TMIQuestionType.BLANK, label: '빈칸채우기' },
+  { value: TMIQuestionType.DISCUSSION, label: '커플논쟁' },
+  { value: TMIQuestionType.BALANCE_GAME, label: '밸런스게임' },
 ];

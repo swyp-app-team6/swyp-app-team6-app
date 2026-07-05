@@ -5,7 +5,7 @@ import { createQueryKeys } from '@lukemorales/query-key-factory';
 /**
  * # QuestionAPI
  * ---
- * - 간단설명: 질문 템플릿 관련 API를 정적 메서드로 관리하는 클래스
+ * - 간단설명: 프로필등록: TMI 질문 템플릿 관련 API를 정적 메서드로 관리하는 클래스
  * - 제약사항 및 특이사항:
  *   - 모든 엔드포인트는 인증 필요 (Authorization Bearer 토큰)
  *   - query: @lukemorales/query-key-factory 기반 쿼리 키 팩토리

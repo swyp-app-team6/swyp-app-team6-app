@@ -1,12 +1,11 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import type { CosmicTypeResult } from '../model/cosmicTypeResults';
-import { COSMIC_TYPE_RESULTS } from '../model/cosmicTypeResults';
+import type { CosmicTypeResponse } from '@/entities/cosmic';
 
 interface Props {
-  /** 유형 결과 데이터 */
-  result: CosmicTypeResult;
+  /** 유형 결과 데이터 (API 응답) */
+  result: CosmicTypeResponse;
   /** 앞면보기 콜백 */
   onFlip: () => void;
 }
@@ -19,13 +18,13 @@ interface Props {
  *   - 보라 그라데이션 배경 (350x520, rounded-xl)
  *   - 연애 스타일 / 자주 듣는 말 / 궁합이 좋은 유형 3개 섹션
  *   - "앞면보기" 버튼으로 카드 전환
- *   - result props로 결과 데이터를 주입받아 렌더링
+ *   - CosmicTypeResponse API 데이터를 주입받아 렌더링
  * ---
- * @param result 유형 결과 데이터
+ * @param result 유형 결과 데이터 (API 응답)
  * @param onFlip 앞면보기 콜백
  * ---
  * @example
- * <CosmicResultBackCard result={result} onFlip={() => setIsBack(false)} />
+ * <CosmicResultBackCard result={cosmicData} onFlip={() => setIsBack(false)} />
  */
 export default function CosmicResultBackCard({ result, onFlip }: Props) {
   return (
@@ -40,7 +39,7 @@ export default function CosmicResultBackCard({ result, onFlip }: Props) {
       <View className="mb-5">
         <Text className="text-sm font-bold text-white mb-3">연애 스타일</Text>
         <View className="gap-1.5">
-          {result.loveStyle.map((item) => (
+          {result.features.map((item) => (
             <View key={item} className="flex-row items-start">
               <Text className="text-white mr-2">•</Text>
               <Text
@@ -60,7 +59,7 @@ export default function CosmicResultBackCard({ result, onFlip }: Props) {
           이런 말을 자주 들어요
         </Text>
         <View className="gap-1">
-          {result.quotes.map((quote) => (
+          {result.mentions.map((quote) => (
             <Text
               key={quote}
               className="text-xs text-white"
@@ -78,22 +77,19 @@ export default function CosmicResultBackCard({ result, onFlip }: Props) {
           궁합이 좋은 유형
         </Text>
         <View className="flex-row gap-4">
-          {result.bestMatches.map((matchType) => {
-            const match = COSMIC_TYPE_RESULTS[matchType];
-            return (
-              <View key={matchType} className="items-center">
-                <View
-                  className="w-12 h-12 rounded-full items-center justify-center mb-1"
-                  style={{ backgroundColor: 'rgba(255,255,255,0.3)' }}
-                >
-                  <Text className="text-lg">✨</Text>
-                </View>
-                <Text className="text-xs text-white">
-                  {match.name.replace(' 형', '형')}
-                </Text>
+          {result.matches.map((match) => (
+            <View key={match.type} className="items-center">
+              <View
+                className="w-12 h-12 rounded-full items-center justify-center mb-1"
+                style={{ backgroundColor: 'rgba(255,255,255,0.3)' }}
+              >
+                <Text className="text-lg">✨</Text>
               </View>
-            );
-          })}
+              <Text className="text-xs text-white">
+                {match.label}
+              </Text>
+            </View>
+          ))}
         </View>
       </View>
 
