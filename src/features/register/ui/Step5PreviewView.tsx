@@ -6,7 +6,7 @@ import { INTEREST_OPTIONS } from '../model/types';
 import ProfilePreviewCard from './ProfilePreviewCard';
 
 /** 탭 목록 */
-const TABS = ['기본정보', '관심사', '자기소개', '유형테스트', '나만의 TMI'] as const;
+const TABS = ['기본정보', '관심사', '자기소개', '나만의 TMI'] as const;
 type TabType = typeof TABS[number];
 
 interface Props {
@@ -22,7 +22,7 @@ interface Props {
  * - 간단설명: 프로필 등록 마지막 단계 - 미리보기 (Figma 디자인 시안 기반)
  * - 제약사항 및 특이사항:
  *   - 프로필 카드 + 탭 메뉴 + 정보 섹션 구성
- *   - 탭: 기본정보, 관심사, 자기소개, 유형테스트, 나만의 TMI
+ *   - 탭: 기본정보, 관심사, 자기소개, 나만의 TMI
  *   - 각 섹션은 흰색 카드(border #d2d2d2, rounded-xl) 내부에 표시
  *   - "프로필 등록 완료하기" CTA 버튼
  * ---
@@ -125,15 +125,6 @@ export default function Step5PreviewView({ onSubmit, loading }: Props) {
                 style={{ letterSpacing: -0.15, lineHeight: 22.5 }}
               >
                 {form.bio || '등록된 자기소개가 없습니다'}
-              </Text>
-            </InfoCard>
-          )}
-
-          {/* 유형테스트 */}
-          {activeTab === '유형테스트' && (
-            <InfoCard title="유형테스트">
-              <Text className="text-sm text-text-gray4">
-                아직 유형 테스트를 완료하지 않았습니다
               </Text>
             </InfoCard>
           )}

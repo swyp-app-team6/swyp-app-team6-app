@@ -16,6 +16,7 @@ import StorageAllPage from '@/pages/storage/StorageAllPage';
 import ExchangedProfileDetailPage from '@/pages/storage/ExchangedProfileDetailPage';
 import WriteReviewPage from '@/pages/storage/WriteReviewPage';
 import ProfileDetailPage from '@/pages/profileDetail/ProfileDetailPage';
+import CosmicTestPage from '@/pages/cosmicTest/CosmicTestPage';
 import ExchangeResultPage from '@/pages/exchangeResult/ExchangeResultPage';
 import { NavigatorType } from '../types';
 import ComponentPlaygroundPage from '../../pages/playground/ComponentPlaygroundPage';
@@ -57,6 +58,7 @@ export default function StackRouter({ initialRouteName = 'home' }: StackRouterPr
         <Stack.Screen name='writeReview' component={WriteReviewPage} />
         <Stack.Screen name='profileDetail' component={ProfileDetailPage} />
         <Stack.Screen name='registerProfile' component={RegisterPage} />
+        <Stack.Screen name='cosmicTest' component={CosmicTestPage} />
         <Stack.Screen name='withdrawal' component={WithdrawalPage} />
         {
           Config.PROJECT_ENV === 'local' && (

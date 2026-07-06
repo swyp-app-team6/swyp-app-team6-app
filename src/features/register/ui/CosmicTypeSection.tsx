@@ -1,7 +1,10 @@
 import React, { memo } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import type { CosmicType } from '@/shared/enums';
 import { useCosmicTypeQuery } from '@/entities/cosmic';
+import { Button } from '@/shared/ui';
+import type { NavigationPropType } from '@/shared/types';
 import InfoCard from './InfoCard';
 
 /**
@@ -9,7 +12,8 @@ import InfoCard from './InfoCard';
  * ---
  * - 간단설명: 코스믹 유형 테스트 탭 섹션
  * - 제약사항 및 특이사항:
- *   - cosmicType이 없으면 미등록 안내 표시
+ *   - cosmicType이 없으면 미등록 안내 + 유형테스트 하기 버튼 표시
+ *   - cosmicType이 있으면 유형 정보 + 유형테스트 다시하기 버튼 표시
  *   - API에서 코스믹 유형 상세 정보를 조회하여 표시
  * ---
  * @param cosmicType 코스믹 유형 코드
@@ -21,6 +25,7 @@ const CosmicTypeSection = memo(function CosmicTypeSection({
 }: {
   cosmicType?: CosmicType;
 }) {
+  const navigation = useNavigation<NavigationPropType>();
   const { data: result, isLoading } = useCosmicTypeQuery(cosmicType);
 
   if (!cosmicType) {
@@ -29,6 +34,13 @@ const CosmicTypeSection = memo(function CosmicTypeSection({
         <Text className="text-sm text-text-gray4">
           등록된 코스믹 유형이 없습니다
         </Text>
+        <View className="mt-4">
+          <Button
+            title="유형테스트 하기"
+            variant="outline"
+            onPress={() => navigation.navigate('cosmicTest')}
+          />
+        </View>
       </InfoCard>
     );
   }
@@ -60,6 +72,13 @@ const CosmicTypeSection = memo(function CosmicTypeSection({
           >
             {result.detail}
           </Text>
+        </View>
+        <View className="w-full mt-2">
+          <Button
+            title="유형테스트 다시하기"
+            variant="outline"
+            onPress={() => navigation.navigate('cosmicTest')}
+          />
         </View>
       </View>
     </InfoCard>
