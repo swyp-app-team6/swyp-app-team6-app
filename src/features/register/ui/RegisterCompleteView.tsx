@@ -43,15 +43,19 @@ export default function RegisterCompleteView({ mode = 'register', onViewProfile,
           style={{ lineHeight: 28 }}
         >
           {isEdit
-            ? '축하드립니다\n프로필 카드를 수정했어요!'
+            ? '프로필 카드 수정이 완료되었습니다.'
             : '축하드립니다\n프로필 카드를 작성했어요!'}
         </Text>
-        <Text
-          className="text-base font-medium text-text-gray4 text-center"
-          style={{ lineHeight: 22.4 }}
-        >
-          {'이제 새로운 만남을 시작할\n모든 준비가 끝났어요'}
-        </Text>
+        {
+          !isEdit && (
+            <Text
+              className="text-base font-medium text-text-gray4 text-center"
+              style={{ lineHeight: 22.4 }}
+            >
+              {'이제 새로운 만남을 시작할\n모든 준비가 끝났어요'}
+            </Text>
+          )
+        }
       </View>
 
       {/* 하단 CTA: 프로필 보기(회색) + 홈으로(보라) */}
