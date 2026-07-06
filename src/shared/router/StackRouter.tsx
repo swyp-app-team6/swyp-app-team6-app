@@ -18,6 +18,7 @@ import WriteReviewPage from '@/pages/storage/WriteReviewPage';
 import ProfileDetailPage from '@/pages/profileDetail/ProfileDetailPage';
 import CosmicTestPage from '@/pages/cosmicTest/CosmicTestPage';
 import ExchangeResultPage from '@/pages/exchangeResult/ExchangeResultPage';
+import EditProfilePage from '@/pages/editProfile/EditProfilePage';
 import { NavigatorType } from '../types';
 import ComponentPlaygroundPage from '../../pages/playground/ComponentPlaygroundPage';
 import Config from 'react-native-config';
@@ -59,6 +60,7 @@ export default function StackRouter({ initialRouteName = 'home' }: StackRouterPr
         <Stack.Screen name='profileDetail' component={ProfileDetailPage} />
         <Stack.Screen name='registerProfile' component={RegisterPage} />
         <Stack.Screen name='cosmicTest' component={CosmicTestPage} />
+        <Stack.Screen name='editProfile' component={EditProfilePage} />
         <Stack.Screen name='withdrawal' component={WithdrawalPage} />
         {
           Config.PROJECT_ENV === 'local' && (
