@@ -1,10 +1,10 @@
 import React from 'react';
-import { Alert, View, ScrollView, ActivityIndicator } from 'react-native';
+import { View, ScrollView, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Header, PopoverMenu, ProfileCard } from '@/shared/ui';
+import { Header, PopoverMenu, ProfileCard, openDialog } from '@/shared/ui';
 import { ProfileActionIcon } from '@/shared/ui';
 import { getInterestLabel } from '@/features/register';
-import { useAuthStore, useDeleteProfileMutation, useMyProfileQuery } from '@/entities/user';
+import { useDeleteProfileMutation, useMyProfileQuery } from '@/entities/user';
 import type { NavigationPropType } from '@/shared/types';
 import BasicInfoSection from '@/features/register/ui/BasicInfoSection';
 import InterestsSection from '@/features/register/ui/InterestsSection';
@@ -26,32 +26,26 @@ export default function ProfileDetailPage() {
   const navigation = useNavigation<NavigationPropType>();
   const { data: profile, isLoading } = useMyProfileQuery();
   const { mutate: deleteProfile } = useDeleteProfileMutation();
-  const clearAuth = useAuthStore((s) => s.clear);
 
   const handleEdit = () => {
     navigation.navigate('mypage');
   };
 
   const handleDelete = () => {
-    Alert.alert(
-      '프로필 삭제',
-      '삭제하시겠습니까?',
-      [
-        { text: '취소', style: 'cancel' },
-        {
-          text: '삭제',
-          style: 'destructive',
-          onPress: () => {
-            deleteProfile(undefined, {
-              onSuccess: () => {
-                clearAuth();
-                navigation.reset({ index: 0, routes: [{ name: 'login' }] });
-              },
-            });
+    openDialog({
+      type: 'confirm',
+      title: '프로필 삭제',
+      message: '삭제하시겠습니까?',
+      okLabel: '삭제',
+      cancelLabel: '취소',
+      okFn: () => {
+        deleteProfile(undefined, {
+          onSuccess: () => {
+            navigation.goBack();
           },
-        },
-      ],
-    );
+        });
+      },
+    });
   };
 
   if (isLoading || !profile) {
@@ -77,7 +71,22 @@ export default function ProfileDetailPage() {
 
   return (
     <View className="flex-1 bg-white">
-      <Header title="내 프로필 카드" showBack />
+      <Header
+        title="내 프로필 카드"
+        showBack
+        right={
+          <PopoverMenu
+            items={[
+              { label: '수정', onPress: handleEdit },
+              { label: '삭제', destructive: true, onPress: handleDelete },
+            ]}
+          >
+            <View className="w-10 h-10 items-center justify-center">
+              <ProfileActionIcon size={24} color="#000000" orientation="vertical" />
+            </View>
+          </PopoverMenu>
+        }
+      />
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* ── 프로필 카드 ── */}
         <View className="items-center pt-6 pb-4">
@@ -87,18 +96,6 @@ export default function ProfileDetailPage() {
             nickname={profile.nickname}
             age={String(profile.age)}
             interests={interests.map((i) => getInterestLabel(i))}
-            topRightSlot={
-              <PopoverMenu
-                items={[
-                  { label: '수정', onPress: handleEdit },
-                  { label: '삭제', destructive: true, onPress: handleDelete },
-                ]}
-              >
-                <View className="w-10 h-10 items-center justify-center">
-                  <ProfileActionIcon size={28} color="#FFFFFF" orientation="vertical" />
-                </View>
-              </PopoverMenu>
-            }
           />
         </View>
 
