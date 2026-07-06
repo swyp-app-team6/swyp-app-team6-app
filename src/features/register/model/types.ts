@@ -1,6 +1,8 @@
 import { INTEREST } from '@/entities/user';
+import type { MyProfileResponse } from '@/entities/user';
 import type { CosmicType } from '@/shared/enums';
 import { TMIQuestionType } from '@/shared/enums';
+import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 
 /**
  * 프로필 등록 폼 상태
@@ -142,6 +144,54 @@ export const INTEREST_OPTIONS: { value: INTEREST; label: string; emoji: string }
   { value: INTEREST.INVESTING, label: '투자', emoji: '💰' },
   { value: INTEREST.MOVIE, label: '영화', emoji: '🎬' },
 ];
+
+/**
+ * # profileToFormState
+ * ---
+ * - 간단설명: MyProfileResponse를 RegisterFormState로 변환하는 파싱 함수
+ * - 제약사항 및 특이사항:
+ *   - image_key는 getProfileImageUrl()로 URI 변환
+ *   - choice_template/short_template를 TMIAnswer[]로 변환
+ * ---
+ * @param profile 프로필 응답 데이터
+ * @example
+ * const formState = profileToFormState(profile);
+ * updateForm(formState);
+ */
+export function profileToFormState(profile: MyProfileResponse): RegisterFormState {
+  const tmiAnswers: TMIAnswer[] = [
+    ...(profile.choice_template ?? []).map((t) => ({
+      questionId: t.question_id!,
+      answerKind: 'CHOICE' as const,
+      questionType: t.question_type,
+      question: t.question,
+      answer: t.answer,
+      answerId: t.answer_id,
+    })),
+    ...(profile.short_template ?? []).map((t) => ({
+      questionId: t.question_id!,
+      answerKind: 'TEXT' as const,
+      questionType: t.question_type,
+      question: t.question,
+      answer: t.answer,
+    })),
+  ];
+
+  return {
+    nickname: profile.nickname,
+    profileImageUri: getProfileImageUrl(profile.image_key) ?? null,
+    profileImageKey: profile.image_key ?? null,
+    gender: profile.gender,
+    age: String(profile.age),
+    jobField: profile.job,
+    region: profile.region.detail,
+    subArea: profile.region.label,
+    bio: profile.bio ?? '',
+    interests: profile.interests.map((i) => i.type),
+    cosmicType: profile.cosmic_type ?? null,
+    tmiAnswers,
+  };
+}
 
 /**
  * TMI 카테고리 필터 옵션

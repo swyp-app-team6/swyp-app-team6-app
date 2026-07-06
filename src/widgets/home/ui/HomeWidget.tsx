@@ -6,10 +6,10 @@ import { ProfileCreatePlusIcon, FlipIcon } from '@/shared/ui/icons';
 import { ProfileShareQRModal } from '@/features/profileShare';
 import { getInterestLabel } from '@/features/register';
 import { useMyProfileQuery } from '@/entities/user';
-import { CosmicType } from '@/shared/enums';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 import type { NavigationPropType } from '@/shared/types';
 import HomeCardBack from './HomeCardBack';
+import HomeCardBackDefault from './HomeCardBackDefault';
 
 /**
  * # HomeWidget
@@ -54,64 +54,68 @@ export default function HomeWidget() {
       )}
 
       {/* 카드 영역 */}
-      {!hasProfile ? (
-        /* 빈 프로필 카드 */
-        <Pressable
-          onPress={() => navigation.navigate('registerProfile')}
-          className="h-[392px] w-[284px] items-center justify-center rounded-xl border-2 border-primary-light bg-primary-lightest"
-        >
-          <View className="items-center">
-            <View className="mb-3">
-              <ProfileCreatePlusIcon size={40} />
+      {!isFlipped ? (
+        /* ── 앞면 ── */
+        !hasProfile ? (
+          /* 빈 프로필 카드 */
+          <Pressable
+            onPress={() => navigation.navigate('registerProfile')}
+            className="h-[392px] w-[284px] items-center justify-center rounded-xl border-2 border-primary-light bg-primary-lightest"
+          >
+            <View className="items-center">
+              <View className="mb-3">
+                <ProfileCreatePlusIcon size={40} />
+              </View>
+              <Text className="text-center text-[14px] font-medium leading-[20px] tracking-tight text-primary">
+                {'새로운 프로필 카드를\n추가하세요'}
+              </Text>
             </View>
-            <Text className="text-center text-[14px] font-medium leading-[20px] tracking-tight text-primary">
-              {'새로운 프로필 카드를\n추가하세요'}
-            </Text>
-          </View>
-        </Pressable>
-      ) : !isFlipped ? (
-        /* 프로필 카드 앞면 */
-        <Pressable
-          onPress={() => navigation.navigate('profileDetail')}
-        >
-          <ProfileCard
-            variant="preview"
-            profileImageUri={getProfileImageUrl(profile.image_key)}
-            nickname={profile.nickname}
-            age={String(profile.age)}
-            interests={profile.interests.map((i) => getInterestLabel(i.type))}
-            topRightSlot={
-              <Pressable
-                hitSlop={8}
-                onPress={() => setQrVisible(true)}
-                accessibilityLabel="프로필 카드 QR 공유"
-              >
-                <ProfileQRCodeIcon size={24} color="#FFFFFF" />
-              </Pressable>
-            }
-          />
-          <ProfileShareQRModal visible={qrVisible} onClose={() => setQrVisible(false)} />
-        </Pressable>
+          </Pressable>
+        ) : (
+          /* 프로필 카드 앞면 */
+          <Pressable
+            onPress={() => navigation.navigate('profileDetail')}
+          >
+            <ProfileCard
+              variant="preview"
+              profileImageUri={getProfileImageUrl(profile.image_key)}
+              nickname={profile.nickname}
+              age={String(profile.age)}
+              interests={profile.interests.map((i) => getInterestLabel(i.type))}
+              topRightSlot={
+                <Pressable
+                  hitSlop={8}
+                  onPress={() => setQrVisible(true)}
+                  accessibilityLabel="프로필 카드 QR 공유"
+                >
+                  <ProfileQRCodeIcon size={24} color="#FFFFFF" />
+                </Pressable>
+              }
+            />
+            <ProfileShareQRModal visible={qrVisible} onClose={() => setQrVisible(false)} />
+          </Pressable>
+        )
       ) : (
-        /* 프로필 카드 뒷면 */
-        <HomeCardBack cosmicType={profile.cosmic_type ?? CosmicType.SHOOTING_STAR} />
+        /* ── 뒷면 ── */
+        (hasProfile && profile.cosmic_type) ? (
+          /* 유형테스트 완료: 코스믹 유형 결과 */
+          <HomeCardBack cosmicType={profile.cosmic_type} />
+        ) : (
+          /* 미등록 또는 유형테스트 미완료: 디폴트 안내 뷰 */
+          <HomeCardBackDefault />
+        )
       )}
 
-      {/* 프로필 존재 시: 뒷면 보기 + 전체보기 버튼 */}
-      {hasProfile && (
-        <>
-          {/* 뒷면 보기 버튼 */}
-          <Pressable
-            onPress={() => setIsFlipped((prev) => !prev)}
-            className="mt-4 flex-row items-center gap-1 rounded-[20px] px-3 py-2"
-          >
-            <FlipIcon size={20} color="#888888" />
-            <Text className="text-[12px] tracking-tight text-text-gray4">
-              뒷면 보기
-            </Text>
-          </Pressable>
-        </>
-      )}
+      {/* 뒷면 보기 버튼 (항상 표시) */}
+      <Pressable
+        onPress={() => setIsFlipped((prev) => !prev)}
+        className="mt-4 flex-row items-center gap-1 rounded-[20px] px-3 py-2"
+      >
+        <FlipIcon size={20} color="#888888" />
+        <Text className="text-[12px] tracking-tight text-text-gray4">
+          뒷면 보기
+        </Text>
+      </Pressable>
 
     </View>
   );

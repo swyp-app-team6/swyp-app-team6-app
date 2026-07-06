@@ -7,12 +7,13 @@ import { Modal } from '@/shared/ui/Modal';
 import { useCosmicTestQuery, useCosmicTypeQuery } from '@/entities/cosmic';
 import type { CosmicTestQuestion, CosmicTestAnswer } from '@/entities/cosmic';
 import { CosmicType } from '@/shared/enums';
-import useRegisterFormStore from '../model/useRegisterFormStore';
 import CosmicTypeResultView from './CosmicTypeResultView';
 
 interface Props {
-  /** 테스트 완료 시 호출되는 콜백 */
-  onComplete: () => void;
+  /** 테스트 완료 시 호출되는 콜백 (계산된 코스믹 유형 전달) */
+  onComplete: (cosmicType: CosmicType) => void;
+  /** 사용자 닉네임 (미전달 시 '사용자' 기본값) */
+  nickname?: string;
 }
 
 /**
@@ -57,12 +58,13 @@ function calculateCosmicType(
  *   - 미응답 문항 존재 시 팝업으로 안내
  *   - 답변 점수 합산으로 유형 판별 후 API에서 상세 결과 조회
  * ---
- * @param onComplete 테스트 완료 시 호출되는 콜백
+ * @param onComplete 테스트 완료 시 호출되는 콜백 (계산된 코스믹 유형 전달)
+ * @param nickname 사용자 닉네임 (미전달 시 '사용자' 기본값)
  * ---
  * @example
- * <CosmicTypeTestView onComplete={() => console.log('완료')} />
+ * <CosmicTypeTestView onComplete={(type) => console.log(type)} nickname="홍길동" />
  */
-export default function CosmicTypeTestView({ onComplete }: Props) {
+export default function CosmicTypeTestView({ onComplete, nickname = '사용자' }: Props) {
   const { data: testData, isLoading } = useCosmicTestQuery();
   const questions = useMemo<CosmicTestQuestion[]>(
     () => testData?.questions ?? [],
@@ -75,7 +77,6 @@ export default function CosmicTypeTestView({ onComplete }: Props) {
   const [showIncompleteModal, setShowIncompleteModal] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [firstUnansweredIndex, setFirstUnansweredIndex] = useState(0);
-  const { form, updateForm } = useRegisterFormStore();
 
   const currentQuestion = questions[currentIndex];
   const selectedAnswer = currentQuestion ? selectedAnswers[currentQuestion.question_id] : undefined;
@@ -136,13 +137,12 @@ export default function CosmicTypeTestView({ onComplete }: Props) {
     setCurrentIndex(firstUnansweredIndex);
   }, [firstUnansweredIndex]);
 
-  /** 카드에 적용하기 → 스토어에 유형 저장 후 다음 단계 */
+  /** 카드에 적용하기 → 계산된 유형을 콜백으로 전달 */
   const handleApply = useCallback(() => {
     if (calculatedType) {
-      updateForm({ cosmicType: calculatedType });
+      onComplete(calculatedType);
     }
-    onComplete();
-  }, [calculatedType, updateForm, onComplete]);
+  }, [calculatedType, onComplete]);
 
   if (isLoading) {
     return (
@@ -165,7 +165,7 @@ export default function CosmicTypeTestView({ onComplete }: Props) {
     return (
       <CosmicTypeResultView
         result={cosmicTypeData}
-        nickname={form.nickname || '사용자'}
+        nickname={nickname}
         onApply={handleApply}
       />
     );

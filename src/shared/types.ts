@@ -26,6 +26,8 @@ export type NavigatorType = {
   exchangeResult: undefined;
   exchangedProfileDetail: { profileId: number };
   writeReview: { profileId: number };
+  cosmicTest: undefined;
+  editProfile: undefined;
   withdrawal: undefined;
   playground: undefined;
 }

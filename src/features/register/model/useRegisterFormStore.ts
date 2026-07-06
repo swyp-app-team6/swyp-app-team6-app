@@ -62,16 +62,16 @@ const useRegisterFormStore = create<RegisterFormStore>()(
      */
     setStep: (step: number) => {
       set((state) => {
-        state.currentStep = Math.max(0, Math.min(6, step));
+        state.currentStep = Math.max(0, Math.min(5, step));
       });
     },
 
     /**
-     * 다음 단계로 이동 (최대 6)
+     * 다음 단계로 이동 (최대 5)
      */
     nextStep: () => {
       set((state) => {
-        if (state.currentStep < 6) {
+        if (state.currentStep < 5) {
           state.currentStep += 1;
         }
       });

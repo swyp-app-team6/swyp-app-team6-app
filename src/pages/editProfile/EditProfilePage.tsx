@@ -1,34 +1,97 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Header, Layout } from '@/shared/ui';
-import { EditProfileFormView } from '@/features/editProfile';
+import { useQueryClient } from '@tanstack/react-query';
+import { Header, Layout, AlertModal, ArrowIcon } from '@/shared/ui';
+import { RegisterFormView, useRegisterFormStore, profileToFormState } from '@/features/register';
+import { ProfileAPI } from '@/entities/user';
+import type { MyProfileResponse } from '@/entities/user';
+import type { NavigationPropType } from '@/shared/types';
 
 /**
  * # EditProfilePage
  * ---
- * - 간단설명: 회원정보 수정 화면 - 닉네임, 프로필 사진 변경
+ * - 간단설명: 프로필 수정 화면 — 등록 UI를 재사용하여 전체 프로필 수정
  * - 제약사항 및 특이사항:
- *   - authStore에서 현재 유저 정보를 로드하여 표시
- *   - 저장 시 authStore.updateUser()로 부분 업데이트
+ *   - getQueryData로 캐시된 프로필 데이터를 초기값으로 사용
+ *   - RegisterFormView(mode='edit')로 6단계 수정 폼 표시
+ *   - 뒤로가기: step > 0이면 이전 단계, step === 0이면 이탈 확인 팝업
  * ---
  * @example
  * <EditProfilePage />
  */
-function EditProfilePage() {
-  const navigation = useNavigation();
+export default function EditProfilePage() {
+  const navigation = useNavigation<NavigationPropType>();
+  const queryClient = useQueryClient();
+  const { currentStep, prevStep, isDirty, reset } = useRegisterFormStore();
+  const [showExitModal, setShowExitModal] = useState(false);
 
-  const handleSave = () => {
+  const profileData = queryClient.getQueryData<MyProfileResponse>(
+    ProfileAPI.query.me().queryKey,
+  );
+  const initialFormData = profileData ? profileToFormState(profileData) : undefined;
+
+  /** 뒤로가기 핸들러 */
+  const handleBack = () => {
+    if (currentStep > 0) {
+      prevStep();
+    } else if (isDirty()) {
+      setShowExitModal(true);
+    } else {
+      navigation.goBack();
+    }
+  };
+
+  /** 이탈 확인 후 나가기 */
+  const handleExitConfirm = () => {
+    setShowExitModal(false);
+    reset();
     navigation.goBack();
+  };
+
+  /** 프로필 보기로 이동 */
+  const handleViewProfile = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'profileCard' }],
+    });
+  };
+
+  /** 홈으로 이동 */
+  const handleGoHome = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'home' }],
+    });
   };
 
   return (
     <>
-      <Header title="회원정보 수정" showBack />
-      <Layout.Body styleClass={{ root: 'px-6 pt-10' }}>
-        <EditProfileFormView onSave={handleSave} />
+      <Header
+        left={
+          <TouchableOpacity onPress={handleBack}>
+            <ArrowIcon direction="left" />
+          </TouchableOpacity>
+        }
+      />
+      <Layout.Body styleClass={{ root: 'bg-white' }}>
+        <RegisterFormView
+          mode="edit"
+          initialData={initialFormData}
+          onViewProfile={handleViewProfile}
+          onGoHome={handleGoHome}
+        />
       </Layout.Body>
+
+      <AlertModal
+        visible={showExitModal}
+        title="프로필 수정 중단"
+        message="이미 수정한 정보가 있어요. 프로필 수정을 그만두실건가요?"
+        confirmText="나가기"
+        cancelText="계속 수정"
+        onConfirm={handleExitConfirm}
+        onCancel={() => setShowExitModal(false)}
+      />
     </>
   );
 }
-
-export default EditProfilePage;

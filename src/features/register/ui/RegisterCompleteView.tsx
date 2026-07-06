@@ -3,6 +3,8 @@ import { View, Text, Pressable } from 'react-native';
 import { BottomCTA, Button } from '@/shared/ui';
 
 interface Props {
+  /** 폼 모드 (register: 등록 완료, edit: 수정 완료) */
+  mode?: 'register' | 'edit';
   /** 프로필 보기 버튼 콜백 */
   onViewProfile: () => void;
   /** 홈으로 이동 버튼 콜백 */
@@ -25,7 +27,8 @@ interface Props {
  * @example
  * <RegisterCompleteView onViewProfile={...} onGoHome={...} />
  */
-export default function RegisterCompleteView({ onViewProfile, onGoHome }: Props) {
+export default function RegisterCompleteView({ mode = 'register', onViewProfile, onGoHome }: Props) {
+  const isEdit = mode === 'edit';
   return (
     <View className="flex-1 bg-white">
       <View className="flex-1 items-center justify-center px-5">
@@ -39,14 +42,20 @@ export default function RegisterCompleteView({ onViewProfile, onGoHome }: Props)
           className="text-xl font-bold text-text-gray2 text-center mb-3"
           style={{ lineHeight: 28 }}
         >
-          {'축하드립니다\n프로필 카드를 작성했어요!'}
+          {isEdit
+            ? '프로필 카드 수정이 완료되었습니다.'
+            : '축하드립니다\n프로필 카드를 작성했어요!'}
         </Text>
-        <Text
-          className="text-base font-medium text-text-gray4 text-center"
-          style={{ lineHeight: 22.4 }}
-        >
-          {'이제 새로운 만남을 시작할\n모든 준비가 끝났어요'}
-        </Text>
+        {
+          !isEdit && (
+            <Text
+              className="text-base font-medium text-text-gray4 text-center"
+              style={{ lineHeight: 22.4 }}
+            >
+              {'이제 새로운 만남을 시작할\n모든 준비가 끝났어요'}
+            </Text>
+          )
+        }
       </View>
 
       {/* 하단 CTA: 프로필 보기(회색) + 홈으로(보라) */}
