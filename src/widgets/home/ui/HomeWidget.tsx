@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import ProfileCard from '@/features/register/ui/ProfileCard';
+import { ProfileCard, ProfileQRCodeIcon } from '@/shared/ui';
 import { ProfileCreatePlusIcon, FlipIcon } from '@/shared/ui/icons';
+import { ProfileShareQRModal } from '@/features/profileShare';
+import { getInterestLabel } from '@/features/register';
+import { useMyProfileQuery } from '@/entities/user';
+import { CosmicType } from '@/shared/enums';
 import type { NavigationPropType } from '@/shared/types';
 import HomeCardBack from './HomeCardBack';
-import { HAS_PROFILE, MOCK_HOME_PROFILE } from '../model/mockData';
 
 /**
  * # HomeWidget
@@ -14,7 +17,6 @@ import { HAS_PROFILE, MOCK_HOME_PROFILE } from '../model/mockData';
  * - 제약사항 및 특이사항:
  *   - 프로필 미등록: 빈 카드 + 생성하기 유도만 표시
  *   - 프로필 등록: 앞면(ProfileCard) ↔ 뒷면(HomeCardBack) 전환 + QR공유 + 전체보기
- *   - 목 데이터 사용 (추후 API 연동 시 교체)
  * ---
  * @example
  * <HomeWidget />
@@ -22,15 +24,26 @@ import { HAS_PROFILE, MOCK_HOME_PROFILE } from '../model/mockData';
 export default function HomeWidget() {
   const navigation = useNavigation<NavigationPropType>();
   const [isFlipped, setIsFlipped] = useState(false);
+  const [qrVisible, setQrVisible] = useState(false);
+  const { data: profile, isLoading } = useMyProfileQuery();
+  const hasProfile = !!profile;
+
+  if (isLoading) {
+    return (
+      <View className="mt-8 items-center justify-center h-[392px]">
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   return (
     <View className="mt-8 items-center">
       {/* 프로필 존재 시: 타이틀 */}
-      {HAS_PROFILE && (
+      {hasProfile && (
         <View className="w-full flex-row items-center justify-between mb-5">
           <View className="flex-row items-center gap-1">
             <Text className="text-[16px] font-semibold leading-[22px] tracking-tight text-primary">
-              {MOCK_HOME_PROFILE.nickname}
+              {profile.nickname}
             </Text>
             <Text className="text-[16px] font-medium leading-[22px] tracking-tight text-text-black">
               님의 프로필 카드
@@ -40,7 +53,7 @@ export default function HomeWidget() {
       )}
 
       {/* 카드 영역 */}
-      {!HAS_PROFILE ? (
+      {!hasProfile ? (
         /* 빈 프로필 카드 */
         <Pressable
           onPress={() => navigation.navigate('registerProfile')}
@@ -57,20 +70,34 @@ export default function HomeWidget() {
         </Pressable>
       ) : !isFlipped ? (
         /* 프로필 카드 앞면 */
-        <ProfileCard
-          profileImageUri={MOCK_HOME_PROFILE.profileImageUri}
-          nickname={MOCK_HOME_PROFILE.nickname}
-          age={MOCK_HOME_PROFILE.age}
-          interests={MOCK_HOME_PROFILE.interests}
-          showQR
-        />
+        <Pressable
+          onPress={() => navigation.navigate('profileDetail')}
+        >
+          <ProfileCard
+            variant="preview"
+            profileImageUri={profile.image_key}
+            nickname={profile.nickname}
+            age={String(profile.age)}
+            interests={profile.interests.map((i) => getInterestLabel(i.type))}
+            topRightSlot={
+              <Pressable
+                hitSlop={8}
+                onPress={() => setQrVisible(true)}
+                accessibilityLabel="프로필 카드 QR 공유"
+              >
+                <ProfileQRCodeIcon size={24} color="#FFFFFF" />
+              </Pressable>
+            }
+          />
+          <ProfileShareQRModal visible={qrVisible} onClose={() => setQrVisible(false)} />
+        </Pressable>
       ) : (
         /* 프로필 카드 뒷면 */
-        <HomeCardBack cosmicType={MOCK_HOME_PROFILE.cosmicType} />
+        <HomeCardBack cosmicType={profile.cosmic_type ?? CosmicType.SHOOTING_STAR} />
       )}
 
       {/* 프로필 존재 시: 뒷면 보기 + 전체보기 버튼 */}
-      {HAS_PROFILE && (
+      {hasProfile && (
         <>
           {/* 뒷면 보기 버튼 */}
           <Pressable
@@ -80,16 +107,6 @@ export default function HomeWidget() {
             <FlipIcon size={20} color="#888888" />
             <Text className="text-[12px] tracking-tight text-text-gray4">
               뒷면 보기
-            </Text>
-          </Pressable>
-
-          {/* 프로필 전체보기 버튼 */}
-          <Pressable
-            onPress={() => navigation.navigate('profileDetail')}
-            className="mt-2 flex-row items-center gap-1 rounded-[20px] px-3 py-2"
-          >
-            <Text className="text-[12px] font-medium tracking-tight text-primary">
-              프로필 전체보기
             </Text>
           </Pressable>
         </>

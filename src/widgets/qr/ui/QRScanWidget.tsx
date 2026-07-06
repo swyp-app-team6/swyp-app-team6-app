@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useCameraDevice } from 'react-native-vision-camera';
+import { useMyProfileQuery } from '@/entities/user';
 import { generateMockQRPayload } from '@/features/exchange';
 import QRScanView from './QRScanView';
 import {
@@ -29,6 +30,7 @@ export default function QRScanWidget() {
   const navigation = useNavigation<NavigationPropType>();
   const device = useCameraDevice('back');
 
+  const { data: profile } = useMyProfileQuery();
   const step = useExchangeFlowStore((s) => s.step);
   const onScanComplete = useExchangeFlowStore((s) => s.onScanComplete);
   const goToPreview = useExchangeFlowStore((s) => s.goToPreview);
@@ -37,10 +39,11 @@ export default function QRScanWidget() {
 
   /** 교환하기 → 로딩 후 결과 페이지로 이동 */
   const handleStartExchange = useCallback(() => {
-    startExchange(() => {
+    const myInterests = profile?.interests.map((i) => i.type) ?? [];
+    startExchange(myInterests, () => {
       navigation.navigate('exchangeResult');
     });
-  }, [startExchange, navigation]);
+  }, [startExchange, navigation, profile]);
 
   /** 철회하기 → 홈으로 이동 */
   const handleCancel = useCallback(() => {

@@ -4,7 +4,6 @@ import * as Sentry from '@sentry/react-native';
 import BootSplash from 'react-native-bootsplash';
 import StackRouter from '@/shared/router/StackRouter';
 import AppProviders from '@/app/providers/AppProviders';
-import Toast from 'react-native-toast-message';
 import Dialog from '@/shared/ui/Dialog';
 import { setupInterceptors } from '../shared/api';
 import useAuthStore from '@/entities/user/model/authStore';
@@ -74,7 +73,6 @@ function App() {
     <AppProviders>
       <StackRouter initialRouteName={initialRoute} />
       <Dialog />
-      <Toast />
     </AppProviders>
   );
 }

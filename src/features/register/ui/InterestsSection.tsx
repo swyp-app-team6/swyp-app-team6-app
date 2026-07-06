@@ -1,7 +1,8 @@
 import React, { memo } from 'react';
 import { View, Text } from 'react-native';
 import InfoCard from './InfoCard';
-import InterestTag from './InterestTag';
+import { InterestTag } from '@/shared/ui';
+import { getInterestLabel } from '../model/types';
 
 /**
  * # InterestsSection
@@ -24,7 +25,7 @@ const InterestsSection = memo(function InterestsSection({
         <View className="gap-2">
           <View className="flex-row flex-wrap gap-1">
             {interests.map((interest) => (
-              <InterestTag key={interest} value={interest} variant="outlined" />
+              <InterestTag key={interest} label={getInterestLabel(interest)} variant="outlined" />
             ))}
           </View>
         </View>

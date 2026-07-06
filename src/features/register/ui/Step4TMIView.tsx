@@ -1,19 +1,35 @@
 import React, { useRef, useState, useMemo } from 'react';
-import { Pressable, View, Text, ScrollView } from 'react-native';
+import { Pressable, View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { TMICard, BottomCTA, Button, ChipSelect, Textbox, SelectedTMIPreviewButton } from '@/shared/ui';
 import Tag from '@/shared/ui/Tag';
 import BottomSheet, { type BottomSheetHandle } from '@/shared/ui/BottomSheet';
 import { useProfileDataStore } from '@/entities/user';
+import { useQuestionsQuery } from '@/entities/question';
+import type { MultipleQuestion, ShortQuestion, QuestionAnswer } from '@/entities/question';
+import { TMIQuestionType } from '@/shared/enums';
 import useRegisterFormStore from '../model/useRegisterFormStore';
-import { TMI_QUESTIONS } from '../model/tmiData';
-import { TMI_CATEGORY_OPTIONS, type TMICategory, type TMIQuestion } from '../model/types';
+import { tmiKey, TMI_CATEGORY_OPTIONS, type TMICategoryFilter } from '../model/types';
+
+/**
+ * TMI 질문 통합 타입 (선택형 + 단답형)
+ * - answerType: 'CHOICE' = 선택형, 'TEXT' = 단답형
+ * - answers: 선택형일 때 선택지 목록
+ */
+interface TMIQuestionUI {
+  id: number;
+  type: TMIQuestionType;
+  content: string;
+  answerType: 'CHOICE' | 'TEXT';
+  answers?: QuestionAnswer[];
+}
 
 /**
  * # Step4TMIView
  * ---
  * - 간단설명: 프로필 등록 4단계 - TMI 등록 (선택사항)
  * - 제약사항 및 특이사항:
+ *   - API에서 질문 목록을 조회하여 표시
  *   - 카테고리 필터로 질문 목록 필터링
  *   - 선택형: 바텀시트에서 선택지 중 1개 탭
  *   - 서술형: 바텀시트에서 텍스트 직접 입력 (5~100자)
@@ -26,24 +42,51 @@ import { TMI_CATEGORY_OPTIONS, type TMICategory, type TMIQuestion } from '../mod
 export default function Step4TMIView() {
   const { form, addTMIAnswer, removeTMIAnswer, nextStep } = useRegisterFormStore();
   const { setProfileData } = useProfileDataStore();
-  const [selectedCategory, setSelectedCategory] = useState<TMICategory>('ALL');
-  const [activeQuestion, setActiveQuestion] = useState<TMIQuestion | null>(null);
+  const { data: questionData, isLoading } = useQuestionsQuery();
+  const [selectedCategory, setSelectedCategory] = useState<TMICategoryFilter>('ALL');
+  const [activeQuestion, setActiveQuestion] = useState<TMIQuestionUI | null>(null);
   const [textInput, setTextInput] = useState('');
-  const [choiceInput, setChoiceInput] = useState<string | null>(null);
+  const [choiceInput, setChoiceInput] = useState<QuestionAnswer | null>(null);
   const sheetRef = useRef<BottomSheetHandle>(null);
   const previewSheetRef = useRef<BottomSheetHandle>(null);
 
+  /** API 질문을 통합 타입으로 변환 */
+  const allQuestions = useMemo<TMIQuestionUI[]>(() => {
+    if (!questionData) return [];
+    const multiple: TMIQuestionUI[] = (questionData.multiple_questions ?? []).map(
+      (q: MultipleQuestion) => ({
+        id: q.id,
+        type: q.type,
+        content: q.content,
+        answerType: 'CHOICE' as const,
+        answers: q.answers,
+      }),
+    );
+    const short: TMIQuestionUI[] = (questionData.short_questions ?? []).map(
+      (q: ShortQuestion) => ({
+        id: q.id,
+        type: q.type,
+        content: q.content,
+        answerType: 'TEXT' as const,
+      }),
+    );
+    return [...multiple, ...short];
+  }, [questionData]);
+
   /** 카테고리 필터링된 질문 목록 */
   const filteredQuestions = useMemo(() => {
-    if (selectedCategory === 'ALL') return TMI_QUESTIONS;
-    return TMI_QUESTIONS.filter((q) => q.category === selectedCategory);
-  }, [selectedCategory]);
+    if (selectedCategory === 'ALL') return allQuestions;
+    return allQuestions.filter((q) => q.type === selectedCategory);
+  }, [selectedCategory, allQuestions]);
 
   /** 질문 카드 탭 핸들러 */
-  const handleQuestionPress = (question: TMIQuestion) => {
-    const existing = form.tmiAnswers.find((a) => a.questionId === question.id);
+  const handleQuestionPress = (question: TMIQuestionUI) => {
+    const key = tmiKey(question.answerType, question.id);
+    const existing = form.tmiAnswers.find(
+      (a) => tmiKey(a.answerKind, a.questionId) === key,
+    );
     if (existing) {
-      removeTMIAnswer(question.id);
+      removeTMIAnswer(question.answerType, question.id);
       return;
     }
     setActiveQuestion(question);
@@ -53,14 +96,21 @@ export default function Step4TMIView() {
   };
 
   /** 선택형 옵션 토글 */
-  const handleChoiceToggle = (option: string) => {
-    setChoiceInput((prev) => (prev === option ? null : option));
+  const handleChoiceToggle = (answer: QuestionAnswer) => {
+    setChoiceInput((prev) => (prev?.answer_id === answer.answer_id ? null : answer));
   };
 
   /** 선택형 답변 확정 */
   const handleChoiceSubmit = () => {
     if (!activeQuestion || !choiceInput) return;
-    addTMIAnswer({ questionId: activeQuestion.id, answer: choiceInput });
+    addTMIAnswer({
+      questionId: activeQuestion.id,
+      answerKind: 'CHOICE',
+      questionType: activeQuestion.type,
+      question: activeQuestion.content,
+      answer: choiceInput.content,
+      answerId: choiceInput.answer_id,
+    });
     sheetRef.current?.close();
     setActiveQuestion(null);
     setChoiceInput(null);
@@ -69,34 +119,49 @@ export default function Step4TMIView() {
   /** 서술형 답변 제출 */
   const handleTextSubmit = () => {
     if (!activeQuestion || textInput.length < 5) return;
-    addTMIAnswer({ questionId: activeQuestion.id, answer: textInput });
+    addTMIAnswer({
+      questionId: activeQuestion.id,
+      answerKind: 'TEXT',
+      questionType: activeQuestion.type,
+      question: activeQuestion.content,
+      answer: textInput,
+    });
     sheetRef.current?.close();
     setActiveQuestion(null);
     setTextInput('');
   };
 
   /** 질문별 답변 여부 확인 */
-  const getAnswer = (questionId: string) => {
-    return form.tmiAnswers.find((a) => a.questionId === questionId)?.answer;
+  const getAnswer = (answerType: 'CHOICE' | 'TEXT', questionId: number) => {
+    const key = tmiKey(answerType, questionId);
+    return form.tmiAnswers.find(
+      (a) => tmiKey(a.answerKind, a.questionId) === key,
+    )?.answer;
   };
 
   /** 카테고리 라벨 가져오기 */
-  const getCategoryLabel = (category: TMICategory) => {
-    return TMI_CATEGORY_OPTIONS.find((c) => c.value === category)?.label ?? '';
+  const getCategoryLabel = (type: TMIQuestionType) => {
+    return TMI_CATEGORY_OPTIONS.find((c) => c.value === type)?.label ?? '';
   };
 
   /** 선택된 TMI 질문+답변 목록 */
   const selectedTMIList = useMemo(() => {
-    return form.tmiAnswers.map((a) => {
-      const question = TMI_QUESTIONS.find((q) => q.id === a.questionId);
-      return {
-        questionId: a.questionId,
-        category: question?.category ?? 'ALL',
-        question: question?.question ?? '',
-        answer: a.answer,
-      };
-    });
+    return form.tmiAnswers.map((a) => ({
+      questionId: a.questionId,
+      answerKind: a.answerKind,
+      type: a.questionType,
+      question: a.question,
+      answer: a.answer,
+    }));
   }, [form.tmiAnswers]);
+
+  if (isLoading) {
+    return (
+      <View className="flex-1 items-center justify-center">
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   return (
     <View className="flex-1 bg-white">
@@ -127,10 +192,10 @@ export default function Step4TMIView() {
         {/* 질문 목록 */}
         <View className="px-5 gap-3">
           {filteredQuestions.map((question) => {
-            const answer = getAnswer(question.id);
+            const answer = getAnswer(question.answerType, question.id);
             const isSelected = !!answer;
             return (
-              <View key={question.id} className="flex-row items-start gap-3">
+              <View key={`${question.answerType}-${question.id}`} className="flex-row items-start gap-3">
                 {/* 체크박스 */}
                 <View className="w-6 h-6 items-center justify-center mt-4">
                   <View
@@ -144,8 +209,8 @@ export default function Step4TMIView() {
                 {/* 카드 */}
                 <View className="flex-1">
                   <TMICard
-                    tag={getCategoryLabel(question.category)}
-                    question={question.question}
+                    tag={getCategoryLabel(question.type)}
+                    question={question.content}
                     answer={answer}
                     selected={isSelected}
                     onPress={() => handleQuestionPress(question)}
@@ -197,25 +262,25 @@ export default function Step4TMIView() {
           setChoiceInput(null);
         }}
       >
-        {activeQuestion?.answerType === 'CHOICE' && activeQuestion.options ? (
+        {activeQuestion?.answerType === 'CHOICE' && activeQuestion.answers ? (
           <View className="gap-4 pb-4">
             {/* 태그 + 질문 헤더 */}
             <View className="gap-4">
               <Tag
-                label={getCategoryLabel(activeQuestion.category)}
+                label={getCategoryLabel(activeQuestion.type)}
                 variant="primary"
               />
               <Text className="text-xl font-bold text-text-black leading-7">
-                {activeQuestion.question}
+                {activeQuestion.content}
               </Text>
             </View>
 
             {/* 선택지 목록 */}
-            {activeQuestion.options.map((option) => {
-              const isActive = choiceInput === option;
+            {activeQuestion.answers.map((option) => {
+              const isActive = choiceInput?.answer_id === option.answer_id;
               return (
                 <Pressable
-                  key={option}
+                  key={option.answer_id}
                   onPress={() => handleChoiceToggle(option)}
                   className={`h-[52px] flex-row items-center justify-between rounded-xl px-4 ${
                     isActive
@@ -230,7 +295,7 @@ export default function Step4TMIView() {
                         : 'font-medium text-text-black'
                     }`}
                   >
-                    {option}
+                    {option.content}
                   </Text>
                   {isActive && <CheckIcon />}
                 </Pressable>
@@ -250,12 +315,12 @@ export default function Step4TMIView() {
             <View className="gap-4 mb-4">
               {activeQuestion && (
                 <Tag
-                  label={getCategoryLabel(activeQuestion.category)}
+                  label={getCategoryLabel(activeQuestion.type)}
                   variant="primary"
                 />
               )}
               <Text className="text-xl font-bold text-text-black leading-7">
-                {activeQuestion?.question ?? ''}
+                {activeQuestion?.content ?? ''}
               </Text>
             </View>
 
@@ -286,8 +351,8 @@ export default function Step4TMIView() {
         <View className="gap-3 pb-4">
           {selectedTMIList.map((item) => (
             <TMICard
-              key={item.questionId}
-              tag={getCategoryLabel(item.category as TMICategory)}
+              key={tmiKey(item.answerKind, item.questionId)}
+              tag={getCategoryLabel(item.type)}
               question={item.question}
               answer={item.answer}
               selected

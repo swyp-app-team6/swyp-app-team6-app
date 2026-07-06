@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal as RNModal, Pressable, Text, View } from 'react-native';
-import { Button } from '@/shared/ui';
-import InterestTag from '@/features/register/ui/InterestTag';
+import { Button, InterestTag } from '@/shared/ui';
+import { getInterestLabel } from '@/features/register';
 
 interface Props {
   /** 모달 표시 여부 */
@@ -69,7 +69,7 @@ export default function ExchangeResultModal({
               </Text>
               <View className="mt-4 flex-row flex-wrap justify-center gap-2">
                 {commonInterests.map((interest) => (
-                  <InterestTag key={interest} value={interest} variant="outlined" />
+                  <InterestTag key={interest} label={getInterestLabel(interest)} variant="outlined" />
                 ))}
               </View>
               <Text className="mt-4 text-center text-[13px] leading-[18px] text-text-gray4">
@@ -87,7 +87,7 @@ export default function ExchangeResultModal({
               </Text>
               <View className="mt-2 flex-row flex-wrap justify-center gap-2">
                 {theirInterests.map((interest) => (
-                  <InterestTag key={interest} value={interest} variant="outlined" />
+                  <InterestTag key={interest} label={getInterestLabel(interest)} variant="outlined" />
                 ))}
               </View>
               <Text className="mt-2 text-center text-[13px] leading-[18px] text-text-gray4">

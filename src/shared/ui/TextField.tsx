@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, TextInput, View, type TextInputProps } from "react-native";
+import { Text, TextInput, View } from "react-native";
 import { cn } from "@/shared/lib/cn";
 
 /**

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-import type { RegisterFormState, TMIAnswer } from './types';
+import { tmiKey, type RegisterFormState, type TMIAnswer } from './types';
 
 /**
  * 프로필 등록 폼 스토어 상태
@@ -15,7 +15,7 @@ interface RegisterFormStore {
   prevStep: () => void;
   updateForm: (partial: Partial<RegisterFormState>) => void;
   addTMIAnswer: (answer: TMIAnswer) => void;
-  removeTMIAnswer: (questionId: string) => void;
+  removeTMIAnswer: (answerKind: 'CHOICE' | 'TEXT', questionId: number) => void;
   reset: () => void;
   isDirty: () => boolean;
   isStep1Valid: () => boolean;
@@ -34,6 +34,7 @@ const INITIAL_FORM: RegisterFormState = {
   subArea: '',
   bio: '',
   interests: [],
+  cosmicType: null,
   tmiAnswers: [],
 };
 
@@ -103,8 +104,9 @@ const useRegisterFormStore = create<RegisterFormStore>()(
      */
     addTMIAnswer: (answer: TMIAnswer) => {
       set((state) => {
+        const key = tmiKey(answer.answerKind, answer.questionId);
         const idx = state.form.tmiAnswers.findIndex(
-          (a) => a.questionId === answer.questionId,
+          (a) => tmiKey(a.answerKind, a.questionId) === key,
         );
         if (idx >= 0) {
           state.form.tmiAnswers[idx] = answer;
@@ -116,12 +118,14 @@ const useRegisterFormStore = create<RegisterFormStore>()(
 
     /**
      * TMI 답변 제거
+     * @param answerKind 답변 종류 (CHOICE/TEXT)
      * @param questionId 제거할 질문 ID
      */
-    removeTMIAnswer: (questionId: string) => {
+    removeTMIAnswer: (answerKind: 'CHOICE' | 'TEXT', questionId: number) => {
       set((state) => {
+        const key = tmiKey(answerKind, questionId);
         state.form.tmiAnswers = state.form.tmiAnswers.filter(
-          (a) => a.questionId !== questionId,
+          (a) => tmiKey(a.answerKind, a.questionId) !== key,
         );
       });
     },

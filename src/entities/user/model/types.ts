@@ -22,6 +22,21 @@ export interface AuthTokens {
 }
 
 /**
+ * 지역 정보 객체
+ * - group = 시/도 그룹명 (예: "서울")
+ * - detail = 시/도 코드 (예: "SEOUL")
+ * - label = 표시 라벨 (예: "서울전체")
+ */
+export interface Region {
+  /** 시/도 그룹명 */
+  group: string;
+  /** 시/도 코드 */
+  detail: string;
+  /** 표시 라벨 */
+  label: string;
+}
+
+/**
  * 프로필 등록 요청 (POST /profile)
  * - nickname: 닉네임 (3~10자)
  * - image_key: 프로필 이미지 키 (presign API에서 발급)
@@ -139,7 +154,7 @@ export interface MyProfileResponse {
   image_key?: string;
   gender: 'M' | 'F';
   age: number;
-  region: string;
+  region: Region;
   job: string;
   interests: InterestTypeLabel[];
   bio: string;

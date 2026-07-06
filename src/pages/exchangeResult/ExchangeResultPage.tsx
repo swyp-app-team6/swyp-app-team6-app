@@ -2,10 +2,10 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
-import { Button, Header } from '@/shared/ui';
+import { Button, Header, InterestTag } from '@/shared/ui';
 import { useExchangeFlowStore } from '@/features/exchange';
-import InterestTag from '@/features/register/ui/InterestTag';
-import { MOCK_HOME_PROFILE } from '@/widgets/home/model/mockData';
+import { getInterestLabel } from '@/features/register';
+import { useMyProfileQuery } from '@/entities/user';
 import type { NavigationPropType } from '@/shared/types';
 
 /**
@@ -24,13 +24,14 @@ import type { NavigationPropType } from '@/shared/types';
 export default function ExchangeResultPage() {
   const navigation = useNavigation<NavigationPropType>();
 
+  const { data: profile } = useMyProfileQuery();
   const scannedProfile = useExchangeFlowStore((s) => s.scannedProfile);
   const commonInterests = useExchangeFlowStore((s) => s.commonInterests);
   const reset = useExchangeFlowStore((s) => s.reset);
 
   const hasCommon = commonInterests.length > 0;
   const theirName = scannedProfile?.name ?? '';
-  const myName = MOCK_HOME_PROFILE.nickname;
+  const myName = profile?.nickname ?? '';
   const displayInterests = hasCommon ? commonInterests : (scannedProfile?.interests ?? []);
 
   /** 홈으로 이동 */
@@ -86,7 +87,7 @@ export default function ExchangeResultPage() {
             {/* 관심사 태그 */}
             <View className="mt-2 flex-row flex-wrap justify-center gap-2">
               {displayInterests.map((interest) => (
-                <InterestTag key={interest} value={interest} variant="overlay" />
+                <InterestTag key={interest} label={getInterestLabel(interest)} variant="overlay" />
               ))}
             </View>
 

@@ -1,6 +1,7 @@
 import axios from "axios";
 import Config from "react-native-config";
 import './axios.d';
+import { NETWORK_TIMEOUT_MS } from "../constants";
 
 /**
  * # API
@@ -17,4 +18,5 @@ import './axios.d';
 export const API = axios.create({
   baseURL: Config.API_URL,
   headers: { 'Content-Type': 'application/json' },
+  timeout: NETWORK_TIMEOUT_MS,
 });

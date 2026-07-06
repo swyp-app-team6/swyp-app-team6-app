@@ -1,15 +1,24 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import type { INTEREST } from './types';
+import type { TMIQuestionType } from '@/shared/enums';
 
 /**
  * TMI 답변
- * - questionId: 질문 ID
+ * - questionId: 질문 ID (API 기준 number)
+ * - answerKind: 답변 종류 ('CHOICE' | 'TEXT')
+ * - questionType: 질문 유형
+ * - question: 질문 텍스트
  * - answer: 선택한 답변 또는 입력한 텍스트
+ * - answerId: 선택형 답변 ID (선택형일 때만)
  */
 interface TMIAnswer {
-  questionId: string;
+  questionId: number;
+  answerKind: 'CHOICE' | 'TEXT';
+  questionType: TMIQuestionType;
+  question: string;
   answer: string;
+  answerId?: number;
 }
 
 /**

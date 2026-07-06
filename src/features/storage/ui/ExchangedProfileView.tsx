@@ -12,7 +12,8 @@ import InterestsSection from '@/features/register/ui/InterestsSection';
 import BioSection from '@/features/register/ui/BioSection';
 import CosmicTypeSection from '@/features/register/ui/CosmicTypeSection';
 import InfoCard from '@/features/register/ui/InfoCard';
-import InterestTag from '@/features/register/ui/InterestTag';
+import { InterestTag } from '@/shared/ui';
+import { getInterestLabel } from '@/features/register';
 import ReportBottomSheet from './ReportBottomSheet';
 import { useNavigation } from '@react-navigation/native';
 
@@ -181,7 +182,7 @@ export default function ExchangedProfileView({
                       {profile.interests.map((interest) => (
                         <InterestTag
                           key={interest}
-                          value={interest}
+                          label={getInterestLabel(interest)}
                           variant="overlay"
                         />
                       ))}
@@ -209,7 +210,7 @@ export default function ExchangedProfileView({
                 {profile.commonInterests.map((interest) => (
                   <InterestTag
                     key={interest}
-                    value={interest}
+                    label={getInterestLabel(interest)}
                     variant="outlined"
                   />
                 ))}

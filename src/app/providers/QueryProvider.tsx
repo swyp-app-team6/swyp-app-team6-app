@@ -1,23 +1,11 @@
 import React from 'react';
-import { QueryCache, MutationCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
-// import useFcmMessage from '@/shared/firebase/useFcmMessage';
-import { toast } from '@/shared/lib/toast';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { NETWORK_RETRY_COUNT } from '../../shared/constants';
 
 const queryClient = new QueryClient({
-  queryCache: new QueryCache({
-    onError: (error) => {
-      toast.error(error.message ?? '데이터를 불러오지 못했습니다.');
-    },
-  }),
-  mutationCache: new MutationCache({
-    onError: (error) => {
-      toast.error(error.message ?? '요청에 실패했습니다.');
-    },
-  }),
   defaultOptions: {
     queries: {
-      retry: 1,
-      staleTime: 1000 * 60,
+      retry: NETWORK_RETRY_COUNT,
     },
   },
 });

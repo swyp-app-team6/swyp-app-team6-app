@@ -5,7 +5,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import { Badge, BottomCTA, Button, SafeBottomSheetModal, Textbox } from '@/shared/ui';
 import { ChevronDownIcon } from '@/shared/ui/icons';
 import { MOCK_STORAGE_PROFILE_DETAILS } from '@/entities/storage';
-import InterestTag from '@/features/register/ui/InterestTag';
+import { InterestTag } from '@/shared/ui';
+import { getInterestLabel } from '@/features/register';
 
 /** 만남 후기 만족도 옵션 */
 const REVIEW_OPTIONS = [
@@ -123,7 +124,7 @@ export default function WriteReviewView({
                     {profile.interests.map((interest) => (
                       <InterestTag
                         key={interest}
-                        value={interest}
+                        label={getInterestLabel(interest)}
                         variant="overlay"
                       />
                     ))}

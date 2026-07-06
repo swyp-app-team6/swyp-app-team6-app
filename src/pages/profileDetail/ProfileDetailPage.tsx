@@ -1,8 +1,11 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
-import { Header } from '@/shared/ui';
-import { useProfileDataStore } from '@/entities/user';
-import ProfileCard from '@/features/register/ui/ProfileCard';
+import { View, ScrollView, ActivityIndicator } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { Header, PopoverMenu, ProfileCard, openDialog } from '@/shared/ui';
+import { ProfileActionIcon } from '@/shared/ui';
+import { getInterestLabel } from '@/features/register';
+import { useDeleteProfileMutation, useMyProfileQuery } from '@/entities/user';
+import type { NavigationPropType } from '@/shared/types';
 import BasicInfoSection from '@/features/register/ui/BasicInfoSection';
 import InterestsSection from '@/features/register/ui/InterestsSection';
 import BioSection from '@/features/register/ui/BioSection';
@@ -20,34 +23,95 @@ import TmiSection from '@/features/register/ui/TmiSection';
  * ---
  */
 export default function ProfileDetailPage() {
-  const { data: form } = useProfileDataStore();
+  const navigation = useNavigation<NavigationPropType>();
+  const { data: profile, isLoading } = useMyProfileQuery();
+  const { mutate: deleteProfile } = useDeleteProfileMutation();
+
+  const handleEdit = () => {
+    navigation.navigate('mypage');
+  };
+
+  const handleDelete = () => {
+    openDialog({
+      type: 'confirm',
+      title: '프로필 삭제',
+      message: '삭제하시겠습니까?',
+      okLabel: '삭제',
+      cancelLabel: '취소',
+      okFn: () => {
+        deleteProfile(undefined, {
+          onSuccess: () => {
+            navigation.goBack();
+          },
+        });
+      },
+    });
+  };
+
+  if (isLoading || !profile) {
+    return (
+      <View className="flex-1 bg-white items-center justify-center">
+        <Header title="내 프로필 카드" showBack />
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  const interests = profile.interests.map((i) => i.type);
+  const tmiAnswers = [
+    ...(profile.choice_template ?? []).map((t) => ({
+      question: t.question,
+      answer: t.answer,
+    })),
+    ...(profile.short_template ?? []).map((t) => ({
+      question: t.question,
+      answer: t.answer,
+    })),
+  ];
 
   return (
     <View className="flex-1 bg-white">
-      <Header title="내 프로필 카드" showBack />
+      <Header
+        title="내 프로필 카드"
+        showBack
+        right={
+          <PopoverMenu
+            items={[
+              { label: '수정', onPress: handleEdit },
+              { label: '삭제', destructive: true, onPress: handleDelete },
+            ]}
+          >
+            <View className="w-10 h-10 items-center justify-center">
+              <ProfileActionIcon size={24} color="#000000" orientation="vertical" />
+            </View>
+          </PopoverMenu>
+        }
+      />
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* ── 프로필 카드 ── */}
         <View className="items-center pt-6 pb-4">
           <ProfileCard
-            profileImageUri={form.profileImageUri}
-            nickname={form.nickname}
-            age={form.age}
-            interests={form.interests}
+            variant="preview"
+            profileImageUri={profile.image_key}
+            nickname={profile.nickname}
+            age={String(profile.age)}
+            interests={interests.map((i) => getInterestLabel(i))}
           />
         </View>
 
         {/* ── 정보 섹션 (모두 세로 나열) ── */}
         <View className="px-5 pb-10 gap-5">
           <BasicInfoSection
-            age={form.age}
-            region={form.region}
-            subArea={form.subArea}
-            jobField={form.jobField}
+            age={String(profile.age)}
+            region={profile.region}
+            jobField={profile.job}
           />
-          <InterestsSection interests={form.interests} />
-          <BioSection bio={form.bio} />
-          <CosmicTypeSection />
-          <TmiSection tmiAnswers={form.tmiAnswers} />
+          <InterestsSection interests={interests} />
+          <BioSection bio={profile.bio} />
+          <CosmicTypeSection
+            cosmicType={profile.cosmic_type}
+          />
+          <TmiSection tmiAnswers={tmiAnswers} />
         </View>
       </ScrollView>
     </View>

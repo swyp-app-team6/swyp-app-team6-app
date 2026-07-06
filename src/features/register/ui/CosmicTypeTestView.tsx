@@ -1,14 +1,12 @@
-import React, { useState, useCallback } from 'react';
-import { View, Text, ScrollView, Pressable } from 'react-native';
+import React, { useState, useCallback, useMemo } from 'react';
+import { View, Text, ScrollView, Pressable, ActivityIndicator } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import Config from 'react-native-config';
 import { BottomCTA, Button } from '@/shared/ui';
 import { Modal } from '@/shared/ui/Modal';
-import {
-  COSMIC_TYPE_QUESTIONS,
-  type CosmicTypeQuestion,
-} from '../model/cosmicTypeData';
-import { COSMIC_TYPE_RESULTS } from '../model/cosmicTypeResults';
+import { useCosmicTestQuery, useCosmicTypeQuery } from '@/entities/cosmic';
+import type { CosmicTestQuestion, CosmicTestAnswer } from '@/entities/cosmic';
+import { CosmicType } from '@/shared/enums';
 import useRegisterFormStore from '../model/useRegisterFormStore';
 import CosmicTypeResultView from './CosmicTypeResultView';
 
@@ -18,15 +16,46 @@ interface Props {
 }
 
 /**
+ * # calculateCosmicType
+ * ---
+ * - 간단설명: 답변별 점수를 합산하여 최종 코스믹 유형 판별
+ * ---
+ * @param selectedAnswers 질문별 선택된 답변 객체
+ */
+function calculateCosmicType(
+  selectedAnswers: Record<number, CosmicTestAnswer>,
+): CosmicType {
+  const scores: Record<string, number> = {};
+
+  Object.values(selectedAnswers).forEach((answer) => {
+    const type = answer.cosmic_type;
+    scores[type] = (scores[type] ?? 0) + answer.score;
+  });
+
+  let maxType: CosmicType = CosmicType.SHOOTING_STAR;
+  let maxScore = -1;
+
+  Object.entries(scores).forEach(([type, score]) => {
+    if (score > maxScore) {
+      maxScore = score;
+      maxType = type as CosmicType;
+    }
+  });
+
+  return maxType;
+}
+
+/**
  * # CosmicTypeTestView
  * ---
- * - 간단설명: 코스믹 유형 테스트 7문항 4지선다 뷰
+ * - 간단설명: 코스믹 유형 테스트 문항 4지선다 뷰
  * - 제약사항 및 특이사항:
- *   - JSON 더미데이터 기반으로 질문/선택지 렌더링
+ *   - API에서 질문/선택지 데이터를 조회하여 렌더링
  *   - 답변 선택 시 자동으로 다음 질문 이동 (300ms 딜레이)
  *   - 이전/다음 화살표로 질문 탐색 가능
  *   - 모든 문항 응답 완료 시 "테스트 완료" 버튼 활성화
  *   - 미응답 문항 존재 시 팝업으로 안내
+ *   - 답변 점수 합산으로 유형 판별 후 API에서 상세 결과 조회
  * ---
  * @param onComplete 테스트 완료 시 호출되는 콜백
  * ---
@@ -34,20 +63,33 @@ interface Props {
  * <CosmicTypeTestView onComplete={() => console.log('완료')} />
  */
 export default function CosmicTypeTestView({ onComplete }: Props) {
-  const questions = COSMIC_TYPE_QUESTIONS;
+  const { data: testData, isLoading } = useCosmicTestQuery();
+  const questions = useMemo<CosmicTestQuestion[]>(
+    () => testData?.questions ?? [],
+    [testData?.questions],
+  );
   const totalQuestions = questions.length;
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<number, CosmicTestAnswer>>({});
   const [showIncompleteModal, setShowIncompleteModal] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [firstUnansweredIndex, setFirstUnansweredIndex] = useState(0);
-  const { form } = useRegisterFormStore();
+  const { form, updateForm } = useRegisterFormStore();
 
-  const currentQuestion: CosmicTypeQuestion = questions[currentIndex];
-  const selectedAnswer = answers[currentQuestion.id];
-  const answeredCount = Object.keys(answers).length;
-  const isAllAnswered = answeredCount === totalQuestions;
+  const currentQuestion = questions[currentIndex];
+  const selectedAnswer = currentQuestion ? selectedAnswers[currentQuestion.question_id] : undefined;
+  const answeredCount = Object.keys(selectedAnswers).length;
+  const isAllAnswered = totalQuestions > 0 && answeredCount === totalQuestions;
+
+  /** 모든 답변 완료 시 계산된 코스믹 유형 */
+  const calculatedType = useMemo(() => {
+    if (!isAllAnswered) return undefined;
+    return calculateCosmicType(selectedAnswers);
+  }, [isAllAnswered, selectedAnswers]);
+
+  /** 코스믹 유형 상세 정보 API 조회 */
+  const { data: cosmicTypeData, isLoading: isTypeLoading } = useCosmicTypeQuery(calculatedType);
 
   /** 이전 질문으로 이동 */
   const goPrev = useCallback(() => {
@@ -65,15 +107,16 @@ export default function CosmicTypeTestView({ onComplete }: Props) {
 
   /** 선택지 선택 핸들러 */
   const handleSelect = useCallback(
-    (option: string) => {
-      setAnswers((prev) => ({ ...prev, [currentQuestion.id]: option }));
+    (answer: CosmicTestAnswer) => {
+      if (!currentQuestion) return;
+      setSelectedAnswers((prev) => ({ ...prev, [currentQuestion.question_id]: answer }));
       if (currentIndex < totalQuestions - 1) {
         setTimeout(() => {
           setCurrentIndex((prev) => prev + 1);
         }, 300);
       }
     },
-    [currentQuestion.id, currentIndex, totalQuestions],
+    [currentQuestion, currentIndex, totalQuestions],
   );
 
   /** 테스트 완료 핸들러 - 결과 카드 뷰 표시 */
@@ -82,10 +125,10 @@ export default function CosmicTypeTestView({ onComplete }: Props) {
       setShowResult(true);
       return;
     }
-    const unansweredIdx = questions.findIndex((q) => !answers[q.id]);
+    const unansweredIdx = questions.findIndex((q) => !selectedAnswers[q.question_id]);
     setFirstUnansweredIndex(unansweredIdx);
     setShowIncompleteModal(true);
-  }, [isAllAnswered, questions, answers]);
+  }, [isAllAnswered, questions, selectedAnswers]);
 
   /** 미응답 질문으로 이동 */
   const goToUnanswered = useCallback(() => {
@@ -93,16 +136,46 @@ export default function CosmicTypeTestView({ onComplete }: Props) {
     setCurrentIndex(firstUnansweredIndex);
   }, [firstUnansweredIndex]);
 
-  // TODO: 추후 답변 기반 유형 판별 로직 적용 (현재 더미로 슈팅스타 형 고정)
-  const resultType = COSMIC_TYPE_RESULTS.SHOOTING_STAR;
+  /** 카드에 적용하기 → 스토어에 유형 저장 후 다음 단계 */
+  const handleApply = useCallback(() => {
+    if (calculatedType) {
+      updateForm({ cosmicType: calculatedType });
+    }
+    onComplete();
+  }, [calculatedType, updateForm, onComplete]);
+
+  if (isLoading) {
+    return (
+      <View className="flex-1 items-center justify-center">
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   if (showResult) {
+    if (isTypeLoading || !cosmicTypeData) {
+      return (
+        <View className="flex-1 items-center justify-center">
+          <ActivityIndicator size="large" />
+          <Text className="text-sm text-text-gray4 mt-2">결과를 불러오는 중...</Text>
+        </View>
+      );
+    }
+
     return (
       <CosmicTypeResultView
-        result={resultType}
+        result={cosmicTypeData}
         nickname={form.nickname || '사용자'}
-        onApply={onComplete}
+        onApply={handleApply}
       />
+    );
+  }
+
+  if (!currentQuestion) {
+    return (
+      <View className="flex-1 items-center justify-center">
+        <Text className="text-sm text-text-gray4">질문을 불러올 수 없습니다</Text>
+      </View>
     );
   }
 
@@ -172,12 +245,12 @@ export default function CosmicTypeTestView({ onComplete }: Props) {
 
         {/* 선택지 목록 */}
         <View className="px-5 mt-3 gap-3">
-          {currentQuestion.options.map((option) => {
-            const isSelected = selectedAnswer === option;
+          {currentQuestion.answers.map((answer) => {
+            const isSelected = selectedAnswer?.answer_id === answer.answer_id;
             return (
               <Pressable
-                key={option}
-                onPress={() => handleSelect(option)}
+                key={answer.answer_id}
+                onPress={() => handleSelect(answer)}
                 className={`h-[72px] px-6 rounded-xl flex-row items-center justify-between border ${
                   isSelected
                     ? 'bg-primary-lightest border-primary'
@@ -196,7 +269,7 @@ export default function CosmicTypeTestView({ onComplete }: Props) {
                     }`}
                     style={{ lineHeight: 22.4 }}
                   >
-                    {option}
+                    {answer.answer}
                   </Text>
                 </View>
                 <ChevronRightIcon

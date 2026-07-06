@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { View, ScrollView } from 'react-native';
-import { BottomCTA, Button } from '@/shared/ui';
+import { BottomCTA, Button, ProfileCard } from '@/shared/ui';
 import { useProfileDataStore } from '@/entities/user';
-import ProfileCard from './ProfileCard';
+import { getInterestLabel } from '../model/types';
 import ProfileTabBar, { type TabType } from './ProfileTabBar';
 import BasicInfoSection from './BasicInfoSection';
 import InterestsSection from './InterestsSection';
@@ -39,6 +39,15 @@ export default function MyProfileView({ onSubmit, loading }: Props) {
   const [activeTab, setActiveTab] = useState<TabType>('기본정보');
   const scrollRef = useRef<ScrollView>(null);
 
+  const tmiAnswersForDisplay = useMemo(
+    () =>
+      form.tmiAnswers.map((tmi) => ({
+        question: tmi.question,
+        answer: tmi.answer,
+      })),
+    [form.tmiAnswers],
+  );
+
   return (
     <View className="flex-1 bg-white">
       <ScrollView
@@ -49,10 +58,11 @@ export default function MyProfileView({ onSubmit, loading }: Props) {
         {/* ── 프로필 카드 ── */}
         <View className="items-center pt-6 pb-4">
           <ProfileCard
+            variant="preview"
             profileImageUri={form.profileImageUri}
             nickname={form.nickname}
             age={form.age}
-            interests={form.interests}
+            interests={form.interests.map((i) => getInterestLabel(i))}
           />
         </View>
 
@@ -65,7 +75,6 @@ export default function MyProfileView({ onSubmit, loading }: Props) {
             <BasicInfoSection
               age={form.age}
               region={form.region}
-              subArea={form.subArea}
               jobField={form.jobField}
             />
           )}
@@ -81,7 +90,7 @@ export default function MyProfileView({ onSubmit, loading }: Props) {
           {activeTab === '유형테스트' && <CosmicTypeSection />}
 
           {activeTab === '나만의 TMI' && (
-            <TmiSection tmiAnswers={form.tmiAnswers} />
+            <TmiSection tmiAnswers={tmiAnswersForDisplay} />
           )}
         </View>
 
