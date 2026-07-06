@@ -3,6 +3,7 @@ import { ActivityIndicator, Modal as RNModal, Pressable, Text, View } from 'reac
 import { Button, ProfileCard } from '@/shared/ui';
 import { getInterestLabel } from '@/features/register';
 import { useMyProfileQuery } from '@/entities/user';
+import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 
 interface Props {
   /** 모달 표시 여부 */
@@ -50,7 +51,7 @@ export default function ExchangePreviewModal({ visible, onExchange }: Props) {
             ) : (
               <ProfileCard
                 variant="preview"
-                profileImageUri={profile?.image_key}
+                profileImageUri={getProfileImageUrl(profile?.image_key)}
                 nickname={profile?.nickname}
                 age={profile ? String(profile.age) : undefined}
                 interests={profile?.interests.map((i) => getInterestLabel(i.type)) ?? []}

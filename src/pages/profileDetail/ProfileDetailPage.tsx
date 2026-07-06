@@ -11,6 +11,7 @@ import InterestsSection from '@/features/register/ui/InterestsSection';
 import BioSection from '@/features/register/ui/BioSection';
 import CosmicTypeSection from '@/features/register/ui/CosmicTypeSection';
 import TmiSection from '@/features/register/ui/TmiSection';
+import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 
 /**
  * # ProfileDetailPage
@@ -92,7 +93,7 @@ export default function ProfileDetailPage() {
         <View className="items-center pt-6 pb-4">
           <ProfileCard
             variant="preview"
-            profileImageUri={profile.image_key}
+            profileImageUri={getProfileImageUrl(profile.image_key)}
             nickname={profile.nickname}
             age={String(profile.age)}
             interests={interests.map((i) => getInterestLabel(i))}

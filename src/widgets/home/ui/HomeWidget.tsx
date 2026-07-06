@@ -7,6 +7,7 @@ import { ProfileShareQRModal } from '@/features/profileShare';
 import { getInterestLabel } from '@/features/register';
 import { useMyProfileQuery } from '@/entities/user';
 import { CosmicType } from '@/shared/enums';
+import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 import type { NavigationPropType } from '@/shared/types';
 import HomeCardBack from './HomeCardBack';
 
@@ -75,7 +76,7 @@ export default function HomeWidget() {
         >
           <ProfileCard
             variant="preview"
-            profileImageUri={profile.image_key}
+            profileImageUri={getProfileImageUrl(profile.image_key)}
             nickname={profile.nickname}
             age={String(profile.age)}
             interests={profile.interests.map((i) => getInterestLabel(i.type))}
