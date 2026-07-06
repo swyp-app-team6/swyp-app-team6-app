@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import ProfileCard from '@/features/register/ui/ProfileCard';
+import { ProfileCard, ProfileQRCodeIcon } from '@/shared/ui';
 import { ProfileCreatePlusIcon, FlipIcon } from '@/shared/ui/icons';
+import { ProfileShareQRModal } from '@/features/profileShare';
+import { getInterestLabel } from '@/features/register';
 import { useMyProfileQuery } from '@/entities/user';
 import { CosmicType } from '@/shared/enums';
 import type { NavigationPropType } from '@/shared/types';
@@ -22,6 +24,7 @@ import HomeCardBack from './HomeCardBack';
 export default function HomeWidget() {
   const navigation = useNavigation<NavigationPropType>();
   const [isFlipped, setIsFlipped] = useState(false);
+  const [qrVisible, setQrVisible] = useState(false);
   const { data: profile, isLoading } = useMyProfileQuery();
   const hasProfile = !!profile;
 
@@ -67,13 +70,25 @@ export default function HomeWidget() {
         </Pressable>
       ) : !isFlipped ? (
         /* 프로필 카드 앞면 */
-        <ProfileCard
-          profileImageUri={profile.image_key}
-          nickname={profile.nickname}
-          age={String(profile.age)}
-          interests={profile.interests.map((i) => i.type)}
-          showQR
-        />
+        <>
+          <ProfileCard
+            variant="preview"
+            profileImageUri={profile.image_key}
+            nickname={profile.nickname}
+            age={String(profile.age)}
+            interests={profile.interests.map((i) => getInterestLabel(i.type))}
+            topRightSlot={
+              <Pressable
+                hitSlop={8}
+                onPress={() => setQrVisible(true)}
+                accessibilityLabel="프로필 카드 QR 공유"
+              >
+                <ProfileQRCodeIcon size={24} color="#FFFFFF" />
+              </Pressable>
+            }
+          />
+          <ProfileShareQRModal visible={qrVisible} onClose={() => setQrVisible(false)} />
+        </>
       ) : (
         /* 프로필 카드 뒷면 */
         <HomeCardBack cosmicType={profile.cosmic_type ?? CosmicType.SHOOTING_STAR} />

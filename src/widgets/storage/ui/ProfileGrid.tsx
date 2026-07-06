@@ -1,7 +1,8 @@
 import React from 'react';
 import { FlatList, StyleSheet } from 'react-native';
+import { ProfileCard } from '@/shared/ui';
 import type { StorageProfile } from '@/entities/storage';
-import ProfileCard from './ProfileCard';
+import { COSMIC_TYPE_LABEL } from '@/entities/storage';
 
 interface ProfileGridProps {
   /** 프로필 목록 */
@@ -54,7 +55,15 @@ export default function ProfileGrid({
       scrollEnabled={false}
       renderItem={({ item }) => (
         <ProfileCard
-          profile={item}
+          variant="grid"
+          id={item.id}
+          name={item.name}
+          age={item.age}
+          location={item.location}
+          job={item.job}
+          cosmicTypeLabel={COSMIC_TYPE_LABEL[item.cosmicType]}
+          imageUri={item.imageUri}
+          isFavorited={item.isFavorited}
           onToggleFavorite={onToggleFavorite}
           onPress={onPressProfile}
           isEditMode={isEditMode}

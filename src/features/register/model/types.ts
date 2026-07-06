@@ -83,6 +83,14 @@ export const REGION_SUB_AREAS: Record<string, string[]> = {
 };
 
 /**
+ * INTEREST 값을 한국어 라벨로 변환
+ * @param value INTEREST enum 값
+ */
+export function getInterestLabel(value: string): string {
+  return INTEREST_OPTIONS.find((o) => o.value === value)?.label ?? value;
+}
+
+/**
  * TMI 카테고리 필터 타입
  * - 'ALL' = 전체
  * - TMIQuestionType = API 질문 유형으로 필터링

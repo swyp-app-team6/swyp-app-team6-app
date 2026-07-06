@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActivityIndicator, Modal as RNModal, Pressable, Text, View } from 'react-native';
-import { Button } from '@/shared/ui';
-import ProfileCard from '@/features/register/ui/ProfileCard';
+import { Button, ProfileCard } from '@/shared/ui';
+import { getInterestLabel } from '@/features/register';
 import { useMyProfileQuery } from '@/entities/user';
 
 interface Props {
@@ -49,10 +49,11 @@ export default function ExchangePreviewModal({ visible, onExchange }: Props) {
               <ActivityIndicator size="large" />
             ) : (
               <ProfileCard
+                variant="preview"
                 profileImageUri={profile?.image_key}
                 nickname={profile?.nickname}
                 age={profile ? String(profile.age) : undefined}
-                interests={profile?.interests.map((i) => i.type) ?? []}
+                interests={profile?.interests.map((i) => getInterestLabel(i.type)) ?? []}
               />
             )}
           </View>

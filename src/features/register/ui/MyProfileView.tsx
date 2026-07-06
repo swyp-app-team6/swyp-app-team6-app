@@ -1,8 +1,8 @@
 import React, { useState, useRef, useMemo } from 'react';
 import { View, ScrollView } from 'react-native';
-import { BottomCTA, Button } from '@/shared/ui';
+import { BottomCTA, Button, ProfileCard } from '@/shared/ui';
 import { useProfileDataStore } from '@/entities/user';
-import ProfileCard from './ProfileCard';
+import { getInterestLabel } from '../model/types';
 import ProfileTabBar, { type TabType } from './ProfileTabBar';
 import BasicInfoSection from './BasicInfoSection';
 import InterestsSection from './InterestsSection';
@@ -58,10 +58,11 @@ export default function MyProfileView({ onSubmit, loading }: Props) {
         {/* ── 프로필 카드 ── */}
         <View className="items-center pt-6 pb-4">
           <ProfileCard
+            variant="preview"
             profileImageUri={form.profileImageUri}
             nickname={form.nickname}
             age={form.age}
-            interests={form.interests}
+            interests={form.interests.map(getInterestLabel)}
           />
         </View>
 

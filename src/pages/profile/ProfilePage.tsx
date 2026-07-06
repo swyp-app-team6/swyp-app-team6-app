@@ -1,10 +1,9 @@
 import React from 'react';
 import { Alert, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Button, Header, Layout } from '@/shared/ui';
-import ProfileCard from '@/widgets/profile/ProfileCard';
+import { Button, Header, Layout, ProfileCard } from '@/shared/ui';
 import withLayout from '@/shared/hoc/withLayout';
-import { useAuthStore, useDeleteProfileMutation } from '@/entities/user';
+import { useAuthStore, useDeleteProfileMutation, useMyProfileQuery } from '@/entities/user';
 import type { NavigationPropType } from '@/shared/types';
 
 /**
@@ -17,6 +16,7 @@ import type { NavigationPropType } from '@/shared/types';
  */
 function ProfilePage() {
   const navigation = useNavigation<NavigationPropType>();
+  const { data: profile, isLoading } = useMyProfileQuery();
   const { mutate: deleteProfile, isPending } = useDeleteProfileMutation();
   const clearAuth = useAuthStore((s) => s.clear);
 
@@ -46,7 +46,14 @@ function ProfilePage() {
     <>
       <Header title="프로필" />
       <Layout.Body styleClass={{ root: 'bg-gray-50 items-center justify-center px-6' }}>
-        <ProfileCard />
+        <ProfileCard
+          variant="compact"
+          profileImageUri={profile?.image_key}
+          nickname={profile?.nickname}
+          job={profile?.job}
+          region={profile?.region}
+          isLoading={isLoading}
+        />
         <View className="w-full gap-3 mt-6">
           <Button
             title="회원정보 수정"

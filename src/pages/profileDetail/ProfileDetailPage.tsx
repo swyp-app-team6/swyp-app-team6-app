@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, ScrollView, ActivityIndicator } from 'react-native';
-import { Header } from '@/shared/ui';
+import { Header, ProfileCard } from '@/shared/ui';
 import { useMyProfileQuery } from '@/entities/user';
-import ProfileCard from '@/features/register/ui/ProfileCard';
+import { getInterestLabel } from '@/features/register';
 import BasicInfoSection from '@/features/register/ui/BasicInfoSection';
 import InterestsSection from '@/features/register/ui/InterestsSection';
 import BioSection from '@/features/register/ui/BioSection';
@@ -50,10 +50,11 @@ export default function ProfileDetailPage() {
         {/* ── 프로필 카드 ── */}
         <View className="items-center pt-6 pb-4">
           <ProfileCard
+            variant="preview"
             profileImageUri={profile.image_key}
             nickname={profile.nickname}
             age={String(profile.age)}
-            interests={interests}
+            interests={interests.map(getInterestLabel)}
           />
         </View>
 

@@ -2,10 +2,10 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
-import { Button, Header } from '@/shared/ui';
+import { Button, Header, InterestTag } from '@/shared/ui';
 import { useExchangeFlowStore } from '@/features/exchange';
+import { getInterestLabel } from '@/features/register';
 import { useMyProfileQuery } from '@/entities/user';
-import InterestTag from '@/features/register/ui/InterestTag';
 import type { NavigationPropType } from '@/shared/types';
 
 /**
@@ -87,7 +87,7 @@ export default function ExchangeResultPage() {
             {/* 관심사 태그 */}
             <View className="mt-2 flex-row flex-wrap justify-center gap-2">
               {displayInterests.map((interest) => (
-                <InterestTag key={interest} value={interest} variant="overlay" />
+                <InterestTag key={interest} label={getInterestLabel(interest)} variant="overlay" />
               ))}
             </View>
 

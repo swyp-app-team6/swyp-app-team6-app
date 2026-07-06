@@ -42,3 +42,5 @@ export { default as AppVersion } from './AppVersion';
 export { default as PopoverMenu, type PopoverMenuItem, type PopoverMenuProps } from './PopoverMenu';
 export { default as LoadSuspense } from './LoadSuspense';
 export { default as ErrorBoundary } from './ErrorBoundary';
+export { ProfileCard } from './ProfileCard';
+export { default as InterestTag } from './InterestTag';
