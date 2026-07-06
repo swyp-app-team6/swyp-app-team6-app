@@ -18,7 +18,8 @@ export default function useDeleteProfileMutation() {
   return useMutation({
     mutationFn: () => ProfileAPI.deleteProfile(),
     onSuccess: () => {
-      queryClient.setQueryData(ProfileAPI.query.me().queryKey, undefined);
+      queryClient.cancelQueries({ queryKey: ProfileAPI.query.me().queryKey });
+      queryClient.setQueryData(ProfileAPI.query.me().queryKey, null);
     },
   });
 }
