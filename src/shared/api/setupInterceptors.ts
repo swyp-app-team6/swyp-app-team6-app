@@ -1,6 +1,7 @@
-import { Alert } from 'react-native';
 import { API } from './client';
 import useAuthStore from '@/entities/user/model/authStore';
+import useConditionStateStore from '@/shared/model/conditionStateStore';
+import { navigationRef } from '@/shared/router/navigationRef';
 
 /**
  * # setupInterceptors
@@ -10,6 +11,7 @@ import useAuthStore from '@/entities/user/model/authStore';
  *   - 앱 시작 시 1회만 호출해야 함
  *   - 요청 인터셉터: accessToken 자동 첨부 (skipAuth: true 시 생략)
  *   - 응답 인터셉터: 401 발생 시 refreshAccessToken()으로 토큰 갱신 후 재시도
+ *   - 토큰 갱신 실패 시 토큰 제거, 조건 플래그 초기화, 로그인 화면으로 이동
  * ---
  * @example
  * // App.tsx 또는 앱 진입점에서
@@ -49,6 +51,17 @@ export function setupInterceptors() {
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return API(originalRequest);
       } catch (refreshError) {
+        const { clear } = useAuthStore.getState();
+        await clear();
+        await useConditionStateStore.getState().clearAll();
+
+        if (navigationRef.isReady()) {
+          navigationRef.resetRoot({
+            index: 0,
+            routes: [{ name: 'login' }],
+          });
+        }
+
         return Promise.reject(refreshError);
       }
     },
