@@ -138,6 +138,7 @@ export default function RegisterFormView({ mode = 'register', initialData, onVie
   if (isComplete) {
     return (
       <RegisterCompleteView
+        mode={mode}
         onViewProfile={onViewProfile!}
         onGoHome={onGoHome!}
       />
