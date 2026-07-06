@@ -135,7 +135,7 @@ const useAuthStore = create<AuthState & AuthActions>()(
 
       if (!refreshToken) {
         get().clear();
-        const error = new Error('리프레시 토큰이 없습니다');
+        const error = new Error('INVALID_REFRESH');
         processQueue(error);
         isRefreshing = false;
         throw error;
@@ -164,8 +164,8 @@ const useAuthStore = create<AuthState & AuthActions>()(
         state.refreshToken = null;
         state.user = null;
       });
-      await EncryptedStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
-      await EncryptedStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
+      await EncryptedStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, '');
+      await EncryptedStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, '');
     },
 
     /**
