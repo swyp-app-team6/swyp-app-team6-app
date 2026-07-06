@@ -24,3 +24,12 @@
 | 스타일링 | NativeWind (Tailwind CSS) | ^4.2.2 |
 | 환경 변수 | react-native-config | ^1.6.1 |
 | 모니터링 | Sentry | |
+
+## 최소 지원 버전
+
+| 플랫폼 | 최소 지원 버전 | 비고 |
+|---|---|---|
+| Android | API 24 (Android 7.0 Nougat) | compileSdk / targetSdk 36 |
+| iOS | 16.0 | Podfile 기준, Xcode 프로젝트 Deployment Target 16.6 |
+
+## ios
