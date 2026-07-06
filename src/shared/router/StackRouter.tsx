@@ -1,6 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react'
+import { navigationRef } from './navigationRef';
 import OnboardingPage from '@/pages/onboarding/OnboardingPage';
 import LoginPage from '@/pages/login/LoginPage';
 import RegisterPage from '@/pages/register/RegisterPage';
@@ -40,7 +41,7 @@ interface StackRouterProps {
  */
 export default function StackRouter({ initialRouteName = 'home' }: StackRouterProps) {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator initialRouteName={initialRouteName} screenOptions={{ headerShown: false }}>
         <Stack.Screen name='onboarding' component={OnboardingPage} />
         <Stack.Screen name='login' component={LoginPage} />

@@ -55,6 +55,8 @@ export default function CosmicResultBackCard({ result, nickname, onFlip }: Props
       style={{
         height: 392,
         borderWidth: 2,
+        borderRadius: 12,
+        margin: 16,
         borderColor: '#E9D5FF',
       }}
     >

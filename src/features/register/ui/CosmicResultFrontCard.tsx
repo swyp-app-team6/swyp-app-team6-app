@@ -4,6 +4,7 @@ import type { ImageSourcePropType } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 import type { CosmicTypeResponse } from '@/entities/cosmic';
+import { FlipIcon } from '../../../shared/ui';
 
 /**
  * 코스믹 유형별 캐릭터 이미지 매핑
@@ -53,10 +54,12 @@ export default function CosmicResultFrontCard({
       colors={['rgba(67, 56, 202, 0.8)', 'rgba(124, 58, 237, 0.8)']}
       start={{ x: 0.5, y: 1 }}
       end={{ x: 0.5, y: 0 }}
-      className="w-[284px] rounded-xl overflow-hidden self-center"
+      className="w-full rounded-xl overflow-hidden self-center"
       style={{
         height: 392,
         borderWidth: 2,
+        borderRadius: 12,
+        margin: 16,
         borderColor: '#E9D5FF',
       }}
     >
@@ -114,34 +117,12 @@ export default function CosmicResultFrontCard({
           className="flex-row items-center rounded-[20px] px-3 py-1.5"
           style={{ backgroundColor: 'rgba(245, 245, 245, 0.3)' }}
         >
-          <FlipIcon />
+          <FlipIcon color='white' />
           <Text className="text-xs text-white ml-1" style={{ lineHeight: 16 }}>
             뒷면보기
           </Text>
         </Pressable>
       </View>
     </LinearGradient>
-  );
-}
-
-/** 뒷면 보기 아이콘 */
-function FlipIcon() {
-  return (
-    <Svg width={20} height={20} viewBox="0 0 20 20" fill="none">
-      <Path
-        d="M13.5 3.5L17 7l-3.5 3.5M3 13l3.5-3.5L3 6"
-        stroke="white"
-        strokeWidth={1.5}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <Path
-        d="M17 7H8.5a4 4 0 00-4 4v2M3 13h8.5a4 4 0 004-4V7"
-        stroke="white"
-        strokeWidth={1.5}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
   );
 }
