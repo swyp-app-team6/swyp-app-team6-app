@@ -36,6 +36,7 @@ interface Props {
  *   - 궁합 유형에 캐릭터 이미지 표시
  *   - "앞면보기" 버튼으로 카드 전환
  *   - CosmicTypeResponse API 데이터를 주입받아 렌더링
+ *  FIXME: ios 그라디언트 적용시 ui 깨지는 문제 발생해 단색으로 처리된 상황
  * ---
  * @param result 유형 결과 데이터 (API 응답)
  * @param nickname 사용자 닉네임

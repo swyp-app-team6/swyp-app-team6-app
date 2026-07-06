@@ -5,6 +5,7 @@ export { INTEREST, CosmicType, TMIQuestionType } from './model/types';
 export type {
   User,
   AuthTokens,
+  Region,
   ProfileRegisterRequest,
   ProfileUpdateRequest,
   MyProfileResponse,

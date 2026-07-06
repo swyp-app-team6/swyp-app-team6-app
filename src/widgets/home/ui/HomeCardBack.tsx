@@ -28,6 +28,7 @@ interface Props {
  *   - 코스믹 유형별 캐릭터 이미지 중앙 표시 (white glow 효과)
  *   - 유형명 + 설명 + 키워드 태그
  *   - 뒷면 보기/전체보기 버튼은 부모(HomeWidget)에서 렌더링
+ *  FIXME: ios 그라디언트 적용시 ui 깨지는 문제 발생해 단색으로 처리된 상황
  * ---
  * @param cosmicType 코스믹 유형 코드
  * ---

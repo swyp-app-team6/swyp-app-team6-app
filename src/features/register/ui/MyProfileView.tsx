@@ -75,7 +75,6 @@ export default function MyProfileView({ onSubmit, loading }: Props) {
             <BasicInfoSection
               age={form.age}
               region={form.region}
-              subArea={form.subArea}
               jobField={form.jobField}
             />
           )}
