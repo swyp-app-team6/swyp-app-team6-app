@@ -70,7 +70,9 @@ export default function HomeWidget() {
         </Pressable>
       ) : !isFlipped ? (
         /* 프로필 카드 앞면 */
-        <>
+        <Pressable
+          onPress={() => navigation.navigate('profileDetail')}
+        >
           <ProfileCard
             variant="preview"
             profileImageUri={profile.image_key}
@@ -88,7 +90,7 @@ export default function HomeWidget() {
             }
           />
           <ProfileShareQRModal visible={qrVisible} onClose={() => setQrVisible(false)} />
-        </>
+        </Pressable>
       ) : (
         /* 프로필 카드 뒷면 */
         <HomeCardBack cosmicType={profile.cosmic_type ?? CosmicType.SHOOTING_STAR} />
@@ -105,16 +107,6 @@ export default function HomeWidget() {
             <FlipIcon size={20} color="#888888" />
             <Text className="text-[12px] tracking-tight text-text-gray4">
               뒷면 보기
-            </Text>
-          </Pressable>
-
-          {/* 프로필 전체보기 버튼 */}
-          <Pressable
-            onPress={() => navigation.navigate('profileDetail')}
-            className="mt-2 flex-row items-center gap-1 rounded-[20px] px-3 py-2"
-          >
-            <Text className="text-[12px] font-medium tracking-tight text-primary">
-              프로필 전체보기
             </Text>
           </Pressable>
         </>

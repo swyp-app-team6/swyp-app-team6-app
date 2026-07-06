@@ -111,7 +111,7 @@ const ProfileCard = memo(function ProfileCard(props: ProfileCardProps) {
 export default ProfileCard;
 
 /* ────────────────────────────────────────────────────────
- * PreviewCard (기존 features/register/ui/ProfileCard)
+ * PreviewCard — 프로필 사진 카드 (앞면)
  * ──────────────────────────────────────────────────────── */
 
 function PreviewCard({

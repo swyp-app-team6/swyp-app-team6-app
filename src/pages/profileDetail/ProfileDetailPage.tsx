@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, ScrollView, ActivityIndicator } from 'react-native';
 import { Header, ProfileCard } from '@/shared/ui';
-import { useMyProfileQuery } from '@/entities/user';
 import { getInterestLabel } from '@/features/register';
+import { useMyProfileQuery } from '@/entities/user';
 import BasicInfoSection from '@/features/register/ui/BasicInfoSection';
 import InterestsSection from '@/features/register/ui/InterestsSection';
 import BioSection from '@/features/register/ui/BioSection';
@@ -54,7 +54,7 @@ export default function ProfileDetailPage() {
             profileImageUri={profile.image_key}
             nickname={profile.nickname}
             age={String(profile.age)}
-            interests={interests.map(getInterestLabel)}
+            interests={interests.map((i) => getInterestLabel(i))}
           />
         </View>
 

@@ -62,7 +62,7 @@ export default function MyProfileView({ onSubmit, loading }: Props) {
             profileImageUri={form.profileImageUri}
             nickname={form.nickname}
             age={form.age}
-            interests={form.interests.map(getInterestLabel)}
+            interests={form.interests.map((i) => getInterestLabel(i))}
           />
         </View>
 
