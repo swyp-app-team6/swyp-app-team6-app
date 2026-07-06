@@ -1,5 +1,4 @@
 import React, { ComponentType, useEffect, useMemo, useRef } from 'react'
-import { useNavigation } from '@react-navigation/native'
 import useAuthStore from '@/entities/user/model/authStore'
 import LoginPage from '../../pages/login/LoginPage';
 

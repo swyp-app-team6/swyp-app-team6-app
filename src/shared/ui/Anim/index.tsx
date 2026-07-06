@@ -85,6 +85,7 @@ function Fade({
       return () => clearTimeout(t);
     }
     run();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type, direction, duration, delay]);
 
   const animStyle = useAnimatedStyle(() => ({
@@ -128,6 +129,7 @@ function ScaleFade({
       return () => clearTimeout(t);
     }
     run();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type, duration, delay]);
 
   const animStyle = useAnimatedStyle(() => ({

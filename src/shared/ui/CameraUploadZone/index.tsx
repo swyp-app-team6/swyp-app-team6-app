@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, Image, View, type ViewStyle } from 'react-native';
+import { Pressable, Image, type ViewStyle } from 'react-native';
 import { cn } from '@/shared/lib/cn';
 import { CameraIcon } from '../icons';
 

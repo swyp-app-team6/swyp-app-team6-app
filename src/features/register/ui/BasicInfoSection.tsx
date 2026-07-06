@@ -19,13 +19,19 @@ import InfoRow from './InfoRow';
 const BasicInfoSection = memo(function BasicInfoSection({
   age,
   region,
+  subArea,
   jobField,
 }: {
   age?: string;
-  region?: Region;
+  region?: Region | string;
+  subArea?: string;
   jobField?: string;
 }) {
-  const regionText = region ? `${region.group} ${region.label}` : '-';
+  const regionText = region
+    ? typeof region === 'string'
+      ? subArea ? `${region} ${subArea}` : region
+      : `${region.group} ${region.label}`
+    : '-';
 
   return (
     <InfoCard title="기본정보">

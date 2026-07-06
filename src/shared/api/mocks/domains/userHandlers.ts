@@ -38,7 +38,7 @@ export const userHandlers = [
       image_key: body.image_key,
       gender: body.gender,
       age: body.age,
-      region: body.region,
+      region: { group: body.region, detail: body.region, label: body.region },
       job: body.job,
       interests: body.interests.map(type => ({ type, label: type })),
       bio: body.bio ?? '',

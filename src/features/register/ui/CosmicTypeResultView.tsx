@@ -52,6 +52,7 @@ export default function CosmicTypeResultView({
         {isBack ? (
           <CosmicResultBackCard
             result={result}
+            nickname={nickname}
             onFlip={() => setIsBack(false)}
           />
         ) : (

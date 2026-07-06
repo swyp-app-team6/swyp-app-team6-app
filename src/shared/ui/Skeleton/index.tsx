@@ -22,6 +22,7 @@ function useShimmer() {
       -1,
       true,
     );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return useAnimatedStyle(() => ({ opacity: opacity.value }));

@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, Pressable, Image } from 'react-native';
 import type { ImageSourcePropType } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 import type { CosmicTypeResponse } from '@/entities/cosmic';
 import { FlipIcon } from '../../../shared/ui';
