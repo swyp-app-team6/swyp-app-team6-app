@@ -29,7 +29,7 @@ interface Props {
  * ---
  * - 간단설명: 코스믹 유형 테스트 결과 카드 앞면
  * - 제약사항 및 특이사항:
- *   - 보라 그라데이션 배경 (320x520, rounded-xl)
+ *   - 보라 그라데이션 배경 (284x392, rounded-xl)
  *   - 닉네임 + 유형명 + 캐릭터 일러스트(glow 효과) + 태그 3개 + 한줄설명
  *   - "뒷면보기" 버튼으로 카드 전환
  *   - CosmicTypeResponse API 데이터를 주입받아 렌더링
@@ -53,46 +53,41 @@ export default function CosmicResultFrontCard({
       colors={['rgba(67, 56, 202, 0.8)', 'rgba(124, 58, 237, 0.8)']}
       start={{ x: 0.5, y: 1 }}
       end={{ x: 0.5, y: 0 }}
-      className="w-80 rounded-xl overflow-hidden self-center"
-      style={{ height: 520 }}
+      className="w-[284px] rounded-xl overflow-hidden self-center"
+      style={{
+        height: 392,
+        borderWidth: 2,
+        borderColor: '#E9D5FF',
+      }}
     >
       {/* 닉네임 + 유형명 */}
-      <View className="items-center mt-7 px-8 gap-1">
-        <Text className="text-base font-medium text-white text-center" style={{ lineHeight: 24 }}>
+      <View className="items-center mt-5 px-5 gap-1">
+        <Text className="text-sm font-medium text-white text-center" style={{ lineHeight: 20 }}>
           {nickname} 님은
         </Text>
-        <Text className="text-xl font-bold text-white text-center" style={{ lineHeight: 28 }}>
+        <Text className="text-base font-bold text-white text-center" style={{ lineHeight: 22 }}>
           {result.cosmic_type.label}
         </Text>
       </View>
 
       {/* 캐릭터 일러스트 영역 */}
-      <View className="items-center justify-center" style={{ height: 192, marginTop: 24 }}>
-        {/* 흰색 glow 배경 */}
-        <View
-          className="absolute rounded-full"
-          style={{
-            width: 128,
-            height: 128,
-            backgroundColor: 'rgba(255, 255, 255, 0.4)',
-          }}
-        />
+      <View className="items-center justify-center my-3" style={{ width: 160, height: 160, alignSelf: 'center' }}>
         {/* 캐릭터 이미지 */}
         {characterImage && (
           <Image
             source={characterImage}
-            style={{ width: 168, height: 168 }}
+            style={{ width: 160, height: 160 }}
             resizeMode="contain"
           />
         )}
       </View>
 
       {/* 태그 */}
-      <View className="flex-row justify-center items-center gap-1 px-8">
+      <View className="flex-row justify-center items-center gap-1 px-5">
         {result.tags.map((tag) => (
           <View
             key={tag}
-            className="rounded-[20px] px-3 py-2"
+            className="rounded-[20px] px-3 py-1.5"
             style={{ borderWidth: 1, borderColor: '#FFFFFF' }}
           >
             <Text className="text-xs text-white" style={{ lineHeight: 12 }}>
@@ -103,24 +98,24 @@ export default function CosmicResultFrontCard({
       </View>
 
       {/* 한줄 설명 */}
-      <View className="items-center mt-4 px-8">
+      <View className="items-center mt-3 px-5">
         <Text
           className="text-sm font-semibold text-white text-center"
-          style={{ lineHeight: 20 }}
+          style={{ lineHeight: 19.6 }}
         >
           {result.detail}
         </Text>
       </View>
 
       {/* 뒷면보기 버튼 */}
-      <View className="items-center mt-4">
+      <View className="items-center mt-3">
         <Pressable
           onPress={onFlip}
-          className="flex-row items-center rounded-[20px] px-3 py-2"
+          className="flex-row items-center rounded-[20px] px-3 py-1.5"
           style={{ backgroundColor: 'rgba(245, 245, 245, 0.3)' }}
         >
           <FlipIcon />
-          <Text className="text-sm text-white ml-1" style={{ lineHeight: 20 }}>
+          <Text className="text-xs text-white ml-1" style={{ lineHeight: 16 }}>
             뒷면보기
           </Text>
         </Pressable>

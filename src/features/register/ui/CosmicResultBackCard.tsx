@@ -29,7 +29,7 @@ interface Props {
  * ---
  * - 간단설명: 코스믹 유형 테스트 결과 카드 뒷면
  * - 제약사항 및 특이사항:
- *   - 보라 그라데이션 배경 (320x520, rounded-xl)
+ *   - 보라 그라데이션 배경 (284x392, rounded-xl)
  *   - 닉네임 + 유형명 상단 표시
  *   - 반투명 흰색 내부 패널에 연애 스타일 / 자주 듣는 말 / 궁합이 좋은 유형 3개 섹션
  *   - 섹션 구분선 (white/10)
@@ -51,35 +51,39 @@ export default function CosmicResultBackCard({ result, nickname, onFlip }: Props
       colors={['rgba(67, 56, 202, 1)', 'rgba(124, 58, 237, 1)']}
       start={{ x: 0.5, y: 1 }}
       end={{ x: 0.5, y: 0 }}
-      className="w-80 rounded-xl overflow-hidden self-center"
-      style={{ height: 520 }}
+      className="w-[284px] rounded-xl overflow-hidden self-center"
+      style={{
+        height: 392,
+        borderWidth: 2,
+        borderColor: '#E9D5FF',
+      }}
     >
       {/* 닉네임 + 유형명 */}
-      <View className="items-center mt-7 px-8 gap-1">
-        <Text className="text-base font-medium text-white text-center" style={{ lineHeight: 24 }}>
+      <View className="items-center mt-4 px-5 gap-0.5">
+        <Text className="text-sm font-medium text-white text-center" style={{ lineHeight: 20 }}>
           {nickname} 님은
         </Text>
-        <Text className="text-xl font-bold text-white text-center" style={{ lineHeight: 28 }}>
+        <Text className="text-base font-bold text-white text-center" style={{ lineHeight: 22 }}>
           {result.cosmic_type.label}
         </Text>
       </View>
 
       {/* 내부 콘텐츠 패널 */}
       <View
-        className="mx-5 mt-2 rounded-xl overflow-hidden px-5 py-5"
+        className="mx-4 mt-2 rounded-xl overflow-hidden px-4 py-3"
         style={{
           backgroundColor: 'rgba(255, 255, 255, 0.1)',
           borderWidth: 1,
           borderColor: 'rgba(255, 255, 255, 0.1)',
-          height: 384,
+          flex: 1,
         }}
       >
         {/* 연애 스타일 */}
-        <View className="gap-1">
-          <Text className="text-base font-semibold text-white" style={{ lineHeight: 24 }}>
+        <View className="gap-0.5">
+          <Text className="text-sm font-semibold text-white" style={{ lineHeight: 20 }}>
             연애 스타일
           </Text>
-          <Text className="text-sm text-white" style={{ lineHeight: 20 }}>
+          <Text className="text-xs text-white" style={{ lineHeight: 17 }}>
             {result.features.map((item, i) => (
               <React.Fragment key={item}>
                 {' '}{item}
@@ -91,16 +95,16 @@ export default function CosmicResultBackCard({ result, nickname, onFlip }: Props
 
         {/* 구분선 */}
         <View
-          className="my-3"
+          className="my-2"
           style={{ height: 1, backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
         />
 
         {/* 자주 듣는 말 */}
-        <View className="gap-1">
-          <Text className="text-base font-semibold text-white" style={{ lineHeight: 24 }}>
+        <View className="gap-0.5">
+          <Text className="text-sm font-semibold text-white" style={{ lineHeight: 20 }}>
             이런 말을 자주 들어요
           </Text>
-          <Text className="text-sm text-white" style={{ lineHeight: 20 }}>
+          <Text className="text-xs text-white" style={{ lineHeight: 17 }}>
             {result.mentions.map((quote, i) => (
               <React.Fragment key={quote}>
                 {quote}
@@ -112,13 +116,13 @@ export default function CosmicResultBackCard({ result, nickname, onFlip }: Props
 
         {/* 구분선 */}
         <View
-          className="my-3"
+          className="my-2"
           style={{ height: 1, backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
         />
 
         {/* 궁합이 좋은 유형 */}
-        <View className="gap-1">
-          <Text className="text-base font-semibold text-white" style={{ lineHeight: 24 }}>
+        <View className="gap-0.5">
+          <Text className="text-sm font-semibold text-white" style={{ lineHeight: 20 }}>
             궁합이 좋은 유형
           </Text>
           <View className="flex-row items-start gap-2 mt-1">
@@ -137,7 +141,7 @@ export default function CosmicResultBackCard({ result, nickname, onFlip }: Props
                       <Text className="text-lg">✨</Text>
                     )}
                   </View>
-                  <Text className="text-sm text-white text-center" style={{ lineHeight: 20 }}>
+                  <Text className="text-xs text-white text-center" style={{ lineHeight: 16 }}>
                     {match.label}
                   </Text>
                 </View>
@@ -148,14 +152,14 @@ export default function CosmicResultBackCard({ result, nickname, onFlip }: Props
       </View>
 
       {/* 앞면보기 버튼 */}
-      <View className="items-center mt-3">
+      <View className="items-center my-2">
         <Pressable
           onPress={onFlip}
-          className="flex-row items-center rounded-[20px] px-3 py-2"
+          className="flex-row items-center rounded-[20px] px-3 py-1.5"
           style={{ backgroundColor: 'rgba(245, 245, 245, 0.3)' }}
         >
           <FlipIcon />
-          <Text className="text-sm text-white ml-1" style={{ lineHeight: 20 }}>
+          <Text className="text-xs text-white ml-1" style={{ lineHeight: 16 }}>
             앞면보기
           </Text>
         </Pressable>

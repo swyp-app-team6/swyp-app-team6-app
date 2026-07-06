@@ -123,12 +123,7 @@ function PreviewCard({
 }: PreviewProps) {
   return (
     <View
-      className="w-[284px] h-[392px] rounded-xl overflow-hidden"
-      style={{
-        backgroundColor: '#F5EDFF',
-        borderWidth: 2,
-        borderColor: '#EADCFF',
-      }}
+      className="w-[284px] h-[392px] bg-white rounded-xl border-2 border-primary-light overflow-hidden"
     >
       {/* 프로필 사진 */}
       {profileImageUri ? (
@@ -144,10 +139,10 @@ function PreviewCard({
       )}
 
       {/* 하단 단색 오버레이 */}
-      <View
+      {/* <View
         className="absolute bottom-0 left-0 right-0"
         style={{ height: 232, backgroundColor: 'rgba(0, 0, 0, 0.55)', borderBottomLeftRadius: 12, borderBottomRightRadius: 12 }}
-      />
+      /> */}
 
       {/* 상단: 유형 배지 + 우측 슬롯 */}
       <View className="absolute top-5 left-5 right-5 flex-row items-center justify-between">
