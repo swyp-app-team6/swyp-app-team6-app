@@ -1,8 +1,11 @@
 import React from 'react';
-import { View, ScrollView, ActivityIndicator } from 'react-native';
-import { Header, ProfileCard } from '@/shared/ui';
+import { Alert, View, ScrollView, ActivityIndicator } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { Header, PopoverMenu, ProfileCard } from '@/shared/ui';
+import { ProfileActionIcon } from '@/shared/ui';
 import { getInterestLabel } from '@/features/register';
-import { useMyProfileQuery } from '@/entities/user';
+import { useAuthStore, useDeleteProfileMutation, useMyProfileQuery } from '@/entities/user';
+import type { NavigationPropType } from '@/shared/types';
 import BasicInfoSection from '@/features/register/ui/BasicInfoSection';
 import InterestsSection from '@/features/register/ui/InterestsSection';
 import BioSection from '@/features/register/ui/BioSection';
@@ -20,7 +23,36 @@ import TmiSection from '@/features/register/ui/TmiSection';
  * ---
  */
 export default function ProfileDetailPage() {
+  const navigation = useNavigation<NavigationPropType>();
   const { data: profile, isLoading } = useMyProfileQuery();
+  const { mutate: deleteProfile } = useDeleteProfileMutation();
+  const clearAuth = useAuthStore((s) => s.clear);
+
+  const handleEdit = () => {
+    navigation.navigate('mypage');
+  };
+
+  const handleDelete = () => {
+    Alert.alert(
+      '프로필 삭제',
+      '삭제하시겠습니까?',
+      [
+        { text: '취소', style: 'cancel' },
+        {
+          text: '삭제',
+          style: 'destructive',
+          onPress: () => {
+            deleteProfile(undefined, {
+              onSuccess: () => {
+                clearAuth();
+                navigation.reset({ index: 0, routes: [{ name: 'login' }] });
+              },
+            });
+          },
+        },
+      ],
+    );
+  };
 
   if (isLoading || !profile) {
     return (
@@ -55,6 +87,18 @@ export default function ProfileDetailPage() {
             nickname={profile.nickname}
             age={String(profile.age)}
             interests={interests.map((i) => getInterestLabel(i))}
+            topRightSlot={
+              <PopoverMenu
+                items={[
+                  { label: '수정', onPress: handleEdit },
+                  { label: '삭제', destructive: true, onPress: handleDelete },
+                ]}
+              >
+                <View className="w-10 h-10 items-center justify-center">
+                  <ProfileActionIcon size={28} color="#FFFFFF" orientation="vertical" />
+                </View>
+              </PopoverMenu>
+            }
           />
         </View>
 

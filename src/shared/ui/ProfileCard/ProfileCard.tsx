@@ -1,6 +1,5 @@
 import React, { memo } from 'react';
 import { View, Text, Image, Pressable, ActivityIndicator } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import Badge from '../Badge';
 import Tag from '../Tag';
 import { Checkbox } from '../Checkbox';
@@ -144,16 +143,10 @@ function PreviewCard({
         </View>
       )}
 
-      {/* 하단 그라디언트 오버레이 */}
-      <LinearGradient
-        colors={[
-          'rgba(255,255,255,0)',
-          'rgba(56,56,56,0.45)',
-          'rgba(0,0,0,1)',
-        ]}
-        locations={[0, 0.29, 1]}
-        className="absolute bottom-0 left-0 right-0 rounded-b-xl"
-        style={{ height: 232 }}
+      {/* 하단 단색 오버레이 */}
+      <View
+        className="absolute bottom-0 left-0 right-0"
+        style={{ height: 232, backgroundColor: 'rgba(0, 0, 0, 0.55)', borderBottomLeftRadius: 12, borderBottomRightRadius: 12 }}
       />
 
       {/* 상단: 유형 배지 + 우측 슬롯 */}

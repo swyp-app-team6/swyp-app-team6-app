@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 import { View, Text, Image, ActivityIndicator } from 'react-native';
 import type { ImageSourcePropType } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import type { CosmicType } from '@/shared/enums';
 import { useCosmicTypeQuery } from '@/entities/cosmic';
 
@@ -40,12 +39,10 @@ const HomeCardBack = memo(function HomeCardBack({ cosmicType }: Props) {
   const characterImage = COSMIC_CHARACTER_IMAGE[cosmicType];
 
   return (
-    <LinearGradient
-      colors={['rgba(67, 56, 202, 0.8)', 'rgba(124, 58, 237, 0.8)']}
-      start={{ x: 0, y: 0.5 }}
-      end={{ x: 1, y: 0.5 }}
+    <View
       className="w-[284px] h-[392px] rounded-xl overflow-hidden items-center justify-center px-5"
       style={{
+        backgroundColor: 'rgba(124, 58, 237, 0.8)',
         borderWidth: 2,
         borderColor: '#E9D5FF',
       }}
@@ -98,7 +95,7 @@ const HomeCardBack = memo(function HomeCardBack({ cosmicType }: Props) {
           </Text>
         </>
       )}
-    </LinearGradient>
+    </View>
   );
 });
 
