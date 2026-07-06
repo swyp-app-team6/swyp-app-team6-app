@@ -1,6 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ProfileAPI } from './profileApi';
 import useAuthStore from '../model/authStore';
+import { AxiosError } from 'axios';
 
 /**
  * # useMyProfileQuery
@@ -15,9 +16,20 @@ import useAuthStore from '../model/authStore';
  */
 export default function useMyProfileQuery() {
   const accessToken = useAuthStore((s) => s.accessToken);
+  const queryClient = useQueryClient();
 
   return useQuery({
     ...ProfileAPI.query.me(),
     enabled: !!accessToken,
+    throwOnError: (e) => {
+      console.error(e);
+      const err = e as AxiosError;
+      // 404에러면 refetch 중단 (프로필없음)
+      if (err.response?.status === 404) {
+        queryClient.cancelQueries(ProfileAPI.query.me());
+        return false;
+      }
+      return false;
+    }
   });
 }
