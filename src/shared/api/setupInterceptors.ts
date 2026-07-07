@@ -1,7 +1,6 @@
 import { API } from './client';
 import useAuthStore from '@/entities/user/model/authStore';
 import useConditionStateStore from '@/shared/model/conditionStateStore';
-import { navigationRef } from '@/shared/router/navigationRef';
 import useApiLogStore, { type ApiLogEntry } from '@/shared/model/apiLogStore';
 
 /**
@@ -107,13 +106,6 @@ export function setupInterceptors() {
         const { clear } = useAuthStore.getState();
         await clear();
         await useConditionStateStore.getState().clearAll();
-
-        if (navigationRef.isReady()) {
-          navigationRef.resetRoot({
-            index: 0,
-            routes: [{ name: 'login' }],
-          });
-        }
 
         return Promise.reject(refreshError);
       }
