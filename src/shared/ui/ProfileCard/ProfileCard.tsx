@@ -84,6 +84,7 @@ type ProfileCardProps = PreviewProps | CompactProps | GridProps;
 
 /**
  * # ProfileCard
+ * @deprecated 제거에정, 기타 공용 컴포넌트들로 대체할것
  * ---
  * - 간단설명: 프로필 카드 통합 컴포넌트 (variant로 레이아웃 분기)
  * - 제약사항 및 특이사항:
@@ -111,9 +112,13 @@ const ProfileCard = memo(function ProfileCard(props: ProfileCardProps) {
 export default ProfileCard;
 
 /* ────────────────────────────────────────────────────────
- * PreviewCard — 프로필 사진 카드 (앞면)
+ * PreviewCard — 프로필 사진 카드 (앞면
  * ──────────────────────────────────────────────────────── */
-
+/**
+ * 
+ * @deprecated 제거에정, 기타 공용 컴포넌트들로 대체할것
+ * @returns 
+ */
 function PreviewCard({
   profileImageUri,
   nickname,
@@ -185,7 +190,11 @@ function PreviewCard({
 /* ────────────────────────────────────────────────────────
  * CompactCard (기존 widgets/profile/ProfileCard)
  * ──────────────────────────────────────────────────────── */
-
+/**
+ * @deprecated 제거에정, 기타 공용 컴포넌트들로 대체할것
+ * @param param0 
+ * @returns 
+ */
 function CompactCard({
   profileImageUri,
   nickname,
@@ -231,7 +240,11 @@ function CompactCard({
 /* ────────────────────────────────────────────────────────
  * GridCard (기존 widgets/storage/ui/ProfileCard)
  * ──────────────────────────────────────────────────────── */
-
+/**
+ * @deprecated 제거에정, 기타 공용 컴포넌트들로 대체할것
+ * @param param0 
+ * @returns 
+ */
 function GridCard({
   id,
   name,
