@@ -16,6 +16,8 @@ interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
   user: User | null;
+  /** 토큰 복원(hydrate) 완료 여부 — false이면 아직 초기화 중 */
+  isHydrated: boolean;
 }
 
 /**
@@ -77,6 +79,7 @@ const useAuthStore = create<AuthState & AuthActions>()(
     accessToken: null,
     refreshToken: null,
     user: null,
+    isHydrated: false,
 
     /**
      * 액세스/리프레시 토큰을 메모리와 EncryptedStorage에 저장
@@ -182,9 +185,13 @@ const useAuthStore = create<AuthState & AuthActions>()(
         set((state) => {
           state.accessToken = accessToken;
           state.refreshToken = refreshToken;
+          state.isHydrated = true;
         });
         return true;
       }
+      set((state) => {
+        state.isHydrated = true;
+      });
       return false;
     },
   })),

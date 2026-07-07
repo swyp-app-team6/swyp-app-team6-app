@@ -1,21 +1,18 @@
 /**
- * 탈퇴 플로우 단계
- * - INFO = 안내
- * - REASON = 사유 선택
- * - CONFIRM = 최종 확인
- * - COMPLETE = 완료
- */
-export type WithdrawalStep = 'info' | 'reason' | 'confirm' | 'complete';
-
-/**
  * 탈퇴 사유 목록
+ * - 서비스 이용이 불만족스럽습니다.
+ * - 이미 다른 유사 서비스를 사용하고 있습니다.
+ * - 너무 많은 이메일, 알림을 받습니다.
+ * - 사유 없음
+ * - 기타
  */
 export const WITHDRAWAL_REASONS = [
-  '사용 빈도가 낮아서',
-  '원하는 기능이 없어서',
-  '다른 서비스를 이용하려고',
-  '개인정보 우려',
+  '서비스 이용이 불만족스럽습니다.',
+  '이미 다른 유사 서비스를 사용하고 있습니다.',
+  '너무 많은 이메일, 알림을 받습니다.',
+  '사유 없음',
   '기타',
 ] as const;
 
+/** 탈퇴 사유 타입 */
 export type WithdrawalReason = (typeof WITHDRAWAL_REASONS)[number];

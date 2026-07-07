@@ -1,92 +1,104 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { AppVersion, Button, Header, Layout, openErrorDialog } from '@/shared/ui';
+import { Header, Layout, MenuList } from '@/shared/ui';
+import ArrowIcon from '@/shared/ui/icons/ArrowIcon';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
 import useAuthStore from '@/entities/user/model/authStore';
 import type { NavigationPropType } from '@/shared/types';
-import { useQueryClient } from '@tanstack/react-query';
 
 /**
  * # MyPage
  * ---
- * - 간단설명: 로그아웃 및 회원탈퇴 진입을 제공하는 마이페이지 화면
+ * - 간단설명: 메뉴 구성 및 계정 정보 수정 진입을 제공하는 마이페이지 메인 화면
  * - 제약사항 및 특이사항:
- *   - 로그아웃 시 토큰 및 조건 플래그 초기화 후 로그인 화면 이동
- *   - 회원탈퇴 버튼 클릭 시 WithdrawalPage로 이동
+ *   - 설정 메뉴(신고하기, 앱 설정, 공지사항)는 UI만 구성, 동작 미구현
+ *   - 약관 메뉴(이용 약관, 개인정보 처리방침)도 UI만 구성
+ *   - 계정 정보 수정 버튼 클릭 시 accountEdit 페이지로 이동
  * ---
+ * @example
+ * <MyPage />
  */
 function MyPage() {
-  const queryClient = useQueryClient();
   const navigation = useNavigation<NavigationPropType>();
   const user = useAuthStore((state) => state.user);
-  const clearAuth = useAuthStore((state) => state.clear);
 
-  /** 
-   * 로그아웃: 토큰 및 조건 플래그 초기화 후 로그인 화면으로 이동 
-   * TODO: 로그아웃 API 연동
-   * */
-  const handleLogout = async () => {
-    try {
-      await clearAuth();
-      queryClient.resetQueries();
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'home' }],
-      });
-    } catch (e) {
-      console.error(e);
-      openErrorDialog({ message: '로그아웃에 실패했습니다' });
-    }
-  };
+  /** 메뉴 아이템 오른쪽 chevron */
+  const chevronRight = <ArrowIcon direction="right" size={24} color="#8C39FB" />;
 
   return (
     <>
       <Header title="마이페이지" />
-      <Layout.Body styleClass={{ root: 'px-6 pt-10' }}>
-        {/* 계정 정보 */}
-        <View className="gap-4">
-          <InfoRow label="이메일" value={user?.email} />
-          <InfoRow label="로그인 방식" value={user?.provider} />
+      <Layout.Body styleClass={{ root: '' }}>
+        {/* 사용자 정보 */}
+        <View className="px-5 py-4 gap-3">
+          <Text className="text-[16px] font-semibold text-[#1A1A1A] leading-[22.4px]">
+            {user?.email?.split('@')[0] || '사용자'}
+          </Text>
+          <Text className="text-[14px] font-medium text-[#1A1A1A] leading-[19.6px]">
+            오늘도 새로운 인연을 만나보세요!
+          </Text>
         </View>
 
-        <View className="mt-8 gap-3">
-          <Button
-            title="로그아웃"
-            variant="secondary"
-            onPress={handleLogout}
-          />
-          <Button
-            title="회원탈퇴"
-            variant="ghost"
-            onPress={() => navigation.navigate('withdrawal')}
-          />
-        </View>
+        {/* 계정 정보 수정 버튼 */}
+        <Pressable
+          className="mx-5 h-12 bg-[#F5F5F5] rounded-xl items-center justify-center active:opacity-80"
+          onPress={() => navigation.navigate('accountEdit')}
+        >
+          <Text className="text-[14px] font-medium text-[#8C39FB] leading-[19.6px]">
+            계정 정보 수정
+          </Text>
+        </Pressable>
 
-        {/* 앱 버전 */}
-        <View className="mt-auto pb-6">
-          <AppVersion />
+        {/* 설정 섹션 */}
+        <View className="mt-4">
+          <MenuList.Section
+            title="설정"
+            styleClass={{
+              root: 'mb-0 border-t border-black/10',
+              title: 'px-5 py-3 text-[14px] font-semibold text-[#888888]',
+            }}
+          >
+            <MenuList.Item
+              label="신고하기"
+              right={chevronRight}
+              styleClass={{ root: 'px-5 h-14', label: 'text-[14px] font-medium text-[#1A1A1A]' }}
+            />
+            <MenuList.Item
+              label="앱 설정"
+              right={chevronRight}
+              styleClass={{ root: 'px-5 h-14', label: 'text-[14px] font-medium text-[#1A1A1A]' }}
+            />
+            <MenuList.Item
+              label="공지사항"
+              right={chevronRight}
+              showDivider={false}
+              styleClass={{ root: 'px-5 h-14', label: 'text-[14px] font-medium text-[#1A1A1A]' }}
+            />
+          </MenuList.Section>
+
+          {/* 약관 섹션 */}
+          <MenuList.Section
+            styleClass={{
+              root: 'mb-0 border-t border-black/10',
+            }}
+          >
+            <MenuList.Item
+              label="이용 약관"
+              right={chevronRight}
+              styleClass={{ root: 'px-5 h-14', label: 'text-[14px] font-medium text-[#1A1A1A]' }}
+            />
+            <MenuList.Item
+              label="개인정보 처리방침"
+              right={chevronRight}
+              showDivider={false}
+              styleClass={{ root: 'px-5 h-14', label: 'text-[14px] font-medium text-[#1A1A1A]' }}
+            />
+          </MenuList.Section>
         </View>
       </Layout.Body>
     </>
-  );
-}
-
-/**
- * # InfoRow
- * ---
- * - 간단설명: 라벨-값 한 줄 정보 표시 컴포넌트
- * ---
- * @param label 항목 라벨
- * @param value 표시할 값
- */
-function InfoRow({ label, value }: { label: string; value?: string }) {
-  return (
-    <View className="gap-2">
-      <Text className="text-sm text-gray-500">{label}</Text>
-      <Text className="text-base text-gray-900">{value || '-'}</Text>
-    </View>
   );
 }
 

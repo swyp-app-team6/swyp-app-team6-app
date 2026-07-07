@@ -8,7 +8,9 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
  * - home = 홈
  * - profileCard = 프로필카드
  * - mypage = 마이페이지
- * - withdrawal = 회원탈퇴
+ * - accountEdit = 계정 정보 수정
+ * - withdrawalReason = 탈퇴 사유 선택
+ * - withdrawalConfirm = 탈퇴 확인
  * - profileDetail = 프로필 상세보기
  */
 export type NavigatorType = {
@@ -28,7 +30,9 @@ export type NavigatorType = {
   writeReview: { profileId: number };
   cosmicTest: undefined;
   editProfile: undefined;
-  withdrawal: undefined;
+  accountEdit: undefined;
+  withdrawalReason: undefined;
+  withdrawalConfirm: { reason: string };
   playground: undefined;
   apiLog: undefined;
 }
