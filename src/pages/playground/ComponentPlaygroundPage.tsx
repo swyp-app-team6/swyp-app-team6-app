@@ -1,6 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { Alert, RefreshControl, ScrollView, Text, View } from 'react-native';
 import * as Sentry from '@sentry/react-native';
+import { useAuthStore } from '@/entities/user';
 import {
   Accordion,
   AlertModal,
@@ -114,6 +115,8 @@ function Section({ title, children }: { title: string; children: React.ReactNode
  * <ComponentPlaygroundPage />
  */
 export default function ComponentPlaygroundPage() {
+  const [activeTab, setActiveTab] = useState<'ui' | 'dev'>('ui');
+  const { setTokens } = useAuthStore();
   const [checked, setChecked] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectValue, setSelectValue] = useState<string | undefined>();
@@ -183,7 +186,52 @@ export default function ComponentPlaygroundPage() {
     <Toast.Provider>
       <Layout>
         <Header title="Components" showBack />
-        <ScrollView
+
+        {/* ── Tab Navigation ───────────────────────────────────────────────── */}
+        <View className="flex-row border-b border-gray-200 bg-white">
+          <Button
+            title="UI"
+            variant={activeTab === 'ui' ? 'primary' : 'ghost'}
+            className="flex-1"
+            onPress={() => setActiveTab('ui')}
+          />
+          <Button
+            title="DEV"
+            variant={activeTab === 'dev' ? 'primary' : 'ghost'}
+            className="flex-1"
+            onPress={() => setActiveTab('dev')}
+          />
+        </View>
+
+        {/* ── DEV 탭 ───────────────────────────────────────────────────────── */}
+        {activeTab === 'dev' && (
+          <ScrollView className="flex-1 bg-white" contentContainerClassName="p-5 pb-20">
+            <Section title="토큰 재발급 테스트용 버튼">
+              <View className="gap-3">
+                <Button
+                  title="accessToken → abcde 로 교체"
+                  variant="secondary"
+                  onPress={() => {
+                    const { refreshToken } = useAuthStore.getState();
+                    setTokens({ accessToken: 'abcde', refreshToken: refreshToken ?? '' });
+                    Alert.alert('토큰 교체', 'accessToken을 abcde로 교체했습니다.');
+                  }}
+                />
+                <Button
+                  title="access + refresh Token → abcde 로 교체"
+                  variant="secondary"
+                  onPress={() => {
+                    setTokens({ accessToken: 'abcde', refreshToken: 'abcde' });
+                    Alert.alert('토큰 교체', 'accessToken, refreshToken 모두 abcde로 교체했습니다.');
+                  }}
+                />
+              </View>
+            </Section>
+          </ScrollView>
+        )}
+
+        {/* ── UI 탭 ────────────────────────────────────────────────────────── */}
+        {activeTab === 'ui' && <ScrollView
           className="flex-1 bg-white"
           contentContainerClassName="p-5 pb-20"
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
@@ -873,7 +921,7 @@ export default function ComponentPlaygroundPage() {
             ))}
           </View>
         </Section>
-        </ScrollView>
+        </ScrollView>}
       </Layout>
     </Toast.Provider>
   );
