@@ -68,7 +68,7 @@ function UserProfileCard({
         />
       ) : (
         <View className="absolute w-full h-full items-center justify-center">
-          <Text className="text-6xl">👤</Text>
+          사진이 없습니다
         </View>
       )}
 

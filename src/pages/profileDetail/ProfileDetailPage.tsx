@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, ScrollView, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Header, PopoverMenu, ProfileCard, openDialog } from '@/shared/ui';
+import { Header, PopoverMenu, openDialog } from '@/shared/ui';
 import { ProfileActionIcon } from '@/shared/ui';
+import UserProfileCard from '@/shared/ui/ProfileCard/UserProfileCard';
 import { getInterestLabel } from '@/features/register';
 import { useDeleteProfileMutation, useMyProfileQuery } from '@/entities/user';
 import type { NavigationPropType } from '@/shared/types';
@@ -91,8 +92,7 @@ export default function ProfileDetailPage() {
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* ── 프로필 카드 ── */}
         <View className="items-center pt-6 pb-4">
-          <ProfileCard
-            variant="preview"
+          <UserProfileCard
             profileImageUri={getProfileImageUrl(profile.image_key)}
             nickname={profile.nickname}
             age={String(profile.age)}
