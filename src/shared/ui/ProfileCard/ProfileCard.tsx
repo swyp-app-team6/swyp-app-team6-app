@@ -7,6 +7,7 @@ import { HeartIcon } from '../icons';
 import InterestTag from '../InterestTag';
 import type { BadgeLevel } from '../Badge';
 
+
 /* ────────────────────────────────────────────────────────
  * Variant: preview
  * ──────────────────────────────────────────────────────── */
@@ -56,15 +57,15 @@ interface GridProps {
   /** 이름 */
   name: string;
   /** 나이 */
-  age: number;
+  age?: number;
   /** 지역 */
-  location: string;
+  location?: string;
   /** 직업 */
-  job: string;
+  job?: string;
   /** 코스믹 유형 라벨 (변환된 한국어) */
   cosmicTypeLabel: string;
   /** 프로필 이미지 URI */
-  imageUri: string;
+  imageUri?: string;
   /** 즐겨찾기 여부 */
   isFavorited: boolean;
   /** 즐겨찾기 토글 콜백 */
@@ -254,11 +255,17 @@ function GridCard({
     >
       {/* 프로필 이미지 */}
       <View className="h-[184px] overflow-hidden rounded-lg">
-        <Image
-          source={{ uri: imageUri }}
-          className="h-full w-full"
-          resizeMode="cover"
-        />
+        {imageUri ? (
+          <Image
+            source={{ uri: imageUri }}
+            className="h-full w-full"
+            resizeMode="cover"
+          />
+        ) : (
+          <View className="h-full w-full items-center justify-center bg-gray-200">
+            <Text className="text-4xl">👤</Text>
+          </View>
+        )}
         {isEditMode && (
           <View className="absolute left-2 top-2">
             <Checkbox
@@ -288,20 +295,28 @@ function GridCard({
           <Text className="text-base font-medium text-text-black">
             {name}
           </Text>
-          <Text className="text-base font-medium text-text-black">
-            {age}세
-          </Text>
+          {age != null && (
+            <Text className="text-base font-medium text-text-black">
+              {age}세
+            </Text>
+          )}
         </View>
 
         {/* 지역 + 직업 */}
-        <View className="flex-row items-start gap-1">
-          <Text className="text-sm font-medium text-text-gray3">
-            {location}
-          </Text>
-          <Text className="text-sm font-medium text-text-gray3" numberOfLines={1}>
-            {job}
-          </Text>
-        </View>
+        {(location || job) && (
+          <View className="flex-row items-start gap-1">
+            {location && (
+              <Text className="text-sm font-medium text-text-gray3">
+                {location}
+              </Text>
+            )}
+            {job && (
+              <Text className="text-sm font-medium text-text-gray3" numberOfLines={1}>
+                {job}
+              </Text>
+            )}
+          </View>
+        )}
       </View>
     </Pressable>
   );
