@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { ProfileCard, ProfileQRCodeIcon } from '@/shared/ui';
+import { ProfileQRCodeIcon } from '@/shared/ui';
+import UserProfileCard from '@/shared/ui/ProfileCard/UserProfileCard';
 import { FlipIcon } from '@/shared/ui/icons';
 import EmptyProfileCard from '@/shared/ui/ProfileCard/EmptyProfileCard';
 import { ProfileShareQRModal } from '@/features/profileShare';
@@ -67,8 +68,7 @@ export default function HomeWidget() {
           <Pressable
             onPress={() => navigation.navigate('profileDetail')}
           >
-            <ProfileCard
-              variant="preview"
+            <UserProfileCard
               profileImageUri={getProfileImageUrl(profile.image_key)}
               nickname={profile.nickname}
               age={String(profile.age)}
