@@ -31,7 +31,7 @@ interface ErrorDialogStore extends IErrorDialogParams {
   openErrorDialog: (params: Partial<IErrorDialogParams>) => void;
   closeErrorDialog: () => void;
 }
-
+// TODO: 재시도인지 확인필요, 만약 재시도면 추후 구현 후 문구 "확인으로 변경"
 const initialState: Omit<ErrorDialogStore, 'openErrorDialog' | 'closeErrorDialog'> = {
   isOpen: false,
   title: '일시적인 오류가 발생했어요',
