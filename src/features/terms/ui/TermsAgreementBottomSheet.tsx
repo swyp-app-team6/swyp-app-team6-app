@@ -157,12 +157,13 @@ const TermsAgreementBottomSheet = forwardRef<BottomSheetHandle, Props>(
                   onValueChange={(v) => handleToggleItem(item.type, v)}
                   label={`[${item.required ? '필수' : '선택'}] ${item.label}`}
                 />
-                {item.content_url && (
+                {item.type !== 'AGE_OVER_14' && (
                   <Pressable
                     onPress={() => handleViewContent(item.content_url)}
                     hitSlop={8}
+                    disabled={!item.content_url}
                   >
-                    <Text className="text-sm text-gray-400 underline">보기</Text>
+                    <Text className={`text-sm underline ${item.content_url ? 'text-gray-400' : 'text-gray-300'}`}>보기</Text>
                   </Pressable>
                 )}
               </View>
