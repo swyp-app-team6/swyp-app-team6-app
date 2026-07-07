@@ -1,7 +1,6 @@
 import { API } from '@/shared/api';
 import type {
   User,
-  AuthTokens,
 } from '../model/types';
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 
@@ -21,6 +20,16 @@ export interface GoogleLoginResponse {
  * - refresh_token: 리프레시 토큰 (snake_case)
  */
 export interface AppleLoginResponse {
+  access_token: string;
+  refresh_token: string;
+}
+
+/**
+ * 토큰 갱신 API 응답
+ * - access_token: 새 액세스 토큰 (snake_case)
+ * - refresh_token: 새 리프레시 토큰 (snake_case)
+ */
+export interface RefreshTokenResponse {
   access_token: string;
   refresh_token: string;
 }
@@ -73,7 +82,7 @@ export class UserAPI {
    * @param refreshToken 리프레시 토큰
    */
   static refreshTokens(refreshToken: string) {
-    return API.post<AuthTokens>('/auth/refresh', { refresh_token: refreshToken }, { skipAuth: true });
+    return API.post<RefreshTokenResponse>('/auth/refresh', { refresh_token: refreshToken }, { skipAuth: true });
   }
 
   /**

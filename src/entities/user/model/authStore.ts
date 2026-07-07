@@ -142,12 +142,12 @@ const useAuthStore = create<AuthState & AuthActions>()(
         isRefreshing = false;
         throw error;
       }
-
       try {
         const { data } = await UserAPI.refreshTokens(refreshToken);
-        get().setTokens(data);
-        processQueue(null, data.accessToken);
-        return data.accessToken;
+        const tokens = { accessToken: data.access_token, refreshToken: data.refresh_token };
+        get().setTokens(tokens);
+        processQueue(null, tokens.accessToken);
+        return tokens.accessToken;
       } catch (refreshError) {
         processQueue(refreshError);
         get().clear();
