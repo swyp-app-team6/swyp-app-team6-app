@@ -1,4 +1,5 @@
 import React from 'react';
+import { Text, TouchableOpacity } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import { Header } from '@/shared/ui';
@@ -25,7 +26,15 @@ export default function ExchangedProfileDetailPage() {
 
   return (
     <>
-      <Header title="교환한 프로필 보기" />
+      <Header
+        title="교환한 프로필 보기"
+        showBack
+        right={
+          <TouchableOpacity onPress={() => navigation.navigate('storage')}>
+            <Text className="text-2xl text-gray-400">✕</Text>
+          </TouchableOpacity>
+        }
+      />
       <ExchangedProfileView
         profileId={profileId}
         onNavigateToReview={() =>
