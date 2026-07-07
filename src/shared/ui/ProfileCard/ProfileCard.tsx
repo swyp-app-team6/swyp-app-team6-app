@@ -140,7 +140,6 @@ function PreviewCard({
         />
       ) : (
         <View className="absolute w-full h-full items-center justify-center">
-          <Text className="text-6xl">👤</Text>
         </View>
       )}
 
@@ -276,7 +275,6 @@ function GridCard({
           />
         ) : (
           <View className="h-full w-full items-center justify-center bg-gray-200">
-            <Text className="text-4xl">👤</Text>
           </View>
         )}
         {isEditMode && (

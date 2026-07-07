@@ -6,6 +6,9 @@ export type {
   ExchangeArchiveParams,
   ExchangeArchiveDetailResponse,
   InterestItem,
+  ReportReasonCode,
+  ReportRequest,
+  ReportResponse,
 } from './model/types';
 export {
   COSMIC_TYPE_LABEL,

@@ -8,6 +8,7 @@ import type { BottomSheetHandle } from '@/shared/ui';
 import { openDialog } from '@/shared/ui/Dialog';
 import { getInterestLabel } from '@/features/register';
 import { useExchangeArchiveDetailQuery, apiValueToCosmicType } from '@/entities/storage';
+import type { ReportReasonCode } from '@/entities/storage';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 import BasicInfoSection from '@/features/register/ui/BasicInfoSection';
 import InterestsSection from '@/features/register/ui/InterestsSection';
@@ -15,6 +16,7 @@ import BioSection from '@/features/register/ui/BioSection';
 import CosmicTypeSection from '@/features/register/ui/CosmicTypeSection';
 import InfoCard from '@/features/register/ui/InfoCard';
 import ReportBottomSheet from './ReportBottomSheet';
+import useReportMutation from '../api/useReportMutation';
 
 interface Props {
   /** 프로필 ID */
@@ -50,6 +52,7 @@ export default function ExchangedProfileView({
   const [isBlocked, _setIsBlocked] = useState(false);
 
   const { data: detail, isLoading } = useExchangeArchiveDetailQuery(profileId);
+  const { mutate: submitReport } = useReportMutation();
 
   const profile = detail?.profile;
   const matchedInterests = detail?.matched_interests ?? [];
@@ -87,6 +90,35 @@ export default function ExchangedProfileView({
     [handleBlock],
   );
 
+  const handleReport = useCallback(
+    (reasonCodes: ReportReasonCode[], etcDetail?: string) => {
+      submitReport(
+        {
+          profileExchangeId: profileId,
+          reasonCodes,
+          etcDetail,
+        },
+        {
+          onSuccess: () => {
+            openDialog({
+              type: 'alert',
+              title: '신고가 접수되었습니다',
+            });
+          },
+          onError: () => {
+            openDialog({
+              type: 'alert',
+              title: '신고 접수에 실패했습니다',
+              message: '잠시 후 다시 시도해주세요.',
+            });
+          },
+        },
+      );
+    },
+    [submitReport, profileId],
+  );
+
+
   if (isLoading) {
     return (
       <View className="flex-1 items-center justify-center">
@@ -105,12 +137,6 @@ export default function ExchangedProfileView({
     );
   }
 
-  const handleReport = (_reportTypes: string[], _detail?: string) => {
-    openDialog({
-      type: 'alert',
-      title: '신고가 접수되었습니다',
-    });
-  };
 
   return (
     <View className="flex-1 bg-white">
@@ -128,7 +154,6 @@ export default function ExchangedProfileView({
                 />
               ) : (
                 <View className="absolute w-full h-full items-center justify-center">
-                  <Text className="text-6xl">👤</Text>
                 </View>
               )}
 

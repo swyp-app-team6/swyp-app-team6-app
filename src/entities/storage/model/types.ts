@@ -167,6 +167,49 @@ export interface ExchangeLikeResponse { exchange_id: number; is_liked: boolean; 
 export interface ExchangeDeleteRequest { exchange_ids: number[]; }
 export interface ExchangeDeleteResponse { deleted_count: number; deleted_ids: number[]; }
 
+/**
+ * 신고 사유 코드
+ * - INAPPROPRIATE_LANGUAGE = 부적절한 언행/욕설
+ * - FRAUD_OR_MONEY_REQUEST = 사기/금전 요구
+ * - FAKE_PROFILE = 허위 프로필
+ * - ETC = 기타 (선택 시 etc_detail 필수)
+ */
+export type ReportReasonCode =
+  | 'INAPPROPRIATE_LANGUAGE'
+  | 'FRAUD_OR_MONEY_REQUEST'
+  | 'FAKE_PROFILE'
+  | 'ETC';
+
+/**
+ * POST /reports 요청 바디
+ * - profile_exchange_id = 교환 프로필 ID
+ * - reason_codes = 신고 사유 코드 배열 (최소 1개)
+ * - etc_detail = 기타 사유 상세 (ETC 선택 시 필수, 최대 300자)
+ */
+export interface ReportRequest {
+  /** 교환 프로필 ID */
+  profile_exchange_id: number;
+  /** 신고 사유 코드 배열 */
+  reason_codes: ReportReasonCode[];
+  /** 기타 사유 상세 */
+  etc_detail?: string;
+}
+
+/**
+ * POST /reports 응답
+ * - reportId = 신고 ID
+ * - status = 신고 상태 (RECEIVED, IN_REVIEW, RESOLVED)
+ * - createdAt = 신고 생성 시각
+ */
+export interface ReportResponse {
+  /** 신고 ID */
+  reportId: number;
+  /** 신고 상태 */
+  status: 'RECEIVED' | 'IN_REVIEW' | 'RESOLVED';
+  /** 신고 생성 시각 */
+  createdAt: string;
+}
+
 export interface StorageProfileDetail extends StorageProfile {
   /** 관심사 목록 */
   interests: string[];

@@ -8,6 +8,8 @@ import type {
   ExchangeLikeResponse,
   ExchangeDeleteRequest,
   ExchangeDeleteResponse,
+  ReportRequest,
+  ReportResponse,
 } from '../model/types';
 
 /**
@@ -62,6 +64,17 @@ export class ExchangeArchiveAPI {
    */
   static deleteArchives(data: ExchangeDeleteRequest) {
     return API.delete<ExchangeDeleteResponse>('/exchange/archive', { data });
+  }
+
+  /**
+   * # reportProfile
+   * ---
+   * - 간단설명: 교환 프로필 신고 요청
+   * ---
+   * @param data 신고 요청 데이터 (profile_exchange_id, reason_codes, etc_detail)
+   */
+  static reportProfile(data: ReportRequest) {
+    return API.post<ReportResponse>('/reports', data);
   }
 
   /** 쿼리 키 팩토리 */

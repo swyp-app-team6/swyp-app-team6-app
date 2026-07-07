@@ -5,17 +5,19 @@ import { useImperativeHandle, useRef } from 'react';
 import { Button, Checkbox, SafeBottomSheetModal } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
 
-/** 신고 유형 옵션 */
-const REPORT_TYPE_OPTIONS = [
-  { label: '부적절한 언행/욕설', value: 'offensive' },
-  { label: '사기/금전 요구', value: 'scam' },
-  { label: '허위 프로필(사진 도용, 사칭)', value: 'fake_profile' },
-  { label: '기타', value: 'other' },
+import type { ReportReasonCode } from '@/entities/storage';
+
+/** 신고 유형 옵션 (API reason_codes 기준) */
+const REPORT_TYPE_OPTIONS: { label: string; value: ReportReasonCode }[] = [
+  { label: '부적절한 언행/욕설', value: 'INAPPROPRIATE_LANGUAGE' },
+  { label: '사기/금전 요구', value: 'FRAUD_OR_MONEY_REQUEST' },
+  { label: '허위 프로필(사진 도용, 사칭)', value: 'FAKE_PROFILE' },
+  { label: '기타', value: 'ETC' },
 ];
 
 interface Props {
   /** 신고 제출 시 호출되는 콜백 */
-  onSubmit: (reportTypes: string[], detail?: string) => void;
+  onSubmit: (reasonCodes: ReportReasonCode[], etcDetail?: string) => void;
 }
 
 /**
@@ -38,7 +40,7 @@ interface Props {
 const ReportBottomSheet = forwardRef<BottomSheetHandle, Props>(
   ({ onSubmit }, ref) => {
     const modalRef = useRef<BottomSheetModal>(null);
-    const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+    const [selectedTypes, setSelectedTypes] = useState<ReportReasonCode[]>([]);
     const [otherText, setOtherText] = useState('');
 
     useImperativeHandle(ref, () => ({
@@ -50,7 +52,7 @@ const ReportBottomSheet = forwardRef<BottomSheetHandle, Props>(
       close: () => modalRef.current?.dismiss(),
     }));
 
-    const toggleType = useCallback((value: string) => {
+    const toggleType = useCallback((value: ReportReasonCode) => {
       setSelectedTypes((prev) =>
         prev.includes(value)
           ? prev.filter((v) => v !== value)
@@ -62,12 +64,12 @@ const ReportBottomSheet = forwardRef<BottomSheetHandle, Props>(
       if (selectedTypes.length === 0) return;
       onSubmit(
         selectedTypes,
-        selectedTypes.includes('other') ? otherText : undefined,
+        selectedTypes.includes('ETC') ? otherText : undefined,
       );
       modalRef.current?.dismiss();
     }, [onSubmit, selectedTypes, otherText]);
 
-    const hasOther = selectedTypes.includes('other');
+    const hasOther = selectedTypes.includes('ETC');
     const isSubmitDisabled =
       selectedTypes.length === 0 ||
       (hasOther && otherText.trim().length === 0);
