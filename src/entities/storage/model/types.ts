@@ -1,4 +1,5 @@
 import type { BadgeLevel } from '@/shared/ui';
+import type { MyProfileResponse } from '@/entities/user';
 
 /**
  * 보관함 프로필 카드 데이터
@@ -158,7 +159,7 @@ export interface ExchangeArchiveDetailResponse {
     cosmic_type: string;
     cosmic_type_image_key: string;
   };
-  profile: Record<string, unknown>;
+  profile: MyProfileResponse;
 }
 
 export interface ExchangeLikeRequest { liked: boolean; }
