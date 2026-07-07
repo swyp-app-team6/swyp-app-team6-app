@@ -4,7 +4,6 @@ import { Button, Input } from '@/shared/ui';
 import { usePermissionStore } from '@/widgets/permissions';
 import { useUpdateProfileMutation } from '@/entities/user';
 import { toast } from '@/shared/lib/toast';
-import { uploadToS3 } from '@/shared/lib/uploadToS3';
 import { useEditProfileImagePicker } from '../lib/useEditProfileImagePicker';
 import useProfileImageUploadMutation from '../api/useProfileImageUploadMutation';
 
@@ -46,9 +45,10 @@ export default function EditProfileFormView({ onSave }: Props) {
       let imageKey: string | undefined;
 
       if (pickedImage) {
-        const presign = await getPresignUrl(pickedImage.contentType);
-        await uploadToS3(presign.uploadUrl, pickedImage.uri, pickedImage.contentType);
-        imageKey = presign.imageKey;
+        imageKey = await getPresignUrl({
+          fileUri: pickedImage.uri,
+          contentType: pickedImage.contentType,
+        });
       }
 
       const hasChanges = imageKey || nickname.trim();

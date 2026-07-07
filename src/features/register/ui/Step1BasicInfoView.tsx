@@ -47,15 +47,8 @@ export default function Step1BasicInfoView() {
 
     try {
       setUploading(true);
-      // TODO: 이미지 압축 필요
-      const { data } = await ProfileAPI.profileImageUpload('image/jpeg');
-      const imageBlob = await fetch(uri);
-      await fetch(data.uploadUrl, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'image/jpeg' },
-        body: await imageBlob.blob(),
-      });
-      updateForm({ profileImageKey: data.imageKey });
+      const imageKey = await ProfileAPI.profileImageUpload(uri, 'image/jpeg');
+      updateForm({ profileImageKey: imageKey });
     } catch (error) {
       console.error('이미지 업로드 실패:', error);
     } finally {

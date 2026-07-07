@@ -1,4 +1,5 @@
 import { API } from '@/shared/api';
+import { uploadToS3 } from '@/shared/lib/uploadToS3';
 import type {
   ProfileRegisterRequest,
   ProfileUpdateRequest,
@@ -90,15 +91,26 @@ export class ProfileAPI {
   /**
    * # profileImageUpload
    * ---
-   * - 간단설명: 프로필 이미지 업로드를 위한 presign uploadURL, imageKey 발급
-   * - 제약사항: contentType은 image/jpeg, image/png, image/webp, image/gif만 허용
+   * - 간단설명: presigned URL 발급 후 로컬 이미지를 S3에 업로드하고 imageKey 반환
+   * - 제약사항 및 특이사항:
+   *   - contentType은 image/jpeg, image/png, image/webp, image/gif만 허용
+   *   - 안드로이드 content:// URI 호환 (XMLHttpRequest 기반 업로드)
    * ---
+   * @param fileUri 로컬 파일 URI (file:// 또는 content://)
    * @param contentType 업로드할 파일의 Content-Type (기본값: image/jpeg)
+   * @returns imageKey (S3에 저장된 이미지 키)
+   * @example
+   * const imageKey = await ProfileAPI.profileImageUpload(uri, 'image/jpeg');
    */
-  static profileImageUpload(contentType: UploadContentType = 'image/jpeg') {
-    return API.post<PresignResponse>('/api/uploads/presign', null, {
+  static async profileImageUpload(
+    fileUri: string,
+    contentType: UploadContentType = 'image/jpeg',
+  ): Promise<string> {
+    const { data } = await API.post<PresignResponse>('/api/uploads/presign', null, {
       params: { contentType },
     });
+    await uploadToS3(data.uploadUrl, fileUri, contentType);
+    return data.imageKey;
   }
 
   /** 쿼리 키 팩토리 */
