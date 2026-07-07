@@ -45,6 +45,8 @@ export default function ExchangeResultPage() {
     const profileId = scannedProfile?.id;
     if (profileId) {
       navigation.navigate('exchangedProfileDetail', { profileId });
+    }else{
+      console.error('프로필 없음', scannedProfile)
     }
   };
 

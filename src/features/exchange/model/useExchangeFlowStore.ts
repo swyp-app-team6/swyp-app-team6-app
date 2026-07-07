@@ -112,7 +112,7 @@ const useExchangeFlowStore = create<ExchangeFlowState>((set, get) => ({
       if (data.status === 'ACCEPTED' && data.result) {
         set({
           exchangeResult: data.result,
-          scannedProfile: data.result.profile_response,
+          scannedProfile: data.result.profile ?? get().scannedProfile,
           step: ExchangeFlowStep.RESULT,
           _abortController: null,
         });

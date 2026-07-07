@@ -7,18 +7,21 @@ import { useCallback, useEffect, useRef, useState } from 'react';
  * - 제약사항 및 특이사항:
  *   - active가 true일 때 타이머 시작, false일 때 초기화
  *   - 0에 도달하면 onExpire 콜백 호출
+ *   - resetKey가 변경되면 타이머를 처음부터 재시작
  * ---
  * @param seconds 카운트다운 시작 시간 (초)
  * @param active 타이머 활성화 여부
  * @param onExpire 만료 시 콜백
+ * @param resetKey 타이머 재시작 트리거 키 (값이 변경될 때마다 리셋)
  * ---
  * @example
- * const remainSeconds = useCountdownTimer(60, visible, onClose);
+ * const remainSeconds = useCountdownTimer(60, visible, onExpire, resetKey);
  */
 export default function useCountdownTimer(
   seconds: number,
   active: boolean,
   onExpire: () => void,
+  resetKey: number = 0,
 ): number {
   const [remainSeconds, setRemainSeconds] = useState(seconds);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -46,7 +49,7 @@ export default function useCountdownTimer(
       clearTimer();
     }
     return clearTimer;
-  }, [active, seconds, onExpire, clearTimer]);
+  }, [active, seconds, onExpire, clearTimer, resetKey]);
 
   return remainSeconds;
 }

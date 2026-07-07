@@ -51,8 +51,21 @@ interface Props {
  */
 export default function ProfileShareQRModal({ visible, onClose }: Props) {
   const navigation = useNavigation<NavigationPropType>();
-  const { data: qrData } = useQuery(ProfileAPI.query.fetchUuid());
-  const remainSeconds = useCountdownTimer(QR_EXPIRY_SECONDS, visible, onClose);
+  const { data: qrData, refetch: refetchQr } = useQuery({
+    ...ProfileAPI.query.fetchUuid(),
+    enabled: visible,
+  });
+
+  /** QR 만료 시 refetch 트리거용 카운터 */
+  const [qrResetKey, setQrResetKey] = useState(0);
+
+  /** 타이머 만료 시 QR 재발급 및 타이머 리셋 */
+  const handleQrExpire = useCallback(() => {
+    refetchQr();
+    setQrResetKey((prev) => prev + 1);
+  }, [refetchQr]);
+
+  const remainSeconds = useCountdownTimer(QR_EXPIRY_SECONDS, visible, handleQrExpire, qrResetKey);
   const abortRef = useRef<AbortController | null>(null);
 
   const [modalStep, setModalStep] = useState<ModalStep>('QR');
@@ -108,7 +121,7 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
 
       if (data.status === 'ACCEPTED' && data.result) {
         useExchangeFlowStore.setState({
-          scannedProfile: data.result.profile_response,
+          scannedProfile: data.result.profile ?? useExchangeFlowStore.getState().scannedProfile,
           exchangeResult: data.result,
           step: ExchangeFlowStep.RESULT,
         });
