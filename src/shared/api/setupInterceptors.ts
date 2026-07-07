@@ -2,6 +2,7 @@ import { API } from './client';
 import useAuthStore from '@/entities/user/model/authStore';
 import useConditionStateStore from '@/shared/model/conditionStateStore';
 import { navigationRef } from '@/shared/router/navigationRef';
+import useApiLogStore, { type ApiLogEntry } from '@/shared/model/apiLogStore';
 
 /**
  * # setupInterceptors
@@ -17,9 +18,15 @@ import { navigationRef } from '@/shared/router/navigationRef';
  * // App.tsx 또는 앱 진입점에서
  * setupInterceptors();
  */
+/** 로그 ID 생성용 카운터 */
+let logIdCounter = 0;
+
 export function setupInterceptors() {
-  /** 요청 인터셉터 — accessToken 자동 첨부 */
+  /** 요청 인터셉터 — accessToken 자동 첨부 + 로그용 타임스탬프 기록 */
   API.interceptors.request.use((config) => {
+    config._logId = String(++logIdCounter);
+    config._startTime = Date.now();
+
     if (config.skipAuth) {
       return config;
     }
@@ -31,13 +38,59 @@ export function setupInterceptors() {
     return config;
   });
 
-  /** 응답 인터셉터 — 401 시 토큰 갱신 후 재시도 */
+  /** 응답 인터셉터 — 성공 로그 수집 */
   API.interceptors.response.use(
     (response) => {
+      const config = response.config;
+      const entry: ApiLogEntry = {
+        id: config._logId ?? String(++logIdCounter),
+        timestamp: config._startTime ?? Date.now(),
+        method: (config.method ?? 'GET').toUpperCase(),
+        url: (config.baseURL ?? '') + (config.url ?? ''),
+        status: response.status,
+        duration: Date.now() - (config._startTime ?? Date.now()),
+        request: {
+          headers: config.headers as unknown as Record<string, string>,
+          params: config.params,
+          data: config.data,
+        },
+        response: {
+          headers: response.headers as unknown as Record<string, string>,
+          data: response.data,
+        },
+        error: null,
+      };
+      useApiLogStore.getState().addLog(entry);
       return response;
     },
     async (error) => {
       const originalRequest = error.config;
+
+      /** 에러 로그 수집 (401 재시도 전에도 기록) */
+      if (originalRequest && !originalRequest._logRecorded) {
+        originalRequest._logRecorded = true;
+        const entry: ApiLogEntry = {
+          id: originalRequest._logId ?? String(++logIdCounter),
+          timestamp: originalRequest._startTime ?? Date.now(),
+          method: (originalRequest.method ?? 'GET').toUpperCase(),
+          url: (originalRequest.baseURL ?? '') + (originalRequest.url ?? ''),
+          status: error.response?.status ?? null,
+          duration: Date.now() - (originalRequest._startTime ?? Date.now()),
+          request: {
+            headers: originalRequest.headers as unknown as Record<string, string>,
+            params: originalRequest.params,
+            data: originalRequest.data,
+          },
+          response: error.response
+            ? {
+                headers: error.response.headers as unknown as Record<string, string>,
+                data: error.response.data,
+              }
+            : null,
+          error: error.message ?? 'Unknown error',
+        };
+        useApiLogStore.getState().addLog(entry);
+      }
 
       if (error.response?.status !== 401 || originalRequest._retry) {
         return Promise.reject(error);

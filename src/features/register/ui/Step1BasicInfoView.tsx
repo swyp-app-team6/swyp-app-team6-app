@@ -47,6 +47,7 @@ export default function Step1BasicInfoView() {
 
     try {
       setUploading(true);
+      // TODO: 이미지 압축 필요
       const { data } = await ProfileAPI.profileImageUpload('image/jpeg');
       const imageBlob = await fetch(uri);
       await fetch(data.uploadUrl, {

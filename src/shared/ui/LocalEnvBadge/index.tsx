@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text } from 'react-native';
+import { TouchableOpacity, Text, View } from 'react-native';
 import Config from 'react-native-config';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationPropType } from '@/shared/types';
@@ -7,11 +7,11 @@ import { NavigationPropType } from '@/shared/types';
 /**
  * # LocalEnvBadge
  * ---
- * - 간단설명: PROJECT_ENV가 'local'일 때만 렌더링되는 로컬 환경 표시 뱃지. 탭 시 home 화면으로 이동
+ * - 간단설명: PROJECT_ENV가 'local'일 때만 렌더링되는 로컬 환경 FAB 그룹
  * - 제약사항 및 특이사항:
  *   - Config.PROJECT_ENV === 'local'인 경우에만 표시됨
- *   - 절대 위치(absolute)로 배치되어야 하며, 부모 컨테이너 기준 우측 하단에 FAB 형태로 위치
- *   - 탭 시 home 라우트로 이동
+ *   - LOG FAB: API 로그 페이지로 이동
+ *   - DOCS FAB: 컴포넌트 플레이그라운드로 이동
  * ---
  * @example
  * <LocalEnvBadge />
@@ -24,12 +24,21 @@ export default function LocalEnvBadge() {
   }
 
   return (
-    <TouchableOpacity
-      testID="local-env-badge"
-      className="absolute bottom-24 right-4 bg-red-500 w-14 h-14 rounded-full z-50 items-center justify-center shadow-lg elevation-5"
-      onPress={() => navigation.navigate('playground')}
-    >
-      <Text className="text-white text-sm font-bold">LOCAL</Text>
-    </TouchableOpacity>
+    <View className="absolute bottom-24 right-4 z-50 items-center gap-2">
+      <TouchableOpacity
+        testID="api-log-badge"
+        className="bg-blue-600 w-14 h-14 rounded-full items-center justify-center shadow-lg elevation-5"
+        onPress={() => navigation.navigate('apiLog')}
+      >
+        <Text className="text-white text-sm font-bold">LOG</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        testID="local-env-badge"
+        className="bg-red-500 w-14 h-14 rounded-full items-center justify-center shadow-lg elevation-5"
+        onPress={() => navigation.navigate('playground')}
+      >
+        <Text className="text-white text-sm font-bold">DOCS</Text>
+      </TouchableOpacity>
+    </View>
   );
 }

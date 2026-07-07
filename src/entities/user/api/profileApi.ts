@@ -123,8 +123,6 @@ export class ProfileAPI {
         const { data } = await ProfileAPI.fetchQrUuid();
         return data;
       },
-      //@ts-ignore
-      staleTime: Infinity,
     }),
   });
 }

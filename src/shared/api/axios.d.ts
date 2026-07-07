@@ -11,6 +11,12 @@ declare module 'axios' {
     skipAuth?: boolean;
     /** 토큰 갱신 재시도 플래그 (내부 사용) */
     _retry?: boolean;
+    /** API 로그 식별자 (내부 사용) */
+    _logId?: string;
+    /** 요청 시작 시각 (내부 사용) */
+    _startTime?: number;
+    /** 에러 로그 중복 기록 방지 플래그 (내부 사용) */
+    _logRecorded?: boolean;
   }
 
   export interface InternalAxiosRequestConfig {
@@ -18,5 +24,11 @@ declare module 'axios' {
     skipAuth?: boolean;
     /** 토큰 갱신 재시도 플래그 (내부 사용) */
     _retry?: boolean;
+    /** API 로그 식별자 (내부 사용) */
+    _logId?: string;
+    /** 요청 시작 시각 (내부 사용) */
+    _startTime?: number;
+    /** 에러 로그 중복 기록 방지 플래그 (내부 사용) */
+    _logRecorded?: boolean;
   }
 }

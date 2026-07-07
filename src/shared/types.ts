@@ -30,6 +30,7 @@ export type NavigatorType = {
   editProfile: undefined;
   withdrawal: undefined;
   playground: undefined;
+  apiLog: undefined;
 }
 
 /** useNavigation 제네릭 타입 */

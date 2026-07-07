@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useCameraDevice } from 'react-native-vision-camera';
@@ -50,6 +50,12 @@ export default function QRScanWidget() {
     cancelExchange();
     navigation.navigate('home');
   }, [cancelExchange, navigation]);
+
+  useEffect(() => {
+    return () => {
+      isScanned.current = false;
+    }
+  }, [])
 
   return (
     <View className="flex-1">

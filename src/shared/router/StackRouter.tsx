@@ -21,6 +21,7 @@ import ExchangeResultPage from '@/pages/exchangeResult/ExchangeResultPage';
 import EditProfilePage from '@/pages/editProfile/EditProfilePage';
 import { NavigatorType } from '../types';
 import ComponentPlaygroundPage from '../../pages/playground/ComponentPlaygroundPage';
+import ApiLogPage from '../../pages/playground/ApiLogPage';
 import Config from 'react-native-config';
 
 const Stack = createNativeStackNavigator<NavigatorType>();
@@ -64,7 +65,10 @@ export default function StackRouter({ initialRouteName = 'home' }: StackRouterPr
         <Stack.Screen name='withdrawal' component={WithdrawalPage} />
         {
           Config.PROJECT_ENV === 'local' && (
-            <Stack.Screen name='playground' component={ComponentPlaygroundPage} />
+            <>
+              <Stack.Screen name='playground' component={ComponentPlaygroundPage} />
+              <Stack.Screen name='apiLog' component={ApiLogPage} />
+            </>
           )
         }
       </Stack.Navigator>
