@@ -19,7 +19,7 @@ export type ExchangeStatus = 'ACCEPTED' | 'DECLINED';
  * - profile = 상대방 프로필
  */
 export interface ExchangeResult {
-  /** 교환 ID */
+  /** 교환 ID: 교환 id는 이걸 써야 함 */
   exchange_id: number;
   /** 교환 시간 */
   exchanged_at: string;

@@ -42,10 +42,10 @@ export default function ExchangeResultPage() {
 
   /** 교환한 프로필 보기 — store 데이터를 상세 페이지에서 사용하므로 reset하지 않음 */
   const handleViewProfile = () => {
-    const profileId = scannedProfile?.id;
+    const profileId = exchangeResult?.exchange_id;
     if (profileId) {
       navigation.navigate('exchangedProfileDetail', { profileId });
-    }else{
+    } else {
       console.error('프로필 없음', scannedProfile)
     }
   };
