@@ -1,21 +1,21 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { Accordion, BottomCTA, Button, PopoverMenu, ProfileActionIcon, ReportIcon, BlockUserIcon } from '@/shared/ui';
 import UserProfileCard from '@/shared/ui/ProfileCard/UserProfileCard';
 import type { PopoverMenuItem } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
 import { openDialog } from '@/shared/ui/Dialog';
-import { MOCK_STORAGE_PROFILE_DETAILS } from '@/entities/storage';
-import type { StorageProfileDetail } from '@/entities/storage';
+import { InterestTag } from '@/shared/ui';
+import { getInterestLabel } from '@/features/register';
+import { useExchangeFlowStore } from '@/features/exchange';
+import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 import BasicInfoSection from '@/features/register/ui/BasicInfoSection';
 import InterestsSection from '@/features/register/ui/InterestsSection';
 import BioSection from '@/features/register/ui/BioSection';
 import CosmicTypeSection from '@/features/register/ui/CosmicTypeSection';
 import InfoCard from '@/features/register/ui/InfoCard';
-import { InterestTag } from '@/shared/ui';
-import { getInterestLabel } from '@/features/register';
 import ReportBottomSheet from './ReportBottomSheet';
-import { useNavigation } from '@react-navigation/native';
 
 interface Props {
   /** 프로필 ID */
@@ -29,7 +29,7 @@ interface Props {
  * ---
  * - 간단설명: 교환한 프로필 상세 보기 뷰 컴포넌트
  * - 제약사항 및 특이사항:
- *   - MyProfileView 구조 기반으로 교환 프로필 데이터 표시
+ *   - useExchangeFlowStore의 scannedProfile, exchangeResult 데이터 사용
  *   - 상단 신고/차단 텍스트 버튼
  *   - 프로필 카드 + 기본정보 + 공통관심사 기본 표시
  *   - "프로필 전체보기" 아코디언으로 나머지 섹션 접기/펼치기
@@ -43,22 +43,20 @@ interface Props {
  * <ExchangedProfileView profileId={1} onNavigateToReview={() => navigate('writeReview')} />
  */
 export default function ExchangedProfileView({
-  profileId,
+  profileId: _profileId,
   onNavigateToReview,
 }: Props) {
   const navigation = useNavigation();
   const reportRef = useRef<BottomSheetHandle>(null);
   const [isBlocked, _setIsBlocked] = useState(false);
 
-  const profile: StorageProfileDetail | undefined = useMemo(
-    () => MOCK_STORAGE_PROFILE_DETAILS.find((p) => p.id === profileId),
-    [profileId],
-  );
+  const scannedProfile = useExchangeFlowStore((s) => s.scannedProfile);
+  const exchangeResult = useExchangeFlowStore((s) => s.exchangeResult);
 
   const handleBlock = useCallback(() => {
     openDialog({
       type: 'confirm',
-      title: '김실명 님을 차단할까요?',
+      title: `${scannedProfile?.nickname ?? ''} 님을 차단할까요?`,
       message: '더 이상 서로의 프로필이 보이지 않아요.',
       okLabel: '차단',
       cancelLabel: '취소',
@@ -66,7 +64,7 @@ export default function ExchangedProfileView({
         navigation.goBack();
       },
     });
-  }, [navigation]);
+  }, [navigation, scannedProfile]);
 
   /** 신고/차단 팝오버 메뉴 항목 */
   const popoverItems: PopoverMenuItem[] = useMemo(
@@ -86,7 +84,7 @@ export default function ExchangedProfileView({
     [handleBlock],
   );
 
-  if (!profile) {
+  if (!scannedProfile) {
     return (
       <View className="flex-1 items-center justify-center">
         <Text className="text-base text-[#888888]">
@@ -95,6 +93,8 @@ export default function ExchangedProfileView({
       </View>
     );
   }
+
+  const matchedInterests = exchangeResult?.matched_interests ?? [];
 
   const handleReport = (_reportTypes: string[], _detail?: string) => {
     openDialog({
@@ -110,11 +110,10 @@ export default function ExchangedProfileView({
         <View className="items-center pb-4">
           <View className="relative">
             <UserProfileCard
-              profileImageUri={profile.imageUri}
-              nickname={profile.name}
-              age={String(profile.age)}
-              interests={profile.interests.map((i) => getInterestLabel(i))}
-              badgeLevel={profile.cosmicType}
+              profileImageUri={getProfileImageUrl(scannedProfile.image_key)}
+              nickname={scannedProfile.nickname}
+              age={String(scannedProfile.age)}
+              interests={scannedProfile.interests.map((i) => getInterestLabel(i.type))}
               topRightSlot={
                 !isBlocked ? (
                   <PopoverMenu items={popoverItems} align="right">
@@ -139,20 +138,19 @@ export default function ExchangedProfileView({
         {/* 기본정보 섹션 */}
         <View className="px-5 pb-4 gap-4">
           <BasicInfoSection
-            age={String(profile.age)}
-            region={profile.region}
-            subArea={profile.subArea}
-            jobField={profile.jobField}
+            age={String(scannedProfile.age)}
+            region={scannedProfile.region}
+            jobField={scannedProfile.job}
           />
 
           {/* 공통관심사 섹션 */}
           <InfoCard title="공통 관심사">
-            {profile.commonInterests.length > 0 ? (
+            {matchedInterests.length > 0 ? (
               <View className="flex-row flex-wrap gap-1">
-                {profile.commonInterests.map((interest) => (
+                {matchedInterests.map((interest) => (
                   <InterestTag
-                    key={interest}
-                    label={getInterestLabel(interest)}
+                    key={interest.type}
+                    label={interest.label}
                     variant="outlined"
                   />
                 ))}
@@ -173,8 +171,8 @@ export default function ExchangedProfileView({
               title="프로필 전체보기"
               styleClass={{ content: 'gap-4' }}
             >
-              <InterestsSection interests={profile.interests} />
-              <BioSection bio={profile.bio} />
+              <InterestsSection interests={scannedProfile.interests.map((i) => i.type)} />
+              <BioSection bio={scannedProfile.bio} />
               <CosmicTypeSection />
             </Accordion.Item>
           </Accordion.Root>

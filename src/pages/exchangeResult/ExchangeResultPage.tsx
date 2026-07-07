@@ -43,10 +43,9 @@ export default function ExchangeResultPage() {
     navigation.navigate('home');
   };
 
-  /** 교환한 프로필 보기 */
+  /** 교환한 프로필 보기 — store 데이터를 상세 페이지에서 사용하므로 reset하지 않음 */
   const handleViewProfile = () => {
     const profileId = scannedProfile?.id;
-    reset();
     if (profileId) {
       navigation.navigate('exchangedProfileDetail', { profileId });
     }
