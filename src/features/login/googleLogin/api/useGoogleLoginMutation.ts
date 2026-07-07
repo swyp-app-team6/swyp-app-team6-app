@@ -8,7 +8,6 @@ import {
 import Config from 'react-native-config';
 import { UserAPI, useAuthStore } from '@/entities/user';
 import type { GoogleLoginResponse } from '@/entities/user';
-import { Alert } from 'react-native';
 
 /**
  * # useGoogleLoginMutation
@@ -55,7 +54,6 @@ export default function useGoogleLoginMutation() {
     },
     onError: (error) => {
       console.error(error);
-      Alert.alert('에러임' + error.message)
       if (isErrorWithCode(error)) {
         switch (error.code) {
           case statusCodes.IN_PROGRESS:

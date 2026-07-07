@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { Platform, Alert } from 'react-native';
+import { Platform } from 'react-native';
 import {
   appleAuth,
   appleAuthAndroid,
@@ -117,7 +117,6 @@ export default function useAppleLoginMutation() {
       console.error(error);
       // Apple 취소 에러(1001)는 사용자 의도이므로 Alert 미표시
       if ((error as any)?.code === '1001') return;
-      Alert.alert('에러', error.message);
     },
   });
 }

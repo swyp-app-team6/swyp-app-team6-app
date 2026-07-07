@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Alert, View } from 'react-native';
+import { View } from 'react-native';
 import { StepView, ProgressBar, ErrorBoundary, LoadSuspense } from '@/shared/ui';
 import type { ChoiceTemplate, ShortTemplate } from '@/entities/user';
 import { useUpdateProfileMutation } from '@/entities/user';
@@ -103,14 +103,14 @@ export default function RegisterFormView({ mode = 'register', initialData, onVie
     if (isEdit && initialData) {
       updateForm(initialData);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     return () => {
       reset();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /** 프로필 등록/수정 API 호출 */
@@ -125,13 +125,8 @@ export default function RegisterFormView({ mode = 'register', initialData, onVie
         await registerAsync(request);
       }
       setIsComplete(true);
-    } catch {
-      Alert.alert(
-        isEdit ? '수정 실패' : '등록 실패',
-        isEdit
-          ? '프로필 수정 중 오류가 발생했습니다. 다시 시도해주세요.'
-          : '프로필 등록 중 오류가 발생했습니다. 다시 시도해주세요.',
-      );
+    } catch (e) {
+      console.error(e)
     }
   }, [isEdit, registerAsync, updateAsync]);
 
