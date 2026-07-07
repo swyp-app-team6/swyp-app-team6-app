@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Image, ScrollView, Text, View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import { Accordion, Badge, BottomCTA, Button, PopoverMenu, ProfileActionIcon, ReportIcon, BlockUserIcon } from '@/shared/ui';
+import { ScrollView, Text, View } from 'react-native';
+import { Accordion, BottomCTA, Button, PopoverMenu, ProfileActionIcon, ReportIcon, BlockUserIcon } from '@/shared/ui';
+import UserProfileCard from '@/shared/ui/ProfileCard/UserProfileCard';
 import type { PopoverMenuItem } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
 import { openDialog } from '@/shared/ui/Dialog';
@@ -108,88 +108,30 @@ export default function ExchangedProfileView({
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* 프로필 카드 */}
         <View className="items-center pb-4">
-          <View
-            className="w-[284px] h-[392px] rounded-xl overflow-hidden"
-            style={{
-              backgroundColor: '#F5EDFF',
-              borderWidth: 2,
-              borderColor: '#EADCFF',
-            }}
-          >
-            {profile.imageUri ? (
-              <Image
-                source={{ uri: profile.imageUri }}
-                className="absolute w-full h-full"
-                resizeMode="cover"
-                blurRadius={isBlocked ? 20 : 0}
-              />
-            ) : (
-              <View className="absolute w-full h-full items-center justify-center">
-                <Text className="text-6xl">👤</Text>
-              </View>
-            )}
-
-            {/* 블러 오버레이 */}
-            {isBlocked && (
-              <View className="absolute w-full h-full items-center justify-center bg-black/40">
-                <Text className="text-base font-medium text-white">
-                  차단된 프로필입니다
-                </Text>
-              </View>
-            )}
-
-            {/* 하단 그라디언트 */}
-            {!isBlocked && (
-              <>
-                <LinearGradient
-                  colors={[
-                    'rgba(255,255,255,0)',
-                    'rgba(56,56,56,0.45)',
-                    'rgba(0,0,0,1)',
-                  ]}
-                  locations={[0, 0.29, 1]}
-                  className="absolute bottom-0 left-0 right-0 rounded-b-xl"
-                  style={{ height: 232 }}
-                />
-                <View className="absolute top-5 left-5">
-                  <Badge level={profile.cosmicType} />
-                </View>
-                {/* 신고/차단 팝오버 메뉴 */}
-                <View className="absolute top-3 right-3">
+          <View className="relative">
+            <UserProfileCard
+              profileImageUri={profile.imageUri}
+              nickname={profile.name}
+              age={String(profile.age)}
+              interests={profile.interests.map((i) => getInterestLabel(i))}
+              badgeLevel={profile.cosmicType}
+              topRightSlot={
+                !isBlocked ? (
                   <PopoverMenu items={popoverItems} align="right">
                     <View className="w-10 h-10 items-center justify-center">
                       <ProfileActionIcon size={28} color="#FFFFFF" orientation="vertical" />
                     </View>
                   </PopoverMenu>
-                </View>
-                <View className="absolute bottom-0 left-0 right-0 px-5 pb-5 gap-2">
-                  <View className="flex-row items-end gap-1">
-                    <Text
-                      className="text-xl font-bold text-white"
-                      style={{ lineHeight: 28 }}
-                    >
-                      {profile.name}
-                    </Text>
-                    <Text
-                      className="text-xl font-bold text-white"
-                      style={{ lineHeight: 28 }}
-                    >
-                      {profile.age}세
-                    </Text>
-                  </View>
-                  {profile.interests.length > 0 && (
-                    <View className="flex-row flex-wrap gap-1">
-                      {profile.interests.map((interest) => (
-                        <InterestTag
-                          key={interest}
-                          label={getInterestLabel(interest)}
-                          variant="overlay"
-                        />
-                      ))}
-                    </View>
-                  )}
-                </View>
-              </>
+                ) : undefined
+              }
+            />
+            {/* 차단 오버레이 */}
+            {isBlocked && (
+              <View className="absolute w-full h-full items-center justify-center bg-black/40 rounded-xl">
+                <Text className="text-base font-medium text-white">
+                  차단된 프로필입니다
+                </Text>
+              </View>
             )}
           </View>
         </View>

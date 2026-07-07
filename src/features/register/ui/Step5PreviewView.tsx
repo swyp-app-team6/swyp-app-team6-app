@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, ScrollView, Pressable } from 'react-native';
 import { BottomCTA, Button } from '@/shared/ui';
+import UserProfileCard from '@/shared/ui/ProfileCard/UserProfileCard';
 import useRegisterFormStore from '../model/useRegisterFormStore';
 import { INTEREST_OPTIONS } from '../model/types';
-import ProfilePreviewCard from './ProfilePreviewCard';
 
 /** 탭 목록 */
 const TABS = ['기본정보', '관심사', '자기소개', '나만의 TMI'] as const;
@@ -50,7 +50,11 @@ export default function Step5PreviewView({ onSubmit, loading }: Props) {
       >
         {/* 프로필 카드 */}
         <View className="items-center pt-6 pb-4">
-          <ProfilePreviewCard />
+          <UserProfileCard
+            profileImageUri={form.profileImageUri}
+            nickname={form.nickname}
+            interests={form.interests.map((i) => getInterestLabel(i))}
+          />
         </View>
 
         {/* 탭 바 */}
