@@ -19,7 +19,7 @@
     "test:e2e:ios": "detox test --configuration ios.sim.debug",
     "test:e2e:android": "detox test --configuration android.emu.debug",
     "fsd:mkdir": "mkdir -p ./{model, ui, api, lib, types}  && touch ./index.tsx",
-    "build:local": "ENVFILE=.env.development sh -c 'cd android && ./gradlew assembleDebug' && open android/app/build/outputs/apk/debug",
+    "android:build": "ENVFILE=.env.production sh -c 'cd android && ./gradlew assembleDebug' && open android/app/build/outputs/apk/debug",
     "prepare": "husky"
   },
   "dependencies": {
