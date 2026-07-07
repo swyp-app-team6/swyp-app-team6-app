@@ -21,7 +21,7 @@ interface Props {
   /** 사용자 닉네임 */
   nickname: string;
   /** 앞면보기 콜백 */
-  onFlip: () => void;
+  onFlip?: () => void;
 }
 
 /**
@@ -153,19 +153,21 @@ export default function CosmicResultBackCard({ result, nickname, onFlip }: Props
         </View>
       </View>
 
-      {/* 앞면보기 버튼 */}
-      <View className="items-center my-2">
-        <Pressable
-          onPress={onFlip}
-          className="flex-row items-center rounded-[20px] px-3 py-1.5"
-          style={{ backgroundColor: 'rgba(245, 245, 245, 0.3)' }}
-        >
-          <FlipIcon color='white' />
-          <Text className="text-xs text-white ml-1" style={{ lineHeight: 16 }}>
-            앞면보기
-          </Text>
-        </Pressable>
-      </View>
+      {/* 앞면보기 버튼 (ProfileFlipWrapper 사용 시 onFlip 생략) */}
+      {onFlip && (
+        <View className="items-center my-2">
+          <Pressable
+            onPress={onFlip}
+            className="flex-row items-center rounded-[20px] px-3 py-1.5"
+            style={{ backgroundColor: 'rgba(245, 245, 245, 0.3)' }}
+          >
+            <FlipIcon color='white' />
+            <Text className="text-xs text-white ml-1" style={{ lineHeight: 16 }}>
+              앞면보기
+            </Text>
+          </Pressable>
+        </View>
+      )}
     </LinearGradient>
   );
 }

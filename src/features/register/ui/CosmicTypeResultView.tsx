@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { View, ScrollView } from 'react-native';
+import React from 'react';
+import { View } from 'react-native';
 import { BottomCTA, Button } from '@/shared/ui';
+import ProfileFlipWrapper from '@/shared/ui/ProfileCard/ProfileFlipWrapper';
 import type { CosmicTypeResponse } from '@/entities/cosmic';
 import CosmicResultFrontCard from './CosmicResultFrontCard';
 import CosmicResultBackCard from './CosmicResultBackCard';
@@ -38,41 +39,26 @@ export default function CosmicTypeResultView({
   result,
   nickname,
   onApply,
-  onSaveImage,
 }: Props) {
-  const [isBack, setIsBack] = useState(false);
-
   return (
-    <View className="flex-1">
-      <ScrollView
-        className="flex-1"
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingTop: 12, paddingBottom: 24 }}
-      >
-        {isBack ? (
-          <CosmicResultBackCard
-            result={result}
-            nickname={nickname}
-            onFlip={() => setIsBack(false)}
-          />
-        ) : (
+    <View className="flex-1 h-full">
+      <ProfileFlipWrapper
+        front={
           <CosmicResultFrontCard
             result={result}
             nickname={nickname}
-            onFlip={() => setIsBack(true)}
           />
-        )}
-      </ScrollView>
+        }
+        back={
+          <CosmicResultBackCard
+            result={result}
+            nickname={nickname}
+          />
+        }
+      />
 
       <BottomCTA styleClass={{ root: 'border-t-0' }}>
         <View className="gap-3">
-          {onSaveImage && (
-            <Button
-              title="이미지 저장"
-              variant="outline"
-              onPress={onSaveImage}
-            />
-          )}
           <Button title="카드에 적용하기" onPress={onApply} />
         </View>
       </BottomCTA>
