@@ -1,7 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { Modal, Pressable, Text, View } from 'react-native';
 import { Button } from '@/shared/ui';
 import QRCode from 'react-native-qrcode-svg';
+import { useQuery } from '@tanstack/react-query';
+import { ProfileAPI } from '@/entities/user';
+import useCountdownTimer from '../lib/useCountdownTimer';
 
 /** QR 유효 시간 (초) */
 const QR_EXPIRY_SECONDS = 60;
@@ -18,7 +21,7 @@ interface Props {
  * ---
  * - 간단설명: 내 프로필 카드 QR 코드 공유 모달
  * - 제약사항 및 특이사항:
- *   - QR 코드 영역(120x120)과 카운트다운 타이머 표시
+ *   - QR 코드에 프로필 uuid를 인코딩
  *   - 60초 카운트다운 후 자동 닫힘
  *   - 모달 열릴 때 타이머 시작, 닫힐 때 초기화
  * ---
@@ -28,37 +31,9 @@ interface Props {
  * @example
  * <ProfileShareQRModal visible={showQR} onClose={() => setShowQR(false)} />
  */
-/** QR 코드에 인코딩할 데이터 (추후 API 연동 시 동적 값으로 교체) */
-const QR_DATA = 'swyp_exchange_profile';
-
 export default function ProfileShareQRModal({ visible, onClose }: Props) {
-  const [remainSeconds, setRemainSeconds] = useState(QR_EXPIRY_SECONDS);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const clearTimer = useCallback(() => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
-  }, []);
-
-  useEffect(() => {
-    if (visible) {
-      setRemainSeconds(QR_EXPIRY_SECONDS);
-      timerRef.current = setInterval(() => {
-        setRemainSeconds((prev) => {
-          if (prev <= 1) {
-            onClose();
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    } else {
-      clearTimer();
-    }
-    return clearTimer;
-  }, [visible, onClose, clearTimer]);
+  const { data: qrData } = useQuery(ProfileAPI.query.fetchUuid());
+  const remainSeconds = useCountdownTimer(QR_EXPIRY_SECONDS, visible, onClose);
 
   return (
     <Modal visible={visible} transparent animationType="fade">
@@ -88,7 +63,7 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
                   borderColor: '#F5F5F5',
                 }}
               >
-                <QRCode value={QR_DATA} size={100} />
+                {qrData?.qr && <QRCode value={qrData.qr} size={100} />}
               </View>
 
               {/* 카운트다운 */}

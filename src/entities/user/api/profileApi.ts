@@ -117,12 +117,14 @@ export class ProfileAPI {
         return data;
       },
     }),
-    qr: () => ({
+    fetchUuid: () => ({
       queryKey: ['qr'],
       queryFn: async () => {
         const { data } = await ProfileAPI.fetchQrUuid();
         return data;
       },
+      //@ts-ignore
+      staleTime: Infinity,
     }),
   });
 }
