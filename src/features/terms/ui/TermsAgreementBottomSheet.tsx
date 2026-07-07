@@ -1,9 +1,12 @@
-import React, { forwardRef, useCallback, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import React, { forwardRef, useCallback, useMemo, useState } from 'react';
+import { ActivityIndicator, Linking, Pressable, Text, View } from 'react-native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useImperativeHandle, useRef } from 'react';
 import { Button, Checkbox, SafeBottomSheetModal } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
+import type { TermsType } from '@/entities/terms';
+import useTermsQuery from '../api/useTermsQuery';
+import useTermsAgreementMutation from '../api/useTermsAgreementMutation';
 
 interface Props {
   /** 동의 완료 시 호출되는 콜백 */
@@ -17,9 +20,11 @@ interface Props {
  * ---
  * - 간단설명: 서비스 이용약관 동의를 위한 바텀시트 컴포넌트
  * - 제약사항 및 특이사항:
- *   - 필수 항목 3개 모두 체크 시 "동의 완료하기" 버튼 활성화
+ *   - GET /terms API로 약관 목록을 동적 조회하여 렌더링
+ *   - required: true인 항목 모두 체크 시 "동의 완료하기" 버튼 활성화
  *   - "이용약관에 모두 동의" 체크 시 전체 선택/해제
- *   - 바텀시트 외부 탭 시 onDismiss 콜백 호출
+ *   - content_url이 있는 항목은 "보기" 클릭 시 외부 링크 이동
+ *   - POST /terms/agreements API로 동의 처리 후 onAgree 콜백 호출
  *   - ref를 통해 open/close 제어
  * ---
  * @param onAgree 동의 완료 시 콜백
@@ -32,41 +37,84 @@ interface Props {
 const TermsAgreementBottomSheet = forwardRef<BottomSheetHandle, Props>(
   ({ onAgree, onDismiss }, ref) => {
     const modalRef = useRef<BottomSheetModal>(null);
+    const [isOpen, setIsOpen] = useState(false);
 
-    const [termsOfService, setTermsOfService] = useState(false);
-    const [privacyPolicy, setPrivacyPolicy] = useState(false);
-    const [ageConfirm, setAgeConfirm] = useState(false);
+    /** 약관 목록 조회 — 바텀시트 열릴 때만 fetch */
+    const { data: termsData, isLoading, isError } = useTermsQuery(isOpen);
+    const terms = useMemo(() => termsData?.terms ?? [], [termsData]);
 
-    const allChecked = termsOfService && privacyPolicy && ageConfirm;
+    /** 동의 상태 관리: { SERVICE: false, PRIVACY: false, ... } */
+    const [checkedMap, setCheckedMap] = useState<Record<string, boolean>>({});
+
+    /** 약관 동의 mutation */
+    const { mutateAsync: agreeTerms, isPending } = useTermsAgreementMutation();
+
+    /** 필수 항목 모두 체크 여부 (버튼 활성화 조건) */
+    const requiredTypes = terms.filter((t) => t.required).map((t) => t.type);
+    const allRequiredChecked =
+      requiredTypes.length > 0 && requiredTypes.every((type) => checkedMap[type]);
+
+    /** 전체 항목 체크 여부 ("모두 동의" 체크박스 상태) */
+    const allChecked =
+      terms.length > 0 && terms.every((t) => checkedMap[t.type]);
 
     useImperativeHandle(ref, () => ({
       open: () => {
-        setTermsOfService(false);
-        setPrivacyPolicy(false);
-        setAgeConfirm(false);
+        setCheckedMap({});
+        setIsOpen(true);
         modalRef.current?.present();
       },
-      close: () => modalRef.current?.dismiss(),
+      close: () => {
+        setIsOpen(false);
+        modalRef.current?.dismiss();
+      },
     }));
 
+    /** 전체 동의 토글 */
     const handleToggleAll = useCallback(
       (value: boolean) => {
-        setTermsOfService(value);
-        setPrivacyPolicy(value);
-        setAgeConfirm(value);
+        const next: Record<string, boolean> = {};
+        terms.forEach((t) => {
+          next[t.type] = value;
+        });
+        setCheckedMap(next);
       },
-      [],
+      [terms],
     );
 
-    const handleAgree = useCallback(() => {
+    /** 개별 항목 토글 */
+    const handleToggleItem = useCallback((type: TermsType, value: boolean) => {
+      setCheckedMap((prev) => ({ ...prev, [type]: value }));
+    }, []);
+
+    /** content_url 외부 링크 열기 */
+    const handleViewContent = useCallback((url: string | null) => {
+      if (url) {
+        Linking.openURL(url);
+      }
+    }, []);
+
+    /** 동의 완료 처리 — POST /terms/agreements 호출 후 onAgree 콜백 */
+    const handleAgree = useCallback(async () => {
+      const agreedTypes = terms
+        .filter((t) => checkedMap[t.type])
+        .map((t) => t.type);
+      await agreeTerms({ agreed_types: agreedTypes });
+      setIsOpen(false);
       modalRef.current?.dismiss();
       onAgree();
-    }, [onAgree]);
+    }, [terms, checkedMap, agreeTerms, onAgree]);
+
+    /** 바텀시트 닫힘 처리 */
+    const handleDismiss = useCallback(() => {
+      setIsOpen(false);
+      onDismiss?.();
+    }, [onDismiss]);
 
     return (
       <SafeBottomSheetModal
         ref={modalRef}
-        onDismiss={onDismiss}
+        onDismiss={handleDismiss}
       >
         {/* 헤더: X 닫기 버튼 */}
         <View className="flex-row justify-end px-5 pt-1 pb-1">
@@ -88,38 +136,38 @@ const TermsAgreementBottomSheet = forwardRef<BottomSheetHandle, Props>(
 
         {/* 약관 항목 목록 */}
         <View className="px-5 gap-2">
-          {/* [필수] 서비스 이용약관 동의 */}
-          <View className="flex-row items-center justify-between rounded-xl border border-gray-200 px-4 py-3.5">
-            <Checkbox
-              checked={termsOfService}
-              onValueChange={setTermsOfService}
-              label="[필수] 서비스 이용약관 동의"
-            />
-            <Pressable hitSlop={8}>
-              <Text className="text-sm text-gray-400 underline">보기</Text>
-            </Pressable>
-          </View>
-
-          {/* [필수] 개인정보 처리방침 동의 */}
-          <View className="flex-row items-center justify-between rounded-xl border border-gray-200 px-4 py-3.5">
-            <Checkbox
-              checked={privacyPolicy}
-              onValueChange={setPrivacyPolicy}
-              label="[필수] 개인정보 처리방침 동의"
-            />
-            <Pressable hitSlop={8}>
-              <Text className="text-sm text-gray-400 underline">보기</Text>
-            </Pressable>
-          </View>
-
-          {/* [필수] 만 14세 이상입니다 */}
-          <View className="flex-row items-center rounded-xl border border-gray-200 px-4 py-3.5">
-            <Checkbox
-              checked={ageConfirm}
-              onValueChange={setAgeConfirm}
-              label="[필수] 만 14세 이상입니다"
-            />
-          </View>
+          {isLoading ? (
+            <View className="py-8 items-center">
+              <ActivityIndicator />
+            </View>
+          ) : isError ? (
+            <View className="py-4">
+              <Text className="text-sm text-red-500">
+                약관 정보를 불러오지 못했습니다.
+              </Text>
+            </View>
+          ) : (
+            terms.map((item) => (
+              <View
+                key={item.type}
+                className="flex-row items-center justify-between rounded-xl border border-gray-200 px-4 py-3.5"
+              >
+                <Checkbox
+                  checked={!!checkedMap[item.type]}
+                  onValueChange={(v) => handleToggleItem(item.type, v)}
+                  label={`[${item.required ? '필수' : '선택'}] ${item.label}`}
+                />
+                {item.content_url && (
+                  <Pressable
+                    onPress={() => handleViewContent(item.content_url)}
+                    hitSlop={8}
+                  >
+                    <Text className="text-sm text-gray-400 underline">보기</Text>
+                  </Pressable>
+                )}
+              </View>
+            ))
+          )}
         </View>
 
         {/* 이용약관에 모두 동의 */}
@@ -136,7 +184,7 @@ const TermsAgreementBottomSheet = forwardRef<BottomSheetHandle, Props>(
         <View className="px-5 pt-3">
           <Button
             title="동의 완료하기"
-            disabled={!allChecked}
+            disabled={!allRequiredChecked || isPending}
             onPress={handleAgree}
           />
         </View>
