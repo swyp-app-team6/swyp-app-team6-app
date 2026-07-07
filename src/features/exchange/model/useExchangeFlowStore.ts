@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { Alert } from 'react-native';
 import type { AxiosError } from 'axios';
 import type { MyProfileResponse } from '@/entities/user';
 import { ProfileAPI } from '@/entities/user';
@@ -86,7 +87,9 @@ const useExchangeFlowStore = create<ExchangeFlowState>((set, get) => ({
         error: null,
       });
     } catch (err) {
+      console.error('[Exchange] onScanComplete 실패:', err);
       const message = getErrorMessage(err as AxiosError);
+      Alert.alert('프로필 교환', message);
       set({ error: message, step: ExchangeFlowStep.IDLE });
     }
   },
@@ -114,16 +117,21 @@ const useExchangeFlowStore = create<ExchangeFlowState>((set, get) => ({
         });
         onComplete?.();
       } else {
+        const declineMsg = '상대방이 교환을 거절했습니다';
+        console.error('[Exchange] startExchange 거절:', declineMsg);
+        Alert.alert('프로필 교환', declineMsg);
         set({
           step: ExchangeFlowStep.DECLINED,
-          error: '상대방이 교환을 거절했습니다',
+          error: declineMsg,
           _abortController: null,
         });
       }
     } catch (err) {
       if (abortController.signal.aborted) return;
+      console.error('[Exchange] startExchange 실패:', err);
       const axiosErr = err as AxiosError;
       const message = getErrorMessage(axiosErr);
+      Alert.alert('프로필 교환', message);
       const nextStep =
         axiosErr.response?.status === 408
           ? ExchangeFlowStep.TIMEOUT
@@ -139,8 +147,8 @@ const useExchangeFlowStore = create<ExchangeFlowState>((set, get) => ({
     if (step === ExchangeFlowStep.LOADING && scannedProfile?.id) {
       try {
         await ExchangeAPI.cancelStart(scannedProfile.id);
-      } catch {
-        // 취소 실패는 무시 — 이미 idle로 리셋
+      } catch (err) {
+        console.error('[Exchange] cancelExchange 실패:', err);
       }
     }
 
