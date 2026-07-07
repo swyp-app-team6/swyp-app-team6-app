@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { ProfileCard, ProfileQRCodeIcon } from '@/shared/ui';
-import { ProfileCreatePlusIcon, FlipIcon } from '@/shared/ui/icons';
+import { FlipIcon } from '@/shared/ui/icons';
+import EmptyProfileCard from '@/shared/ui/ProfileCard/EmptyProfileCard';
 import { ProfileShareQRModal } from '@/features/profileShare';
 import { getInterestLabel } from '@/features/register';
 import { useMyProfileQuery } from '@/entities/user';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 import type { NavigationPropType } from '@/shared/types';
 import HomeCardBack from './HomeCardBack';
-import HomeCardBackDefault from './HomeCardBackDefault';
 
 /**
  * # HomeWidget
@@ -58,19 +58,10 @@ export default function HomeWidget() {
         /* ── 앞면 ── */
         !hasProfile ? (
           /* 빈 프로필 카드 */
-          <Pressable
+          <EmptyProfileCard
+            text={'새로운 프로필 카드를\n추가하세요'}
             onPress={() => navigation.navigate('registerProfile')}
-            className="h-[392px] w-[284px] items-center justify-center rounded-xl border-2 border-primary-light bg-primary-lightest"
-          >
-            <View className="items-center">
-              <View className="mb-3">
-                <ProfileCreatePlusIcon size={40} />
-              </View>
-              <Text className="text-center text-[14px] font-medium leading-[20px] tracking-tight text-primary">
-                {'새로운 프로필 카드를\n추가하세요'}
-              </Text>
-            </View>
-          </Pressable>
+          />
         ) : (
           /* 프로필 카드 앞면 */
           <Pressable
@@ -102,7 +93,10 @@ export default function HomeWidget() {
           <HomeCardBack cosmicType={profile.cosmic_type} />
         ) : (
           /* 미등록 또는 유형테스트 미완료: 디폴트 안내 뷰 */
-          <HomeCardBackDefault />
+          <EmptyProfileCard
+            text={'유형 테스트를 통해\n나의 유형을 찾아보세요!'}
+            onPress={() => navigation.navigate('cosmicTest')}
+          />
         )
       )}
 
