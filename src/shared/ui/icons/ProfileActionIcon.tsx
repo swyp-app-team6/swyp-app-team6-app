@@ -18,13 +18,11 @@ import type { OrientedIconProps } from './types';
  */
 export default function ProfileActionIcon({ size = 16, color = '#1A1A1A', orientation = 'horizontal' }: OrientedIconProps) {
   const isVertical = orientation === 'vertical';
-  const width = isVertical ? size * (4 / 16) : size;
-  const height = isVertical ? size : size * (4 / 16);
 
   return (
     <Svg
-      width={width}
-      height={height}
+      width={size}
+      height={size}
       viewBox="0 0 16 4"
       fill="none"
       style={isVertical ? { transform: [{ rotate: '90deg' }] } : undefined}

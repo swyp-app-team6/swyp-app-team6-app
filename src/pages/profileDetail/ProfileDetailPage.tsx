@@ -82,8 +82,8 @@ export default function ProfileDetailPage() {
               { label: '삭제', destructive: true, onPress: handleDelete },
             ]}
           >
-            <View className="w-10 h-10 items-center justify-center">
-              <ProfileActionIcon size={24} color="#000000" orientation="vertical" />
+            <View className="items-center justify-center">
+              <ProfileActionIcon size={12} color="#000000" orientation="vertical" />
             </View>
           </PopoverMenu>
         }

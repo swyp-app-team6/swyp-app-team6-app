@@ -44,7 +44,7 @@ export default function Header({ left, center, right, title, showBack = false }:
 
   const leftContent = showBack ? (
     <TouchableOpacity onPress={() => navigation.goBack()}>
-      <ArrowIcon size={24} color="#8C39FB" direction="left" />
+      <ArrowIcon size={24} color="black" direction="left" />
     </TouchableOpacity>
   ) : (
     left ?? null
