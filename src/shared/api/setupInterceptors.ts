@@ -92,7 +92,7 @@ export function setupInterceptors() {
         useApiLogStore.getState().addLog(entry);
       }
 
-      if (error.response?.status !== 401 || originalRequest._retry) {
+      if (error.response?.status !== 401 || originalRequest._retry || originalRequest.skipAuth) {
         return Promise.reject(error);
       }
 
