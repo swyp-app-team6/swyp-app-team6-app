@@ -57,6 +57,115 @@ export const COSMIC_TYPE_LABEL: Record<BadgeLevel, string> = {
  * - cosmicTypeDesc = 유형 설명
  * - isBlocked = 차단 여부
  */
+/** 관심사 항목 */
+export interface InterestItem {
+  /** 관심사 코드 */
+  type: string;
+  /** 관심사 한글 라벨 */
+  label: string;
+}
+
+const API_TO_BADGE: Record<string, BadgeLevel> = {
+  SHOOTING_STAR: 'star',
+  GALAXY: 'galaxy',
+  SOLA: 'solar',
+  LUNA: 'luna',
+};
+
+const BADGE_TO_API: Record<BadgeLevel, string> = {
+  star: 'SHOOTING_STAR',
+  galaxy: 'GALAXY',
+  solar: 'SOLA',
+  luna: 'LUNA',
+};
+
+/**
+ * # apiValueToCosmicType
+ * ---
+ * - 간단설명: API cosmic_type 문자열을 앱의 BadgeLevel로 변환
+ * ---
+ * @param apiValue API 응답의 cosmic_type 값
+ * @example apiValueToCosmicType('SHOOTING_STAR') // 'star'
+ */
+export function apiValueToCosmicType(apiValue: string): BadgeLevel {
+  return API_TO_BADGE[apiValue] ?? 'star';
+}
+
+/**
+ * # cosmicTypeToApiValue
+ * ---
+ * - 간단설명: 앱의 BadgeLevel을 API cosmic_type 문자열로 변환
+ * ---
+ * @param badge 앱의 BadgeLevel 값
+ * @example cosmicTypeToApiValue('star') // 'SHOOTING_STAR'
+ */
+export function cosmicTypeToApiValue(badge: BadgeLevel): string {
+  return BADGE_TO_API[badge];
+}
+
+/**
+ * GET /exchange/archive 응답의 개별 교환 프로필
+ */
+export interface ExchangeArchiveItem {
+  exchange_id: number;
+  nickname: string;
+  cosmic_type: string;
+  cosmic_type_image_key: string;
+  interests: InterestItem[];
+  bio: string;
+  matched_interests: InterestItem[];
+  memo: string | null;
+  score: number | null;
+  is_liked: boolean;
+  exchanged_at: string;
+}
+
+/**
+ * GET /exchange/archive 페이지네이션 응답
+ */
+export interface ExchangeArchiveResponse {
+  exchanges: ExchangeArchiveItem[];
+  total_count: number;
+  next_cursor: string | null;
+}
+
+/**
+ * GET /exchange/archive 요청 파라미터
+ */
+export interface ExchangeArchiveParams {
+  keyword?: string;
+  regions?: string[];
+  types?: string[];
+  liked?: boolean;
+  sort?: 'RECENT' | 'OLDEST';
+  cursor?: string;
+  size?: number;
+}
+
+/**
+ * GET /exchange/archive/{exchangeId} 상세 응답
+ */
+export interface ExchangeArchiveDetailResponse {
+  exchange_id: number;
+  exchanged_at: string;
+  is_matched: boolean;
+  matched_interests: InterestItem[];
+  memo: string;
+  score: number;
+  is_liked: boolean;
+  my_profile: {
+    nickname: string;
+    cosmic_type: string;
+    cosmic_type_image_key: string;
+  };
+  profile: Record<string, unknown>;
+}
+
+export interface ExchangeLikeRequest { liked: boolean; }
+export interface ExchangeLikeResponse { exchange_id: number; is_liked: boolean; }
+export interface ExchangeDeleteRequest { exchange_ids: number[]; }
+export interface ExchangeDeleteResponse { deleted_count: number; deleted_ids: number[]; }
+
 export interface StorageProfileDetail extends StorageProfile {
   /** 관심사 목록 */
   interests: string[];

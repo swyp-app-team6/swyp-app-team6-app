@@ -1,3 +1,18 @@
-export type { StorageProfile, StorageProfileDetail } from './model/types';
-export { COSMIC_TYPE_LABEL } from './model/types';
-export { MOCK_STORAGE_PROFILES, MOCK_STORAGE_PROFILE_DETAILS } from './model/mockData';
+export type {
+  StorageProfile,
+  StorageProfileDetail,
+  ExchangeArchiveItem,
+  ExchangeArchiveResponse,
+  ExchangeArchiveParams,
+  ExchangeArchiveDetailResponse,
+  InterestItem,
+} from './model/types';
+export {
+  COSMIC_TYPE_LABEL,
+  apiValueToCosmicType,
+  cosmicTypeToApiValue,
+} from './model/types';
+
+export { ExchangeArchiveAPI } from './api/exchangeArchiveApi';
+export { default as useExchangeArchiveListQuery } from './api/useExchangeArchiveListQuery';
+export { default as useExchangeArchiveDetailQuery } from './api/useExchangeArchiveDetailQuery';

@@ -6,11 +6,16 @@ import type { BottomSheetHandle } from '@/shared/ui';
 import PullToRefreshWrapper from '@/shared/ui/PullToRefreshWrapper';
 import { HeartIcon, SearchIcon, FilterIcon } from '@/shared/ui/icons';
 import { openDialog } from '@/shared/ui/Dialog';
-import { MOCK_STORAGE_PROFILES, COSMIC_TYPE_LABEL } from '@/entities/storage';
-import type { StorageProfile } from '@/entities/storage';
+import {
+  useExchangeArchiveListQuery,
+  cosmicTypeToApiValue,
+} from '@/entities/storage';
+import type { ExchangeArchiveItem } from '@/entities/storage';
 import type { NavigationPropType } from '@/shared/types';
 import {
   StorageFilterBottomSheet,
+  useToggleLikeMutation,
+  useDeleteArchivesMutation,
   type StorageFilterState,
 } from '@/features/storage';
 import ProfileGrid from './ProfileGrid';
@@ -19,12 +24,11 @@ import EditToolbar from './EditToolbar';
 /**
  * # StorageAllWidget
  * ---
- * - 간단설명: 보관함 전체보기 위젯 — 검색, 필터, 편집 모드(전체선택/선택삭제) 포함
+ * - 간단설명: 보관함 전체보기 위젯 — 검색, 필터, 편집 모드, 무한스크롤
  * - 제약사항 및 특이사항:
- *   - 편집 모드: 체크박스 + 전체선택/편집취소/선택삭제
- *   - 필터: 지역 + 유형 바텀시트
- *   - 삭제: openDialog로 확인/완료 다이얼로그
- *   - mock 데이터 기반 (API 미연동)
+ *   - API 연동: useExchangeArchiveListQuery로 커서 기반 무한스크롤
+ *   - 좋아요: optimistic update
+ *   - 삭제: 다이얼로그 확인 후 mutation
  * ---
  * @example
  * <StorageAllWidget />
@@ -32,7 +36,6 @@ import EditToolbar from './EditToolbar';
 export default function StorageAllWidget() {
   const navigation = useNavigation<NavigationPropType>();
   const [searchQuery, setSearchQuery] = useState('');
-  const [profiles, setProfiles] = useState<StorageProfile[]>(MOCK_STORAGE_PROFILES);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [isFavoriteOnly, setIsFavoriteOnly] = useState(false);
@@ -42,79 +45,73 @@ export default function StorageAllWidget() {
   });
   const filterRef = useRef<BottomSheetHandle>(null);
 
-  const filteredProfiles = useMemo(() => {
-    let result = profiles;
+  const params = useMemo(
+    () => ({
+      keyword: searchQuery.trim() || undefined,
+      regions: filter.regions.length > 0 ? filter.regions : undefined,
+      types:
+        filter.cosmicTypes.length > 0
+          ? filter.cosmicTypes.map((t) => cosmicTypeToApiValue(t as any))
+          : undefined,
+      liked: isFavoriteOnly ? true : undefined,
+    }),
+    [searchQuery, filter, isFavoriteOnly],
+  );
 
-    if (searchQuery.trim()) {
-      const query = searchQuery.trim().toLowerCase();
-      result = result.filter((p) => {
-        const typeLabel = COSMIC_TYPE_LABEL[p.cosmicType];
-        return (
-          p.name.toLowerCase().includes(query) ||
-          typeLabel.toLowerCase().includes(query)
-        );
-      });
-    }
+  const {
+    data,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useExchangeArchiveListQuery(params);
 
-    if (isFavoriteOnly) {
-      result = result.filter((p) => p.isFavorited);
-    }
+  const { mutate: toggleLike } = useToggleLikeMutation();
+  const { mutate: deleteArchives } = useDeleteArchivesMutation();
 
-    if (filter.cosmicTypes.length > 0) {
-      result = result.filter((p) => filter.cosmicTypes.includes(p.cosmicType));
-    }
-
-    return result;
-  }, [searchQuery, profiles, isFavoriteOnly, filter]);
+  const exchanges: ExchangeArchiveItem[] = useMemo(
+    () => data?.pages.flatMap((page) => page.exchanges) ?? [],
+    [data],
+  );
+  const totalCount = data?.pages[0]?.total_count ?? 0;
 
   const handleToggleFavorite = (id: number) => {
-    setProfiles((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, isFavorited: !p.isFavorited } : p)),
-    );
+    const item = exchanges.find((e) => e.exchange_id === id);
+    if (item) {
+      toggleLike({ exchangeId: id, liked: !item.is_liked });
+    }
   };
 
-  const handleRefetch = () => {
-    setProfiles([...MOCK_STORAGE_PROFILES]);
-  };
-
-  /** 편집 모드 진입 */
   const handleEnterEditMode = () => {
     setIsEditMode(true);
     setSelectedIds(new Set());
   };
 
-  /** 편집 취소 */
   const handleCancelEdit = () => {
     setIsEditMode(false);
     setSelectedIds(new Set());
   };
 
-  /** 개별 선택 토글 */
-  const handleToggleSelect = useCallback(
-    (id: number) => {
-      setSelectedIds((prev) => {
-        const next = new Set(prev);
-        if (next.has(id)) {
-          next.delete(id);
-        } else {
-          next.add(id);
-        }
-        return next;
-      });
-    },
-    [],
-  );
+  const handleToggleSelect = useCallback((id: number) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  }, []);
 
-  /** 전체 선택 토글 */
   const handleToggleSelectAll = () => {
-    if (selectedIds.size === filteredProfiles.length) {
+    if (selectedIds.size === exchanges.length) {
       setSelectedIds(new Set());
     } else {
-      setSelectedIds(new Set(filteredProfiles.map((p) => p.id)));
+      setSelectedIds(new Set(exchanges.map((p) => p.exchange_id)));
     }
   };
 
-  /** 선택 삭제 */
   const handleDeleteSelected = () => {
     if (selectedIds.size === 0) return;
 
@@ -122,29 +119,39 @@ export default function StorageAllWidget() {
       type: 'confirm',
       title: '선택한 프로필을 삭제하시겠어요?',
       okFn: () => {
-        setProfiles((prev) => prev.filter((p) => !selectedIds.has(p.id)));
-        setSelectedIds(new Set());
-        setIsEditMode(false);
-
-        openDialog({
-          type: 'alert',
-          title: '선택한 프로필을 삭제했습니다',
-        });
+        deleteArchives(
+          { exchange_ids: Array.from(selectedIds) },
+          {
+            onSuccess: () => {
+              setSelectedIds(new Set());
+              setIsEditMode(false);
+              openDialog({
+                type: 'alert',
+                title: '선택한 프로필을 삭제했습니다',
+              });
+            },
+          },
+        );
       },
     });
   };
 
-  /** 필터 적용 */
   const handleApplyFilter = useCallback((newFilter: StorageFilterState) => {
     setFilter(newFilter);
   }, []);
 
+  const handleEndReached = () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
+
   const isAllSelected =
-    filteredProfiles.length > 0 && selectedIds.size === filteredProfiles.length;
+    exchanges.length > 0 && selectedIds.size === exchanges.length;
 
   return (
     <>
-      <PullToRefreshWrapper onRefetch={handleRefetch}>
+      <PullToRefreshWrapper onRefetch={refetch}>
         {/* 검색바 */}
         <Input
           placeholder="이름 또는 태그로 검색"
@@ -160,7 +167,7 @@ export default function StorageAllWidget() {
             <View className="flex-row items-center gap-1">
               <Text className="text-sm text-[#565656]">총</Text>
               <Text className="text-sm text-[#1A1A1A]">
-                {filteredProfiles.length}개
+                {totalCount}개
               </Text>
             </View>
             {!isEditMode && (
@@ -209,7 +216,7 @@ export default function StorageAllWidget() {
 
         {/* 프로필 그리드 */}
         <ProfileGrid
-          profiles={filteredProfiles}
+          profiles={exchanges}
           onToggleFavorite={handleToggleFavorite}
           onPressProfile={(id) =>
             navigation.navigate('exchangedProfileDetail', { profileId: id })
@@ -217,6 +224,8 @@ export default function StorageAllWidget() {
           isEditMode={isEditMode}
           selectedIds={selectedIds}
           onToggleSelect={handleToggleSelect}
+          onEndReached={handleEndReached}
+          isFetchingNextPage={isFetchingNextPage}
         />
       </PullToRefreshWrapper>
 

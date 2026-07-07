@@ -1,12 +1,12 @@
 import React, { useMemo, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Input } from '@/shared/ui';
 import { SearchFallbackView } from '@/shared/ui/SearchFallbackView';
 import PullToRefreshWrapper from '@/shared/ui/PullToRefreshWrapper';
 import { ArrowIcon, SearchIcon } from '@/shared/ui/icons';
-import { MOCK_STORAGE_PROFILES, COSMIC_TYPE_LABEL } from '@/entities/storage';
-import type { StorageProfile } from '@/entities/storage';
+import { useExchangeArchiveListQuery } from '@/entities/storage';
+import { useToggleLikeMutation } from '@/features/storage';
 import type { NavigationPropType } from '@/shared/types';
 import ProfileGrid from './ProfileGrid';
 
@@ -18,11 +18,9 @@ const PREVIEW_COUNT = 4;
  * ---
  * - 간단설명: 보관함 미리보기 위젯 — 최신 4개 프로필 + 빈 상태 + 전체보기 네비게이션
  * - 제약사항 및 특이사항:
- *   - 검색: 이름 또는 코스믹 유형 라벨 기준 필터링
- *   - mock 데이터 기반 (API 미연동)
- *   - 즐겨찾기 토글은 로컬 상태로 관리
- *   - 최대 4개까지만 표시, 전체보기 클릭 시 storageAll 페이지로 이동
- *   - 프로필이 없으면 빈 상태 메시지 표시
+ *   - API 연동: useExchangeArchiveListQuery({ size: 4 })
+ *   - 검색: keyword 파라미터로 서버 검색
+ *   - 즐겨찾기: useToggleLikeMutation으로 서버 반영
  * ---
  * @example
  * <StorageWidget />
@@ -30,40 +28,31 @@ const PREVIEW_COUNT = 4;
 export default function StorageWidget() {
   const navigation = useNavigation<NavigationPropType>();
   const [searchQuery, setSearchQuery] = useState('');
-  const [profiles, setProfiles] = useState<StorageProfile[]>(MOCK_STORAGE_PROFILES);
 
-  const filteredProfiles = useMemo(() => {
-    if (!searchQuery.trim()) return profiles;
-    const query = searchQuery.trim().toLowerCase();
-    return profiles.filter((p) => {
-      const typeLabel = COSMIC_TYPE_LABEL[p.cosmicType];
-      return (
-        p.name.toLowerCase().includes(query) ||
-        typeLabel.toLowerCase().includes(query)
-      );
-    });
-  }, [searchQuery, profiles]);
-
-  /** 미리보기용 최신 4개 프로필 */
-  const previewProfiles = useMemo(
-    () => filteredProfiles.slice(0, PREVIEW_COUNT),
-    [filteredProfiles],
+  const params = useMemo(
+    () => ({
+      size: PREVIEW_COUNT,
+      keyword: searchQuery.trim() || undefined,
+    }),
+    [searchQuery],
   );
 
+  const { data, isLoading, refetch } = useExchangeArchiveListQuery(params);
+  const { mutate: toggleLike } = useToggleLikeMutation();
+
+  const exchanges = data?.pages[0]?.exchanges ?? [];
+  const totalCount = data?.pages[0]?.total_count ?? 0;
+  const isEmpty = exchanges.length === 0 && !isLoading;
+
   const handleToggleFavorite = (id: number) => {
-    setProfiles((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, isFavorited: !p.isFavorited } : p)),
-    );
+    const item = exchanges.find((e) => e.exchange_id === id);
+    if (item) {
+      toggleLike({ exchangeId: id, liked: !item.is_liked });
+    }
   };
-
-  const handleRefetch = () => {
-    setProfiles([...MOCK_STORAGE_PROFILES]);
-  };
-
-  const isEmpty = filteredProfiles.length === 0;
 
   return (
-    <PullToRefreshWrapper onRefetch={handleRefetch}>
+    <PullToRefreshWrapper onRefetch={refetch}>
       {/* 검색바 */}
       <Input
         placeholder="이름 또는 태그로 검색"
@@ -77,7 +66,7 @@ export default function StorageWidget() {
       <View className="mb-3 mt-5 flex-row items-center justify-between">
         <View className="flex-row items-center gap-1">
           <Text className="text-sm text-[#565656]">총</Text>
-          <Text className="text-sm text-[#1A1A1A]">{filteredProfiles.length}개</Text>
+          <Text className="text-sm text-[#1A1A1A]">{totalCount}개</Text>
         </View>
         {!isEmpty && (
           <Pressable
@@ -91,14 +80,18 @@ export default function StorageWidget() {
       </View>
 
       {/* 프로필 그리드 또는 빈 상태 */}
-      {isEmpty ? (
+      {isLoading ? (
+        <View className="flex-1 items-center py-40">
+          <ActivityIndicator size="large" />
+        </View>
+      ) : isEmpty ? (
         <SearchFallbackView
           message="아직 교환한 프로필이 없어요!"
           styleClass={{ root: 'flex-1 py-40' }}
         />
       ) : (
         <ProfileGrid
-          profiles={previewProfiles}
+          profiles={exchanges}
           onToggleFavorite={handleToggleFavorite}
           onPressProfile={(id) =>
             navigation.navigate('exchangedProfileDetail', { profileId: id })
