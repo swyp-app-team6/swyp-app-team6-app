@@ -42,6 +42,7 @@ export default function CosmicTypeResultView({
 }: Props) {
   return (
     <View className="flex-1 h-full">
+      <View className="flex-1 items-center justify-center">
       <ProfileFlipWrapper
         front={
           <CosmicResultFrontCard
@@ -56,6 +57,7 @@ export default function CosmicTypeResultView({
           />
         }
       />
+      </View>
 
       <BottomCTA styleClass={{ root: 'border-t-0' }}>
         <View className="gap-3">
