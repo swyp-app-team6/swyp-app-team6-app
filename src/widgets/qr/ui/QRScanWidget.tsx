@@ -1,14 +1,13 @@
-import React, { useCallback } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import React, { useCallback, useRef } from 'react';
+import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useCameraDevice } from 'react-native-vision-camera';
-import { useMyProfileQuery } from '@/entities/user';
-import { generateMockQRPayload } from '@/features/exchange';
 import QRScanView from './QRScanView';
 import {
   ExchangeConfirmModal,
   ExchangePreviewModal,
   ExchangeLoadingModal,
+  ExchangeFlowStep,
   useExchangeFlowStore,
 } from '@/features/exchange';
 import type { NavigationPropType } from '@/shared/types';
@@ -30,20 +29,21 @@ export default function QRScanWidget() {
   const navigation = useNavigation<NavigationPropType>();
   const device = useCameraDevice('back');
 
-  const { data: profile } = useMyProfileQuery();
+  /** 스캔 처리 중 중복 호출 방지 플래그 */
+  const isScanned = useRef(false);
+
   const step = useExchangeFlowStore((s) => s.step);
   const onScanComplete = useExchangeFlowStore((s) => s.onScanComplete);
   const goToPreview = useExchangeFlowStore((s) => s.goToPreview);
   const startExchange = useExchangeFlowStore((s) => s.startExchange);
   const cancelExchange = useExchangeFlowStore((s) => s.cancelExchange);
 
-  /** 교환하기 → 로딩 후 결과 페이지로 이동 */
+  /** 교환하기 → long-polling 후 결과 페이지로 이동 */
   const handleStartExchange = useCallback(() => {
-    const myInterests = profile?.interests.map((i) => i.type) ?? [];
-    startExchange(myInterests, () => {
+    startExchange(() => {
       navigation.navigate('exchangeResult');
     });
-  }, [startExchange, navigation, profile]);
+  }, [startExchange, navigation]);
 
   /** 철회하기 → 홈으로 이동 */
   const handleCancel = useCallback(() => {
@@ -56,45 +56,35 @@ export default function QRScanWidget() {
       {/* QR 스캔 카메라 */}
       {device ? (
         <QRScanView
-          isActive={step === 'idle'}
+          isActive={step === ExchangeFlowStep.IDLE}
           onScanned={(value) => {
-            if (value) onScanComplete(value);
+            if (!isScanned.current && value) {
+              console.log(value);
+              onScanComplete(value);
+              isScanned.current = true;
+            }
           }}
           onError={(error) => console.error('QR 스캔 오류:', error)}
         />
       ) : (
-        <View className="flex-1 items-center justify-center">
-          {/* 카메라 없음 — QRScanView 내부에서 권한 처리 */}
-        </View>
-      )}
-
-      {/* TODO: 테스트용 스캔완료 버튼 — 추후 제거 */}
-      {step === 'idle' && (
-        <View className="absolute bottom-24 left-0 right-0 items-center">
-          <Pressable
-            className="rounded-xl bg-primary px-6 py-3"
-            onPress={() => onScanComplete(JSON.stringify(generateMockQRPayload(1)))}
-          >
-            <Text className="text-base font-bold text-white">스캔완료 (테스트)</Text>
-          </Pressable>
-        </View>
+        <View className="flex-1 items-center justify-center" />
       )}
 
       {/* 교환 확인 모달 */}
       <ExchangeConfirmModal
-        visible={step === 'confirm'}
+        visible={step === ExchangeFlowStep.CONFIRM}
         onCancel={handleCancel}
         onPreview={goToPreview}
       />
 
       {/* 내 프로필 미리보기 모달 */}
       <ExchangePreviewModal
-        visible={step === 'preview'}
+        visible={step === ExchangeFlowStep.PREVIEW}
         onExchange={handleStartExchange}
       />
 
       {/* 로딩 모달 */}
-      <ExchangeLoadingModal visible={step === 'loading'} />
+      <ExchangeLoadingModal visible={step === ExchangeFlowStep.LOADING} />
     </View>
   );
 }

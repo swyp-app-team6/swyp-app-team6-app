@@ -78,3 +78,30 @@ export enum TMIQuestionType {
   /** 밸런스 게임 */
   BALANCE_GAME = 'BALANCE_GAME',
 }
+
+/**
+ * 교환 플로우 단계
+ * - IDLE = 스캔 대기
+ * - CONFIRM = 교환 확인 모달
+ * - PREVIEW = 내 프로필 미리보기
+ * - LOADING = 교환 대기 중 (long-polling)
+ * - RESULT = 공통 관심사 결과
+ * - TIMEOUT = 타임아웃
+ * - DECLINED = 상대방 거절
+ */
+export enum ExchangeFlowStep {
+  /** 스캔 대기 */
+  IDLE = 'idle',
+  /** 교환 확인 모달 */
+  CONFIRM = 'confirm',
+  /** 내 프로필 미리보기 */
+  PREVIEW = 'preview',
+  /** 교환 대기 중 (long-polling) */
+  LOADING = 'loading',
+  /** 공통 관심사 결과 */
+  RESULT = 'result',
+  /** 타임아웃 */
+  TIMEOUT = 'timeout',
+  /** 상대방 거절 */
+  DECLINED = 'declined',
+}

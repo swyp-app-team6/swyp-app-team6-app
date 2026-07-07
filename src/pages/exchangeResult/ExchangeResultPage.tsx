@@ -26,13 +26,16 @@ export default function ExchangeResultPage() {
 
   const { data: profile } = useMyProfileQuery();
   const scannedProfile = useExchangeFlowStore((s) => s.scannedProfile);
-  const commonInterests = useExchangeFlowStore((s) => s.commonInterests);
+  const exchangeResult = useExchangeFlowStore((s) => s.exchangeResult);
   const reset = useExchangeFlowStore((s) => s.reset);
 
-  const hasCommon = commonInterests.length > 0;
-  const theirName = scannedProfile?.name ?? '';
+  const matchedInterests = exchangeResult?.matched_interests ?? [];
+  const hasCommon = matchedInterests.length > 0;
+  const theirName = scannedProfile?.nickname ?? '';
   const myName = profile?.nickname ?? '';
-  const displayInterests = hasCommon ? commonInterests : (scannedProfile?.interests ?? []);
+  const displayInterests = hasCommon
+    ? matchedInterests.map((i) => i.type)
+    : scannedProfile?.interests.map((i) => i.type) ?? [];
 
   /** 홈으로 이동 */
   const handleGoHome = () => {
