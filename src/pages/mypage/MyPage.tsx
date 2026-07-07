@@ -5,8 +5,8 @@ import { AppVersion, Button, Header, Layout, openErrorDialog } from '@/shared/ui
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
 import useAuthStore from '@/entities/user/model/authStore';
-import useConditionStateStore from '@/shared/model/conditionStateStore';
 import type { NavigationPropType } from '@/shared/types';
+import { useQueryClient } from '@tanstack/react-query';
 
 /**
  * # MyPage
@@ -18,16 +18,19 @@ import type { NavigationPropType } from '@/shared/types';
  * ---
  */
 function MyPage() {
+  const queryClient = useQueryClient();
   const navigation = useNavigation<NavigationPropType>();
   const user = useAuthStore((state) => state.user);
   const clearAuth = useAuthStore((state) => state.clear);
-  const clearCondition = useConditionStateStore((state) => state.clearAll);
 
-  /** 로그아웃: 토큰 및 조건 플래그 초기화 후 로그인 화면으로 이동 */
+  /** 
+   * 로그아웃: 토큰 및 조건 플래그 초기화 후 로그인 화면으로 이동 
+   * TODO: 로그아웃 API 연동
+   * */
   const handleLogout = async () => {
     try {
       await clearAuth();
-      await clearCondition();
+      queryClient.resetQueries();
       navigation.reset({
         index: 0,
         routes: [{ name: 'home' }],
