@@ -6,6 +6,7 @@ import { ProfileAPI } from '@/entities/user';
 import { ExchangeAPI } from '@/entities/exchange';
 import type { ExchangeResult } from '@/entities/exchange';
 import { ExchangeFlowStep } from '@/shared/enums';
+import { openErrorDialog } from '@/shared/ui';
 
 interface ExchangeFlowState {
   /** 현재 교환 플로우 단계 */
@@ -149,6 +150,7 @@ const useExchangeFlowStore = create<ExchangeFlowState>((set, get) => ({
         await ExchangeAPI.cancelStart(scannedProfile.id);
       } catch (err) {
         console.error('[Exchange] cancelExchange 실패:', err);
+        openErrorDialog({ message: '교환 취소에 실패했습니다' });
       }
     }
 

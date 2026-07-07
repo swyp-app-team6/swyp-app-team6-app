@@ -4,6 +4,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import type { User, AuthTokens } from './types';
 import { UserAPI } from '../api/userApi';
 import { STORAGE_KEYS } from '@/shared/lib/storageKeys';
+import { openErrorDialog } from '@/shared/ui';
 
 /**
  * 인증 상태
@@ -111,6 +112,7 @@ const useAuthStore = create<AuthState & AuthActions>()(
         });
       } catch (error) {
         console.error('fetchUserInfo 실패:', error);
+        openErrorDialog();
       }
     },
 

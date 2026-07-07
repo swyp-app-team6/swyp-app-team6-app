@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { StepView, ProgressBar, ErrorBoundary, LoadSuspense } from '@/shared/ui';
+import { StepView, ProgressBar, ErrorBoundary, LoadSuspense, openErrorDialog } from '@/shared/ui';
 import type { ChoiceTemplate, ShortTemplate } from '@/entities/user';
 import { useUpdateProfileMutation } from '@/entities/user';
 import useRegisterFormStore from '../model/useRegisterFormStore';
@@ -126,7 +126,8 @@ export default function RegisterFormView({ mode = 'register', initialData, onVie
       }
       setIsComplete(true);
     } catch (e) {
-      console.error(e)
+      console.error(e);
+      openErrorDialog({ message: '프로필 저장에 실패했습니다' });
     }
   }, [isEdit, registerAsync, updateAsync]);
 

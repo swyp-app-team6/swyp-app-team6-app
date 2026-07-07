@@ -5,6 +5,7 @@ import BootSplash from 'react-native-bootsplash';
 import StackRouter from '@/shared/router/StackRouter';
 import AppProviders from '@/app/providers/AppProviders';
 import Dialog from '@/shared/ui/Dialog';
+import { openErrorDialog } from '@/shared/ui';
 import { setupInterceptors } from '../shared/api';
 import useAuthStore from '@/entities/user/model/authStore';
 import usePermissionStore from '@/widgets/permissions/model/usePermissionStore';
@@ -58,6 +59,7 @@ function App() {
         }
       } catch (e) {
         console.error(e);
+        openErrorDialog();
       } finally {
         setIsReady(true);
         BootSplash.hide({ fade: true });

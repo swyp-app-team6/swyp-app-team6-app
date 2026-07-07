@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import Config from 'react-native-config';
 import { launchImageLibrary } from 'react-native-image-picker';
-import { Input, BottomCTA, Button, CameraUploadZone } from '@/shared/ui';
+import { Input, BottomCTA, Button, CameraUploadZone, openErrorDialog } from '@/shared/ui';
 import { ProfileAPI } from '@/entities/user';
 import { usePermissionStore } from '@/widgets/permissions';
 import useRegisterFormStore from '../model/useRegisterFormStore';
@@ -51,6 +51,7 @@ export default function Step1BasicInfoView() {
       updateForm({ profileImageKey: imageKey });
     } catch (error) {
       console.error('이미지 업로드 실패:', error);
+      openErrorDialog({ message: '이미지 업로드에 실패했습니다' });
     } finally {
       setUploading(false);
     }

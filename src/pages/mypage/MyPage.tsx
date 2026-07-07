@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { AppVersion, Button, Header, Layout } from '@/shared/ui';
+import { AppVersion, Button, Header, Layout, openErrorDialog } from '@/shared/ui';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
 import useAuthStore from '@/entities/user/model/authStore';
@@ -34,6 +34,7 @@ function MyPage() {
       });
     } catch (e) {
       console.error(e);
+      openErrorDialog({ message: '로그아웃에 실패했습니다' });
     }
   };
 
