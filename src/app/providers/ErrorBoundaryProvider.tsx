@@ -29,12 +29,9 @@ export function AppErrorFallback({ resetErrorBoundary }: { resetErrorBoundary?: 
         <Text className="text-base font-bold text-text-black text-center leading-[22.4px]">
           일시적인 오류가 발생했어요
         </Text>
-        <Text className="text-sm text-text-gray3 text-center leading-5">
-          다시 시도 해주세요
-        </Text>
       </View>
       <View className="w-[260px] mt-2">
-        <Button title="다시 시도하기" variant="primary" onPress={resetErrorBoundary} />
+        <Button title="새로고침" variant="primary" onPress={resetErrorBoundary} />
       </View>
     </View>
   );
