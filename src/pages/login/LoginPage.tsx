@@ -10,7 +10,7 @@ import useAppleLoginMutation from '@/features/login/appleLogin/api/useAppleLogin
 import { TermsAgreementBottomSheet } from '@/features/terms';
 import { PermissionGuideBottomSheet } from '@/features/permissionGuide';
 import LoginTroubleBottomSheet from '@/features/login/ui/LoginTroubleBottomSheet';
-import { ProfileAPI } from '@/entities/user';
+// import { ProfileAPI } from '@/entities/user'; // 임시 비활성화: 약관 항상 노출
 import useConditionStateStore from '@/shared/model/conditionStateStore';
 import useSafePaddingBottom from '@/shared/utils/useSafePaddingBottom';
 
@@ -33,7 +33,7 @@ function LoginPage() {
   const { mutateAsync: appleLogin, isPending: isApplePending } = useAppleLoginMutation();
   const safePadding = useSafePaddingBottom();
   const {
-    isAgreedToTerms,
+    // isAgreedToTerms, // 임시 비활성화: 약관 항상 노출
     isPermissionAllowed,
     setIsAgreedToTerms,
     setIsPermissionAllowed,
@@ -43,24 +43,18 @@ function LoginPage() {
   const permissionRef = useRef<BottomSheetHandle>(null);
   const troubleRef = useRef<BottomSheetHandle>(null);
 
-  /** 프로필 존재 여부를 확인하여 home 또는 register로 분기 */
-  const navigateByProfile = async () => {
-    try {
-      await ProfileAPI.fetchProfile();
-      navigation.reset({ index: 0, routes: [{ name: 'home' }] });
-    } catch {
-    }
-  };
+  // /** 프로필 존재 여부를 확인하여 home 또는 register로 분기 */
+  // const navigateByProfile = async () => {
+  //   try {
+  //     await ProfileAPI.fetchProfile();
+  //     navigation.reset({ index: 0, routes: [{ name: 'home' }] });
+  //   } catch {
+  //   }
+  // };
 
-  /** 로그인 성공 후 플로우 분기 */
+  /** 로그인 성공 후 플로우 분기 (임시: 약관 항상 노출) */
   const handleLoginSuccess = () => {
-    if (isAgreedToTerms) {
-      termsRef.current?.open();
-    } else if (isPermissionAllowed) {
-      permissionRef.current?.open();
-    } else {
-      navigateByProfile();
-    }
+    termsRef.current?.open();
   };
 
   const handleGoogleLogin = async () => {

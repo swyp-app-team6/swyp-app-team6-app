@@ -1,5 +1,5 @@
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
-import { ActivityIndicator, Linking, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Linking, Pressable, Text, View } from 'react-native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useImperativeHandle, useRef } from 'react';
 import { Button, Checkbox, SafeBottomSheetModal } from '@/shared/ui';
@@ -91,6 +91,8 @@ const TermsAgreementBottomSheet = forwardRef<BottomSheetHandle, Props>(
     const handleViewContent = useCallback((url: string | null) => {
       if (url) {
         Linking.openURL(url);
+      } else {
+        Alert.alert('링크가 존재하지 않습니다.')
       }
     }, []);
 
@@ -152,16 +154,17 @@ const TermsAgreementBottomSheet = forwardRef<BottomSheetHandle, Props>(
                 key={item.type}
                 className="flex-row items-center justify-between rounded-xl border border-gray-200 px-4 py-3.5"
               >
-                <Checkbox
-                  checked={!!checkedMap[item.type]}
-                  onValueChange={(v) => handleToggleItem(item.type, v)}
-                  label={`[${item.required ? '필수' : '선택'}] ${item.label}`}
-                />
+                <View className="flex-1 flex-shrink">
+                  <Checkbox
+                    checked={!!checkedMap[item.type]}
+                    onValueChange={(v) => handleToggleItem(item.type, v)}
+                    label={`[${item.required ? '필수' : '선택'}] ${item.label}`}
+                  />
+                </View>
                 {item.type !== 'AGE_OVER_14' && (
                   <Pressable
                     onPress={() => handleViewContent(item.content_url)}
                     hitSlop={8}
-                    disabled={!item.content_url}
                   >
                     <Text className={`text-sm underline ${item.content_url ? 'text-gray-400' : 'text-gray-300'}`}>보기</Text>
                   </Pressable>
