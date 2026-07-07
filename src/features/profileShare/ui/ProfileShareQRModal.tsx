@@ -1,9 +1,10 @@
-import React from 'react';
-import { Modal, Pressable, Text, View } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Alert, Modal, Pressable, Text, View } from 'react-native';
 import { Button } from '@/shared/ui';
 import QRCode from 'react-native-qrcode-svg';
 import { useQuery } from '@tanstack/react-query';
 import { ProfileAPI } from '@/entities/user';
+import { ExchangeAPI } from '@/entities/exchange';
 import useCountdownTimer from '../lib/useCountdownTimer';
 
 /** QR 유효 시간 (초) */
@@ -23,7 +24,8 @@ interface Props {
  * - 제약사항 및 특이사항:
  *   - QR 코드에 프로필 uuid를 인코딩
  *   - 60초 카운트다운 후 자동 닫힘
- *   - 모달 열릴 때 타이머 시작, 닫힐 때 초기화
+ *   - 모달 열릴 때 타이머 시작 + exchange/wait API 호출로 대기 상태 진입
+ *   - 모달 닫힐 때 AbortController로 wait 요청 취소
  * ---
  * @param visible 모달 표시 여부
  * @param onClose 모달 닫기 콜백
@@ -34,6 +36,33 @@ interface Props {
 export default function ProfileShareQRModal({ visible, onClose }: Props) {
   const { data: qrData } = useQuery(ProfileAPI.query.fetchUuid());
   const remainSeconds = useCountdownTimer(QR_EXPIRY_SECONDS, visible, onClose);
+  const abortRef = useRef<AbortController | null>(null);
+
+  /** 
+   * 모달 열릴 때 exchange/wait 호출, 닫힐 때 취소 
+   * TODO: 여기 추후 리팩초링
+   * */
+  useEffect(() => {
+    if (visible) {
+      const controller = new AbortController();
+      abortRef.current = controller;
+
+      ExchangeAPI.wait(controller.signal)
+        .catch((err) => {
+          if (controller.signal.aborted) return;
+          console.error('[Exchange] wait 실패:', err);
+          Alert.alert('프로필 교환', '교환 대기 중 오류가 발생했습니다');
+        });
+    } else {
+      abortRef.current?.abort();
+      abortRef.current = null;
+    }
+
+    return () => {
+      abortRef.current?.abort();
+      abortRef.current = null;
+    };
+  }, [visible]);
 
   return (
     <Modal visible={visible} transparent animationType="fade">
