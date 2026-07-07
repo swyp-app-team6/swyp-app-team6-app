@@ -6,6 +6,8 @@ import {
   AlertModal,
   Dialog,
   openDialog,
+  ErrorDialog,
+  openErrorDialog,
   Anim,
   Avatar,
   Badge,
@@ -392,6 +394,30 @@ export default function ComponentPlaygroundPage() {
             />
           </View>
           <Dialog />
+        </Section>
+
+        {/* ── ErrorDialog ────────────────────────────────────────────────────── */}
+        <Section title="ErrorDialog — 에러 발생 시 전역 다이얼로그 (함수 호출)">
+          <View className="gap-2">
+            <Button
+              title="기본 에러 다이얼로그"
+              variant="secondary"
+              onPress={() => openErrorDialog()}
+            />
+            <Button
+              title="커스텀 에러 다이얼로그"
+              variant="secondary"
+              onPress={() =>
+                openErrorDialog({
+                  title: '네트워크 오류',
+                  message: '인터넷 연결을 확인해주세요',
+                  buttonLabel: '재시도',
+                  onRetry: () => Alert.alert('재시도', '재시도 콜백 실행됨'),
+                })
+              }
+            />
+          </View>
+          <ErrorDialog />
         </Section>
 
         {/* ── PopoverMenu ───────────────────────────────────────────────────── */}
