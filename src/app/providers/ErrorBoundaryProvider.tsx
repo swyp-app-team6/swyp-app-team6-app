@@ -1,35 +1,41 @@
-import React, { useMemo } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import { Text, View } from 'react-native';
 import { ErrorBoundary } from 'react-error-boundary';
+import { ErrorIcon } from '@/shared/ui/icons/ErrorIcon';
+import { Button } from '@/shared/ui/Button';
 
 /**
- * 에러
- * @param param0 
- * @returns 
+ * # AppErrorFallback
+ * ---
+ * - 간단설명: 앱 전역 에러 발생 시 표시되는 폴백 UI 컴포넌트
+ * - 제약사항 및 특이사항:
+ *   - ErrorBoundary의 FallbackComponent로 사용
+ *   - ErrorDialog와 동일한 에러 아이콘 + 재시도 버튼 UI 적용
+ * ---
+ * @param resetErrorBoundary 에러 초기화 함수
+ * ---
+ * @example
+ * ```tsx
+ * <ErrorBoundary FallbackComponent={AppErrorFallback}>
+ *   <App />
+ * </ErrorBoundary>
+ * ```
  */
-export function AppErrorFallback({ resetErrorBoundary, error }: { resetErrorBoundary?: () => void; error?: unknown }) {
-
-  /** 
-   * 에러 문구 
-   * TODO: 에러페이지 디자인/기획 나오면 재작성
-   * */
-  const errorMsg = useMemo(() => {
-    const _error = error as Error;
-    return _error.message || '알 수 없는 오류가 발생했습니다.';
-  }, [error])
-
+export function AppErrorFallback({ resetErrorBoundary }: { resetErrorBoundary?: () => void; error?: unknown }) {
   return (
     <View className="flex-1 items-center justify-center bg-white px-8 gap-4">
-      <Text className="text-4xl">⚠️</Text>
-      <Text className="text-lg font-bold text-gray-900 text-center">문제가 발생했습니다</Text>
-      <Text className="text-sm text-gray-500 text-center">{errorMsg}</Text>
-      <TouchableOpacity
-        onPress={resetErrorBoundary}
-        className="mt-2 bg-blue-500 px-6 py-3 rounded-xl"
-        activeOpacity={0.8}
-      >
-        <Text className="text-white font-semibold text-base">새로 고침</Text>
-      </TouchableOpacity>
+      <ErrorIcon />
+      <View className="items-center gap-1">
+        <Text className="text-base font-bold text-text-black text-center leading-[22.4px]">
+          일시적인 오류가 발생했어요
+        </Text>
+        <Text className="text-sm text-text-gray3 text-center leading-5">
+          다시 시도 해주세요
+        </Text>
+      </View>
+      <View className="w-[260px] mt-2">
+        <Button title="다시 시도하기" variant="primary" onPress={resetErrorBoundary} />
+      </View>
     </View>
   );
 }
