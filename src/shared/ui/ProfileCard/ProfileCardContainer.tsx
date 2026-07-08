@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { Pressable } from "react-native";
+import { Pressable, type ViewStyle } from "react-native";
 import { twJoin } from "tailwind-merge";
 
 /**
@@ -8,13 +8,22 @@ import { twJoin } from "tailwind-merge";
  * @param param0 
  * @returns 
  */
-function ProfileCardContainer({ children, className, ...props }: {
+function ProfileCardContainer({ children, className, responsive = false, ...props }: {
   children: React.ReactNode;
   className?: string;
+  responsive?: boolean;
 } & React.ComponentProps<typeof Pressable>) {
+  const style: ViewStyle = !responsive ? {
+    width: 284,
+    height: 392,
+  } : {
+    width: '100%',
+    aspectRatio: 284 / 392,
+  }
   return (
     <Pressable
-      className={twJoin('h-[392px] w-[284px] items-center justify-center rounded-xl border-2', className)}
+      className={twJoin('flex items-center justify-center rounded-xl border-2 border-primary-light', className)}
+      style={style}
       {...props}
     >
       {children}
