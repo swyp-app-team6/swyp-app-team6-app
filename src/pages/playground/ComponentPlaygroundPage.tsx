@@ -2,6 +2,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import { Alert, RefreshControl, ScrollView, Text, View } from 'react-native';
 import * as Sentry from '@sentry/react-native';
 import { useAuthStore } from '@/entities/user';
+import CommonInterestCard from '@/pages/exchangeResult/CommonInterestCard';
 import {
   Accordion,
   AlertModal,
@@ -159,6 +160,9 @@ export default function ComponentPlaygroundPage() {
   // FavTag 상태
   const [favTags, setFavTags] = useState<Record<string, boolean>>({});
 
+  // CommonInterestCard 상태
+  const [commonInterestHasCommon, setCommonInterestHasCommon] = useState(true);
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setChecked(false);
@@ -174,6 +178,7 @@ export default function ComponentPlaygroundPage() {
     setChooseValue('');
     setSelectedTMI('');
     setFavTags({});
+    setCommonInterestHasCommon(true);
     setCards([
       { id: '1', title: '첫 번째 카드', description: '오른쪽으로 스와이프해서 삭제하세요.' },
       { id: '2', title: '두 번째 카드', description: '카드 컴포넌트 예시입니다.' },
@@ -853,6 +858,32 @@ export default function ComponentPlaygroundPage() {
             <KakaoLoginButton onPress={() => {}} />
             <GoogleLoginButton onPress={() => {}} />
             <AppleLoginButton onPress={() => {}} />
+          </View>
+        </Section>
+
+        {/* ── CommonInterestCard (공통된 관심사 결과 카드) ─────────────────── */}
+        <Section title="CommonInterestCard — 공통된 관심사 결과 카드">
+          <View className="mb-3 flex-row gap-2">
+            <Button
+              title="공통 있음"
+              variant={commonInterestHasCommon ? 'primary' : 'secondary'}
+              onPress={() => setCommonInterestHasCommon(true)}
+            />
+            <Button
+              title="공통 없음"
+              variant={!commonInterestHasCommon ? 'primary' : 'secondary'}
+              onPress={() => setCommonInterestHasCommon(false)}
+            />
+          </View>
+          <View className="items-center">
+            <CommonInterestCard
+              hasCommon={commonInterestHasCommon}
+              interests={commonInterestHasCommon
+                ? ['TRAVEL', 'MUSIC', 'CAFE']
+                : ['SPORTS', 'GAME', 'MOVIE']
+              }
+              theirName="민수"
+            />
           </View>
         </Section>
 

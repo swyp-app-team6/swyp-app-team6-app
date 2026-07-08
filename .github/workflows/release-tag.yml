@@ -1,4 +1,4 @@
-name: Create Release Tag
+name: Orbits App Release
 
 on:
   push:
@@ -10,7 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-
+    # main 브랜치 머지 시 release tag 자동생성
+    # 버전은 v[package.json.version] 형식으로 자동 지정
+    # 만약 version up 안된경우 skip
     steps:
       - name: Checkout
         uses: actions/checkout@v4

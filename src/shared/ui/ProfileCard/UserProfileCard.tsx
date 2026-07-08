@@ -3,6 +3,7 @@ import { View, Text, Image } from 'react-native';
 import Badge from '../Badge';
 import InterestTag from '../InterestTag';
 import type { BadgeLevel } from '../Badge';
+import ProfileCardContainer from './ProfileCardContainer';
 
 interface UserProfileCardProps {
   /** 프로필 이미지 URI */
@@ -56,9 +57,7 @@ function UserProfileCard({
   topRightSlot,
 }: UserProfileCardProps) {
   return (
-    <View
-      className="w-[284px] h-[392px] bg-white rounded-xl border-2 border-primary-light overflow-hidden"
-    >
+    <ProfileCardContainer >
       {/* 프로필 사진 */}
       {profileImageUri ? (
         <Image
@@ -105,7 +104,7 @@ function UserProfileCard({
           </View>
         )}
       </View>
-    </View>
+    </ProfileCardContainer>
   );
 }
 

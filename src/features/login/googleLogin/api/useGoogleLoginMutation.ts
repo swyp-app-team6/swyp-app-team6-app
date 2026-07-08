@@ -33,6 +33,7 @@ export default function useGoogleLoginMutation() {
       });
 
       await GoogleSignin.hasPlayServices();
+      await GoogleSignin.signOut();
       const response = await GoogleSignin.signIn();
 
       if (!isSuccessResponse(response)) {
