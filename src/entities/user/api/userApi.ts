@@ -8,20 +8,24 @@ import { createQueryKeys } from "@lukemorales/query-key-factory";
  * Google 로그인 API 응답
  * - access_token: 액세스 토큰 (snake_case)
  * - refresh_token: 리프레시 토큰 (snake_case)
+ * - requires_terms_agreement: 약관 동의 필요 여부 (false = 미동의, 약관 동의 바텀시트 노출)
  */
 export interface GoogleLoginResponse {
   access_token: string;
   refresh_token: string;
+  requires_terms_agreement: boolean;
 }
 
 /**
  * Apple 로그인 API 응답
  * - access_token: 액세스 토큰 (snake_case)
  * - refresh_token: 리프레시 토큰 (snake_case)
+ * - requires_terms_agreement: 약관 동의 필요 여부 (false = 미동의, 약관 동의 바텀시트 노출)
  */
 export interface AppleLoginResponse {
   access_token: string;
   refresh_token: string;
+  requires_terms_agreement: boolean;
 }
 
 /**
