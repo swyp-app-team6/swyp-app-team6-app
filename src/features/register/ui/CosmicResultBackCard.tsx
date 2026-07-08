@@ -118,12 +118,12 @@ export default function CosmicResultBackCard({ result, nickname }: Props) {
               {result.matches.map((match) => {
                 const matchImage = COSMIC_CHARACTER_IMAGE[match.type];
                 return (
-                  <View key={match.type} style={{ width: '16%' }} className="items-center">
-                    <View style={{ width: '100%', aspectRatio: 1 }} className="items-center justify-center">
+                  <View key={match.type} style={{ width: 50 }} className="items-center">
+                    <View style={{ width: 50, height: 50 }} className="items-center justify-center">
                       {matchImage ? (
                         <Image
                           source={matchImage}
-                          style={{ width: '100%', aspectRatio: 50 / 43 }}
+                          style={{ width: 50, height: 43 }}
                           resizeMode="contain"
                         />
                       ) : (
