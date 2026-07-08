@@ -2,6 +2,7 @@ import React, { ComponentType, useEffect, useMemo, useRef } from 'react'
 import { View, Text } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import useAuthStore from '@/entities/user/model/authStore'
+import useConditionStateStore from '@/shared/model/conditionStateStore'
 import { Button } from '@/shared/ui'
 import type { NavigationPropType } from '@/shared/types'
 
@@ -27,6 +28,7 @@ export default function withAuthorization<P extends object>(
     const accessToken = useAuthStore((state) => state.accessToken)
     const user = useAuthStore((state) => state.user)
     const fetchUserInfo = useAuthStore((state) => state.fetchUserInfo)
+    const hasVisitedFirstPage = useConditionStateStore((state) => state.hasVisitedFirstPage)
     const hasFetched = useRef(false);
 
     const isAuthorized = useMemo(() => {
@@ -40,6 +42,17 @@ export default function withAuthorization<P extends object>(
         fetchUserInfo();
       }
     }, [isAuthorized, user, fetchUserInfo]);
+
+    /** 첫 방문 + 미인증 시 로그인 페이지로 즉시 리다이렉트 */
+    useEffect(() => {
+      if (hasVisitedFirstPage && !isAuthorized) {
+        navigation.navigate('login');
+      }
+    }, [hasVisitedFirstPage, isAuthorized, navigation]);
+
+    if (!isAuthorized && hasVisitedFirstPage) {
+      return null;
+    }
 
     if (!isAuthorized) {
       return (

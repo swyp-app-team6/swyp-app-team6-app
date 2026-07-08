@@ -16,5 +16,7 @@ export const STORAGE_KEYS = {
   IS_AGREED_TO_TERMS: 'isAgreedToTerms',
   /** 접근권한 안내 필요 여부 (AsyncStorage) */
   IS_PERMISSION_ALLOWED: 'isPermissionAllowed',
+  /** 첫 페이지 방문 여부 (AsyncStorage) */
+  HAS_VISITED_FIRST_PAGE: 'hasVisitedFirstPage',
 } as const;
 export type STORAGE_KEYS = typeof STORAGE_KEYS[keyof typeof STORAGE_KEYS];
