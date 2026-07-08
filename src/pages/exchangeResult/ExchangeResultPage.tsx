@@ -1,11 +1,14 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Image, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Button, Header, InterestTag } from '@/shared/ui';
 import ProfileCardGradientBackground from '@/shared/ui/ProfileCard/ProfileCardGradientBackground';
 import { useExchangeFlowStore } from '@/features/exchange';
 import { getInterestLabel } from '@/features/register';
 import type { NavigationPropType } from '@/shared/types';
+
+const profileCommonFound = require('@/assets/characters/profile-common-found.png');
+const profileCommonNotFound = require('@/assets/characters/profile-common-not-found.png');
 
 /**
  * # ExchangeResultPage
@@ -67,11 +70,13 @@ export default function ExchangeResultPage() {
                 : '아쉽지만 서로 겹치는 관심사가\n아직 없어요!'}
             </Text>
 
-            {/* 일러스트 영역 (플레이스홀더) */}
+            {/* 일러스트 영역 */}
             <View className="my-8 items-center">
-              <View className="h-[154px] w-[214px] items-center justify-center rounded-xl">
-                <Text className="text-[48px]">🌌</Text>
-              </View>
+              <Image
+                source={hasCommon ? profileCommonFound : profileCommonNotFound}
+                className="h-[154px] w-[214px]"
+                resizeMode="contain"
+              />
             </View>
 
             {/* 공통 관심사 섹션 */}
