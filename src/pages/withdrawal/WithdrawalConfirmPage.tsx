@@ -51,7 +51,7 @@ function WithdrawalConfirmPage() {
   return (
     <>
       <Header title="탈퇴하기" showBack />
-      <Layout.Body styleClass={{ root: 'px-5' }}>
+      <Layout.Body styleClass={{ root: 'px-5 bg-white' }}>
         {/* 제목 */}
         <View className="pt-4 gap-5">
           <Text className="text-[16px] font-semibold text-[#1A1A1A] leading-[22.4px]">

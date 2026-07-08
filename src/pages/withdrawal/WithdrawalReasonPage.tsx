@@ -52,7 +52,7 @@ function WithdrawalReasonPage() {
   return (
     <>
       <Header title="탈퇴하기" showBack />
-      <Layout.Body styleClass={{ root: '' }}>
+      <Layout.Body styleClass={{ root: 'bg-white' }}>
         {/* 제목 */}
         <View className="px-5 py-4">
           <Text className="text-[16px] font-semibold text-[#1A1A1A] leading-[22.4px]">

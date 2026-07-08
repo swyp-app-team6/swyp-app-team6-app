@@ -30,7 +30,7 @@ function MyPage() {
   return (
     <>
       <Header title="마이페이지" />
-      <Layout.Body styleClass={{ root: '' }}>
+      <Layout.Body styleClass={{ root: 'bg-white' }}>
         {/* 사용자 정보 */}
         <View className="px-5 py-4 gap-3">
           <Text className="text-[16px] font-semibold text-[#1A1A1A] leading-[22.4px]">

@@ -65,7 +65,7 @@ function AccountEditPage() {
   return (
     <>
       <Header title="계정 정보 수정" showBack />
-      <Layout.Body styleClass={{ root: '' }}>
+      <Layout.Body styleClass={{ root: 'bg-white' }}>
         {/* 가입 정보 */}
         <View className="px-5 py-4 gap-3">
           <Text className="text-[16px] font-semibold text-[#1A1A1A] leading-[22.4px]">
