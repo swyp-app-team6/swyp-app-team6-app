@@ -9,6 +9,7 @@ import useAuthStore from '@/entities/user/model/authStore';
 import { UserAPI } from '@/entities/user/api/userApi';
 import type { NavigationPropType } from '@/shared/types';
 import { useQueryClient } from '@tanstack/react-query';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 /**
  * # 프로바이더 → 표시 텍스트 매핑
@@ -55,6 +56,7 @@ function AccountEditPage() {
       if (refreshToken) {
         await UserAPI.logout(refreshToken);
       }
+      await GoogleSignin.signOut();
       await clearAuth();
       queryClient.resetQueries();
       navigation.reset({
