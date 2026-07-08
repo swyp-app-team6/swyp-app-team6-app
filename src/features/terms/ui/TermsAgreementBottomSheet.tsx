@@ -8,6 +8,15 @@ import type { TermsType } from '@/entities/terms';
 import useTermsQuery from '../api/useTermsQuery';
 import useTermsAgreementMutation from '../api/useTermsAgreementMutation';
 
+/**
+ * 약관 유형별 폴백 URL 매핑
+ * - content_url이 null일 경우 사용되는 기본 링크
+ */
+const TERMS_FALLBACK_URL: Partial<Record<TermsType, string>> = {
+  PRIVACY: 'https://real-jellyfish-10c.notion.site/39144f5610118006bc88d377d1b92aa3',
+  SERVICE: 'https://real-jellyfish-10c.notion.site/39144f56101180ab915eed4b439d5233?pvs=74',
+};
+
 interface Props {
   /** 동의 완료 시 호출되는 콜백 */
   onAgree: () => void;
@@ -87,10 +96,11 @@ const TermsAgreementBottomSheet = forwardRef<BottomSheetHandle, Props>(
       setCheckedMap((prev) => ({ ...prev, [type]: value }));
     }, []);
 
-    /** content_url 외부 링크 열기 */
-    const handleViewContent = useCallback((url: string | null) => {
-      if (url) {
-        Linking.openURL(url);
+    /** content_url 외부 링크 열기 (없으면 폴백 URL 사용) */
+    const handleViewContent = useCallback((type: TermsType, url: string | null) => {
+      const targetUrl = url ?? TERMS_FALLBACK_URL[type];
+      if (targetUrl) {
+        Linking.openURL(targetUrl);
       } else {
         Alert.alert('링크가 존재하지 않습니다.')
       }
@@ -163,7 +173,7 @@ const TermsAgreementBottomSheet = forwardRef<BottomSheetHandle, Props>(
                 </View>
                 {item.type !== 'AGE_OVER_14' && (
                   <Pressable
-                    onPress={() => handleViewContent(item.content_url)}
+                    onPress={() => handleViewContent(item.type, item.content_url)}
                     hitSlop={8}
                   >
                     <Text className={`text-sm underline ${item.content_url ? 'text-gray-400' : 'text-gray-300'}`}>보기</Text>
