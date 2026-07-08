@@ -56,7 +56,7 @@ export default function Textbox({
   onChangeText: parentOnChangeText,
   ...rest
 }: Props) {
-  const [length, setLength] = useState(value?.length ?? 0);
+  const [length, setLength] = useState(value?.replace(/\s/g, '').length ?? 0);
   const InputComponent = isBottomSheet ? BottomSheetTextInput : TextInput;
 
   /** 최신 parentOnChangeText를 ref로 보관하여 콜백 안정성 확보 */
@@ -64,7 +64,7 @@ export default function Textbox({
   parentOnChangeTextRef.current = parentOnChangeText;
 
   const handleChangeText = useCallback((text: string) => {
-    setLength(text.length);
+    setLength(text.replace(/\s/g, '').length);
     parentOnChangeTextRef.current?.(text);
   }, []);
 
