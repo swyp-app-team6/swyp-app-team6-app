@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, Image } from 'react-native';
 import { BottomCTA, Button } from '@/shared/ui';
 
 interface Props {
@@ -34,7 +34,11 @@ export default function RegisterCompleteView({ mode = 'register', onViewProfile,
       <View className="flex-1 items-center justify-center px-5">
         {/* 축하 일러스트 플레이스홀더 */}
         <View className="w-[200px] h-[167px] items-center justify-center mb-10">
-          <Text className="text-7xl">🎉</Text>
+          <Image
+            source={require('@/assets/characters/profile-created.png')}
+            className="w-[200px] h-[167px]"
+            resizeMode="contain"
+          />
         </View>
 
         {/* 축하 메시지 */}
