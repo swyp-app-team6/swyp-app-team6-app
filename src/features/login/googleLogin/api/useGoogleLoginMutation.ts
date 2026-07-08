@@ -51,6 +51,7 @@ export default function useGoogleLoginMutation() {
       const { access_token, refresh_token } = data;
       await setTokens({ accessToken: access_token, refreshToken: refresh_token });
       await fetchUserInfo();
+      return data;
     },
     onError: (error) => {
       console.error(error);

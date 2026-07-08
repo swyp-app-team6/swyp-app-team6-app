@@ -25,7 +25,7 @@ function DefaultLoginPage() {
   return (
     <Layout>
       <Header title="안내받은 계정 로그인" showBack />
-      <Layout.Body>
+      <Layout.Body styleClass={{ root: 'bg-white' }}>
         <DefaultLoginView onLoginSuccess={handleLoginSuccess} />
       </Layout.Body>
     </Layout>

@@ -8,20 +8,51 @@ import { createQueryKeys } from "@lukemorales/query-key-factory";
  * Google 로그인 API 응답
  * - access_token: 액세스 토큰 (snake_case)
  * - refresh_token: 리프레시 토큰 (snake_case)
+ * - requires_terms_agreement: 약관 동의 필요 여부 (false = 미동의, 약관 동의 바텀시트 노출)
  */
 export interface GoogleLoginResponse {
   access_token: string;
   refresh_token: string;
+  requires_terms_agreement: boolean;
 }
 
 /**
  * Apple 로그인 API 응답
  * - access_token: 액세스 토큰 (snake_case)
  * - refresh_token: 리프레시 토큰 (snake_case)
+ * - requires_terms_agreement: 약관 동의 필요 여부 (false = 미동의, 약관 동의 바텀시트 노출)
  */
 export interface AppleLoginResponse {
   access_token: string;
   refresh_token: string;
+  requires_terms_agreement: boolean;
+}
+
+/**
+ * 일반 로그인 API 요청
+ * - email: 가입 시 등록한 아이디
+ * - password: 비밀번호
+ */
+export interface DefaultLoginRequest {
+  /** 가입 시 등록한 아이디 */
+  email: string;
+  /** 비밀번호 */
+  password: string;
+}
+
+/**
+ * 일반 로그인 API 응답
+ * - access_token: 액세스 토큰 (snake_case)
+ * - refresh_token: 리프레시 토큰 (snake_case)
+ * - requires_terms_agreement: 약관 동의 필요 여부 (false = 미동의, 약관 동의 바텀시트 노출)
+ */
+export interface DefaultLoginResponse {
+  /** 액세스 토큰 */
+  access_token: string;
+  /** 리프레시 토큰 */
+  refresh_token: string;
+  /** 약관 동의 필요 여부 */
+  requires_terms_agreement: boolean;
 }
 
 /**
@@ -75,6 +106,17 @@ export class UserAPI {
   }
 
   /**
+   * # defaultLogin
+   * ---
+   * - 간단설명: 안내받은 계정 기반 이메일/비밀번호 로그인
+   * ---
+   * @param body 이메일과 비밀번호
+   */
+  static defaultLogin(body: DefaultLoginRequest) {
+    return API.post<DefaultLoginResponse>('/auth/login', body, { skipAuth: true });
+  }
+
+  /**
    * # refreshTokens
    * ---
    * - 간단설명: refresh_token으로 새로운 토큰 쌍을 재발급
@@ -96,14 +138,26 @@ export class UserAPI {
   }
 
   /**
+   * # logout
+   * ---
+   * - 간단설명: 서버에 로그아웃 요청하여 리프레시 토큰 무효화
+   * ---
+   * @param refreshToken 무효화할 리프레시 토큰
+   */
+  static logout(refreshToken: string) {
+    return API.post<void>('/auth/logout', { refresh_token: refreshToken });
+  }
+
+  /**
    * # deleteUser
    * ---
    * - 간단설명: 회원 탈퇴 및 관련 데이터 삭제
    * - 제약사항: 탈퇴 시 프로필 등 연관 데이터도 함께 삭제됨
    * ---
+   * @param body 탈퇴 사유 코드 및 상세 사유
    */
-  static deleteUser() {
-    return API.delete<void>('/user');
+  static deleteUser(body: { reasonCode: string; reasonDetail?: string }) {
+    return API.delete<void>('/user', { data: body });
   }
 
   /** 쿼리 키 팩토리 */

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 import { Button, Input } from '@/shared/ui';
-import { AlertModal } from '@/shared/ui';
+import { openErrorDialog } from '@/shared/ui/ErrorDialog';
 import useDefaultLoginMutation from '../api/useDefaultLoginMutation';
 
 /**
@@ -27,19 +27,24 @@ export default function DefaultLoginView({ onLoginSuccess }: Props) {
   const { mutate, isPending } = useDefaultLoginMutation();
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
-  const [showError, setShowError] = useState(false);
-
   const isFormValid = userId.trim().length > 0 && password.trim().length > 0;
 
   const handleLogin = () => {
-    mutate(undefined, {
-      onSuccess: () => {
-        onLoginSuccess?.();
+    mutate(
+      { email: userId, password },
+      {
+        onSuccess: () => {
+          onLoginSuccess?.();
+        },
+        onError: () => {
+          openErrorDialog({
+            title: '로그인 실패',
+            message: '사용할 수 없는 계정입니다.\n아이디, 비밀번호를 다시 확인해주시길 바랍니다.',
+            buttonLabel: '확인',
+          });
+        },
       },
-      onError: () => {
-        setShowError(true);
-      },
-    });
+    );
   };
 
   return (
@@ -83,13 +88,6 @@ export default function DefaultLoginView({ onLoginSuccess }: Props) {
         />
       </View>
 
-      {/* 에러 팝업 */}
-      <AlertModal
-        visible={showError}
-        message="사용할 수 없는 계정입니다. 아이디, 비밀번호를 다시 확인해주시길 바랍니다."
-        confirmText="확인"
-        onConfirm={() => setShowError(false)}
-      />
     </View>
   );
 }

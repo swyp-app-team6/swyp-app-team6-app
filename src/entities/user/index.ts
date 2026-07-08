@@ -17,7 +17,7 @@ export type {
   QrResponse,
 } from './model/types';
 export { UserAPI } from './api/userApi';
-export type { GoogleLoginResponse, AppleLoginResponse } from './api/userApi';
+export type { GoogleLoginResponse, AppleLoginResponse, DefaultLoginRequest, DefaultLoginResponse } from './api/userApi';
 export { ProfileAPI } from './api/profileApi';
 export { default as useMyProfileQuery } from './api/useMyProfileQuery';
 export { default as useDeleteProfileMutation } from './api/useDeleteProfileMutation';

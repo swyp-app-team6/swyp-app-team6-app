@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import Clipboard from '@react-native-clipboard/clipboard';
 import { Button, Header, Layout } from '@/shared/ui';
 import useApiLogStore, { type ApiLogEntry } from '@/shared/model/apiLogStore';
 
@@ -135,9 +136,31 @@ function LogItem({ log }: { log: ApiLogEntry }) {
       {/* 상세 정보 */}
       {expanded && (
         <View className="mt-3 pt-3 border-t border-text-gray6">
-          <Text className="text-[10px] text-text-gray5 mb-1">
-            {log.url}
-          </Text>
+          <View className="flex-row justify-between items-center mb-1">
+            <Text className="text-[10px] text-text-gray5">
+              {log.url}
+            </Text>
+            <TouchableOpacity
+              className="bg-text-gray7 rounded px-2 py-1"
+              onPress={(e) => {
+                e.stopPropagation();
+                const copyData = JSON.stringify(
+                  {
+                    url: log.url,
+                    requestBody: log.request.data ?? null,
+                    status: log.status,
+                    responseBody: log.response?.data ?? null,
+                  },
+                  null,
+                  2,
+                );
+                Clipboard.setString(copyData);
+                Alert.alert('복사 완료', '클립보드에 복사되었습니다.');
+              }}
+            >
+              <Text className="text-[10px] text-text-gray4 font-semibold">복사</Text>
+            </TouchableOpacity>
+          </View>
 
           {log.error && (
             <View className="bg-red-50 rounded-lg p-2 mt-1 mb-1">

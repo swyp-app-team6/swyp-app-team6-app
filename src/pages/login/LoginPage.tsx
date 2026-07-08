@@ -10,7 +10,6 @@ import useAppleLoginMutation from '@/features/login/appleLogin/api/useAppleLogin
 import { TermsAgreementBottomSheet } from '@/features/terms';
 import { PermissionGuideBottomSheet } from '@/features/permissionGuide';
 import LoginTroubleBottomSheet from '@/features/login/ui/LoginTroubleBottomSheet';
-import { ProfileAPI } from '@/entities/user';
 import useConditionStateStore from '@/shared/model/conditionStateStore';
 import useSafePaddingBottom from '@/shared/utils/useSafePaddingBottom';
 
@@ -19,9 +18,8 @@ import useSafePaddingBottom from '@/shared/utils/useSafePaddingBottom';
  * ---
  * - 간단설명: Orbits 브랜딩 + 소셜 로그인 + 이용약관/접근권한 바텀시트를 제공하는 로그인 화면
  * - 제약사항 및 특이사항:
- *   - Google 로그인 성공 시 비회원이면 이용약관 → 접근권한 바텀시트 순서로 노출
- *   - 기존 회원이면 바로 home 화면으로 이동
- *   - Apple 로그인은 UI만 배치 (실제 연동 제외)
+ *   - 로그인 API 응답의 requires_terms_agreement가 false이면 약관동의 바텀시트 노출
+ *   - requires_terms_agreement가 true(이미 동의)이면 접근권한 또는 home으로 바로 이동
  *   - "로그인에 문제가 있나요?" → LoginTroubleBottomSheet → DefaultLoginPage 진입
  * ---
  * @example
@@ -33,7 +31,6 @@ function LoginPage() {
   const { mutateAsync: appleLogin, isPending: isApplePending } = useAppleLoginMutation();
   const safePadding = useSafePaddingBottom();
   const {
-    isAgreedToTerms,
     isPermissionAllowed,
     setIsAgreedToTerms,
     setIsPermissionAllowed,
@@ -43,34 +40,29 @@ function LoginPage() {
   const permissionRef = useRef<BottomSheetHandle>(null);
   const troubleRef = useRef<BottomSheetHandle>(null);
 
-  /** 프로필 존재 여부를 확인하여 home 또는 register로 분기 */
-  const navigateByProfile = async () => {
-    try {
-      await ProfileAPI.fetchProfile();
-      navigation.reset({ index: 0, routes: [{ name: 'home' }] });
-    } catch {
-    }
-  };
-
-  /** 로그인 성공 후 플로우 분기 */
-  const handleLoginSuccess = () => {
-    if (isAgreedToTerms) {
+  /** 로그인 성공 후 플로우 분기: requires_terms_agreement가 false이면 약관 바텀시트 노출 */
+  const handleLoginSuccess = (requiresTermsAgreement: boolean) => {
+    if (!requiresTermsAgreement) {
       termsRef.current?.open();
-    } else if (isPermissionAllowed) {
-      permissionRef.current?.open();
     } else {
-      navigateByProfile();
+      if (isPermissionAllowed) {
+        permissionRef.current?.open();
+      } else {
+        navigation.reset({ index: 0, routes: [{ name: 'home' }] });
+      }
     }
   };
 
   const handleGoogleLogin = async () => {
-    await googleLogin();
-    handleLoginSuccess();
+    const result = await googleLogin();
+    if (!result) return;
+    handleLoginSuccess(result.requires_terms_agreement);
   };
 
   const handleAppleLogin = async () => {
-    await appleLogin();
-    handleLoginSuccess();
+    const result = await appleLogin();
+    if (!result) return;
+    handleLoginSuccess(result.requires_terms_agreement);
   };
 
   /** Apple 로그인 버튼 노출 여부 (iOS: 항상, Android: API 19+ 지원 시) */
