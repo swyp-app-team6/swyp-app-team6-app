@@ -24,6 +24,7 @@ import EditProfilePage from '@/pages/editProfile/EditProfilePage';
 import { NavigatorType } from '../types';
 import ComponentPlaygroundPage from '../../pages/playground/ComponentPlaygroundPage';
 import ApiLogPage from '../../pages/playground/ApiLogPage';
+import SafeAreaTestPage from '../../pages/playground/SafeAreaTestPage';
 import Config from 'react-native-config';
 
 const Stack = createNativeStackNavigator<NavigatorType>();
@@ -72,6 +73,7 @@ export default function StackRouter({ initialRouteName = 'home' }: StackRouterPr
             <>
               <Stack.Screen name='playground' component={ComponentPlaygroundPage} />
               <Stack.Screen name='apiLog' component={ApiLogPage} />
+              <Stack.Screen name='safeAreaTest' component={SafeAreaTestPage} />
             </>
           )
         }

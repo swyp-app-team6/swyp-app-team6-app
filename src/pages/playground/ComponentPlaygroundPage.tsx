@@ -1,5 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { Alert, RefreshControl, ScrollView, Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NavigationPropType } from '@/shared/types';
 import * as Sentry from '@sentry/react-native';
 import { useAuthStore } from '@/entities/user';
 import CommonInterestCard from '@/pages/exchangeResult/CommonInterestCard';
@@ -116,6 +118,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
  * <ComponentPlaygroundPage />
  */
 export default function ComponentPlaygroundPage() {
+  const navigation = useNavigation<NavigationPropType>();
   const [activeTab, setActiveTab] = useState<'ui' | 'dev'>('ui');
   const { setTokens } = useAuthStore();
   const [checked, setChecked] = useState(false);
@@ -211,6 +214,14 @@ export default function ComponentPlaygroundPage() {
         {/* ── DEV 탭 ───────────────────────────────────────────────────────── */}
         {activeTab === 'dev' && (
           <ScrollView className="flex-1 bg-white" contentContainerClassName="p-5 pb-20">
+            <Section title="SafeArea 테스트">
+              <Button
+                title="SafeArea 테스트 페이지로 이동"
+                variant="secondary"
+                onPress={() => navigation.navigate('safeAreaTest')}
+              />
+            </Section>
+
             <Section title="토큰 재발급 테스트용 버튼">
               <View className="gap-3">
                 <Button

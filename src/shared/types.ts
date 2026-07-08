@@ -35,6 +35,7 @@ export type NavigatorType = {
   withdrawalConfirm: { reason: string };
   playground: undefined;
   apiLog: undefined;
+  safeAreaTest: undefined;
 }
 
 /** useNavigation 제네릭 타입 */
