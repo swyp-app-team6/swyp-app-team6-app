@@ -5,6 +5,7 @@ import BootSplash from 'react-native-bootsplash';
 import StackRouter from '@/shared/router/StackRouter';
 import AppProviders from '@/app/providers/AppProviders';
 import Dialog from '@/shared/ui/Dialog';
+import ErrorDialog from '@/shared/ui/ErrorDialog';
 import { openErrorDialog } from '@/shared/ui';
 import { setupInterceptors } from '../shared/api';
 import useAuthStore from '@/entities/user/model/authStore';
@@ -75,6 +76,7 @@ function App() {
     <AppProviders>
       <StackRouter initialRouteName={initialRoute} />
       <Dialog />
+      <ErrorDialog />
     </AppProviders>
   );
 }
