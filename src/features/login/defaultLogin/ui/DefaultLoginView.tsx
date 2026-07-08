@@ -32,14 +32,17 @@ export default function DefaultLoginView({ onLoginSuccess }: Props) {
   const isFormValid = userId.trim().length > 0 && password.trim().length > 0;
 
   const handleLogin = () => {
-    mutate(undefined, {
-      onSuccess: () => {
-        onLoginSuccess?.();
+    mutate(
+      { email: userId, password },
+      {
+        onSuccess: () => {
+          onLoginSuccess?.();
+        },
+        onError: () => {
+          setShowError(true);
+        },
       },
-      onError: () => {
-        setShowError(true);
-      },
-    });
+    );
   };
 
   return (

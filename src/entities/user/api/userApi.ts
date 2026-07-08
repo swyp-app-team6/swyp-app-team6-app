@@ -29,6 +29,33 @@ export interface AppleLoginResponse {
 }
 
 /**
+ * 일반 로그인 API 요청
+ * - email: 가입 시 등록한 아이디
+ * - password: 비밀번호
+ */
+export interface DefaultLoginRequest {
+  /** 가입 시 등록한 아이디 */
+  email: string;
+  /** 비밀번호 */
+  password: string;
+}
+
+/**
+ * 일반 로그인 API 응답
+ * - access_token: 액세스 토큰 (snake_case)
+ * - refresh_token: 리프레시 토큰 (snake_case)
+ * - requires_terms_agreement: 약관 동의 필요 여부 (false = 미동의, 약관 동의 바텀시트 노출)
+ */
+export interface DefaultLoginResponse {
+  /** 액세스 토큰 */
+  access_token: string;
+  /** 리프레시 토큰 */
+  refresh_token: string;
+  /** 약관 동의 필요 여부 */
+  requires_terms_agreement: boolean;
+}
+
+/**
  * 토큰 갱신 API 응답
  * - access_token: 새 액세스 토큰 (snake_case)
  * - refresh_token: 새 리프레시 토큰 (snake_case)
@@ -76,6 +103,17 @@ export class UserAPI {
       { identityToken, authorizationCode },
       { skipAuth: true },
     );
+  }
+
+  /**
+   * # defaultLogin
+   * ---
+   * - 간단설명: 안내받은 계정 기반 이메일/비밀번호 로그인
+   * ---
+   * @param body 이메일과 비밀번호
+   */
+  static defaultLogin(body: DefaultLoginRequest) {
+    return API.post<DefaultLoginResponse>('/auth/login', body, { skipAuth: true });
   }
 
   /**

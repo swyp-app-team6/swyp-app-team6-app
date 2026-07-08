@@ -1,30 +1,32 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query';
 import { useAuthStore } from '../../../../entities/user';
+import { UserAPI } from '../../../../entities/user/api/userApi';
+import type { DefaultLoginRequest } from '../../../../entities/user/api/userApi';
 
 /**
  * # useDefaultLoginMutation
  * ---
- * - 간단설명: ID/비밀번호 기반 기본 로그인 mutation 훅
- * - 제약사항 및 특이사항: API 연동 전 임시 빈 토큰 반환, 성공 시 authStore에 토큰 및 유저 정보 저장
+ * - 간단설명: 안내받은 계정 기반 이메일/비밀번호 로그인 mutation 훅
+ * - 제약사항 및 특이사항:
+ *   - 성공 시 authStore에 토큰 저장
+ *   - requires_terms_agreement 값을 onSuccess 콜백으로 전달
  * ---
  * @example
  * const { mutate, isPending } = useDefaultLoginMutation();
- * mutate();
+ * mutate({ email: 'user@example.com', password: '1234' });
  */
 export default function useDefaultLoginMutation() {
-  const { setTokens, setUser } = useAuthStore();
+  const { setTokens } = useAuthStore();
   return useMutation({
-    mutationFn: async () => {
-      // TODO: API 형식에 맞춰 로그인 작성
-      return {
-        accessToken: '',
-        refreshToken: '',
-        user: null,
-      }
+    mutationFn: async (body: DefaultLoginRequest) => {
+      const { data } = await UserAPI.defaultLogin(body);
+      return data;
     },
-    onSuccess: ({ accessToken, refreshToken, user }) => {
-      setTokens({ accessToken, refreshToken });
-      if (user) setUser(user);
+    onSuccess: (data) => {
+      setTokens({
+        accessToken: data.access_token,
+        refreshToken: data.refresh_token,
+      });
     },
-  })
+  });
 }
