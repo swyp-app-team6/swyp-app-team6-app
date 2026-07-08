@@ -40,7 +40,7 @@ function LoginPage() {
   const permissionRef = useRef<BottomSheetHandle>(null);
   const troubleRef = useRef<BottomSheetHandle>(null);
 
-  /** 로그인 성공 후 플로우 분기: requires_terms_agreement가 false이면 약관 바텀시트 노출 */
+  /** 로그인 성공 후 플로우 분기: requires_terms_agreement가 true이면 약관 바텀시트 노출 */
   const handleLoginSuccess = (requiresTermsAgreement: boolean) => {
     if (requiresTermsAgreement) {
       termsRef.current?.open();
