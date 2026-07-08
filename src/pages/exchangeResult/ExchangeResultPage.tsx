@@ -1,14 +1,10 @@
 import React from 'react';
-import { Image, Text, View } from 'react-native';
+import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Button, Header, InterestTag } from '@/shared/ui';
-import ProfileCardGradientBackground from '@/shared/ui/ProfileCard/ProfileCardGradientBackground';
+import { Button, Header } from '@/shared/ui';
 import { useExchangeFlowStore } from '@/features/exchange';
-import { getInterestLabel } from '@/features/register';
 import type { NavigationPropType } from '@/shared/types';
-
-const profileCommonFound = require('@/assets/characters/profile-common-found.png');
-const profileCommonNotFound = require('@/assets/characters/profile-common-not-found.png');
+import CommonInterestCard from './CommonInterestCard';
 
 /**
  * # ExchangeResultPage
@@ -60,47 +56,11 @@ export default function ExchangeResultPage() {
 
       {/* 본문 */}
       <View className="flex-1 items-center pt-6">
-        {/* 그라디언트 카드 */}
-        <ProfileCardGradientBackground>
-          <View className="flex-1 px-6 py-8">
-            {/* 타이틀 */}
-            <Text className="text-center text-[20px] font-bold leading-[28px] text-white">
-              {hasCommon
-                ? '드디어 두 우주가 서로 통하는\n관심사를 찾았어요!'
-                : '아쉽지만 서로 겹치는 관심사가\n아직 없어요!'}
-            </Text>
-
-            {/* 일러스트 영역 */}
-            <View className="my-8 items-center">
-              <Image
-                source={hasCommon ? profileCommonFound : profileCommonNotFound}
-                className="h-[154px] w-[214px]"
-                resizeMode="contain"
-              />
-            </View>
-
-            {/* 공통 관심사 섹션 */}
-            <View className="items-center gap-2">
-              <Text className="text-center text-[18px] font-bold leading-[24px] text-white">
-                {hasCommon ? '두 분의 공통된 관심사는' : `${theirName}의 관심사는`}
-              </Text>
-
-              {/* 관심사 태그 */}
-              <View className="mt-2 flex-row flex-wrap justify-center gap-2">
-                {displayInterests.map((interest) => (
-                  <InterestTag key={interest} label={getInterestLabel(interest)} variant="overlay" />
-                ))}
-              </View>
-
-              {/* 안내 문구 */}
-              <Text className="mt-3 text-center text-[14px] font-medium leading-[20px] text-neutral-100">
-                {hasCommon
-                  ? '공통된 관심사를 기반으로\n가볍게 이야기를 시작해보세요!'
-                  : '다양한 관심사를 통해\n새로운 이야기를 나눠보세요!'}
-              </Text>
-            </View>
-          </View>
-        </ProfileCardGradientBackground>
+        <CommonInterestCard
+          hasCommon={hasCommon}
+          interests={displayInterests}
+          theirName={theirName}
+        />
       </View>
 
       {/* 하단 CTA */}
