@@ -107,12 +107,12 @@ function OnboardingPage() {
 
                   {/* 일러스트 이미지 */}
                   <View
-                    className="w-full items-center justify-center rounded-2xl"
+                    className="w-full bg-gray-100 items-center justify-center rounded-2xl"
                     style={{ height: 440 }}
                   >
                     <Image
                       source={slide.image}
-                      style={{ width: '100%', height: '100%' }}
+                      style={{ width: 200, height: 200 }}
                       resizeMode="contain"
                     />
                   </View>
