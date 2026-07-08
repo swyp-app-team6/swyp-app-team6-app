@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
@@ -8,25 +8,35 @@ import type { NavigationPropType } from '@/shared/types';
 import useConditionStateStore from '@/shared/model/conditionStateStore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+/** 온보딩 캐릭터 이미지 */
+const onboarding1 = require('@/assets/characters/onboarding-1.png');
+const onboarding2 = require('@/assets/characters/onboarding-2.png');
+const onboarding3 = require('@/assets/characters/onboarding-3.png');
+const onboarding4 = require('@/assets/characters/onboarding-4.png');
+
 /** 온보딩 슬라이드 데이터 (4단계) */
 const ONBOARDING_SLIDES = [
   {
     title: '프로필 등록',
     description: '상대방에게 어필할 수 있는\n나만의 프로필을 등록할 수 있어요',
+    image: onboarding1,
   },
   {
     title: '프로필 교환',
     description: '프로필의 QR코드와 스캔 기능을 사용해\n서로의 프로필 정보를 교환할 수 있어요',
+    image: onboarding2,
   },
   {
     title: '관심사 찾기',
     description: '프로필을 교환하면 상대방과 자신의\n공통된 관심사를 볼 수 있어요',
+    image: onboarding3,
   },
   {
     title: '교환한 프로필 후기 작성',
     description: '교환한 상대방 프로필에\n나만 보는 후기를 작성해 상대방을 기억할 수 있어요',
+    image: onboarding4,
   },
-] as const;
+];
 
 /**
  * # OnboardingPage
@@ -95,11 +105,17 @@ function OnboardingPage() {
                     </Text>
                   </View>
 
-                  {/* 일러스트 플레이스홀더 (350x440) */}
+                  {/* 일러스트 이미지 */}
                   <View
-                    className="w-full bg-gray-100 rounded-2xl"
+                    className="w-full items-center justify-center rounded-2xl"
                     style={{ height: 440 }}
-                  />
+                  >
+                    <Image
+                      source={slide.image}
+                      style={{ width: '100%', height: '100%' }}
+                      resizeMode="contain"
+                    />
+                  </View>
                 </View>
               </StepView.Step>
             ))}
