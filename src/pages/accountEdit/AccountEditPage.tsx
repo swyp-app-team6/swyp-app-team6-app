@@ -56,7 +56,11 @@ function AccountEditPage() {
       if (refreshToken) {
         await UserAPI.logout(refreshToken);
       }
-      await GoogleSignin.signOut();
+      try {
+        await GoogleSignin.signOut();
+      } catch {
+        // Google 로그인이 아닌 경우 signOut 실패 무시
+      }
       await clearAuth();
       queryClient.resetQueries();
       navigation.reset({
