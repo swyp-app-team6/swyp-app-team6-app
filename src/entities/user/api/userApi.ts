@@ -96,14 +96,26 @@ export class UserAPI {
   }
 
   /**
+   * # logout
+   * ---
+   * - 간단설명: 서버에 로그아웃 요청하여 리프레시 토큰 무효화
+   * ---
+   * @param refreshToken 무효화할 리프레시 토큰
+   */
+  static logout(refreshToken: string) {
+    return API.post<void>('/auth/logout', { refresh_token: refreshToken });
+  }
+
+  /**
    * # deleteUser
    * ---
    * - 간단설명: 회원 탈퇴 및 관련 데이터 삭제
    * - 제약사항: 탈퇴 시 프로필 등 연관 데이터도 함께 삭제됨
    * ---
+   * @param body 탈퇴 사유 코드 및 상세 사유
    */
-  static deleteUser() {
-    return API.delete<void>('/user');
+  static deleteUser(body: { reasonCode: string; reasonDetail?: string }) {
+    return API.delete<void>('/user', { data: body });
   }
 
   /** 쿼리 키 팩토리 */

@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import { Button, Checkbox, Header, Layout, openErrorDialog } from '@/shared/ui';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
 import useAuthStore from '@/entities/user/model/authStore';
 import { UserAPI } from '@/entities/user/api/userApi';
-import type { NavigationPropType } from '@/shared/types';
+import { REASON_CODE_MAP, WITHDRAWAL_REASONS } from '@/features/withdrawal';
+import type { NavigationPropType, NavigatorType } from '@/shared/types';
 import { useQueryClient } from '@tanstack/react-query';
 
 /**
@@ -24,8 +25,12 @@ import { useQueryClient } from '@tanstack/react-query';
 function WithdrawalConfirmPage() {
   const queryClient = useQueryClient();
   const navigation = useNavigation<NavigationPropType>();
+  const route = useRoute<RouteProp<NavigatorType, 'withdrawalConfirm'>>();
   const clearAuth = useAuthStore((state) => state.clear);
   const [confirmed, setConfirmed] = useState(false);
+
+  /** route params에서 전달받은 사유 텍스트 */
+  const reason = route.params?.reason || '';
 
   /**
    * # handleWithdraw
@@ -35,7 +40,13 @@ function WithdrawalConfirmPage() {
    */
   const handleWithdraw = async () => {
     try {
-      await UserAPI.deleteUser();
+      const matchedReason = WITHDRAWAL_REASONS.find((r) => r === reason);
+      const reasonCode = matchedReason
+        ? REASON_CODE_MAP[matchedReason]
+        : 'OTHER';
+      const reasonDetail = reasonCode === 'OTHER' ? reason : undefined;
+
+      await UserAPI.deleteUser({ reasonCode, reasonDetail });
       await clearAuth();
       queryClient.resetQueries();
       navigation.reset({

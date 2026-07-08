@@ -1,11 +1,12 @@
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Header, Layout, MenuList, openErrorDialog } from '@/shared/ui';
 import ArrowIcon from '@/shared/ui/icons/ArrowIcon';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
 import useAuthStore from '@/entities/user/model/authStore';
+import { UserAPI } from '@/entities/user/api/userApi';
 import type { NavigationPropType } from '@/shared/types';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -37,6 +38,7 @@ function AccountEditPage() {
   const queryClient = useQueryClient();
   const navigation = useNavigation<NavigationPropType>();
   const user = useAuthStore((state) => state.user);
+  const refreshToken = useAuthStore((state) => state.refreshToken);
   const clearAuth = useAuthStore((state) => state.clear);
 
   /** 메뉴 아이템 오른쪽 chevron */
@@ -45,11 +47,14 @@ function AccountEditPage() {
   /**
    * # handleLogout
    * ---
-   * - 간단설명: 로그아웃 처리 (토큰 초기화 → 홈 화면 이동)
+   * - 간단설명: 서버 로그아웃 API 호출 후 로컬 인증 초기화 및 홈 화면 이동
    * ---
    */
   const handleLogout = async () => {
     try {
+      if (refreshToken) {
+        await UserAPI.logout(refreshToken);
+      }
       await clearAuth();
       queryClient.resetQueries();
       navigation.reset({
@@ -77,7 +82,7 @@ function AccountEditPage() {
         </View>
 
         {/* 휴대폰 번호 (UI만 구성) */}
-        <View className="px-5 gap-1">
+        {/* <View className="px-5 gap-1">
           <View className="h-[30px] justify-center">
             <Text className="text-[16px] font-medium text-[#1A1A1A] leading-[22.4px]">
               휴대폰 번호
@@ -93,7 +98,7 @@ function AccountEditPage() {
               </Text>
             </Pressable>
           </View>
-        </View>
+        </View> */}
 
         {/* 계정 관리 섹션 */}
         <View className="mt-6">
