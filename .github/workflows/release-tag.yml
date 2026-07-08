@@ -1,7 +1,9 @@
 name: Orbits App Release
 
 on:
-  push:
+  pull_request:
+    types:
+      - closed
     branches:
       - main
 
@@ -10,7 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    # main 브랜치 머지 시 release tag 자동생성
+    if: github.event.pull_request.merged == true
+    # PR이 main 브랜치에 머지되는 시점에 release tag 자동생성
     # 버전은 v[package.json.version] 형식으로 자동 지정
     # 만약 version up 안된경우 skip
     steps:
