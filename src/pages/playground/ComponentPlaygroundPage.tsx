@@ -11,6 +11,9 @@ import EmptyProfileCard from '@/shared/ui/ProfileCard/EmptyProfileCard';
 import ProfileFlipWrapper from '@/shared/ui/ProfileCard/ProfileFlipWrapper';
 import ProfileCardContainer from '@/shared/ui/ProfileCard/ProfileCardContainer';
 import ProfileCardGradientBackground from '@/shared/ui/ProfileCard/ProfileCardGradientBackground';
+import CosmicResultFrontCard from '@/features/register/ui/CosmicResultFrontCard';
+import CosmicResultBackCard from '@/features/register/ui/CosmicResultBackCard';
+import { CosmicType } from '@/shared/enums';
 import {
   Accordion,
   AlertModal,
@@ -1059,6 +1062,42 @@ export default function ComponentPlaygroundPage() {
                 <Text className="mt-2 text-sm text-white/80">solid indigo → violet</Text>
               </View>
             </ProfileCardGradientBackground>
+          </View>
+        </Section>
+
+        {/* ── CosmicResultCard (앞/뒤) ───────────────────────────────────── */}
+        <Section title="CosmicResultCard — 코스믹 유형 결과 카드 (앞/뒤)">
+          <View className="items-center gap-4">
+            <CosmicResultFrontCard
+              nickname="홍길동"
+              result={{
+                cosmic_type: { type: CosmicType.SHOOTING_STAR, label: '별똥별' },
+                tags: ['#열정적', '#모험가', '#솔직한'],
+                detail: '당신은 강렬한 첫인상으로 상대의 마음을 사로잡는 타입입니다.',
+                image_key: 'shooting_star',
+                features: ['적극적으로 다가가는 편', '감정 표현이 솔직함'],
+                mentions: ['"너는 진짜 솔직한 것 같아"', '"첫인상이 강렬해"'],
+                matches: [
+                  { type: CosmicType.GALAXY, label: '은하수' },
+                  { type: CosmicType.LUNA, label: '루나' },
+                ],
+              }}
+            />
+            <CosmicResultBackCard
+              nickname="홍길동"
+              result={{
+                cosmic_type: { type: CosmicType.SHOOTING_STAR, label: '별똥별' },
+                tags: ['#열정적', '#모험가', '#솔직한'],
+                detail: '당신은 강렬한 첫인상으로 상대의 마음을 사로잡는 타입입니다.',
+                image_key: 'shooting_star',
+                features: ['적극적으로 다가가는 편', '감정 표현이 솔직함'],
+                mentions: ['"너는 진짜 솔직한 것 같아"', '"첫인상이 강렬해"'],
+                matches: [
+                  { type: CosmicType.GALAXY, label: '은하수' },
+                  { type: CosmicType.LUNA, label: '루나' },
+                ],
+              }}
+            />
           </View>
         </Section>
 

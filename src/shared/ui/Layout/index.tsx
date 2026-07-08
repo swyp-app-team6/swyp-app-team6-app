@@ -52,7 +52,7 @@ Layout.Header = function LayoutHeader({ children, styleClass, style }: Props) {
 Layout.Body = function LayoutBody({ children, styleClass }: Props) {
   return (
     <View
-      className={cn('flex-1', styleClass?.root)}
+      className={cn('flex-1 px-5', styleClass?.root)}
       style={Platform.OS === 'android' ? { paddingBottom: 16 } : undefined}
     >
       {children}
