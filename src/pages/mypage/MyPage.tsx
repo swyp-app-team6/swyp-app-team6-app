@@ -1,7 +1,7 @@
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Header, Layout, MenuList } from '@/shared/ui';
+import { Button, Header, Layout, MenuList } from '@/shared/ui';
 import ArrowIcon from '@/shared/ui/icons/ArrowIcon';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
@@ -42,14 +42,13 @@ function MyPage() {
         </View>
 
         {/* 계정 정보 수정 버튼 */}
-        <Pressable
-          className="mx-5 h-12 bg-[#F5F5F5] rounded-xl items-center justify-center active:opacity-80"
-          onPress={() => navigation.navigate('accountEdit')}
-        >
-          <Text className="text-[14px] font-medium text-[#8C39FB] leading-[19.6px]">
-            계정 정보 수정
-          </Text>
-        </Pressable>
+        <View className="mx-5">
+          <Button
+            title="계정 정보 수정"
+            variant="secondary"
+            onPress={() => navigation.navigate('accountEdit')}
+          />
+        </View>
 
         {/* 설정 섹션 */}
         <View className="mt-4">

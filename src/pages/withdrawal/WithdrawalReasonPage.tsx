@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Header, Layout, MenuList, Textbox } from '@/shared/ui';
+import { Button, Header, Layout, MenuList, Textbox } from '@/shared/ui';
 import ArrowIcon from '@/shared/ui/icons/ArrowIcon';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
@@ -106,19 +106,14 @@ function WithdrawalReasonPage() {
 
         {/* 다음 버튼 */}
         <View className="px-5 mt-auto pb-6">
-          <Pressable
-            className={`h-12 rounded-xl items-center justify-center ${
-              isNextEnabled ? 'bg-[#F5F5F5] active:opacity-80' : 'bg-[#F5F5F5] opacity-50'
-            }`}
+          <Button
+            title="다음"
+            variant="secondary"
             disabled={!isNextEnabled}
             onPress={() =>
               navigation.navigate('withdrawalConfirm', { reason: finalReason })
             }
-          >
-            <Text className="text-[16px] font-bold text-[#8C39FB] leading-[22.4px]">
-              다음
-            </Text>
-          </Pressable>
+          />
         </View>
       </Layout.Body>
     </>
