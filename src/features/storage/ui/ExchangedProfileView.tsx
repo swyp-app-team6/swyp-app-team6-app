@@ -17,6 +17,7 @@ import CosmicTypeSection from '@/features/register/ui/CosmicTypeSection';
 import InfoCard from '@/features/register/ui/InfoCard';
 import ReportBottomSheet from './ReportBottomSheet';
 import useReportMutation from '../api/useReportMutation';
+import useBlockMutation from '../api/useBlockMutation';
 
 interface Props {
   /** 프로필 ID */
@@ -53,11 +54,12 @@ export default function ExchangedProfileView({
 
   const { data: detail, isLoading } = useExchangeArchiveDetailQuery(profileId);
   const { mutate: submitReport } = useReportMutation();
+  const { mutate: submitBlock } = useBlockMutation();
 
   const profile = detail?.profile;
   const matchedInterests = detail?.matched_interests ?? [];
   const imageUri = getProfileImageUrl(profile?.image_key);
-  const cosmicType = profile?.cosmic_type ? apiValueToCosmicType(profile.cosmic_type) : 'star';
+  const cosmicType = profile?.cosmic_type ? apiValueToCosmicType(profile.cosmic_type) : undefined;
 
   const handleBlock = useCallback(() => {
     openDialog({
@@ -67,10 +69,27 @@ export default function ExchangedProfileView({
       okLabel: '차단',
       cancelLabel: '취소',
       okFn: () => {
-        navigation.goBack();
+        submitBlock(profileId, {
+          onSuccess: () => {
+            openDialog({
+              type: 'alert',
+              title: '차단이 완료되었습니다',
+              okFn: () => {
+                navigation.goBack();
+              },
+            });
+          },
+          onError: () => {
+            openDialog({
+              type: 'alert',
+              title: '차단에 실패했습니다',
+              message: '잠시 후 다시 시도해주세요.',
+            });
+          },
+        });
       },
     });
-  }, [navigation, profile]);
+  }, [navigation, profile, submitBlock, profileId]);
 
   /** 신고/차단 팝오버 메뉴 항목 */
   const popoverItems: PopoverMenuItem[] = useMemo(
@@ -159,7 +178,7 @@ export default function ExchangedProfileView({
 
               {/* 상단: 배지 + 신고/차단 메뉴 */}
               <View className="absolute top-5 left-5 right-5 flex-row items-center justify-between">
-                <Badge level={cosmicType} />
+                {cosmicType && <Badge level={cosmicType} />}
                 {!isBlocked && (
                   <PopoverMenu items={popoverItems} align="right">
                     <View className="w-10 h-10 items-center justify-center">

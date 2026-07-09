@@ -210,6 +210,33 @@ export interface ReportResponse {
   createdAt: string;
 }
 
+/**
+ * POST /blocks 요청 바디
+ * - profile_exchange_id = 차단할 교환 프로필 ID
+ */
+export interface BlockCreateRequest {
+  /** 차단할 교환 프로필 ID */
+  profile_exchange_id: number;
+}
+
+/**
+ * POST /blocks 응답
+ * - block_id = 차단 ID
+ * - nickname = 차단 대상 닉네임
+ * - image_key = 차단 대상 프로필 이미지 키
+ * - created_at = 차단 생성 시각
+ */
+export interface BlockResponse {
+  /** 차단 ID */
+  block_id: number;
+  /** 차단 대상 닉네임 */
+  nickname: string | null;
+  /** 차단 대상 프로필 이미지 키 */
+  image_key: string | null;
+  /** 차단 생성 시각 */
+  created_at: string;
+}
+
 export interface StorageProfileDetail extends StorageProfile {
   /** 관심사 목록 */
   interests: string[];

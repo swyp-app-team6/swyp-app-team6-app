@@ -9,6 +9,8 @@ export type {
   ReportReasonCode,
   ReportRequest,
   ReportResponse,
+  BlockCreateRequest,
+  BlockResponse,
 } from './model/types';
 export {
   COSMIC_TYPE_LABEL,

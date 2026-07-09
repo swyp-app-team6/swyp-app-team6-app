@@ -10,6 +10,8 @@ import type {
   ExchangeDeleteResponse,
   ReportRequest,
   ReportResponse,
+  BlockCreateRequest,
+  BlockResponse,
 } from '../model/types';
 
 /**
@@ -75,6 +77,17 @@ export class ExchangeArchiveAPI {
    */
   static reportProfile(data: ReportRequest) {
     return API.post<ReportResponse>('/reports', data);
+  }
+
+  /**
+   * # blockUser
+   * ---
+   * - 간단설명: 교환 프로필 유저 차단 요청
+   * ---
+   * @param data 차단 요청 데이터 (profile_exchange_id)
+   */
+  static blockUser(data: BlockCreateRequest) {
+    return API.post<BlockResponse>('/blocks', data);
   }
 
   /** 쿼리 키 팩토리 */
