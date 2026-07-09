@@ -168,6 +168,27 @@ export interface ExchangeDeleteRequest { exchange_ids: number[]; }
 export interface ExchangeDeleteResponse { deleted_count: number; deleted_ids: number[]; }
 
 /**
+ * 만남후기 만족도 점수
+ * - 4 = 매우 좋았어요
+ * - 3 = 좋았어요
+ * - 2 = 나쁘지 않았어요
+ * - 1 = 잘 모르겠어요
+ */
+export type ReviewScore = 1 | 2 | 3 | 4;
+
+/**
+ * PATCH /exchange/archive/{exchangeId}/review 요청 바디
+ * - score = 만족도 점수 (1-4)
+ * - review = 후기 메모 (최대 300자, 선택)
+ */
+export interface ExchangeReviewRequest {
+  /** 만족도 점수 */
+  score: ReviewScore;
+  /** 후기 메모 */
+  review?: string;
+}
+
+/**
  * 신고 사유 코드
  * - INAPPROPRIATE_LANGUAGE = 부적절한 언행/욕설
  * - FRAUD_OR_MONEY_REQUEST = 사기/금전 요구
