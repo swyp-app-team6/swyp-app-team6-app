@@ -185,7 +185,7 @@ export function profileToFormState(profile: MyProfileResponse): RegisterFormStat
     gender: profile.gender,
     age: String(profile.age),
     jobField: profile.job,
-    region: profile.region.detail,
+    region: REGION_OPTIONS.find((o) => o.label === profile.region.group)?.value ?? profile.region.detail,
     subArea: profile.region.label,
     bio: profile.bio ?? '',
     interests: profile.interests.map((i) => i.type),

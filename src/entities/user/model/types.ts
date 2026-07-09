@@ -30,7 +30,10 @@ export interface AuthTokens {
 export interface Region {
   /** 시/도 그룹명 */
   group: string;
-  /** 시/도 코드 */
+  /** 
+   * 시/도 코드 ex) BUSAN_JUNGGU 
+   * 이걸 통해 사용자 지역파악에 사용
+   * */
   detail: string;
   /** 표시 라벨 */
   label: string;
