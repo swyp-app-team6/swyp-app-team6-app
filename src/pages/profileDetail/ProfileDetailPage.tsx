@@ -109,9 +109,9 @@ export default function ProfileDetailPage() {
           />
           <InterestsSection interests={interests} />
           <BioSection bio={profile.bio} />
-          <CosmicTypeSection
-            cosmicType={profile.cosmic_type}
-          />
+          {profile.cosmic_type && (
+            <CosmicTypeSection cosmicType={profile.cosmic_type} />
+          )}
           <TmiSection tmiAnswers={tmiAnswers} />
         </View>
       </ScrollView>

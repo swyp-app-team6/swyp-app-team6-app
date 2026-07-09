@@ -238,7 +238,9 @@ export default function ExchangedProfileView({
             >
               <InterestsSection interests={profile.interests.map((i) => i.type)} />
               <BioSection bio={profile.bio} />
-              <CosmicTypeSection />
+              {profile.cosmic_type && (
+                <CosmicTypeSection cosmicType={profile.cosmic_type} />
+              )}
             </Accordion.Item>
           </Accordion.Root>
         </View>
