@@ -13,6 +13,7 @@ import BioSection from '@/features/register/ui/BioSection';
 import CosmicTypeSection from '@/features/register/ui/CosmicTypeSection';
 import TmiSection from '@/features/register/ui/TmiSection';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
+import { apiValueToCosmicType } from '@/entities/storage';
 
 /**
  * # ProfileDetailPage
@@ -97,6 +98,7 @@ export default function ProfileDetailPage() {
             nickname={profile.nickname}
             age={String(profile.age)}
             interests={interests.map((i) => getInterestLabel(i))}
+            badgeLevel={profile.cosmic_type ? apiValueToCosmicType(profile.cosmic_type) : undefined}
           />
         </View>
 

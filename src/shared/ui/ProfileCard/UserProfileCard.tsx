@@ -55,7 +55,7 @@ function UserProfileCard({
   nickname,
   age,
   interests,
-  badgeLevel = 'star',
+  badgeLevel,
   topRightSlot,
   onPress,
 }: UserProfileCardProps) {
@@ -76,7 +76,7 @@ function UserProfileCard({
 
       {/* 상단: 유형 배지 + 우측 슬롯 */}
       <View className="absolute top-5 left-5 right-5 flex-row items-center justify-between">
-        <Badge level={badgeLevel} />
+        {badgeLevel && <Badge level={badgeLevel} />}
         {topRightSlot}
       </View>
 

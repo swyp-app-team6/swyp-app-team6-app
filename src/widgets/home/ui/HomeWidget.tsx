@@ -9,6 +9,7 @@ import { ProfileShareQRModal } from '@/features/profileShare';
 import { getInterestLabel } from '@/features/register';
 import { useMyProfileQuery } from '@/entities/user';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
+import { apiValueToCosmicType } from '@/entities/storage';
 import type { NavigationPropType } from '@/shared/types';
 import HomeCardBack from './HomeCardBack';
 
@@ -50,6 +51,7 @@ export default function HomeWidget() {
         nickname={profile.nickname}
         age={String(profile.age)}
         interests={profile.interests.map((i) => getInterestLabel(i.type))}
+        badgeLevel={profile.cosmic_type ? apiValueToCosmicType(profile.cosmic_type) : undefined}
         onPress={() => navigation.navigate('profileDetail')}
         topRightSlot={
           <Pressable
