@@ -181,7 +181,7 @@ export default function CosmicTypeTestView({ onComplete, nickname = '사용자' 
   return (
     <View className="flex-1">
       <ScrollView
-        className="flex-1"
+        className="flex-1 mt-10"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 24 }}
       >
