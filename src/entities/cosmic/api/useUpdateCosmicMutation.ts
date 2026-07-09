@@ -8,7 +8,7 @@ import { ProfileAPI } from '@/entities/user';
  * ---
  * - 간단설명: 코스믹 유형 수정 mutation 훅 (PATCH /profile/cosmic)
  * - 제약사항 및 특이사항:
- *   - 성공 시 프로필 쿼리 캐시 무효화
+ *   - 성공 시 프로필 쿼리 캐시 무효화 및 즉시 refetch 수행
  *   - 응답 204 No Content
  * ---
  * @example
@@ -21,7 +21,7 @@ export default function useUpdateCosmicMutation() {
   return useMutation({
     mutationFn: (cosmicType: CosmicType) => CosmicAPI.updateCosmic(cosmicType),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ProfileAPI.query._def });
+      queryClient.refetchQueries({ queryKey: ProfileAPI.query._def });
     },
   });
 }
