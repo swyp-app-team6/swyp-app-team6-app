@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { View } from 'react-native';
 import type { Region } from '@/entities/user/model/types';
+import { getRegionLabel } from '@/shared/lib/regionLabel';
 import InfoCard from './InfoCard';
 import InfoRow from './InfoRow';
 
@@ -19,20 +20,13 @@ import InfoRow from './InfoRow';
 const BasicInfoSection = memo(function BasicInfoSection({
   age,
   region,
-  subArea,
   jobField,
 }: {
-  age?: string;
-  region?: Region | string;
-  subArea?: string;
+  age: string;
+  region: Region;
   jobField?: string;
 }) {
-  const regionText = region
-    ? typeof region === 'string'
-      ? subArea ? `${region} ${subArea}` : region
-      : `${region.group} ${region.label}`
-    : '-';
-
+  const regionText = getRegionLabel(region!.detail);
   return (
     <InfoCard title="기본정보">
       <View className="gap-3">
