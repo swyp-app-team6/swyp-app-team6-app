@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { StepView, ProgressBar, ErrorBoundary, LoadSuspense, openErrorDialog } from '@/shared/ui';
 import type { ChoiceTemplate, ShortTemplate } from '@/entities/user';
 import { useUpdateProfileMutation } from '@/entities/user';
+import { resolveRegionEnum } from '@/shared/lib/regionLabel';
 import useRegisterFormStore from '../model/useRegisterFormStore';
 import useRegisterMutation from '../api/useRegisterMutation';
 import type { RegisterFormState } from '../model/types';
@@ -56,7 +57,7 @@ function buildRegisterRequest(form: RegisterFormState) {
     image_key: form.profileImageKey ?? '',
     gender: form.gender as 'M' | 'F',
     age: Number(form.age),
-    region: form.region,
+    region: resolveRegionEnum(form.region, form.subArea),
     job: form.jobField,
     interests: form.interests,
     bio: form.bio || undefined,
