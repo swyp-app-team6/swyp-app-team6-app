@@ -185,13 +185,7 @@ export default function CosmicTypeTestView({ onComplete, nickname = '사용자' 
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 24 }}
       >
-        {/* 일러스트 이미지 영역 (placeholder) */}
-        <View className="items-center justify-center mt-4 mb-4" style={{ height: 120 }}>
-          <View className="w-[134px] h-[106px] rounded-2xl bg-primary-lightest items-center justify-center">
-            <Text className="text-4xl">🔮</Text>
-          </View>
-        </View>
-
+        {/* TODO: 여기에 질문유형별 캐릭터 png 필요함 */}
         {/* 질문 네비게이터 */}
         <View className="px-5 mb-2">
           <View className="flex-row items-center">
@@ -250,11 +244,10 @@ export default function CosmicTypeTestView({ onComplete, nickname = '사용자' 
               <Pressable
                 key={answer.answer_id}
                 onPress={() => handleSelect(answer)}
-                className={`h-[72px] px-6 rounded-xl flex-row items-center justify-between border ${
-                  isSelected
+                className={`h-[72px] px-6 rounded-xl flex-row items-center justify-between border ${isSelected
                     ? 'bg-primary-lightest border-primary'
                     : 'bg-[#F5F5F5] border-[#BFBFBF]'
-                }`}
+                  }`}
               >
                 <View className="flex-row items-center flex-1">
                   {isSelected && (
@@ -263,9 +256,8 @@ export default function CosmicTypeTestView({ onComplete, nickname = '사용자' 
                     </View>
                   )}
                   <Text
-                    className={`text-base font-medium ${
-                      isSelected ? 'text-primary' : 'text-[#888888]'
-                    }`}
+                    className={`text-base font-medium ${isSelected ? 'text-primary' : 'text-[#888888]'
+                      }`}
                     style={{ lineHeight: 22.4 }}
                   >
                     {answer.answer}
