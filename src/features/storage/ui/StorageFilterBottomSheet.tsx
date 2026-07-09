@@ -5,18 +5,28 @@ import { useImperativeHandle, useRef } from 'react';
 import { Button, SafeBottomSheetModal } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
 
+/**
+ * 지역 필터 옵션
+ * - value = 칩 토글용 고유 키
+ * - apiValues = API에 전달할 enum 값 배열
+ */
+interface RegionOption {
+  label: string;
+  value: string;
+  apiValues: string[];
+}
+
 /** 지역 필터 옵션 목록 */
-const REGION_OPTIONS = [
-  { label: '서울', value: 'seoul' },
-  { label: '경기', value: 'gyeonggi' },
-  { label: '인천', value: 'incheon' },
-  { label: '대구/경북', value: 'daegu' },
-  { label: '부산/울산/경남', value: 'busan' },
-  { label: '충청/세종/대전', value: 'chungcheong' },
-  { label: '전라/광주', value: 'jeolla' },
-  { label: '강원', value: 'gangwon' },
-  { label: '제주', value: 'jeju' },
-  { label: '해외', value: 'overseas' },
+const REGION_OPTIONS: RegionOption[] = [
+  { label: '서울', value: 'SEOUL', apiValues: ['SEOUL'] },
+  { label: '경기', value: 'GYEONGGI', apiValues: ['GYEONGGI'] },
+  { label: '인천', value: 'INCHEON', apiValues: ['INCHEON'] },
+  { label: '대구/경북', value: 'DAEGU_GYEONGBUK', apiValues: ['DAEGU', 'GYEONGBUK'] },
+  { label: '부산/울산/경남', value: 'BUSAN_ULSAN_GYEONGNAM', apiValues: ['BUSAN', 'ULSAN', 'GYEONGNAM'] },
+  { label: '충청/세종/대전', value: 'CHUNG_SEJONG_DAEJEON', apiValues: ['CHUNGNAM', 'CHUNGBUK', 'SEJONG', 'DAEJEON'] },
+  { label: '전라/광주', value: 'JEONLA_GWANGJU', apiValues: ['JEONNAM', 'JEONBUK', 'GWANGJU'] },
+  { label: '강원', value: 'GANGWON', apiValues: ['GANGWON'] },
+  { label: '제주', value: 'JEJU', apiValues: ['JEJU'] },
 ];
 
 /** 유형 필터 옵션 목록 */
@@ -153,8 +163,11 @@ const StorageFilterBottomSheet = forwardRef<BottomSheetHandle, Props>(
     }, []);
 
     const handleApply = useCallback(() => {
+      const apiRegions = selectedRegions.flatMap(
+        (v) => REGION_OPTIONS.find((o) => o.value === v)?.apiValues ?? [],
+      );
       onApply({
-        regions: selectedRegions,
+        regions: apiRegions,
         cosmicTypes: selectedCosmicTypes,
       });
       modalRef.current?.dismiss();
