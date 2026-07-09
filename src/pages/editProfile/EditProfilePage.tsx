@@ -49,22 +49,6 @@ export default function EditProfilePage() {
     navigation.goBack();
   };
 
-  /** 프로필 보기로 이동 */
-  const handleViewProfile = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'profileCard' }],
-    });
-  };
-
-  /** 홈으로 이동 */
-  const handleGoHome = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'home' }],
-    });
-  };
-
   return (
     <>
       <Header
@@ -78,8 +62,6 @@ export default function EditProfilePage() {
         <RegisterFormView
           mode="edit"
           initialData={initialFormData}
-          onViewProfile={handleViewProfile}
-          onGoHome={handleGoHome}
         />
       </Layout.Body>
 

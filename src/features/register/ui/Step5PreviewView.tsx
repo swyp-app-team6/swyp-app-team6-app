@@ -10,6 +10,8 @@ const TABS = ['기본정보', '관심사', '자기소개', '나만의 TMI'] as c
 type TabType = typeof TABS[number];
 
 interface Props {
+  /** 폼 모드 (register: 신규 등록, edit: 수정) */
+  mode?: 'register' | 'edit';
   /** 등록 완료 버튼 콜백 */
   onSubmit: () => void;
   /** API 호출 중 로딩 상태 */
@@ -31,7 +33,7 @@ interface Props {
  * @example
  * <Step5PreviewView onSubmit={handleSubmit} loading={false} />
  */
-export default function Step5PreviewView({ onSubmit, loading }: Props) {
+export default function Step5PreviewView({ mode = 'register', onSubmit, loading }: Props) {
   const { form } = useRegisterFormStore();
   const [activeTab, setActiveTab] = useState<TabType>('기본정보');
   const scrollRef = useRef<ScrollView>(null);
@@ -169,7 +171,7 @@ export default function Step5PreviewView({ onSubmit, loading }: Props) {
 
       <BottomCTA>
         <Button
-          title="프로필 등록 완료하기"
+          title={mode === 'edit' ? '프로필 수정 완료하기' : '프로필 등록 완료하기'}
           onPress={onSubmit}
           loading={loading}
         />

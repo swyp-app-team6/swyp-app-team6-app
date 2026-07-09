@@ -1,14 +1,12 @@
 import React from 'react';
-import { View, Text, Pressable, Image } from 'react-native';
+import { View, Text, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { BottomCTA, Button } from '@/shared/ui';
+import type { NavigationPropType } from '@/shared/types';
 
 interface Props {
   /** 폼 모드 (register: 등록 완료, edit: 수정 완료) */
   mode?: 'register' | 'edit';
-  /** 프로필 보기 버튼 콜백 */
-  onViewProfile: () => void;
-  /** 홈으로 이동 버튼 콜백 */
-  onGoHome: () => void;
 }
 
 /**
@@ -18,17 +16,26 @@ interface Props {
  * - 제약사항 및 특이사항:
  *   - 상단: 축하 일러스트 (플레이스홀더, 200x167)
  *   - 중앙: 축하 타이틀 + 서브 메시지
- *   - 하단 CTA: "프로필 보기"(회색 배경) + "홈으로"(보라 배경) 가로 배치
- *   - 프로필 보기 → profileCard 화면, 홈으로 → home 화면
- * ---
- * @param onViewProfile 프로필 보기 버튼 콜백
- * @param onGoHome 홈으로 이동 버튼 콜백
+ *   - 하단 CTA: "프로필 보기"(secondary) + "홈으로"(primary) 가로 배치
+ *   - 프로필 보기 → profileDetail 화면, 홈으로 → home 화면
  * ---
  * @example
- * <RegisterCompleteView onViewProfile={...} onGoHome={...} />
+ * <RegisterCompleteView />
+ * <RegisterCompleteView mode="edit" />
  */
-export default function RegisterCompleteView({ mode = 'register', onViewProfile, onGoHome }: Props) {
+export default function RegisterCompleteView({ mode = 'register' }: Props) {
+  const navigation = useNavigation<NavigationPropType>();
   const isEdit = mode === 'edit';
+
+  /** 프로필 상세 화면으로 이동 */
+  const handleViewProfile = () => {
+    navigation.reset({ index: 0, routes: [{ name: 'profileDetail' }] });
+  };
+
+  /** 홈 화면으로 이동 */
+  const handleGoHome = () => {
+    navigation.reset({ index: 0, routes: [{ name: 'home' }] });
+  };
   return (
     <View className="flex-1 bg-white">
       <View className="flex-1 items-center justify-center px-5">
@@ -65,20 +72,11 @@ export default function RegisterCompleteView({ mode = 'register', onViewProfile,
       {/* 하단 CTA: 프로필 보기(회색) + 홈으로(보라) */}
       <BottomCTA>
         <View className="flex-row gap-3">
-          <Pressable
-            onPress={onViewProfile}
-            className="h-14 rounded-xl bg-text-gray7 items-center justify-center px-6 active:opacity-80"
-            accessibilityRole="button"
-          >
-            <Text
-              className="text-base font-bold text-text-gray4 text-center"
-              style={{ lineHeight: 22.4 }}
-            >
-              프로필 보기
-            </Text>
-          </Pressable>
           <View className="flex-1">
-            <Button title="홈으로" onPress={onGoHome} />
+            <Button title="프로필 보기" variant="secondary" onPress={handleViewProfile} />
+          </View>
+          <View className="flex-1">
+            <Button title="홈으로" onPress={handleGoHome} />
           </View>
         </View>
       </BottomCTA>
