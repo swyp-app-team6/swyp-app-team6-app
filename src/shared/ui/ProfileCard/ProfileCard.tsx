@@ -261,7 +261,7 @@ function GridCard({
 }: GridProps) {
   return (
     <Pressable
-      className="flex-1 overflow-hidden rounded-xl pb-3"
+      className="flex-1 max-w-[50%] overflow-hidden rounded-xl pb-3"
       onPress={() => onPress?.(id)}
       disabled={isEditMode}
     >

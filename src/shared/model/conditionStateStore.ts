@@ -15,6 +15,8 @@ interface ConditionState {
   isProfileCreated: boolean;
   isAgreedToTerms: boolean;
   isPermissionAllowed: boolean;
+  /** 첫 페이지 방문 여부 (true = 첫 방문, withAuthorization에서 미인증 시 로그인 페이지로 리다이렉트) */
+  hasVisitedFirstPage: boolean;
 }
 
 /**
@@ -23,6 +25,7 @@ interface ConditionState {
  * - setIsProfileCreated: 프로필 생성 필요 여부 설정
  * - setIsAgreedToTerms: 이용약관 노출 여부 설정
  * - setIsPermissionAllowed: 접근권한 노출 여부 설정
+ * - setHasVisitedFirstPage: 첫 페이지 방문 여부 설정
  * - initFromStorage: AsyncStorage에서 모든 플래그 복원
  * - clearAll: 모든 플래그 초기화 및 AsyncStorage 삭제
  */
@@ -31,6 +34,7 @@ interface ConditionActions {
   setIsProfileCreated: (value: boolean) => void;
   setIsAgreedToTerms: (value: boolean) => void;
   setIsPermissionAllowed: (value: boolean) => void;
+  setHasVisitedFirstPage: (value: boolean) => void;
   initFromStorage: () => Promise<void>;
   clearAll: () => Promise<void>;
 }
@@ -50,6 +54,7 @@ interface ConditionActions {
  */
 const useConditionStateStore = create<ConditionState & ConditionActions>()(
   immer((set) => ({
+    hasVisitedFirstPage: true,
     hasSeenOnboarding: false,
     isProfileCreated: true,
     isAgreedToTerms: true,
@@ -102,6 +107,17 @@ const useConditionStateStore = create<ConditionState & ConditionActions>()(
     },
 
     /**
+     * 첫 페이지 방문 여부 설정 (true = 첫 방문, 미인증 시 로그인 페이지로 리다이렉트)
+     * @param value 설정할 값
+     */
+    setHasVisitedFirstPage: async (value: boolean) => {
+      set((state) => {
+        state.hasVisitedFirstPage = value;
+      });
+      await AsyncStorage.setItem(STORAGE_KEYS.HAS_VISITED_FIRST_PAGE, String(value));
+    },
+
+    /**
      * AsyncStorage에서 모든 조건 플래그를 복원
      */
     initFromStorage: async () => {
@@ -110,11 +126,13 @@ const useConditionStateStore = create<ConditionState & ConditionActions>()(
         storedProfileCreated,
         storedAgreedToTerms,
         storedPermissionAllowed,
+        storedVisitedFirstPage,
       ] = await Promise.all([
         AsyncStorage.getItem(STORAGE_KEYS.HAS_SEEN_ONBOARDING),
         AsyncStorage.getItem(STORAGE_KEYS.IS_PROFILE_CREATED),
         AsyncStorage.getItem(STORAGE_KEYS.IS_AGREED_TO_TERMS),
         AsyncStorage.getItem(STORAGE_KEYS.IS_PERMISSION_ALLOWED),
+        AsyncStorage.getItem(STORAGE_KEYS.HAS_VISITED_FIRST_PAGE),
       ]);
 
       set((state) => {
@@ -122,6 +140,7 @@ const useConditionStateStore = create<ConditionState & ConditionActions>()(
         state.isProfileCreated = storedProfileCreated === null ? true : storedProfileCreated === 'true';
         state.isAgreedToTerms = storedAgreedToTerms === null ? true : storedAgreedToTerms === 'true';
         state.isPermissionAllowed = storedPermissionAllowed === null ? true : storedPermissionAllowed === 'true';
+        state.hasVisitedFirstPage = storedVisitedFirstPage === null ? true : storedVisitedFirstPage === 'true';
       });
     },
 
@@ -134,6 +153,7 @@ const useConditionStateStore = create<ConditionState & ConditionActions>()(
         state.isProfileCreated = false;
         state.isAgreedToTerms = false;
         state.isPermissionAllowed = false;
+        state.hasVisitedFirstPage = true;
       });
       await Promise.all(
         Object.values(STORAGE_KEYS).map((key) => AsyncStorage.removeItem(key)),

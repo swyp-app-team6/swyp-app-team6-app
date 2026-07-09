@@ -66,10 +66,10 @@ function Input({
   ...props
 }: InputProps) {
   const InputComponent = isBottomSheet ? BottomSheetTextInput : TextInput;
-  const [length, setLength] = useState(props.value?.length ?? 0);
+  const [length, setLength] = useState(props.value?.replace(/\s/g, '').length ?? 0);
 
   const handleChangeText = (text: string) => {
-    setLength(text.length);
+    setLength(text.replace(/\s/g, '').length);
     props.onChangeText?.(text);
   };
 

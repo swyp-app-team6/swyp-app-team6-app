@@ -40,22 +40,6 @@ export default function RegisterPage() {
     navigation.goBack();
   };
 
-  /** 프로필 보기로 이동 */
-  const handleViewProfile = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'profileCard' }],
-    });
-  };
-
-  /** 홈으로 이동 */
-  const handleGoHome = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'home' }],
-    });
-  };
-
   return (
     <>
       <Header
@@ -66,10 +50,7 @@ export default function RegisterPage() {
         }
       />
       <Layout.Body styleClass={{ root: 'bg-white' }}>
-        <RegisterFormView
-          onViewProfile={handleViewProfile}
-          onGoHome={handleGoHome}
-        />
+        <RegisterFormView />
       </Layout.Body>
 
       <AlertModal

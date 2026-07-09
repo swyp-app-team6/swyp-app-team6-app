@@ -1,6 +1,7 @@
 import { INTEREST } from '@/entities/user';
 import type { MyProfileResponse } from '@/entities/user';
 import type { CosmicType } from '@/shared/enums';
+import { Region } from '@/shared/enums';
 import { TMIQuestionType } from '@/shared/enums';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 
@@ -39,24 +40,24 @@ export interface RegisterFormState {
  * - value: API에 전송하는 지역 코드
  * - label: 화면에 표시하는 한국어 라벨
  */
-export const REGION_OPTIONS: { value: string; label: string }[] = [
-  { value: 'SEOUL', label: '서울' },
-  { value: 'GYEONGGI', label: '경기' },
-  { value: 'INCHEON', label: '인천' },
-  { value: 'BUSAN', label: '부산' },
-  { value: 'DAEGU', label: '대구' },
-  { value: 'DAEJEON', label: '대전' },
-  { value: 'GWANGJU', label: '광주' },
-  { value: 'ULSAN', label: '울산' },
-  { value: 'SEJONG', label: '세종' },
-  { value: 'GANGWON', label: '강원' },
-  { value: 'CHUNGBUK', label: '충북' },
-  { value: 'CHUNGNAM', label: '충남' },
-  { value: 'JEONBUK', label: '전북' },
-  { value: 'JEONNAM', label: '전남' },
-  { value: 'GYEONGBUK', label: '경북' },
-  { value: 'GYEONGNAM', label: '경남' },
-  { value: 'JEJU', label: '제주' },
+export const REGION_OPTIONS: { value: Region; label: string }[] = [
+  { value: Region.SEOUL, label: '서울' },
+  { value: Region.GYEONGGI, label: '경기' },
+  { value: Region.INCHEON, label: '인천' },
+  { value: Region.BUSAN, label: '부산' },
+  { value: Region.DAEGU, label: '대구' },
+  { value: Region.DAEJEON, label: '대전' },
+  { value: Region.GWANGJU, label: '광주' },
+  { value: Region.ULSAN, label: '울산' },
+  { value: Region.SEJONG, label: '세종' },
+  { value: Region.GANGWON, label: '강원' },
+  { value: Region.CHUNGBUK, label: '충북' },
+  { value: Region.CHUNGNAM, label: '충남' },
+  { value: Region.JEONBUK, label: '전북' },
+  { value: Region.JEONNAM, label: '전남' },
+  { value: Region.GYEONGBUK, label: '경북' },
+  { value: Region.GYEONGNAM, label: '경남' },
+  { value: Region.JEJU, label: '제주' },
 ];
 
 /**
@@ -184,7 +185,7 @@ export function profileToFormState(profile: MyProfileResponse): RegisterFormStat
     gender: profile.gender,
     age: String(profile.age),
     jobField: profile.job,
-    region: profile.region.detail,
+    region: REGION_OPTIONS.find((o) => o.label === profile.region.group)?.value ?? profile.region.detail,
     subArea: profile.region.label,
     bio: profile.bio ?? '',
     interests: profile.interests.map((i) => i.type),

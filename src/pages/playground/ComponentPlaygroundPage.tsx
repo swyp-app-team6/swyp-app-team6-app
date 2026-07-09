@@ -1,8 +1,19 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { Alert, RefreshControl, ScrollView, Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NavigationPropType } from '@/shared/types';
 import * as Sentry from '@sentry/react-native';
 import { useAuthStore } from '@/entities/user';
 import CommonInterestCard from '@/pages/exchangeResult/CommonInterestCard';
+import { ProfileCard } from '@/shared/ui';
+import UserProfileCard from '@/shared/ui/ProfileCard/UserProfileCard';
+import EmptyProfileCard from '@/shared/ui/ProfileCard/EmptyProfileCard';
+import ProfileFlipWrapper from '@/shared/ui/ProfileCard/ProfileFlipWrapper';
+import ProfileCardContainer from '@/shared/ui/ProfileCard/ProfileCardContainer';
+import ProfileCardGradientBackground from '@/shared/ui/ProfileCard/ProfileCardGradientBackground';
+import CosmicResultFrontCard from '@/features/register/ui/CosmicResultFrontCard';
+import CosmicResultBackCard from '@/features/register/ui/CosmicResultBackCard';
+import { CosmicType } from '@/shared/enums';
 import {
   Accordion,
   AlertModal,
@@ -116,6 +127,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
  * <ComponentPlaygroundPage />
  */
 export default function ComponentPlaygroundPage() {
+  const navigation = useNavigation<NavigationPropType>();
   const [activeTab, setActiveTab] = useState<'ui' | 'dev'>('ui');
   const { setTokens } = useAuthStore();
   const [checked, setChecked] = useState(false);
@@ -163,6 +175,11 @@ export default function ComponentPlaygroundPage() {
   // CommonInterestCard 상태
   const [commonInterestHasCommon, setCommonInterestHasCommon] = useState(true);
 
+  // ProfileCard grid 상태
+  const [gridFavorited, setGridFavorited] = useState<Record<number, boolean>>({});
+  const [gridEditMode, setGridEditMode] = useState(false);
+  const [gridSelected, setGridSelected] = useState<Set<number>>(new Set());
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setChecked(false);
@@ -179,6 +196,9 @@ export default function ComponentPlaygroundPage() {
     setSelectedTMI('');
     setFavTags({});
     setCommonInterestHasCommon(true);
+    setGridFavorited({});
+    setGridEditMode(false);
+    setGridSelected(new Set());
     setCards([
       { id: '1', title: '첫 번째 카드', description: '오른쪽으로 스와이프해서 삭제하세요.' },
       { id: '2', title: '두 번째 카드', description: '카드 컴포넌트 예시입니다.' },
@@ -211,6 +231,14 @@ export default function ComponentPlaygroundPage() {
         {/* ── DEV 탭 ───────────────────────────────────────────────────────── */}
         {activeTab === 'dev' && (
           <ScrollView className="flex-1 bg-white" contentContainerClassName="p-5 pb-20">
+            <Section title="SafeArea 테스트">
+              <Button
+                title="SafeArea 테스트 페이지로 이동"
+                variant="secondary"
+                onPress={() => navigation.navigate('safeAreaTest')}
+              />
+            </Section>
+
             <Section title="토큰 재발급 테스트용 버튼">
               <View className="gap-3">
                 <Button
@@ -883,6 +911,192 @@ export default function ComponentPlaygroundPage() {
                 : ['SPORTS', 'GAME', 'MOVIE']
               }
               theirName="민수"
+            />
+          </View>
+        </Section>
+
+        {/* ── ProfileCard (deprecated) — preview ──────────────────────────── */}
+        <Section title="ProfileCard (deprecated) — variant=preview">
+          <View className="items-center">
+            <ProfileCard
+              variant="preview"
+              profileImageUri="https://picsum.photos/284/392"
+              nickname="홍길동"
+              age="25"
+              interests={['여행', '음악', '카페']}
+              badgeLevel="galaxy"
+            />
+          </View>
+        </Section>
+
+        {/* ── ProfileCard (deprecated) — compact ──────────────────────────── */}
+        <Section title="ProfileCard (deprecated) — variant=compact">
+          <ProfileCard
+            variant="compact"
+            profileImageUri="https://picsum.photos/80/80"
+            nickname="김철수"
+            job="개발자"
+            region="서울"
+          />
+        </Section>
+
+        {/* ── ProfileCard (deprecated) — grid ─────────────────────────────── */}
+        <Section title="ProfileCard (deprecated) — variant=grid">
+          <View className="mb-3 flex-row gap-2">
+            <Button
+              title={gridEditMode ? '편집 해제' : '편집 모드'}
+              variant={gridEditMode ? 'primary' : 'secondary'}
+              onPress={() => { setGridEditMode(!gridEditMode); setGridSelected(new Set()); }}
+            />
+          </View>
+          <View className="flex-row gap-2">
+            {[
+              { id: 1, name: '민수', age: 27, cosmicTypeLabel: '별빛 탐험가', location: '서울', job: '디자이너' },
+              { id: 2, name: '수진', age: 24, cosmicTypeLabel: '우주 몽상가', location: '부산', job: '마케터' },
+            ].map((item) => (
+              <ProfileCard
+                key={item.id}
+                variant="grid"
+                id={item.id}
+                name={item.name}
+                age={item.age}
+                cosmicTypeLabel={item.cosmicTypeLabel}
+                imageUri="https://picsum.photos/200/184"
+                location={item.location}
+                job={item.job}
+                isFavorited={!!gridFavorited[item.id]}
+                onToggleFavorite={(id) => setGridFavorited(prev => ({ ...prev, [id]: !prev[id] }))}
+                onPress={(id) => Alert.alert('카드 클릭', `ID: ${id}`)}
+                isEditMode={gridEditMode}
+                isSelected={gridSelected.has(item.id)}
+                onToggleSelect={(id) => setGridSelected(prev => {
+                  const next = new Set(prev);
+                  next.has(id) ? next.delete(id) : next.add(id);
+                  return next;
+                })}
+              />
+            ))}
+          </View>
+        </Section>
+
+        {/* ── UserProfileCard ─────────────────────────────────────────────── */}
+        <Section title="UserProfileCard — 유저 사진+정보 프로필 카드">
+          <View className="items-center">
+            <UserProfileCard
+              profileImageUri="https://picsum.photos/284/392"
+              nickname="이영희"
+              age="28"
+              interests={['운동', '독서', '요리']}
+              badgeLevel="solar"
+              onPress={() => Alert.alert('UserProfileCard', '카드 클릭')}
+            />
+          </View>
+        </Section>
+
+        {/* ── EmptyProfileCard ────────────────────────────────────────────── */}
+        <Section title="EmptyProfileCard — 비어있는 프로필 카드">
+          <View className="items-center gap-4">
+            <EmptyProfileCard
+              text="새로운 프로필 카드를 추가하세요"
+              onPress={() => Alert.alert('EmptyProfileCard', '프로필 생성으로 이동')}
+            />
+            <EmptyProfileCard
+              text="유형 테스트를 통해 나의 유형을 찾아보세요!"
+              onPress={() => Alert.alert('EmptyProfileCard', '유형 테스트로 이동')}
+            />
+          </View>
+        </Section>
+
+        {/* ── ProfileFlipWrapper ──────────────────────────────────────────── */}
+        <Section title="ProfileFlipWrapper — 앞/뒤 플립 전환">
+          <View className="items-center">
+            <ProfileFlipWrapper
+              front={
+                <UserProfileCard
+                  profileImageUri="https://picsum.photos/284/392"
+                  nickname="플립 앞면"
+                  age="26"
+                  interests={['여행', '사진']}
+                  badgeLevel="luna"
+                />
+              }
+              back={
+                <ProfileCardGradientBackground>
+                  <View className="flex-1 items-center justify-center p-5">
+                    <Text className="text-lg font-bold text-white">플립 뒷면</Text>
+                    <Text className="mt-2 text-sm text-white/80 text-center">
+                      코스믹 유형 결과나{'\n'}기타 정보를 표시하는 뒷면입니다.
+                    </Text>
+                  </View>
+                </ProfileCardGradientBackground>
+              }
+            />
+          </View>
+        </Section>
+
+        {/* ── ProfileCardContainer ────────────────────────────────────────── */}
+        <Section title="ProfileCardContainer — 프레임 프리미티브 (284×392)">
+          <View className="items-center gap-4">
+            <ProfileCardContainer onPress={() => Alert.alert('ProfileCardContainer', '기본 프레임 클릭')}>
+              <Text className="text-sm text-text-gray4">기본 프레임 (284×392)</Text>
+            </ProfileCardContainer>
+            <Text className="text-xs text-text-gray4">responsive=true (width: 100%)</Text>
+            <ProfileCardContainer responsive>
+              <Text className="text-sm text-text-gray4">반응형 프레임</Text>
+            </ProfileCardContainer>
+          </View>
+        </Section>
+
+        {/* ── ProfileCardGradientBackground ───────────────────────────────── */}
+        <Section title="ProfileCardGradientBackground — 그라디언트 배경 카드">
+          <View className="items-center gap-4">
+            <ProfileCardGradientBackground>
+              <View className="flex-1 items-center justify-center p-5">
+                <Text className="text-lg font-bold text-white">기본 그라디언트</Text>
+                <Text className="mt-2 text-sm text-white/80">indigo → violet</Text>
+              </View>
+            </ProfileCardGradientBackground>
+            <ProfileCardGradientBackground colors={['rgba(67, 56, 202, 1)', 'rgba(124, 58, 237, 1)']}>
+              <View className="flex-1 items-center justify-center p-5">
+                <Text className="text-lg font-bold text-white">커스텀 색상</Text>
+                <Text className="mt-2 text-sm text-white/80">solid indigo → violet</Text>
+              </View>
+            </ProfileCardGradientBackground>
+          </View>
+        </Section>
+
+        {/* ── CosmicResultCard (앞/뒤) ───────────────────────────────────── */}
+        <Section title="CosmicResultCard — 코스믹 유형 결과 카드 (앞/뒤)">
+          <View className="items-center gap-4">
+            <CosmicResultFrontCard
+              nickname="홍길동"
+              result={{
+                cosmic_type: { type: CosmicType.SHOOTING_STAR, label: '별똥별' },
+                tags: ['#열정적', '#모험가', '#솔직한'],
+                detail: '당신은 강렬한 첫인상으로 상대의 마음을 사로잡는 타입입니다.',
+                image_key: 'shooting_star',
+                features: ['적극적으로 다가가는 편', '감정 표현이 솔직함'],
+                mentions: ['"너는 진짜 솔직한 것 같아"', '"첫인상이 강렬해"'],
+                matches: [
+                  { type: CosmicType.GALAXY, label: '은하수' },
+                  { type: CosmicType.LUNA, label: '루나' },
+                ],
+              }}
+            />
+            <CosmicResultBackCard
+              nickname="홍길동"
+              result={{
+                cosmic_type: { type: CosmicType.SHOOTING_STAR, label: '별똥별' },
+                tags: ['#열정적', '#모험가', '#솔직한'],
+                detail: '당신은 강렬한 첫인상으로 상대의 마음을 사로잡는 타입입니다.',
+                image_key: 'shooting_star',
+                features: ['적극적으로 다가가는 편', '감정 표현이 솔직함'],
+                mentions: ['"너는 진짜 솔직한 것 같아"', '"첫인상이 강렬해"'],
+                matches: [
+                  { type: CosmicType.GALAXY, label: '은하수' },
+                  { type: CosmicType.LUNA, label: '루나' },
+                ],
+              }}
             />
           </View>
         </Section>

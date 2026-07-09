@@ -38,7 +38,7 @@ export default function CommonInterestCard({
   theirName,
 }: CommonInterestCardProps) {
   return (
-    <ProfileCardContainer>
+    <ProfileCardContainer responsive>
       <ProfileCardGradientBackground>
         <View className="flex-1 px-6 py-8">
           {/* 타이틀 */}

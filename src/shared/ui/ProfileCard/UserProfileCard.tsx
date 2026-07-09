@@ -18,6 +18,8 @@ interface UserProfileCardProps {
   badgeLevel?: BadgeLevel;
   /** 우측 상단 슬롯 (QR 버튼 등) */
   topRightSlot?: React.ReactNode;
+  /** 카드 탭 핸들러 */
+  onPress?: () => void;
 }
 
 /**
@@ -55,9 +57,10 @@ function UserProfileCard({
   interests,
   badgeLevel = 'star',
   topRightSlot,
+  onPress,
 }: UserProfileCardProps) {
   return (
-    <ProfileCardContainer >
+    <ProfileCardContainer onPress={onPress}>
       {/* 프로필 사진 */}
       {profileImageUri ? (
         <Image

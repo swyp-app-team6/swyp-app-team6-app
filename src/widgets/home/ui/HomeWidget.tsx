@@ -44,12 +44,13 @@ export default function HomeWidget() {
       onPress={() => navigation.navigate('registerProfile')}
     />
   ) : (
-    <Pressable onPress={() => navigation.navigate('profileDetail')}>
+    <View>
       <UserProfileCard
         profileImageUri={getProfileImageUrl(profile.image_key)}
         nickname={profile.nickname}
         age={String(profile.age)}
         interests={profile.interests.map((i) => getInterestLabel(i.type))}
+        onPress={() => navigation.navigate('profileDetail')}
         topRightSlot={
           <Pressable
             hitSlop={8}
@@ -61,7 +62,7 @@ export default function HomeWidget() {
         }
       />
       <ProfileShareQRModal visible={qrVisible} onClose={() => setQrVisible(false)} />
-    </Pressable>
+    </View>
   );
 
   /** 뒷면 카드 */

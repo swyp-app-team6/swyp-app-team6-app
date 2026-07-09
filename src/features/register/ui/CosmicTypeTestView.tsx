@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { View, Text, ScrollView, Pressable, ActivityIndicator } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import Config from 'react-native-config';
 import { BottomCTA, Button } from '@/shared/ui';
 import { Modal } from '@/shared/ui/Modal';
 import { useCosmicTestQuery, useCosmicTypeQuery } from '@/entities/cosmic';
@@ -286,7 +285,7 @@ export default function CosmicTypeTestView({ onComplete, nickname = '사용자' 
       <BottomCTA>
         <Button
           title="결과보기"
-          disabled={Config.PROJECT_ENV === 'local' ? false : !isAllAnswered}
+          disabled={!isAllAnswered}
           onPress={handleComplete}
         />
       </BottomCTA>

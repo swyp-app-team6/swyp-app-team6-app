@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { StepView, ProgressBar, ErrorBoundary, LoadSuspense, openErrorDialog } from '@/shared/ui';
 import type { ChoiceTemplate, ShortTemplate } from '@/entities/user';
 import { useUpdateProfileMutation } from '@/entities/user';
+import { resolveRegionEnum } from '@/shared/lib/regionLabel';
 import useRegisterFormStore from '../model/useRegisterFormStore';
 import useRegisterMutation from '../api/useRegisterMutation';
 import type { RegisterFormState } from '../model/types';
@@ -19,10 +20,6 @@ interface Props {
   mode?: 'register' | 'edit';
   /** edit 모드 시 초기 폼 데이터 (profileToFormState로 변환된 값) */
   initialData?: RegisterFormState;
-  /** 등록/수정 완료 후 프로필 보기 콜백 */
-  onViewProfile?: () => void;
-  /** 등록/수정 완료 후 홈으로 이동 콜백 */
-  onGoHome?: () => void;
 }
 
 /**
@@ -60,7 +57,7 @@ function buildRegisterRequest(form: RegisterFormState) {
     image_key: form.profileImageKey ?? '',
     gender: form.gender as 'M' | 'F',
     age: Number(form.age),
-    region: form.region,
+    region: resolveRegionEnum(form.region, form.subArea),
     job: form.jobField,
     interests: form.interests,
     bio: form.bio || undefined,
@@ -84,13 +81,11 @@ function buildRegisterRequest(form: RegisterFormState) {
  * ---
  * @param mode 폼 모드 (기본값 'register')
  * @param initialData edit 모드 시 초기 폼 데이터
- * @param onViewProfile 완료 후 프로필 보기 콜백
- * @param onGoHome 완료 후 홈으로 이동 콜백
  * @example
- * <RegisterFormView onViewProfile={...} onGoHome={...} />
- * <RegisterFormView mode="edit" initialData={formState} onViewProfile={...} onGoHome={...} />
+ * <RegisterFormView />
+ * <RegisterFormView mode="edit" initialData={formState} />
  */
-export default function RegisterFormView({ mode = 'register', initialData, onViewProfile, onGoHome }: Props) {
+export default function RegisterFormView({ mode = 'register', initialData }: Props) {
   const { currentStep, reset, updateForm } = useRegisterFormStore();
   const [isComplete, setIsComplete] = useState(false);
   const { mutateAsync: registerAsync, isPending: isRegistering } = useRegisterMutation();
@@ -133,11 +128,7 @@ export default function RegisterFormView({ mode = 'register', initialData, onVie
 
   if (isComplete) {
     return (
-      <RegisterCompleteView
-        mode={mode}
-        onViewProfile={onViewProfile!}
-        onGoHome={onGoHome!}
-      />
+      <RegisterCompleteView mode={mode} />
     );
   }
 
@@ -175,7 +166,7 @@ export default function RegisterFormView({ mode = 'register', initialData, onVie
           </ErrorBoundary>
         </StepView.Step>
         <StepView.Step>
-          <Step7PreviewView onSubmit={handleSubmit} loading={isPending} />
+          <Step7PreviewView mode={mode} onSubmit={handleSubmit} loading={isPending} />
         </StepView.Step>
       </StepView>
     </View>
