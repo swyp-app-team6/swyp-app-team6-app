@@ -72,10 +72,10 @@ export default function RegisterCompleteView({ mode = 'register' }: Props) {
       {/* 하단 CTA: 프로필 보기(회색) + 홈으로(보라) */}
       <BottomCTA>
         <View className="flex-row gap-3">
-          <View className="flex-1">
+          <View className="w-1/3">
             <Button title="프로필 보기" variant="secondary" onPress={handleViewProfile} />
           </View>
-          <View className="flex-1">
+          <View className="w-2/3">
             <Button title="홈으로" onPress={handleGoHome} />
           </View>
         </View>
