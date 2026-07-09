@@ -27,9 +27,9 @@ export default function RegisterCompleteView({ mode = 'register' }: Props) {
   const navigation = useNavigation<NavigationPropType>();
   const isEdit = mode === 'edit';
 
-  /** 프로필 상세 화면으로 이동 */
+  /** 프로필 상세 화면으로 이동 (home을 스택에 포함하여 뒤로가기 지원) */
   const handleViewProfile = () => {
-    navigation.reset({ index: 0, routes: [{ name: 'profileDetail' }] });
+    navigation.reset({ index: 1, routes: [{ name: 'home' }, { name: 'profileDetail' }] });
   };
 
   /** 홈 화면으로 이동 */
