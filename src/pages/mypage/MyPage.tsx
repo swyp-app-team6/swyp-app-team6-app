@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Button, Header, Layout, MenuList } from '@/shared/ui';
+import { Button, Header, Layout, MenuList, AppVersion } from '@/shared/ui';
 import ArrowIcon from '@/shared/ui/icons/ArrowIcon';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
@@ -95,6 +95,11 @@ function MyPage() {
               styleClass={{ root: 'px-5 h-14', label: 'text-[14px] font-medium text-[#1A1A1A]' }}
             />
           </MenuList.Section>
+        </View>
+
+        {/* 앱 버전 */}
+        <View className="py-6">
+          <AppVersion />
         </View>
       </Layout.Body>
     </>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
 import { CodeScanner } from 'react-native-vision-camera-barcode-scanner';
 import { usePermissionStore } from '../../permissions';
 import CameraPermissionRequiredFallbackView from '../../permissions/ui/CameraPermissionRequiredFallbackView';
@@ -22,6 +22,8 @@ interface QRScanViewProps {
   onScanned: (value: string | undefined) => void;
   /** 스캔 오류 콜백 */
   onError: (error: Error) => void;
+  /** 카메라 재시작 콜백 */
+  onReload?: () => void;
 }
 
 /**
@@ -37,11 +39,12 @@ interface QRScanViewProps {
  * @param isActive 카메라 활성화 여부
  * @param onScanned QR 코드 인식 완료 콜백
  * @param onError 스캔 오류 콜백
+ * @param onReload 카메라 재시작 콜백
  * ---
  * @example
  * <QRScanView isActive={true} onScanned={(v) => console.log(v)} onError={console.error} />
  */
-export default function QRScanView({ isActive, onScanned, onError }: QRScanViewProps) {
+export default function QRScanView({ isActive, onScanned, onError, onReload }: QRScanViewProps) {
   const { cameraStatus } = usePermissionStore();
 
   if (cameraStatus === 'denied' || cameraStatus === 'blocked') {
@@ -85,6 +88,14 @@ export default function QRScanView({ isActive, onScanned, onError }: QRScanViewP
           <Text style={styles.guideTitle}>프로필 카드 교환을 위한 QR 스캔</Text>
           <Text style={styles.guideSubtitle}>내 프로필 카드 우측 상단에 QR 코드가 있어요</Text>
         </View>
+
+      </View>
+
+      {/* 카메라 재시작 버튼 — 오버레이 밖에 배치하여 터치 가능 */}
+      <View style={styles.reloadContainer} pointerEvents="box-none">
+        <Pressable onPress={onReload} style={styles.reloadButton}>
+          <Text style={styles.reloadText}>카메라 다시 시작</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -140,5 +151,23 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     lineHeight: 12,
     textAlign: 'center',
+  },
+  reloadContainer: {
+    position: 'absolute',
+    top: SCAN_TOP + SCAN_SIZE + 32,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  reloadButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+  },
+  reloadText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '500',
   },
 });
