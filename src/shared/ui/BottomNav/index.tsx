@@ -56,7 +56,7 @@ export default function BottomNav({ items, activeRoute, onPress, styleClass }: P
     <View
       className={cn('flex-row bg-white', styleClass?.root)}
       style={[
-        { paddingBottom: safePadding.paddingBottom, height: 32 + safePadding.paddingBottom },
+        { height: 32 + safePadding.paddingBottom },
         Platform.select({
           ios: {
             shadowColor: '#000',
@@ -72,7 +72,8 @@ export default function BottomNav({ items, activeRoute, onPress, styleClass }: P
         return (
           <TouchableOpacity
             key={item.name}
-            className={cn('flex-1 items-center pt-2 pb-1', styleClass?.tab)}
+            className={cn('flex-1 items-center pt-2', styleClass?.tab)}
+            style={{ paddingBottom: safePadding.paddingBottom }}
             onPress={() => onPress(item.name)}
             activeOpacity={0.7}
           >

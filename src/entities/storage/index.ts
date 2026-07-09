@@ -13,6 +13,8 @@ export type {
   BlockResponse,
   BlockListItem,
   BlockDeleteResponse,
+  ExchangeReviewRequest,
+  ReviewScore,
 } from './model/types';
 export {
   COSMIC_TYPE_LABEL,

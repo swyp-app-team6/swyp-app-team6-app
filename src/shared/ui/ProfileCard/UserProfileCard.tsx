@@ -65,7 +65,7 @@ function UserProfileCard({
       {profileImageUri ? (
         <Image
           source={{ uri: profileImageUri }}
-          className="absolute w-full h-full"
+          className="absolute w-full h-full rounded-lg"
           resizeMode="cover"
         />
       ) : (

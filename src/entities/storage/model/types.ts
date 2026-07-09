@@ -110,6 +110,8 @@ export function cosmicTypeToApiValue(badge: BadgeLevel): string {
 export interface ExchangeArchiveItem {
   exchange_id: number;
   nickname: string;
+  /** 프로필 이미지 S3 키 */
+  image_key: string | null;
   cosmic_type: string;
   cosmic_type_image_key: string;
   interests: InterestItem[];
@@ -166,6 +168,27 @@ export interface ExchangeLikeRequest { liked: boolean; }
 export interface ExchangeLikeResponse { exchange_id: number; is_liked: boolean; }
 export interface ExchangeDeleteRequest { exchange_ids: number[]; }
 export interface ExchangeDeleteResponse { deleted_count: number; deleted_ids: number[]; }
+
+/**
+ * 만남후기 만족도 점수
+ * - 4 = 매우 좋았어요
+ * - 3 = 좋았어요
+ * - 2 = 나쁘지 않았어요
+ * - 1 = 잘 모르겠어요
+ */
+export type ReviewScore = 1 | 2 | 3 | 4;
+
+/**
+ * PATCH /exchange/archive/{exchangeId}/review 요청 바디
+ * - score = 만족도 점수 (1-4)
+ * - review = 후기 메모 (최대 300자, 선택)
+ */
+export interface ExchangeReviewRequest {
+  /** 만족도 점수 */
+  score: ReviewScore;
+  /** 후기 메모 */
+  review?: string;
+}
 
 /**
  * 신고 사유 코드

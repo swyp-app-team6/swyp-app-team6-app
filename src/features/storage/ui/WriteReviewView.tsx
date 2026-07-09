@@ -7,20 +7,21 @@ import { useExchangeFlowStore } from '@/features/exchange';
 import UserProfileCard from '@/shared/ui/ProfileCard/UserProfileCard';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 import { getInterestLabel } from '@/features/register';
+import type { ReviewScore } from '@/entities/storage';
 
-/** 만남 후기 만족도 옵션 */
-const REVIEW_OPTIONS = [
-  { label: '매우 좋았어요', value: 'very_good' },
-  { label: '좋았어요', value: 'good' },
-  { label: '나쁘지 않았어요', value: 'not_bad' },
-  { label: '잘 모르겠어요', value: 'not_sure' },
+/** 만남 후기 만족도 옵션 (value = API score 1-4) */
+const REVIEW_OPTIONS: { label: string; value: ReviewScore }[] = [
+  { label: '매우 좋았어요', value: 4 },
+  { label: '좋았어요', value: 3 },
+  { label: '나쁘지 않았어요', value: 2 },
+  { label: '잘 모르겠어요', value: 1 },
 ];
 
 interface Props {
   /** 프로필 ID */
   profileId: number;
   /** 후기 등록 콜백 */
-  onSubmit: (rating: string, reviewText: string) => void;
+  onSubmit: (score: ReviewScore, review: string) => void;
   /** 등록 중 로딩 상태 */
   loading?: boolean;
 }
@@ -36,7 +37,7 @@ interface Props {
  *   - 만족도 미선택 시 "등록하기" 버튼 비활성화
  * ---
  * @param profileId 대상 프로필 ID
- * @param onSubmit 후기 등록 콜백 (만족도, 후기 텍스트)
+ * @param onSubmit 후기 등록 콜백 (score, review)
  * @param loading 로딩 상태
  * ---
  * @example
@@ -47,7 +48,7 @@ export default function WriteReviewView({
   onSubmit,
   loading,
 }: Props) {
-  const [selectedRating, setSelectedRating] = useState<string | null>(null);
+  const [selectedRating, setSelectedRating] = useState<ReviewScore | null>(null);
   const [reviewText, setReviewText] = useState('');
   const ratingSheetRef = useRef<BottomSheetModal>(null);
 

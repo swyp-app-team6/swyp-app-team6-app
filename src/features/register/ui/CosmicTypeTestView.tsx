@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { View, Text, ScrollView, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, Pressable, ActivityIndicator, Image } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { BottomCTA, Button } from '@/shared/ui';
 import { Modal } from '@/shared/ui/Modal';
@@ -81,6 +81,10 @@ export default function CosmicTypeTestView({ onComplete, nickname = '사용자' 
   const selectedAnswer = currentQuestion ? selectedAnswers[currentQuestion.question_id] : undefined;
   const answeredCount = Object.keys(selectedAnswers).length;
   const isAllAnswered = totalQuestions > 0 && answeredCount === totalQuestions;
+  /** 마지막 질문 응답 여부 — CTA 활성화 조건 */
+  const lastQuestion = questions[totalQuestions - 1];
+  const isLastAnswered = lastQuestion ? !!selectedAnswers[lastQuestion.question_id] : false;
+
 
   /** 모든 답변 완료 시 계산된 코스믹 유형 */
   const calculatedType = useMemo(() => {
@@ -263,10 +267,12 @@ export default function CosmicTypeTestView({ onComplete, nickname = '사용자' 
                     {answer.answer}
                   </Text>
                 </View>
-                <ChevronRightIcon
-                  color={isSelected ? '#8C39FB' : '#888888'}
-                  size={16}
-                />
+                {currentIndex < totalQuestions - 1 && (
+                  <ChevronRightIcon
+                    color={isSelected ? '#8C39FB' : '#888888'}
+                    size={16}
+                  />
+                )}
               </Pressable>
             );
           })}
@@ -276,8 +282,8 @@ export default function CosmicTypeTestView({ onComplete, nickname = '사용자' 
       {/* 하단 CTA */}
       <BottomCTA>
         <Button
-          title="결과보기"
-          disabled={!isAllAnswered}
+          title="테스트 완료"
+          disabled={!isLastAnswered}
           onPress={handleComplete}
         />
       </BottomCTA>
@@ -288,16 +294,25 @@ export default function CosmicTypeTestView({ onComplete, nickname = '사용자' 
         onClose={() => setShowIncompleteModal(false)}
       >
         <View className="items-center">
-          <Text className="text-base font-bold text-text-black text-center mb-1">
+          <Text className="text-sm font-medium text-[#1B1B1B] text-center">
             {totalQuestions}문항 중{' '}
-            <Text className="text-red-500">
-              질문 {firstUnansweredIndex + 1}번
-            </Text>{' '}
-            미응답
+            <Text className="text-[#E01619] text-sm font-medium">
+              질문 {firstUnansweredIndex + 1}번 미응답
+            </Text>
           </Text>
-          <Text className="text-base font-medium text-text-black text-center">
+          <Text
+            className="text-base font-semibold text-[#1A1A1A] text-center"
+            style={{ lineHeight: 22.4 }}
+          >
             선택하지 않은 답변이 있어요.
           </Text>
+        </View>
+        <View className="items-center my-4">
+          <Image
+            source={require('@/assets/characters/cosmic-test-warn.png')}
+            style={{ width: 40, height: 111 }}
+            resizeMode="contain"
+          />
         </View>
         <View className="mt-6 w-[260px] self-center">
           <Button title="선택하러 가기" onPress={goToUnanswered} />

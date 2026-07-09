@@ -8,6 +8,7 @@ import type {
   ExchangeLikeResponse,
   ExchangeDeleteRequest,
   ExchangeDeleteResponse,
+  ExchangeReviewRequest,
   ReportRequest,
   ReportResponse,
   BlockCreateRequest,
@@ -57,6 +58,21 @@ export class ExchangeArchiveAPI {
    */
   static toggleLike(exchangeId: number, data: ExchangeLikeRequest) {
     return API.patch<ExchangeLikeResponse>(`/exchange/archive/${exchangeId}/like`, data);
+  }
+
+  /**
+   * # updateReview
+   * ---
+   * - 간단설명: 만남 후기(만족도 + 메모) 등록/수정
+   * ---
+   * @param exchangeId 교환 고유 ID
+   * @param data 후기 요청 데이터 (score, review)
+   */
+  static updateReview(exchangeId: number, data: ExchangeReviewRequest) {
+    return API.patch<ExchangeArchiveDetailResponse>(
+      `/exchange/archive/${exchangeId}/review`,
+      data,
+    );
   }
 
   /**

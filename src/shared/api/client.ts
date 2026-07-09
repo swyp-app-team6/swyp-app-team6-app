@@ -1,5 +1,7 @@
 import axios from "axios";
 import Config from "react-native-config";
+// @ts-ignore
+import qs from 'qs';
 import './axios.d';
 import { NETWORK_TIMEOUT_MS } from "../constants";
 
@@ -19,4 +21,5 @@ export const API = axios.create({
   baseURL: Config.API_URL,
   headers: { 'Content-Type': 'application/json' },
   timeout: NETWORK_TIMEOUT_MS,
+  paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
 });

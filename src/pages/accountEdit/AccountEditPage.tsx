@@ -19,7 +19,6 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
  */
 const PROVIDER_LABEL: Record<string, string> = {
   google: '구글 간편 가입',
-  kakao: '카카오 간편 가입',
   apple: '애플 간편 가입',
 };
 
@@ -80,7 +79,7 @@ function AccountEditPage() {
         {/* 가입 정보 */}
         <View className="px-5 py-4 gap-3">
           <Text className="text-[16px] font-semibold text-[#1A1A1A] leading-[22.4px]">
-            {PROVIDER_LABEL[user?.provider || ''] || user?.provider || '-'}
+            {PROVIDER_LABEL[(user?.provider || '').toLowerCase()] || '안내 로그인'}
           </Text>
           <Text className="text-[14px] font-medium text-[#888888] leading-[19.6px]">
             {user?.email || '-'}
