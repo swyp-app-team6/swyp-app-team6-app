@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useCameraDevice } from 'react-native-vision-camera';
 import QRScanView from './QRScanView';
@@ -15,6 +15,12 @@ import QRScanView from './QRScanView';
 export default function QRScanTab() {
   const device = useCameraDevice('back');
   const [scannedText, setScannedText] = useState('');
+  const [cameraKey, setCameraKey] = useState(0);
+
+  const handleReload = useCallback(() => {
+    setScannedText('');
+    setCameraKey((prev) => prev + 1);
+  }, []);
 
   /** 카메라 이상 발생 경우 */
   if (!device) {
@@ -28,7 +34,9 @@ export default function QRScanTab() {
   return (
     <View className='flex-1'>
       <QRScanView
+        key={cameraKey}
         isActive={!scannedText}
+        onReload={handleReload}
         onScanned={(value) => {
           if (!scannedText && value != null) setScannedText(value);
         }}

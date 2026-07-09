@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused, useFocusEffect } from '@react-navigation/native';
 import { useCameraDevice } from 'react-native-vision-camera';
 import QRScanView from './QRScanView';
 import {
@@ -28,15 +28,34 @@ import type { NavigationPropType } from '@/shared/types';
 export default function QRScanWidget() {
   const navigation = useNavigation<NavigationPropType>();
   const device = useCameraDevice('back');
+  const isFocused = useIsFocused();
 
   /** 스캔 처리 중 중복 호출 방지 플래그 */
   const isScanned = useRef(false);
+
+  /** 카메라 강제 리마운트를 위한 키 */
+  const [cameraKey, setCameraKey] = useState(0);
 
   const step = useExchangeFlowStore((s) => s.step);
   const onScanComplete = useExchangeFlowStore((s) => s.onScanComplete);
   const goToPreview = useExchangeFlowStore((s) => s.goToPreview);
   const startExchange = useExchangeFlowStore((s) => s.startExchange);
   const cancelExchange = useExchangeFlowStore((s) => s.cancelExchange);
+
+  /** 화면 포커스 진입/이탈 시 상태 초기화 */
+  useFocusEffect(
+    useCallback(() => {
+      const currentStep = useExchangeFlowStore.getState().step;
+      if (currentStep !== ExchangeFlowStep.IDLE) {
+        useExchangeFlowStore.getState().reset();
+      }
+      isScanned.current = false;
+
+      return () => {
+        isScanned.current = false;
+      };
+    }, []),
+  );
 
   /** 교환하기 → long-polling 후 결과 페이지로 이동 */
   const handleStartExchange = useCallback(() => {
@@ -51,6 +70,20 @@ export default function QRScanWidget() {
     navigation.navigate('home');
   }, [cancelExchange, navigation]);
 
+  /**
+   * # handleReload
+   * ---
+   * - 간단설명: 카메라 강제 재시작 — exchange 상태 리셋 + CodeScanner 리마운트
+   * ---
+   * @example
+   * <QRScanView onReload={handleReload} />
+   */
+  const handleReload = useCallback(() => {
+    useExchangeFlowStore.getState().reset();
+    isScanned.current = false;
+    setCameraKey((prev) => prev + 1);
+  }, []);
+
   useEffect(() => {
     return () => {
       isScanned.current = false;
@@ -62,7 +95,9 @@ export default function QRScanWidget() {
       {/* QR 스캔 카메라 */}
       {device ? (
         <QRScanView
-          isActive={step === ExchangeFlowStep.IDLE}
+          key={cameraKey}
+          isActive={isFocused && step === ExchangeFlowStep.IDLE}
+          onReload={handleReload}
           onScanned={(value) => {
             if (!isScanned.current && value) {
               console.log(value);

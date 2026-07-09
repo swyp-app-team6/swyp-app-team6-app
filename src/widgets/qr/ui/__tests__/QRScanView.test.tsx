@@ -27,14 +27,14 @@ describe('QRScanView', () => {
 
   it('진입 시 카메라 권한을 요청한다', async () => {
     await act(async () => {
-      render(<QRScanView isActive={true} onScanned={jest.fn()} onError={jest.fn()} />);
+      render(<QRScanView isActive={true} onScanned={jest.fn()} onError={jest.fn()} onReload={jest.fn()} />);
     });
     expect(mockRequestCameraPermission).toHaveBeenCalledTimes(1);
   });
 
   it('cameraStatus가 granted일 때 CodeScanner를 렌더링한다', async () => {
     await act(async () => {
-      render(<QRScanView isActive={true} onScanned={jest.fn()} onError={jest.fn()} />);
+      render(<QRScanView isActive={true} onScanned={jest.fn()} onError={jest.fn()} onReload={jest.fn()} />);
     });
     expect(screen.getByTestId('code-scanner')).toBeTruthy();
   });
@@ -45,7 +45,7 @@ describe('QRScanView', () => {
       requestCameraPermission: mockRequestCameraPermission,
     });
     await act(async () => {
-      render(<QRScanView isActive={false} onScanned={jest.fn()} onError={jest.fn()} />);
+      render(<QRScanView isActive={false} onScanned={jest.fn()} onError={jest.fn()} onReload={jest.fn()} />);
     });
     expect(screen.getByText('QR코드 인식을 위해서 카메라 권한이 필요합니다')).toBeTruthy();
   });
@@ -56,7 +56,7 @@ describe('QRScanView', () => {
       requestCameraPermission: mockRequestCameraPermission,
     });
     await act(async () => {
-      render(<QRScanView isActive={false} onScanned={jest.fn()} onError={jest.fn()} />);
+      render(<QRScanView isActive={false} onScanned={jest.fn()} onError={jest.fn()} onReload={jest.fn()} />);
     });
     expect(screen.getByText('QR코드 인식을 위해서 카메라 권한이 필요합니다')).toBeTruthy();
   });
@@ -67,7 +67,7 @@ describe('QRScanView', () => {
       requestCameraPermission: mockRequestCameraPermission,
     });
     await act(async () => {
-      render(<QRScanView isActive={false} onScanned={jest.fn()} onError={jest.fn()} />);
+      render(<QRScanView isActive={false} onScanned={jest.fn()} onError={jest.fn()} onReload={jest.fn()} />);
     });
     fireEvent.press(screen.getByText('권한 허용하기'));
     expect(mockRequestCameraPermission).toHaveBeenCalledTimes(2); // 1 from useEffect, 1 from button
