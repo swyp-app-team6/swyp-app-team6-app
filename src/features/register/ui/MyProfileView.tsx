@@ -2,7 +2,8 @@ import React, { useState, useRef, useMemo } from 'react';
 import { View, ScrollView } from 'react-native';
 import { BottomCTA, Button, ProfileCard } from '@/shared/ui';
 import { useProfileDataStore } from '@/entities/user';
-import { getInterestLabel } from '../model/types';
+import { getInterestLabel, REGION_OPTIONS } from '../model/types';
+import { resolveRegionEnum, getRegionLabel } from '@/shared/lib/regionLabel';
 import ProfileTabBar, { type TabType } from './ProfileTabBar';
 import BasicInfoSection from './BasicInfoSection';
 import InterestsSection from './InterestsSection';
@@ -74,7 +75,11 @@ export default function MyProfileView({ onSubmit, loading }: Props) {
           {activeTab === '기본정보' && (
             <BasicInfoSection
               age={form.age}
-              region={form.region}
+              region={{
+                group: REGION_OPTIONS.find((o) => o.value === form.region)?.label ?? '',
+                detail: resolveRegionEnum(form.region, form.subArea),
+                label: getRegionLabel(resolveRegionEnum(form.region, form.subArea)),
+              }}
               jobField={form.jobField}
             />
           )}
