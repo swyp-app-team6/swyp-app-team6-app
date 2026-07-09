@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { View, Text, ScrollView, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, Pressable, ActivityIndicator, Image } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { BottomCTA, Button } from '@/shared/ui';
 import { Modal } from '@/shared/ui/Modal';
@@ -306,6 +306,13 @@ export default function CosmicTypeTestView({ onComplete, nickname = '사용자' 
           >
             선택하지 않은 답변이 있어요.
           </Text>
+        </View>
+        <View className="items-center my-4">
+          <Image
+            source={require('@/assets/characters/cosmic-test-warn.png')}
+            style={{ width: 40, height: 111 }}
+            resizeMode="contain"
+          />
         </View>
         <View className="mt-6 w-[260px] self-center">
           <Button title="선택하러 가기" onPress={goToUnanswered} />
