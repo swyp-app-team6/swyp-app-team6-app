@@ -11,6 +11,8 @@ export type {
   ReportResponse,
   BlockCreateRequest,
   BlockResponse,
+  BlockListItem,
+  BlockDeleteResponse,
 } from './model/types';
 export {
   COSMIC_TYPE_LABEL,

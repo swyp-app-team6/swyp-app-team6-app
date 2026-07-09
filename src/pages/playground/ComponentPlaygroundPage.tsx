@@ -14,6 +14,7 @@ import ProfileCardGradientBackground from '@/shared/ui/ProfileCard/ProfileCardGr
 import CosmicResultFrontCard from '@/features/register/ui/CosmicResultFrontCard';
 import CosmicResultBackCard from '@/features/register/ui/CosmicResultBackCard';
 import { CosmicType } from '@/shared/enums';
+import { useBlockListQuery, useUnblockMutation } from '@/features/storage';
 import {
   Accordion,
   AlertModal,
@@ -24,6 +25,7 @@ import {
   Anim,
   Avatar,
   Badge,
+  BlockUserIcon,
   BottomCTA,
   Button,
   BottomSheet,
@@ -128,7 +130,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
  */
 export default function ComponentPlaygroundPage() {
   const navigation = useNavigation<NavigationPropType>();
-  const [activeTab, setActiveTab] = useState<'ui' | 'dev'>('ui');
+  const [activeTab, setActiveTab] = useState<'ui' | 'dev' | 'block'>('ui');
   const { setTokens } = useAuthStore();
   const [checked, setChecked] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -175,6 +177,10 @@ export default function ComponentPlaygroundPage() {
   // CommonInterestCard 상태
   const [commonInterestHasCommon, setCommonInterestHasCommon] = useState(true);
 
+  // 차단 프로필 API 연동
+  const { data: blockedUsers = [], refetch: refetchBlockList, isLoading: isBlockListLoading } = useBlockListQuery();
+  const { mutate: unblock } = useUnblockMutation();
+
   // ProfileCard grid 상태
   const [gridFavorited, setGridFavorited] = useState<Record<number, boolean>>({});
   const [gridEditMode, setGridEditMode] = useState(false);
@@ -199,13 +205,14 @@ export default function ComponentPlaygroundPage() {
     setGridFavorited({});
     setGridEditMode(false);
     setGridSelected(new Set());
+    refetchBlockList();
     setCards([
       { id: '1', title: '첫 번째 카드', description: '오른쪽으로 스와이프해서 삭제하세요.' },
       { id: '2', title: '두 번째 카드', description: '카드 컴포넌트 예시입니다.' },
       { id: '3', title: '세 번째 카드', description: '삭제 버튼을 탭하면 사라집니다.' },
     ]);
     setRefreshing(false);
-  }, []);
+  }, [refetchBlockList]);
 
   return (
     <Toast.Provider>
@@ -225,6 +232,12 @@ export default function ComponentPlaygroundPage() {
             variant={activeTab === 'dev' ? 'primary' : 'ghost'}
             className="flex-1"
             onPress={() => setActiveTab('dev')}
+          />
+          <Button
+            title="차단"
+            variant={activeTab === 'block' ? 'primary' : 'ghost'}
+            className="flex-1"
+            onPress={() => setActiveTab('block')}
           />
         </View>
 
@@ -260,6 +273,69 @@ export default function ComponentPlaygroundPage() {
                 />
               </View>
             </Section>
+          </ScrollView>
+        )}
+
+        {/* ── 차단 탭 ──────────────────────────────────────────────────────── */}
+        {activeTab === 'block' && (
+          <ScrollView className="flex-1 bg-white" contentContainerClassName="p-5 pb-20">
+            <Section title="차단 프로필 — 차단 목록 조회 & 차단 해제">
+              {isBlockListLoading ? (
+                <View className="items-center py-8">
+                  <Text className="text-sm text-text-gray4">불러오는 중...</Text>
+                </View>
+              ) : blockedUsers.length === 0 ? (
+                <View className="items-center py-8">
+                  <BlockUserIcon size={40} color="#BFBFBF" />
+                  <Text className="mt-3 text-sm text-text-gray4">차단한 사용자가 없습니다</Text>
+                </View>
+              ) : (
+                <View className="gap-2">
+                  {blockedUsers.map((user) => (
+                    <View
+                      key={user.block_id}
+                      className="flex-row items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3"
+                    >
+                      <View className="flex-row items-center gap-3">
+                        <Avatar size={40} name={user.nickname ?? undefined} />
+                        <View>
+                          <Text className="text-sm font-semibold text-text-black">
+                            {user.nickname ?? '알 수 없는 사용자'}
+                          </Text>
+                          <Text className="text-xs text-text-gray4">
+                            차단일: {new Date(user.created_at).toLocaleDateString('ko-KR')}
+                          </Text>
+                        </View>
+                      </View>
+                      <Button
+                        title="해제"
+                        variant="outline"
+                        onPress={() =>
+                          openDialog({
+                            type: 'confirm',
+                            title: '차단 해제',
+                            message: `${user.nickname ?? '이 사용자'}의 차단을 해제하시겠습니까?`,
+                            okLabel: '해제',
+                            okFn: () => {
+                              unblock(user.block_id, {
+                                onSuccess: () => {
+                                  Alert.alert('차단 해제', `${user.nickname ?? '사용자'}의 차단이 해제되었습니다.`);
+                                },
+                                onError: () => {
+                                  openErrorDialog({ title: '차단 해제 실패', message: '다시 시도해주세요.' });
+                                },
+                              });
+                            },
+                          })
+                        }
+                      />
+                    </View>
+                  ))}
+                </View>
+              )}
+            </Section>
+            <Dialog />
+            <ErrorDialog />
           </ScrollView>
         )}
 

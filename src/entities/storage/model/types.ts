@@ -237,6 +237,33 @@ export interface BlockResponse {
   created_at: string;
 }
 
+/**
+ * GET /blocks 응답 — 차단 목록의 개별 항목
+ * - block_id = 차단 ID
+ * - nickname = 차단 대상 닉네임
+ * - image_key = 차단 대상 프로필 이미지 키
+ * - created_at = 차단 생성 시각
+ */
+export interface BlockListItem {
+  /** 차단 ID */
+  block_id: number;
+  /** 차단 대상 닉네임 */
+  nickname: string | null;
+  /** 차단 대상 프로필 이미지 키 */
+  image_key: string | null;
+  /** 차단 생성 시각 */
+  created_at: string;
+}
+
+/**
+ * DELETE /blocks/{blockId} 응답
+ * - block_id = 해제된 차단 ID
+ */
+export interface BlockDeleteResponse {
+  /** 해제된 차단 ID */
+  block_id: number;
+}
+
 export interface StorageProfileDetail extends StorageProfile {
   /** 관심사 목록 */
   interests: string[];

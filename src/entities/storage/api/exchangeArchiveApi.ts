@@ -12,6 +12,8 @@ import type {
   ReportResponse,
   BlockCreateRequest,
   BlockResponse,
+  BlockListItem,
+  BlockDeleteResponse,
 } from '../model/types';
 
 /**
@@ -90,6 +92,27 @@ export class ExchangeArchiveAPI {
     return API.post<BlockResponse>('/blocks', data);
   }
 
+  /**
+   * # fetchBlockList
+   * ---
+   * - 간단설명: 차단한 유저 목록 조회
+   * ---
+   */
+  static fetchBlockList() {
+    return API.get<BlockListItem[]>('/blocks');
+  }
+
+  /**
+   * # unblockUser
+   * ---
+   * - 간단설명: 차단 해제 요청
+   * ---
+   * @param blockId 차단 ID
+   */
+  static unblockUser(blockId: number) {
+    return API.delete<BlockDeleteResponse>(`/blocks/${blockId}`);
+  }
+
   /** 쿼리 키 팩토리 */
   static query = createQueryKeys('exchangeArchive', {
     list: (params?: Omit<ExchangeArchiveParams, 'cursor'>) => ({
@@ -106,5 +129,12 @@ export class ExchangeArchiveAPI {
         return data;
       },
     }),
+    blockList: {
+      queryKey: ['blockList'],
+      queryFn: async () => {
+        const { data } = await ExchangeArchiveAPI.fetchBlockList();
+        return data;
+      },
+    },
   });
 }
