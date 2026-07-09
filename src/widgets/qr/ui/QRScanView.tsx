@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
 import { CodeScanner } from 'react-native-vision-camera-barcode-scanner';
+import Svg, { Rect, Path } from 'react-native-svg';
 import { usePermissionStore } from '../../permissions';
 import CameraPermissionRequiredFallbackView from '../../permissions/ui/CameraPermissionRequiredFallbackView';
 
@@ -24,6 +25,8 @@ interface QRScanViewProps {
   onError: (error: Error) => void;
   /** 카메라 재시작 콜백 */
   onReload?: () => void;
+  /** 닫기(뒤로가기) 콜백 */
+  onClose?: () => void;
 }
 
 /**
@@ -40,11 +43,12 @@ interface QRScanViewProps {
  * @param onScanned QR 코드 인식 완료 콜백
  * @param onError 스캔 오류 콜백
  * @param onReload 카메라 재시작 콜백
+ * @param onClose 닫기(뒤로가기) 콜백
  * ---
  * @example
  * <QRScanView isActive={true} onScanned={(v) => console.log(v)} onError={console.error} />
  */
-export default function QRScanView({ isActive, onScanned, onError, onReload }: QRScanViewProps) {
+export default function QRScanView({ isActive, onScanned, onError, onReload, onClose }: QRScanViewProps) {
   const { cameraStatus } = usePermissionStore();
 
   if (cameraStatus === 'denied' || cameraStatus === 'blocked') {
@@ -91,9 +95,19 @@ export default function QRScanView({ isActive, onScanned, onError, onReload }: Q
 
       </View>
 
-      {/* 카메라 재시작 버튼 — 오버레이 밖에 배치하여 터치 가능 */}
+      {/* 닫기 버튼 — 스캔 영역 하단 */}
+      <View style={styles.closeContainer} pointerEvents="box-none">
+        <Pressable onPress={onClose} style={styles.closeButton}>
+          <Svg width={60} height={60} viewBox="0 0 60 60" fill="none">
+            <Rect x={1} y={1} width={58} height={58} rx={29} stroke="white" strokeWidth={2} />
+            <Path d="M40 20L20 40M40 40L20 20" stroke="white" strokeWidth={2} strokeLinecap="round" />
+          </Svg>
+        </Pressable>
+      </View>
+
+      {/* 카메라 다시 시작 — 하단 밑줄 텍스트 */}
       <View style={styles.reloadContainer} pointerEvents="box-none">
-        <Pressable onPress={onReload} style={styles.reloadButton}>
+        <Pressable onPress={onReload}>
           <Text style={styles.reloadText}>카메라 다시 시작</Text>
         </Pressable>
       </View>
@@ -152,22 +166,27 @@ const styles = StyleSheet.create({
     lineHeight: 12,
     textAlign: 'center',
   },
-  reloadContainer: {
+  closeContainer: {
     position: 'absolute',
     top: SCAN_TOP + SCAN_SIZE + 32,
     left: 0,
     right: 0,
     alignItems: 'center',
   },
-  reloadButton: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+  closeButton: {
+    padding: 4,
+  },
+  reloadContainer: {
+    position: 'absolute',
+    bottom: 48,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
   },
   reloadText: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: '400',
+    textDecorationLine: 'underline',
   },
 });

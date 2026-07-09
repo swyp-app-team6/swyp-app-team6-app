@@ -70,6 +70,11 @@ export default function QRScanWidget() {
     navigation.navigate('home');
   }, [cancelExchange, navigation]);
 
+  /** 닫기 → 이전 화면으로 이동 */
+  const handleClose = useCallback(() => {
+    navigation.goBack();
+  }, [navigation]);
+
   /**
    * # handleReload
    * ---
@@ -98,6 +103,7 @@ export default function QRScanWidget() {
           key={cameraKey}
           isActive={isFocused && step === ExchangeFlowStep.IDLE}
           onReload={handleReload}
+          onClose={handleClose}
           onScanned={(value) => {
             if (!isScanned.current && value) {
               console.log(value);
