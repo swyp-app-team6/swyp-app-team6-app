@@ -110,7 +110,7 @@ export default function ProfileDetailPage() {
           <InterestsSection interests={interests} />
           <BioSection bio={profile.bio} />
           {profile.cosmic_type && (
-            <CosmicTypeSection cosmicType={profile.cosmic_type} />
+            <CosmicTypeSection cosmicType={profile.cosmic_type} showRetestButton />
           )}
           <TmiSection tmiAnswers={tmiAnswers} />
         </View>
