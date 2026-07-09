@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Header, ErrorBoundary, LoadSuspense } from '@/shared/ui';
 import { CosmicTypeTestView } from '@/features/register';
 import { useMyProfileQuery } from '@/entities/user';
+import { useUpdateCosmicMutation } from '@/entities/cosmic';
 import type { CosmicType } from '@/shared/enums';
 import type { NavigationPropType } from '@/shared/types';
 
@@ -22,13 +23,18 @@ import type { NavigationPropType } from '@/shared/types';
 export default function CosmicTestPage() {
   const navigation = useNavigation<NavigationPropType>();
   const { data: profile } = useMyProfileQuery();
+  const { mutate: updateCosmic } = useUpdateCosmicMutation();
 
-  /** 테스트 완료 → 이전 화면 복귀 */
+  /** 테스트 완료 → 코스믹 유형 저장 후 이전 화면 복귀 */
   const handleComplete = useCallback(
-    (_cosmicType: CosmicType) => {
-      navigation.goBack();
+    (cosmicType: CosmicType) => {
+      updateCosmic(cosmicType, {
+        onSettled: () => {
+          navigation.goBack();
+        },
+      });
     },
-    [navigation],
+    [navigation, updateCosmic],
   );
 
   return (

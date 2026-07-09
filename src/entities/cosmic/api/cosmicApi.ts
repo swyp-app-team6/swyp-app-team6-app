@@ -37,6 +37,20 @@ export class CosmicAPI {
     return API.get<CosmicTypeResponse>(`/cosmic/${type}`);
   }
 
+  /**
+   * # updateCosmic
+   * ---
+   * - 간단설명: 프로필의 코스믹 유형을 수정 (PATCH /profile/cosmic)
+   * - 제약사항 및 특이사항:
+   *   - 응답 204 No Content
+   *   - 인증 필요 (Authorization Bearer 토큰)
+   * ---
+   * @param cosmicType 변경할 Cosmic 유형 (GALAXY | SHOOTING_STAR | LUNA | SOLA)
+   */
+  static updateCosmic(cosmicType: CosmicType) {
+    return API.patch<void>('/profile/cosmic', { cosmic_type: cosmicType });
+  }
+
   /** 쿼리 키 팩토리 */
   static query = createQueryKeys('cosmic', {
     test: () => ({

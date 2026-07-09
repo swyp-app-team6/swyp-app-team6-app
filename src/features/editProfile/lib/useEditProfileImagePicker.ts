@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import {
   launchImageLibrary,
+  OptionsCommon,
   type ImagePickerResponse,
 } from 'react-native-image-picker';
 import type { UploadContentType } from '@/entities/user';
 
-const IMAGE_OPTIONS = {
-  mediaType: 'photo' as const,
-  quality: 0.8 as const,
-  maxWidth: 512,
-  maxHeight: 512,
+const IMAGE_OPTIONS: OptionsCommon = {
+  mediaType: 'photo',
+  quality: 1,
+  maxWidth: 1024,
+  maxHeight: 1024,
 };
 
 /** 이미지 선택 결과 */

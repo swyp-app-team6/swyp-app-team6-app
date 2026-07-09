@@ -46,7 +46,7 @@ export default function withAuthorization<P extends object>(
     /** 첫 방문 + 미인증 시 로그인 페이지로 즉시 리다이렉트 */
     useEffect(() => {
       if (hasVisitedFirstPage && !isAuthorized) {
-        navigation.navigate('login');
+        navigation.reset({ index: 0, routes: [{ name: 'login' }] });
       }
     }, [hasVisitedFirstPage, isAuthorized, navigation]);
 
@@ -61,7 +61,7 @@ export default function withAuthorization<P extends object>(
             로그인 후 사용 가능합니다.
           </Text>
           <View className="w-[260px] mt-6">
-            <Button title="로그인" variant="primary" onPress={() => navigation.navigate('login')} />
+            <Button title="로그인" variant="primary" onPress={() => navigation.reset({ index: 0, routes: [{ name: 'login' }] })} />
           </View>
         </View>
       )

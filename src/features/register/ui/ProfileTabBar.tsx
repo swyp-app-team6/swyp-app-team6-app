@@ -19,10 +19,17 @@ export type TabType = (typeof TABS)[number];
 const ProfileTabBar = memo(function ProfileTabBar({
   activeTab,
   onTabChange,
+  hiddenTabs,
 }: {
   activeTab: TabType;
   onTabChange: (tab: TabType) => void;
+  /** 숨길 탭 목록 */
+  hiddenTabs?: TabType[];
 }) {
+  const visibleTabs = hiddenTabs
+    ? TABS.filter((tab) => !hiddenTabs.includes(tab))
+    : TABS;
+
   return (
     <ScrollView
       horizontal
@@ -30,7 +37,7 @@ const ProfileTabBar = memo(function ProfileTabBar({
       contentContainerStyle={{ paddingHorizontal: 20, gap: 12 }}
       className="py-6"
     >
-      {TABS.map((tab) => (
+      {visibleTabs.map((tab) => (
         <Pressable key={tab} onPress={() => onTabChange(tab)}>
           <Text
             className={`text-base ${

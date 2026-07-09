@@ -50,7 +50,7 @@ export default function StackRouter({ initialRouteName = 'home' }: StackRouterPr
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator initialRouteName={initialRouteName} screenOptions={{ headerShown: false }}>
         <Stack.Screen name='onboarding' component={OnboardingPage} />
-        <Stack.Screen name='login' component={LoginPage} />
+        <Stack.Screen name='login' component={LoginPage} options={{ gestureEnabled: false }} />
         <Stack.Screen name='defaultLogin' component={DefaultLoginPage} />
         <Stack.Screen name='home' component={HomePage} options={{ animation: 'none' }} />
         <Stack.Screen name='profileCard' component={ProfileCardPage} options={{ animation: 'none' }} />

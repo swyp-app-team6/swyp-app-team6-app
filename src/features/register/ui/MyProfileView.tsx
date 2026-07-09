@@ -8,7 +8,7 @@ import ProfileTabBar, { type TabType } from './ProfileTabBar';
 import BasicInfoSection from './BasicInfoSection';
 import InterestsSection from './InterestsSection';
 import BioSection from './BioSection';
-import CosmicTypeSection from './CosmicTypeSection';
+
 import TmiSection from './TmiSection';
 
 interface Props {
@@ -68,7 +68,11 @@ export default function MyProfileView({ onSubmit, loading }: Props) {
         </View>
 
         {/* ── 탭 바 ── */}
-        <ProfileTabBar activeTab={activeTab} onTabChange={setActiveTab} />
+        <ProfileTabBar
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          hiddenTabs={['유형테스트']}
+        />
 
         {/* ── 정보 섹션 ── */}
         <View className="px-5 pb-6 gap-5">
@@ -91,8 +95,6 @@ export default function MyProfileView({ onSubmit, loading }: Props) {
           {activeTab === '자기소개' && (
             <BioSection bio={form.bio} />
           )}
-
-          {activeTab === '유형테스트' && <CosmicTypeSection />}
 
           {activeTab === '나만의 TMI' && (
             <TmiSection tmiAnswers={tmiAnswersForDisplay} />
