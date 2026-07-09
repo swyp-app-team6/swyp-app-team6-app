@@ -76,7 +76,7 @@ export default function ProfileGrid({
             id={item.exchange_id}
             name={item.nickname}
             cosmicTypeLabel={COSMIC_TYPE_LABEL[badgeLevel]}
-            imageUri={getProfileImageUrl(item.cosmic_type_image_key)}
+            imageUri={getProfileImageUrl(item.image_key)}
             isFavorited={item.is_liked}
             onToggleFavorite={onToggleFavorite}
             onPress={onPressProfile}

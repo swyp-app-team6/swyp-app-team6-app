@@ -110,6 +110,8 @@ export function cosmicTypeToApiValue(badge: BadgeLevel): string {
 export interface ExchangeArchiveItem {
   exchange_id: number;
   nickname: string;
+  /** 프로필 이미지 S3 키 */
+  image_key: string | null;
   cosmic_type: string;
   cosmic_type_image_key: string;
   interests: InterestItem[];
