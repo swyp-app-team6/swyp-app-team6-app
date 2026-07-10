@@ -320,10 +320,18 @@ export default function ExchangedProfileView({
 
         {/* 후기 열람 */}
         {hasReview && (
-          <ReviewReadView
-            score={detail.score as ReviewScore}
-            memo={detail.memo}
-          />
+          <Accordion.Root>
+            <Accordion.Item
+              itemKey="review"
+              title="만남 후기"
+              styleClass={{ content: 'gap-4' }}
+            >
+              <ReviewReadView
+                score={detail.score as ReviewScore}
+                memo={detail.memo}
+              />
+            </Accordion.Item>
+          </Accordion.Root>
         )}
 
         {/* 하단 여백 (CTA 공간 확보) */}
