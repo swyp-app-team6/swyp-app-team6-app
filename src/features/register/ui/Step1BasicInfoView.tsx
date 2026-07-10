@@ -98,15 +98,15 @@ export default function Step1BasicInfoView() {
           <View className="flex-row gap-3">
             <Button
               title="남성"
-              variant={form.gender === 'M' ? 'primary' : 'secondary'}
+              variant={form.gender === 'M' ? 'chip-selected' : 'chip'}
               onPress={() => updateForm({ gender: 'M' })}
-              className="px-6 h-11"
+              className="w-20 px-4"
             />
             <Button
               title="여성"
-              variant={form.gender === 'F' ? 'primary' : 'secondary'}
+              variant={form.gender === 'F' ? 'chip-selected' : 'chip'}
               onPress={() => updateForm({ gender: 'F' })}
-              className="px-6 h-11"
+              className="w-20 px-4"
             />
           </View>
         </View>

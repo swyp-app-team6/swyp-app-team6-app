@@ -73,16 +73,15 @@ export default function RegionPicker({ selectedRegion, selectedSubArea, onConfir
               <Pressable
                 key={option.value}
                 onPress={() => handleProvincePress(option.label)}
-                className={`h-12 px-4 rounded-xl justify-center mb-1 ${
-                  isActive ? 'bg-gray7' : 'bg-white'
-                }`}
+                className="h-12 px-4 rounded-xl justify-center mb-1"
+                style={{ backgroundColor: isActive ? '#F5F5F5' : '#FFFFFF' }}
               >
                 <Text
-                  className={`text-base ${
-                    isActive
-                      ? 'font-bold text-text-gray2'
-                      : 'font-medium text-text-gray4'
-                  }`}
+                  className="text-base"
+                  style={{
+                    color: isActive ? '#1B1B1B' : '#888888',
+                    fontWeight: isActive ? '700' : '500',
+                  }}
                 >
                   {option.label}
                 </Text>
@@ -92,7 +91,7 @@ export default function RegionPicker({ selectedRegion, selectedSubArea, onConfir
         </BottomSheetScrollView>
 
         {/* 구분선 */}
-        <View className="w-px bg-text-gray6 self-stretch" />
+        <View className="w-px self-stretch" style={{ backgroundColor: '#D9D9D9' }} />
 
         {/* 하위 지역 컬럼 */}
         <BottomSheetScrollView className="flex-1" showsVerticalScrollIndicator={false}>
@@ -103,16 +102,15 @@ export default function RegionPicker({ selectedRegion, selectedSubArea, onConfir
               <Pressable
                 key={area}
                 onPress={() => handleSubAreaPress(area)}
-                className={`h-12 px-4 rounded-xl justify-center mb-1 ${
-                  isActive ? 'bg-gray7' : 'bg-white'
-                }`}
+                className="h-12 px-4 rounded-xl justify-center mb-1"
+                style={{ backgroundColor: isActive ? '#F5F5F5' : '#FFFFFF' }}
               >
                 <Text
-                  className={`text-base ${
-                    isActive
-                      ? 'font-bold text-text-gray2'
-                      : 'font-medium text-text-gray4'
-                  }`}
+                  className="text-base"
+                  style={{
+                    color: isActive ? '#1B1B1B' : '#888888',
+                    fontWeight: isActive ? '700' : '500',
+                  }}
                 >
                   {area}
                 </Text>
