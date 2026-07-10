@@ -7,6 +7,7 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import { cn } from '@/shared/lib/cn';
+import ChevronDownIcon from '../icons/ChevronDownIcon';
 
 interface AccordionContextValue {
   multiple: boolean;
@@ -122,18 +123,20 @@ function Item({ itemKey, title, children, defaultOpen, styleClass }: ItemProps) 
   }));
 
   return (
-    <View className={cn('border-b border-gray-200', styleClass?.root)}>
+    <View className={cn('border-t border-gray-200', styleClass?.root)}>
       <Pressable
         onPress={() => toggle(itemKey)}
         className={cn(
-          'flex-row items-center justify-between px-4 py-3.5',
+          'flex-row items-center justify-center px-4 py-3.5',
           styleClass?.header,
         )}
         accessibilityRole="button"
         accessibilityState={{ expanded: isOpen }}
       >
-        <Text className="flex-1 text-base font-medium text-gray-900">{title}</Text>
-        <Text className="text-gray-400">{isOpen ? '▲' : '▼'}</Text>
+        <Text className="text-base font-medium text-gray-900">{title}</Text>
+        <View className="ml-2" style={isOpen ? { transform: [{ rotate: '180deg' }] } : undefined}>
+          <ChevronDownIcon size={16} color="#9CA3AF" />
+        </View>
       </Pressable>
       {isOpen && (
         <Animated.View

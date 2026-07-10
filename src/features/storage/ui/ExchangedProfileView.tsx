@@ -243,7 +243,7 @@ export default function ExchangedProfileView({
                     {cosmicType && <Badge level={cosmicType} />}
                     <PopoverMenu items={popoverItems} align="right">
                       <View className="w-10 h-10 items-center justify-center">
-                        <ProfileActionIcon size={28} color="#FFFFFF" orientation="vertical" />
+                        <ProfileActionIcon size={12} color="#FFFFFF" orientation="vertical" />
                       </View>
                     </PopoverMenu>
                   </View>

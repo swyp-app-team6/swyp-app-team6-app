@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import { createStore } from 'zustand/vanilla';
 import { useStore } from 'zustand';
 import { Modal } from '@/shared/ui/Modal';
@@ -186,12 +186,15 @@ export default function Dialog() {
       )}
       <View className="mt-6 flex-row justify-end gap-3">
         {type === 'confirm' && (
-          <Button
-            title={cancelLabel || '취소'}
-            variant="ghost"
+          <Pressable
+            className="flex-1 h-12 rounded-lg items-center justify-center"
+            style={{ backgroundColor: '#F5F5F5' }}
             onPress={handleCancel}
-            className="flex-1 flex align-center justify-center"
-          />
+          >
+            <Text className="text-base font-bold" style={{ color: '#1A1A1A' }}>
+              {cancelLabel || '취소'}
+            </Text>
+          </Pressable>
         )}
         <Button
           title={okLabel || '확인'}

@@ -37,9 +37,12 @@ export default function WriteReviewPage() {
       {
         onSuccess: () => {
           openDialog({
-            type: 'alert',
-            title: '후기가 등록되었습니다',
-            okFn: () => navigation.goBack(),
+            type: 'confirm',
+            message: '후기를 등록했습니다!',
+            cancelLabel: '뒤로 가기',
+            okLabel: '홈으로 가기',
+            cancelFn: () => navigation.goBack(),
+            okFn: () => navigation.navigate('home' as never),
           });
         },
         onError: () => {
@@ -55,7 +58,7 @@ export default function WriteReviewPage() {
 
   return (
     <>
-      <Header title="만남후기 작성" />
+      <Header title="교환한 프로필 보기" />
       <WriteReviewView
         profileId={profileId}
         onSubmit={handleSubmit}
