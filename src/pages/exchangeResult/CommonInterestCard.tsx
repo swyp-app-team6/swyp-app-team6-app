@@ -40,7 +40,7 @@ export default function CommonInterestCard({
   return (
     <ProfileCardContainer responsive>
       <ProfileCardGradientBackground>
-        <View className="flex-1 px-6 py-8">
+        <View className="flex-1 justify-center px-6 py-8">
           {/* 타이틀 */}
           <Text className="text-center text-[20px] font-bold leading-[28px] text-white">
             {hasCommon

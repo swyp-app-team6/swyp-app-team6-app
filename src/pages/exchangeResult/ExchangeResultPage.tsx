@@ -55,7 +55,7 @@ export default function ExchangeResultPage() {
       <Header title="공통된 관심사 결과" showBack />
 
       {/* 본문 */}
-      <View className="flex-1 items-center pt-6">
+      <View className="flex-1 items-center px-5 pt-12">
         <CommonInterestCard
           hasCommon={hasCommon}
           interests={displayInterests}
