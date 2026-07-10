@@ -1,7 +1,7 @@
 import React, { useRef, useState, useMemo } from 'react';
 import { Pressable, View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import { TMICard, BottomCTA, Button, ChipSelect, Textbox, SelectedTMIPreviewButton } from '@/shared/ui';
+import { TMICard, BottomCTA, Button, ChipSelect, Textbox, SelectedTMIPreviewButton, Checkbox } from '@/shared/ui';
 import Tag from '@/shared/ui/Tag';
 import BottomSheet, { type BottomSheetHandle } from '@/shared/ui/BottomSheet';
 import { useProfileDataStore } from '@/entities/user';
@@ -197,13 +197,10 @@ export default function Step4TMIView() {
             return (
               <View key={`${question.answerType}-${question.id}`} className="flex-row items-start gap-3">
                 {/* 체크박스 */}
-                <View className="w-6 h-6 items-center justify-center mt-4">
-                  <View
-                    className={`w-[18px] h-[18px] rounded-[4px] border-2 ${
-                      isSelected
-                        ? 'bg-primary border-primary'
-                        : 'bg-white border-[#BFBFBF]'
-                    }`}
+                <View className="mt-4">
+                  <Checkbox
+                    checked={isSelected}
+                    onValueChange={() => handleQuestionPress(question)}
                   />
                 </View>
                 {/* 카드 */}
