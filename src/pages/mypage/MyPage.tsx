@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Linking, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Button, Header, Layout, MenuList, AppVersion } from '@/shared/ui';
 import ArrowIcon from '@/shared/ui/icons/ArrowIcon';
@@ -13,13 +13,18 @@ import type { NavigationPropType } from '@/shared/types';
  * ---
  * - 간단설명: 메뉴 구성 및 계정 정보 수정 진입을 제공하는 마이페이지 메인 화면
  * - 제약사항 및 특이사항:
- *   - 설정 메뉴(신고하기, 앱 설정, 공지사항)는 UI만 구성, 동작 미구현
- *   - 약관 메뉴(이용 약관, 개인정보 처리방침)도 UI만 구성
+ *   - 설정 메뉴(신고하기, 공지사항)에서 공지사항은 노션 링크로 이동
+ *   - 약관 메뉴(이용 약관, 개인정보 처리방침)는 노션 링크로 이동
  *   - 계정 정보 수정 버튼 클릭 시 accountEdit 페이지로 이동
  * ---
  * @example
  * <MyPage />
  */
+/** 이용약관 노션 링크 */
+const TERMS_URL = 'https://real-jellyfish-10c.notion.site/39144f56101180ab915eed4b439d5233?pvs=74';
+/** 개인정보 처리방침 노션 링크 */
+const PRIVACY_URL = 'https://real-jellyfish-10c.notion.site/39144f5610118006bc88d377d1b92aa3';
+
 function MyPage() {
   const navigation = useNavigation<NavigationPropType>();
   const user = useAuthStore((state) => state.user);
@@ -65,11 +70,6 @@ function MyPage() {
               styleClass={{ root: 'px-5 h-14', label: 'text-[14px] font-medium text-[#1A1A1A]' }}
             />
             <MenuList.Item
-              label="앱 설정"
-              right={chevronRight}
-              styleClass={{ root: 'px-5 h-14', label: 'text-[14px] font-medium text-[#1A1A1A]' }}
-            />
-            <MenuList.Item
               label="공지사항"
               right={chevronRight}
               showDivider={false}
@@ -86,12 +86,14 @@ function MyPage() {
             <MenuList.Item
               label="이용 약관"
               right={chevronRight}
+              onPress={() => Linking.openURL(TERMS_URL)}
               styleClass={{ root: 'px-5 h-14', label: 'text-[14px] font-medium text-[#1A1A1A]' }}
             />
             <MenuList.Item
               label="개인정보 처리방침"
               right={chevronRight}
               showDivider={false}
+              onPress={() => Linking.openURL(PRIVACY_URL)}
               styleClass={{ root: 'px-5 h-14', label: 'text-[14px] font-medium text-[#1A1A1A]' }}
             />
           </MenuList.Section>
