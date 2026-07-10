@@ -118,7 +118,7 @@ export default function Step4TMIView() {
 
   /** 서술형 답변 제출 */
   const handleTextSubmit = () => {
-    if (!activeQuestion || textInput.length < 5) return;
+    if (!activeQuestion || textInput.length < 1) return;
     addTMIAnswer({
       questionId: activeQuestion.id,
       answerKind: 'TEXT',
@@ -341,14 +341,14 @@ export default function Step4TMIView() {
             <Textbox
               value={textInput}
               onChangeText={setTextInput}
-              placeholder="답변을 입력해주세요 (5~100자)"
+              placeholder="답변을 입력해주세요 (1~100자)"
               maxLength={100}
               minHeight={80}
               isBottomSheet
             />
             <Button
               title="답변 완료"
-              disabled={textInput.length < 5}
+              disabled={textInput.length < 1}
               onPress={handleTextSubmit}
               className="mt-3"
             />
