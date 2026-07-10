@@ -279,14 +279,16 @@ export default function CosmicTypeTestView({ onComplete, nickname = '사용자' 
         </View>
       </ScrollView>
 
-      {/* 하단 CTA */}
-      <BottomCTA>
-        <Button
-          title="테스트 완료"
-          disabled={!isLastAnswered}
-          onPress={handleComplete}
-        />
-      </BottomCTA>
+      {/* 하단 CTA — 마지막 문항에서만 노출 */}
+      {currentIndex === totalQuestions - 1 && (
+        <BottomCTA>
+          <Button
+            title="테스트 완료"
+            disabled={!isLastAnswered}
+            onPress={handleComplete}
+          />
+        </BottomCTA>
+      )}
 
       {/* 미응답 안내 팝업 */}
       <Modal
