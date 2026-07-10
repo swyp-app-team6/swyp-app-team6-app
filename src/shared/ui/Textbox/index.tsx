@@ -79,7 +79,7 @@ export default function Textbox({
   return (
     <View className={cn(styleClass?.root)}>
       {label && (
-        <Text className={cn('mb-3 text-base font-medium text-text-gray7', styleClass?.label)}>
+        <Text className={cn('mb-3 text-base font-medium text-black', styleClass?.label)}>
           {label}
         </Text>
       )}
