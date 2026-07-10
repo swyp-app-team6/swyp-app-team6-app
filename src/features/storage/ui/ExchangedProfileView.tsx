@@ -160,7 +160,7 @@ export default function ExchangedProfileView({
           onSuccess: () => {
             openDialog({
               type: 'alert',
-              title: '신고가 접수되었습니다',
+              message: '신고가 접수되었습니다',
             });
           },
           onError: () => {

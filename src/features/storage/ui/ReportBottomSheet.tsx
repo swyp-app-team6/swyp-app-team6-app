@@ -1,8 +1,8 @@
 import React, { forwardRef, useCallback, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { BottomSheetModal, BottomSheetTextInput } from '@gorhom/bottom-sheet';
+import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { useImperativeHandle, useRef } from 'react';
-import { Button, Checkbox, SafeBottomSheetModal } from '@/shared/ui';
+import { BottomSheet, Button, Checkbox } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
 
 import type { ReportReasonCode } from '@/entities/storage';
@@ -41,7 +41,7 @@ interface Props {
  */
 const ReportBottomSheet = forwardRef<BottomSheetHandle, Props>(
   ({ nickname, onSubmit }, ref) => {
-    const modalRef = useRef<BottomSheetModal>(null);
+    const modalRef = useRef<BottomSheetHandle>(null);
     const [selectedTypes, setSelectedTypes] = useState<ReportReasonCode[]>([]);
     const [otherText, setOtherText] = useState('');
 
@@ -49,9 +49,9 @@ const ReportBottomSheet = forwardRef<BottomSheetHandle, Props>(
       open: () => {
         setSelectedTypes([]);
         setOtherText('');
-        modalRef.current?.present();
+        modalRef.current?.open();
       },
-      close: () => modalRef.current?.dismiss(),
+      close: () => modalRef.current?.close(),
     }));
 
     const toggleType = useCallback((value: ReportReasonCode) => {
@@ -68,7 +68,7 @@ const ReportBottomSheet = forwardRef<BottomSheetHandle, Props>(
         selectedTypes,
         selectedTypes.includes('ETC') ? otherText : undefined,
       );
-      modalRef.current?.dismiss();
+      modalRef.current?.close();
     }, [onSubmit, selectedTypes, otherText]);
 
     const hasOther = selectedTypes.includes('ETC');
@@ -77,16 +77,9 @@ const ReportBottomSheet = forwardRef<BottomSheetHandle, Props>(
       (hasOther && otherText.trim().length === 0);
 
     return (
-      <SafeBottomSheetModal ref={modalRef}>
-        {/* 타이틀 */}
-        <View className="px-5 mb-4">
-          <Text className="text-xl font-bold text-[#1A1A1A] leading-7">
-            {nickname} 님 신고하기
-          </Text>
-        </View>
-
+      <BottomSheet ref={modalRef} title={`${nickname} 님 신고하기`}>
         {/* 신고 유형 체크박스 목록 */}
-        <View className="px-5 gap-2 mb-4">
+        <View className="gap-2 mb-4">
           {REPORT_TYPE_OPTIONS.map((option) => {
             const isChecked = selectedTypes.includes(option.value);
             return (
@@ -113,7 +106,7 @@ const ReportBottomSheet = forwardRef<BottomSheetHandle, Props>(
 
         {/* 기타 텍스트 입력 */}
         {hasOther && (
-          <View className="px-5 mb-4">
+          <View className="mb-4">
             <BottomSheetTextInput
               defaultValue={otherText}
               onChangeText={setOtherText}
@@ -131,15 +124,13 @@ const ReportBottomSheet = forwardRef<BottomSheetHandle, Props>(
         )}
 
         {/* 제출 버튼 */}
-        <View className="px-5">
-          <Button
-            title="신고제출"
-            variant="primary"
-            onPress={handleSubmit}
-            disabled={isSubmitDisabled}
-          />
-        </View>
-      </SafeBottomSheetModal>
+        <Button
+          title="신고제출"
+          variant="primary"
+          onPress={handleSubmit}
+          disabled={isSubmitDisabled}
+        />
+      </BottomSheet>
     );
   },
 );
