@@ -24,15 +24,16 @@ export default function Step2DetailInfoView() {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const [ageError, setAgeError] = useState(false);
 
-  /** 나이 변경 핸들러 */
+  /** 나이 변경 핸들러 — 만 14세 이하 입력 시 즉시 에러 표시 */
   const handleAgeChange = (text: string) => {
     updateForm({ age: text });
-    if (ageError) setAgeError(false);
+    const age = Number(text);
+    setAgeError(text.length > 0 && age <= 14);
   };
 
-  /** 다음으로 버튼 클릭 핸들러 - 14세 미만 검증 후 다음 단계 이동 */
+  /** 다음으로 버튼 클릭 핸들러 - 만 14세 이하 검증 후 다음 단계 이동 */
   const handleNext = () => {
-    if (Number(form.age) < 14) {
+    if (Number(form.age) <= 14) {
       setAgeError(true);
       return;
     }
@@ -82,7 +83,7 @@ export default function Step2DetailInfoView() {
           />
           {ageError && (
             <Text className="text-red-500 text-sm mt-1">
-              만 14세 미만은 등록할 수 없습니다.
+              만 14세 이하는 등록할 수 없습니다.
             </Text>
           )}
         </View>
