@@ -181,7 +181,6 @@ const useRegisterFormStore = create<RegisterFormStore>()(
       const { form } = get();
       return (
         form.age.length > 0 &&
-        Number(form.age) >= 14 &&
         form.jobField.length > 0 &&
         form.region.length > 0
       );

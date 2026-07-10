@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { View, Text, ScrollView, Pressable } from 'react-native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Input, BottomCTA, Button, SafeBottomSheetModal } from '@/shared/ui';
@@ -22,10 +22,21 @@ import RegionPicker from './RegionPicker';
 export default function Step2DetailInfoView() {
   const { form, updateForm, nextStep, isStep2Valid } = useRegisterFormStore();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
+  const [ageError, setAgeError] = useState(false);
 
   /** 나이 변경 핸들러 */
   const handleAgeChange = (text: string) => {
     updateForm({ age: text });
+    if (ageError) setAgeError(false);
+  };
+
+  /** 다음으로 버튼 클릭 핸들러 - 14세 미만 검증 후 다음 단계 이동 */
+  const handleNext = () => {
+    if (Number(form.age) < 14) {
+      setAgeError(true);
+      return;
+    }
+    nextStep();
   };
 
   /** 직무분야 변경 핸들러 */
@@ -69,7 +80,7 @@ export default function Step2DetailInfoView() {
             onChangeText={handleAgeChange}
             keyboardType="number-pad"
           />
-          {form.age.length > 0 && Number(form.age) < 14 && (
+          {ageError && (
             <Text className="text-red-500 text-sm mt-1">
               만 14세 미만은 등록할 수 없습니다.
             </Text>
@@ -109,7 +120,7 @@ export default function Step2DetailInfoView() {
         <Button
           title="다음으로"
           disabled={!isStep2Valid()}
-          onPress={nextStep}
+          onPress={handleNext}
         />
       </BottomCTA>
 
