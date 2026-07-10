@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Header, ErrorBoundary, LoadSuspense } from '@/shared/ui';
@@ -24,6 +24,7 @@ export default function CosmicTestPage() {
   const navigation = useNavigation<NavigationPropType>();
   const { data: profile } = useMyProfileQuery();
   const { mutate: updateCosmic } = useUpdateCosmicMutation();
+  const [isResultView, setIsResultView] = useState(false);
 
   /** 테스트 완료 → 코스믹 유형 저장 후 이전 화면 복귀 */
   const handleComplete = useCallback(
@@ -39,12 +40,13 @@ export default function CosmicTestPage() {
 
   return (
     <View className="flex-1 bg-white">
-      <Header title="코스믹 유형 테스트" showBack />
+      <Header title={isResultView ? '테스트 결과' : '코스믹 유형 테스트'} showBack />
       <ErrorBoundary>
         <LoadSuspense>
           <CosmicTypeTestView
             onComplete={handleComplete}
             nickname={profile?.nickname ?? '사용자'}
+            onResultShow={setIsResultView}
           />
         </LoadSuspense>
       </ErrorBoundary>

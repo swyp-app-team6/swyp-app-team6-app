@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { View, Text, ScrollView, Pressable, ActivityIndicator, Image } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { BottomCTA, Button } from '@/shared/ui';
@@ -13,6 +13,8 @@ interface Props {
   onComplete: (cosmicType: CosmicType) => void;
   /** 사용자 닉네임 (미전달 시 '사용자' 기본값) */
   nickname?: string;
+  /** 결과 화면 표시 상태 변경 시 호출되는 콜백 */
+  onResultShow?: (isResult: boolean) => void;
 }
 
 /**
@@ -63,7 +65,7 @@ function calculateCosmicType(
  * @example
  * <CosmicTypeTestView onComplete={(type) => console.log(type)} nickname="홍길동" />
  */
-export default function CosmicTypeTestView({ onComplete, nickname = '사용자' }: Props) {
+export default function CosmicTypeTestView({ onComplete, nickname = '사용자', onResultShow }: Props) {
   const { data: testData, isLoading } = useCosmicTestQuery();
   const questions = useMemo<CosmicTestQuestion[]>(
     () => testData?.questions ?? [],
@@ -76,6 +78,10 @@ export default function CosmicTypeTestView({ onComplete, nickname = '사용자' 
   const [showIncompleteModal, setShowIncompleteModal] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [firstUnansweredIndex, setFirstUnansweredIndex] = useState(0);
+
+  useEffect(() => {
+    onResultShow?.(showResult);
+  }, [showResult, onResultShow]);
 
   const currentQuestion = questions[currentIndex];
   const selectedAnswer = currentQuestion ? selectedAnswers[currentQuestion.question_id] : undefined;
