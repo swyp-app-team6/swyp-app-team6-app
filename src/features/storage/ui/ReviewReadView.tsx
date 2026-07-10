@@ -39,7 +39,7 @@ export default function ReviewReadView({ score, memo }: Props) {
   return (
     <View>
       {/* 만족도 표시 */}
-      <View className="px-5 pb-6 gap-3">
+      <View className="pb-6 gap-3">
         <Text className="text-base font-medium text-[#18181B]">
           전체적인 만남은 어떠셨나요?
         </Text>
@@ -51,7 +51,7 @@ export default function ReviewReadView({ score, memo }: Props) {
       </View>
 
       {/* 메모 표시 */}
-      <View className="px-5 pb-6">
+      <View className="pb-6">
         <View className="flex-row items-center gap-1 mb-3">
           <Text className="text-base font-medium text-[#18181B]">
             메모를 남겨주세요
