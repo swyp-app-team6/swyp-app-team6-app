@@ -1,6 +1,5 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { useCallback, useMemo, useRef } from 'react';
+import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { Accordion, BottomCTA, Button, PopoverMenu, ProfileActionIcon, ReportIcon, BlockUserIcon, Badge, InterestTag } from '@/shared/ui';
 import ProfileCardContainer from '@/shared/ui/ProfileCard/ProfileCardContainer';
 import type { PopoverMenuItem } from '@/shared/ui';
@@ -18,6 +17,8 @@ import InfoCard from '@/features/register/ui/InfoCard';
 import ReportBottomSheet from './ReportBottomSheet';
 import useReportMutation from '../api/useReportMutation';
 import useBlockMutation from '../api/useBlockMutation';
+import useBlockListQuery from '../api/useBlockListQuery';
+import useUnblockMutation from '../api/useUnblockMutation';
 
 interface Props {
   /** 프로필 ID */
@@ -48,18 +49,28 @@ export default function ExchangedProfileView({
   profileId,
   onNavigateToReview,
 }: Props) {
-  const navigation = useNavigation();
   const reportRef = useRef<BottomSheetHandle>(null);
-  const [isBlocked, _setIsBlocked] = useState(false);
 
   const { data: detail, isLoading } = useExchangeArchiveDetailQuery(profileId);
   const { mutate: submitReport } = useReportMutation();
   const { mutate: submitBlock } = useBlockMutation();
+  const { data: blockList = [] } = useBlockListQuery();
+  const { mutate: submitUnblock, isPending: isUnblocking } = useUnblockMutation();
 
   const profile = detail?.profile;
   const matchedInterests = detail?.matched_interests ?? [];
   const imageUri = getProfileImageUrl(profile?.image_key);
   const cosmicType = profile?.cosmic_type ? apiValueToCosmicType(profile.cosmic_type) : undefined;
+
+  /** 차단 목록에서 현재 프로필과 매칭되는 항목 조회 */
+  const blockEntry = useMemo(() => {
+    if (!profile) return undefined;
+    return blockList.find(
+      (b) => b.nickname === profile.nickname && b.image_key === (profile.image_key ?? null),
+    );
+  }, [blockList, profile]);
+
+  const isBlocked = !!blockEntry;
 
   const handleBlock = useCallback(() => {
     openDialog({
@@ -74,9 +85,6 @@ export default function ExchangedProfileView({
             openDialog({
               type: 'alert',
               title: '차단이 완료되었습니다',
-              okFn: () => {
-                navigation.goBack();
-              },
             });
           },
           onError: () => {
@@ -89,7 +97,36 @@ export default function ExchangedProfileView({
         });
       },
     });
-  }, [navigation, profile, submitBlock, profileId]);
+  }, [profile, submitBlock, profileId]);
+
+  /** 차단해제 핸들러 */
+  const handleUnblock = useCallback(() => {
+    if (!blockEntry) return;
+    openDialog({
+      type: 'confirm',
+      title: `${profile?.nickname ?? ''} 님의 차단을 해제할까요?`,
+      message: '프로필이 다시 정상적으로 표시됩니다.',
+      okLabel: '차단해제',
+      cancelLabel: '취소',
+      okFn: () => {
+        submitUnblock(blockEntry.block_id, {
+          onSuccess: () => {
+            openDialog({
+              type: 'alert',
+              title: '차단이 해제되었습니다',
+            });
+          },
+          onError: () => {
+            openDialog({
+              type: 'alert',
+              title: '차단 해제에 실패했습니다',
+              message: '잠시 후 다시 시도해주세요.',
+            });
+          },
+        });
+      },
+    });
+  }, [blockEntry, profile, submitUnblock]);
 
   /** 신고/차단 팝오버 메뉴 항목 */
   const popoverItems: PopoverMenuItem[] = useMemo(
@@ -214,6 +251,11 @@ export default function ExchangedProfileView({
                 <Text className="text-base font-medium text-white">
                   차단된 프로필입니다
                 </Text>
+                <Pressable onPress={handleUnblock} disabled={isUnblocking}>
+                  <Text className="text-sm text-white underline mt-3">
+                    차단해제
+                  </Text>
+                </Pressable>
               </View>
             )}
           </View>

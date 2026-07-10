@@ -23,6 +23,9 @@ export default function useUnblockMutation() {
       queryClient.invalidateQueries({
         queryKey: ExchangeArchiveAPI.query.blockList.queryKey,
       });
+      queryClient.invalidateQueries({
+        queryKey: ExchangeArchiveAPI.query._def,
+      });
     },
   });
 }
