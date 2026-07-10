@@ -209,57 +209,59 @@ export default function ExchangedProfileView({
                   source={{ uri: imageUri }}
                   className="absolute w-full h-full"
                   resizeMode="cover"
+                  blurRadius={isBlocked ? 20 : 0}
                 />
               ) : (
                 <View className="absolute w-full h-full items-center justify-center">
                 </View>
               )}
 
-              {/* 상단: 배지 + 신고/차단 메뉴 */}
-              <View className="absolute top-5 left-5 right-5 flex-row items-center justify-between">
-                {cosmicType && <Badge level={cosmicType} />}
-                {!isBlocked && (
-                  <PopoverMenu items={popoverItems} align="right">
-                    <View className="w-10 h-10 items-center justify-center">
-                      <ProfileActionIcon size={28} color="#FFFFFF" orientation="vertical" />
-                    </View>
-                  </PopoverMenu>
-                )}
-              </View>
-
-              {/* 하단: 닉네임 + 나이 + 관심사 태그 */}
-              <View className="absolute bottom-0 left-0 right-0 px-5 pb-5 gap-2">
-                <View className="flex-row items-end gap-1">
-                  <Text className="text-xl font-bold text-white" style={{ lineHeight: 28 }}>
-                    {profile.nickname}
+              {/* 차단 오버레이 (카드 내부) */}
+              {isBlocked ? (
+                <View className="absolute w-full h-full items-center justify-center bg-black/40 z-10">
+                  <Text className="text-base font-medium text-white">
+                    차단된 프로필입니다
                   </Text>
-                  <Text className="text-xl font-bold text-white" style={{ lineHeight: 28 }}>
-                    {profile.age}세
-                  </Text>
+                  <Pressable onPress={handleUnblock} disabled={isUnblocking}>
+                    <Text className="text-sm text-white underline mt-3">
+                      차단해제
+                    </Text>
+                  </Pressable>
                 </View>
-
-                {profile.interests.length > 0 && (
-                  <View className="flex-row flex-wrap gap-1">
-                    {profile.interests.map((i) => (
-                      <InterestTag key={i.type} label={getInterestLabel(i.type)} variant="overlay" />
-                    ))}
+              ) : (
+                <>
+                  {/* 상단: 배지 + 신고/차단 메뉴 */}
+                  <View className="absolute top-5 left-5 right-5 flex-row items-center justify-between">
+                    {cosmicType && <Badge level={cosmicType} />}
+                    <PopoverMenu items={popoverItems} align="right">
+                      <View className="w-10 h-10 items-center justify-center">
+                        <ProfileActionIcon size={28} color="#FFFFFF" orientation="vertical" />
+                      </View>
+                    </PopoverMenu>
                   </View>
-                )}
-              </View>
+
+                  {/* 하단: 닉네임 + 나이 + 관심사 태그 */}
+                  <View className="absolute bottom-0 left-0 right-0 px-5 pb-5 gap-2">
+                    <View className="flex-row items-end gap-1">
+                      <Text className="text-xl font-bold text-white" style={{ lineHeight: 28 }}>
+                        {profile.nickname}
+                      </Text>
+                      <Text className="text-xl font-bold text-white" style={{ lineHeight: 28 }}>
+                        {profile.age}세
+                      </Text>
+                    </View>
+
+                    {profile.interests.length > 0 && (
+                      <View className="flex-row flex-wrap gap-1">
+                        {profile.interests.map((i) => (
+                          <InterestTag key={i.type} label={getInterestLabel(i.type)} variant="overlay" />
+                        ))}
+                      </View>
+                    )}
+                  </View>
+                </>
+              )}
             </ProfileCardContainer>
-            {/* 차단 오버레이 */}
-            {isBlocked && (
-              <View className="absolute w-full h-full items-center justify-center bg-black/40 rounded-xl">
-                <Text className="text-base font-medium text-white">
-                  차단된 프로필입니다
-                </Text>
-                <Pressable onPress={handleUnblock} disabled={isUnblocking}>
-                  <Text className="text-sm text-white underline mt-3">
-                    차단해제
-                  </Text>
-                </Pressable>
-              </View>
-            )}
           </View>
         </View>
 
