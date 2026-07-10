@@ -51,7 +51,7 @@ export default function CosmicResultFrontCard({
         style={{ width: '100%', aspectRatio: 350 / 520 }}
       >
         {/* 콘텐츠 영역 - 세로 중앙 배치 */}
-        <View className="flex-1 justify-center items-center" style={{ paddingVertical: '6%' }}>
+        <View className="flex-1 justify-center items-center" style={{ paddingVertical: '6%', gap: 12 }}>
           {/* 닉네임 + 유형명 */}
           <View className="items-center gap-1" style={{ paddingHorizontal: '9%' }}>
             <Text className="text-base font-medium text-white text-center" style={{ lineHeight: 22.4 }}>
@@ -99,7 +99,7 @@ export default function CosmicResultFrontCard({
           </View>
 
           {/* 한줄 설명 */}
-          <View className="items-center" style={{ marginTop: '2.5%', paddingHorizontal: '9%' }}>
+          <View className="items-center" style={{ paddingHorizontal: '9%' }}>
             <Text
               className="text-sm font-semibold text-white text-center"
               style={{ lineHeight: 19.6 }}

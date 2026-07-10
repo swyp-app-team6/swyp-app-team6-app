@@ -60,7 +60,7 @@ function getErrorMessage(err: AxiosError): string {
     case 409:
       return '상대방이 교환 대기 중이 아닙니다';
     default:
-      return '네트워크 오류가 발생했습니다';
+      return '프로필 교환 도중 문제가 발생했습니다';
   }
 }
 

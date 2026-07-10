@@ -47,7 +47,7 @@ export default function CosmicResultBackCard({ result, nickname }: Props) {
         style={{ width: '100%', aspectRatio: 350 / 520 }}
       >
         {/* 콘텐츠 영역 - 세로 중앙 배치 */}
-        <View className="flex-1 justify-center" style={{ paddingVertical: '6%' }}>
+        <View className="flex-1 justify-center" style={{ paddingVertical: '6%', gap: 12 }}>
           {/* 닉네임 + 유형명 */}
           <View className="items-center gap-1" style={{ paddingHorizontal: '9%' }}>
             <Text className="text-base font-medium text-white text-center" style={{ lineHeight: 22.4 }}>
@@ -85,7 +85,7 @@ export default function CosmicResultBackCard({ result, nickname }: Props) {
 
           {/* 구분선 */}
           <View
-            className="my-3"
+            className="my-4"
             style={{ height: 1, backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
           />
 
@@ -106,7 +106,7 @@ export default function CosmicResultBackCard({ result, nickname }: Props) {
 
           {/* 구분선 */}
           <View
-            className="my-3"
+            className="my-4"
             style={{ height: 1, backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
           />
 
