@@ -1,6 +1,5 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import { Textbox } from '@/shared/ui';
 import type { ReviewScore } from '@/entities/storage';
 
 /** 만남 후기 만족도 옵션 (value = API score 1-4) */
@@ -25,7 +24,7 @@ interface Props {
  * - 제약사항 및 특이사항:
  *   - WriteReviewView와 동일한 UI 구조에 disabled 처리
  *   - 만족도 셀렉트: 선택된 라벨 텍스트만 표시 (드롭다운 아이콘 제거, 터치 불가)
- *   - 메모: Textbox editable={false}로 읽기 전용
+ *   - 메모: View+Text로 읽기 전용 표시 (Textbox의 한글 IME 이슈 회피)
  *   - 프로필 카드, BottomCTA 없음
  * ---
  * @param score 만족도 점수 (1-4)
@@ -61,12 +60,11 @@ export default function ReviewReadView({ score, memo }: Props) {
             (나만 볼 수 있어요)
           </Text>
         </View>
-        <Textbox
-          value={memo}
-          editable={false}
-          placeholder=""
-          minHeight={112}
-        />
+        <View className="rounded-xl bg-text-gray7 p-4" style={{ minHeight: 112 }}>
+          <Text className="text-base text-text-black">
+            {memo || ''}
+          </Text>
+        </View>
       </View>
     </View>
   );
