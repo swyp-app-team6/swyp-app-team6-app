@@ -50,7 +50,7 @@ export default function Step2InterestsView() {
         </Text>
         <Text className="text-sm text-text-gray4 mb-6">
           관심사를 3~5개 선택해주세요 ({form.interests.length}/{MAX_INTERESTS})
-        </Text>
+      </Text>
 
         {isLoading ? (
           <View className="items-center py-10">

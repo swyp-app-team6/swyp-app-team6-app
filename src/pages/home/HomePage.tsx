@@ -24,21 +24,23 @@ function HomePage() {
     <>
       <Header
         left={
-          <Image
-            source={require('@/assets/orbits-name-icon.png')}
-            className="h-[21px] w-[68px]"
-            resizeMode="contain"
-          />
+          <View className="flex-row items-center gap-2">
+            <Image
+              source={require('@/assets/characters/home-logo-icon.png')}
+              className="h-[21px] w-[68px]"
+              resizeMode="contain"
+            />
+          </View>
         }
         right={
           <View className="flex-row items-center gap-3">
             <Pressable hitSlop={8} onPress={() => navigation.navigate('mypage')}>
-              <SettingIcon size={24} color="#9ca3af" />
+              <SettingIcon size={24} color="#8C39FB" />
             </Pressable>
           </View>
         }
       />
-      <Layout.Body styleClass={{ root: 'px-5 pt-6 bg-white' }}>
+      <Layout.Body styleClass={{ root: 'px-5 pt-2 bg-white' }}>
         {/* 홈화면 타이틀 */}
         <Text className="text-[20px] font-semibold leading-[30px] tracking-tight text-text-black">
           {'오르비츠와 함께 새로운 만남을\n시작할 준비가 되셨나요?'}
