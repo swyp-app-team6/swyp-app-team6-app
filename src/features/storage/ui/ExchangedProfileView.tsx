@@ -7,7 +7,7 @@ import type { BottomSheetHandle } from '@/shared/ui';
 import { openDialog } from '@/shared/ui/Dialog';
 import { getInterestLabel } from '@/features/register';
 import { useExchangeArchiveDetailQuery, apiValueToCosmicType } from '@/entities/storage';
-import type { ReportReasonCode } from '@/entities/storage';
+import type { ReportReasonCode, ReviewScore } from '@/entities/storage';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 import BasicInfoSection from '@/features/register/ui/BasicInfoSection';
 import InterestsSection from '@/features/register/ui/InterestsSection';
@@ -19,6 +19,7 @@ import useReportMutation from '../api/useReportMutation';
 import useBlockMutation from '../api/useBlockMutation';
 import useBlockListQuery from '../api/useBlockListQuery';
 import useUnblockMutation from '../api/useUnblockMutation';
+import ReviewReadView from './ReviewReadView';
 
 interface Props {
   /** 프로필 ID */
@@ -71,6 +72,7 @@ export default function ExchangedProfileView({
   }, [blockList, profile]);
 
   const isBlocked = !!blockEntry;
+  const hasReview = (detail?.score ?? 0) > 0;
 
   const handleBlock = useCallback(() => {
     openDialog({
@@ -306,17 +308,27 @@ export default function ExchangedProfileView({
           </Accordion.Root>
         </View>
 
+        {/* 후기 열람 */}
+        {hasReview && (
+          <ReviewReadView
+            score={detail.score as ReviewScore}
+            memo={detail.memo}
+          />
+        )}
+
         {/* 하단 여백 (CTA 공간 확보) */}
         <View className="h-24" />
       </ScrollView>
 
-      <BottomCTA>
-        <Button
-          title="만남후기 작성"
-          onPress={onNavigateToReview}
-          disabled={isBlocked}
-        />
-      </BottomCTA>
+      {!hasReview && (
+        <BottomCTA>
+          <Button
+            title="만남후기 작성"
+            onPress={onNavigateToReview}
+            disabled={isBlocked}
+          />
+        </BottomCTA>
+      )}
 
       <ReportBottomSheet ref={reportRef} onSubmit={handleReport} />
     </View>
