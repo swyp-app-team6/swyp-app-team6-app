@@ -78,7 +78,7 @@ export default function ExchangedProfileView({
     openDialog({
       type: 'confirm',
       title: `${profile?.nickname ?? ''} 님을 차단할까요?`,
-      message: '더 이상 서로의 프로필이 보이지 않아요.',
+      message: '차단하면 프로필이\n노출되지 않아요.',
       okLabel: '차단',
       cancelLabel: '취소',
       okFn: () => {
@@ -134,15 +134,14 @@ export default function ExchangedProfileView({
   const popoverItems: PopoverMenuItem[] = useMemo(
     () => [
       {
-        label: '신고',
-        icon: <ReportIcon size={16} color="#888888" />,
-        onPress: () => reportRef.current?.open(),
+        label: '차단하기',
+        icon: <BlockUserIcon size={16} color="#1A1A1A" />,
+        onPress: handleBlock,
       },
       {
-        label: '차단',
-        icon: <BlockUserIcon size={16} color="#888888" />,
-        onPress: handleBlock,
-        destructive: true,
+        label: '신고하기',
+        icon: <ReportIcon size={16} color="#E01619" />,
+        onPress: () => reportRef.current?.open(),
       },
     ],
     [handleBlock],
@@ -314,25 +313,15 @@ export default function ExchangedProfileView({
               {profile.cosmic_type && (
                 <CosmicTypeSection cosmicType={profile.cosmic_type} />
               )}
+              {hasReview && (
+                <ReviewReadView
+                  score={detail.score as ReviewScore}
+                  memo={detail.memo}
+                />
+              )}
             </Accordion.Item>
           </Accordion.Root>
         </View>
-
-        {/* 후기 열람 */}
-        {hasReview && (
-          <Accordion.Root>
-            <Accordion.Item
-              itemKey="review"
-              title="만남 후기"
-              styleClass={{ content: 'gap-4' }}
-            >
-              <ReviewReadView
-                score={detail.score as ReviewScore}
-                memo={detail.memo}
-              />
-            </Accordion.Item>
-          </Accordion.Root>
-        )}
 
         {/* 하단 여백 (CTA 공간 확보) */}
         <View className="h-24" />
