@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { View, Text, Image } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import Badge from '../Badge';
 import InterestTag from '../InterestTag';
 import type { BadgeLevel } from '../Badge';
@@ -79,6 +80,22 @@ function UserProfileCard({
         <View>{badgeLevel && <Badge level={badgeLevel} />}</View>
         {topRightSlot}
       </View>
+
+      {/* 하단 어두운 그라데이션 오버레이 */}
+      <LinearGradient
+        colors={['transparent', 'rgba(0, 0, 0, 0.4)']}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: '40%',
+          borderBottomLeftRadius: 10,
+          borderBottomRightRadius: 10,
+        }}
+      />
 
       {/* 하단 정보 (이름 + 나이 + 관심사 태그) */}
       <View className="absolute bottom-0 left-0 right-0 px-5 pb-5 gap-2">

@@ -46,27 +46,28 @@ export default function CosmicResultBackCard({ result, nickname }: Props) {
         colors={['#5032D5', '#8743ED']}
         style={{ width: '100%', aspectRatio: 350 / 520 }}
       >
-        {/* 닉네임 + 유형명 */}
-        <View className="items-center gap-1" style={{ marginTop: '5.4%', paddingHorizontal: '9%' }}>
-          <Text className="text-base font-medium text-white text-center" style={{ lineHeight: 22.4 }}>
-            {nickname} 님은
-          </Text>
-          <Text className="text-xl font-bold text-white text-center" style={{ lineHeight: 28 }}>
-            {result.cosmic_type.label}
-          </Text>
-        </View>
+        {/* 콘텐츠 영역 - 세로 중앙 배치 */}
+        <View className="flex-1 justify-center" style={{ paddingVertical: '6%' }}>
+          {/* 닉네임 + 유형명 */}
+          <View className="items-center gap-1" style={{ paddingHorizontal: '9%' }}>
+            <Text className="text-base font-medium text-white text-center" style={{ lineHeight: 22.4 }}>
+              {nickname} 님은
+            </Text>
+            <Text className="text-xl font-bold text-white text-center" style={{ lineHeight: 28 }}>
+              {result.cosmic_type.label}
+            </Text>
+          </View>
 
-        {/* 내부 콘텐츠 패널 */}
-        <View
-          className="rounded-xl overflow-hidden"
-          style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.08)',
-            flex: 1,
-            marginHorizontal: '5.7%',
-            marginTop: '3%',
-            padding: '5.7%',
-          }}
-        >
+          {/* 내부 콘텐츠 패널 */}
+          <View
+            className="rounded-xl overflow-hidden"
+            style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.08)',
+              marginHorizontal: '5.7%',
+              marginTop: '3%',
+              padding: '5.7%',
+            }}
+          >
           {/* 연애 스타일 */}
           <View className="gap-1">
             <Text className="text-base font-semibold text-white" style={{ lineHeight: 22.4 }}>
@@ -138,6 +139,7 @@ export default function CosmicResultBackCard({ result, nickname }: Props) {
               })}
             </View>
           </View>
+        </View>
         </View>
       </ProfileCardGradientBackground>
     </View>
