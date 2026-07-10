@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Header, Layout, AlertModal, ArrowIcon } from '@/shared/ui';
 import { RegisterFormView, useRegisterFormStore } from '@/features/register';
@@ -19,7 +19,7 @@ import type { NavigationPropType } from '@/shared/types';
  */
 export default function RegisterPage() {
   const navigation = useNavigation<NavigationPropType>();
-  const { currentStep, prevStep, isDirty, reset } = useRegisterFormStore();
+  const { currentStep, prevStep, nextStep, isDirty, reset } = useRegisterFormStore();
   const [showExitModal, setShowExitModal] = useState(false);
 
   /** 뒤로가기 핸들러 */
@@ -47,6 +47,13 @@ export default function RegisterPage() {
           <TouchableOpacity onPress={handleBack}>
             <ArrowIcon direction="left" />
           </TouchableOpacity>
+        }
+        right={
+          (currentStep === 3 || currentStep === 4) ? (
+            <TouchableOpacity onPress={nextStep} hitSlop={8}>
+              <Text className="text-sm font-medium text-text-gray4">건너뛰기</Text>
+            </TouchableOpacity>
+          ) : undefined
         }
       />
       <Layout.Body styleClass={{ root: 'bg-white' }}>
