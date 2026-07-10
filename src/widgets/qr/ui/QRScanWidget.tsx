@@ -64,11 +64,12 @@ export default function QRScanWidget() {
     });
   }, [startExchange, navigation]);
 
-  /** 철회하기 → 홈으로 이동 */
+  /** 철회하기 → 교환 상태 초기화 후 QR 스캔 화면으로 복귀 */
   const handleCancel = useCallback(() => {
     cancelExchange();
-    navigation.navigate('home');
-  }, [cancelExchange, navigation]);
+    isScanned.current = false;
+    setCameraKey((prev) => prev + 1);
+  }, [cancelExchange]);
 
   /** 닫기 → 이전 화면으로 이동 */
   const handleClose = useCallback(() => {
@@ -128,10 +129,11 @@ export default function QRScanWidget() {
       <ExchangePreviewModal
         visible={step === ExchangeFlowStep.PREVIEW}
         onExchange={handleStartExchange}
+        onCancel={handleCancel}
       />
 
       {/* 로딩 모달 */}
-      <ExchangeLoadingModal visible={step === ExchangeFlowStep.LOADING} />
+      <ExchangeLoadingModal visible={step === ExchangeFlowStep.LOADING} onCancel={handleCancel} />
     </View>
   );
 }

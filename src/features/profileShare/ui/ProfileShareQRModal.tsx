@@ -79,6 +79,23 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
   }, [onClose]);
 
   /**
+   * # handleDecline
+   * ---
+   * - 간단설명: 교환 거절 시 서버에 decline API 호출 후 모달 닫기
+   * ---
+   */
+  const handleDecline = useCallback(async () => {
+    if (receivedProfile?.id) {
+      try {
+        await ExchangeAPI.decline(receivedProfile.id);
+      } catch (err) {
+        console.error('[Exchange] decline 실패:', err);
+      }
+    }
+    handleClose();
+  }, [receivedProfile, handleClose]);
+
+  /**
    * 모달 열릴 때 exchange/wait 호출, 닫힐 때 취소
    * TODO: 여기 추후 리팩토링
    */
@@ -208,7 +225,7 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
 
               <View className="mt-5 flex-row gap-3">
                 <View className="flex-1">
-                  <Button title="거절하기" variant="secondary" onPress={handleClose} />
+                  <Button title="거절하기" variant="secondary" onPress={handleDecline} />
                 </View>
                 <View className="flex-1">
                   {modalStep === 'ACCEPTING' ? (

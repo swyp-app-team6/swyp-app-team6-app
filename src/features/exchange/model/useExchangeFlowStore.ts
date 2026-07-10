@@ -1,12 +1,11 @@
 import { create } from 'zustand';
-import { Alert } from 'react-native';
 import type { AxiosError } from 'axios';
 import type { MyProfileResponse } from '@/entities/user';
 import { ProfileAPI } from '@/entities/user';
 import { ExchangeAPI } from '@/entities/exchange';
 import type { ExchangeResult } from '@/entities/exchange';
 import { ExchangeFlowStep } from '@/shared/enums';
-import { openErrorDialog } from '@/shared/ui';
+import { openDialog, openErrorDialog } from '@/shared/ui';
 
 interface ExchangeFlowState {
   /** 현재 교환 플로우 단계 */
@@ -90,7 +89,7 @@ const useExchangeFlowStore = create<ExchangeFlowState>((set, get) => ({
     } catch (err) {
       console.error('[Exchange] onScanComplete 실패:', err);
       const message = getErrorMessage(err as AxiosError);
-      Alert.alert('프로필 교환', message);
+      openDialog({ title: '프로필 교환', message });
       set({ error: message, step: ExchangeFlowStep.IDLE });
     }
   },
@@ -120,9 +119,9 @@ const useExchangeFlowStore = create<ExchangeFlowState>((set, get) => ({
       } else {
         const declineMsg = '상대방이 교환을 거절했습니다';
         console.error('[Exchange] startExchange 거절:', declineMsg);
-        Alert.alert('프로필 교환', declineMsg);
+        openDialog({ title: '프로필 교환', message: declineMsg });
         set({
-          step: ExchangeFlowStep.DECLINED,
+          step: ExchangeFlowStep.IDLE,
           error: declineMsg,
           _abortController: null,
         });
@@ -132,12 +131,8 @@ const useExchangeFlowStore = create<ExchangeFlowState>((set, get) => ({
       console.error('[Exchange] startExchange 실패:', err);
       const axiosErr = err as AxiosError;
       const message = getErrorMessage(axiosErr);
-      Alert.alert('프로필 교환', message);
-      const nextStep =
-        axiosErr.response?.status === 408
-          ? ExchangeFlowStep.TIMEOUT
-          : ExchangeFlowStep.IDLE;
-      set({ error: message, step: nextStep, _abortController: null });
+      openDialog({ title: '프로필 교환', message });
+      set({ error: message, step: ExchangeFlowStep.IDLE, _abortController: null });
     }
   },
 

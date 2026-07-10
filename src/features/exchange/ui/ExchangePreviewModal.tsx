@@ -10,6 +10,8 @@ interface Props {
   visible: boolean;
   /** 교환하기 콜백 */
   onExchange: () => void;
+  /** 취소하기 콜백 */
+  onCancel: () => void;
 }
 
 /**
@@ -18,15 +20,16 @@ interface Props {
  * - 간단설명: 상대에게 보이는 내 프로필 카드를 미리보기하는 전체 화면 모달
  * - 제약사항 및 특이사항:
  *   - 실제 프로필 데이터로 내 프로필 카드 표시
- *   - 하단 '교환하기' CTA로 교환 진행
+ *   - 하단 '취소하기' / '교환하기' CTA로 교환 진행 또는 취소
  * ---
  * @param visible 모달 표시 여부
  * @param onExchange 교환하기 콜백
+ * @param onCancel 취소하기 콜백
  * ---
  * @example
- * <ExchangePreviewModal visible={true} onExchange={handleExchange} />
+ * <ExchangePreviewModal visible={true} onExchange={handleExchange} onCancel={handleCancel} />
  */
-export default function ExchangePreviewModal({ visible, onExchange }: Props) {
+export default function ExchangePreviewModal({ visible, onExchange, onCancel }: Props) {
   const { data: profile, isLoading } = useMyProfileQuery();
 
   return (
@@ -59,9 +62,14 @@ export default function ExchangePreviewModal({ visible, onExchange }: Props) {
             )}
           </View>
 
-          {/* 교환하기 CTA */}
-          <View className="mt-5">
-            <Button title="교환하기" variant="primary" onPress={onExchange} />
+          {/* 취소하기 / 교환하기 CTA */}
+          <View className="mt-5 flex-row gap-3">
+            <View className="flex-1">
+              <Button title="취소하기" variant="secondary" onPress={onCancel} />
+            </View>
+            <View className="flex-1">
+              <Button title="교환하기" variant="primary" onPress={onExchange} />
+            </View>
           </View>
         </Pressable>
       </Pressable>
