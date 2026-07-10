@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useRef } from 'react';
 import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { Accordion, BottomCTA, Button, PopoverMenu, ProfileActionIcon, ReportIcon, BlockUserIcon, Badge, InterestTag } from '@/shared/ui';
+import Svg, { Path } from 'react-native-svg';
 import ProfileCardContainer from '@/shared/ui/ProfileCard/ProfileCardContainer';
 import type { PopoverMenuItem } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
@@ -218,7 +219,15 @@ export default function ExchangedProfileView({
 
               {/* 차단 오버레이 (카드 내부) */}
               {isBlocked ? (
-                <View className="absolute w-full h-full items-center justify-center bg-black/40 z-10">
+                <View className="absolute w-full h-full items-center justify-center bg-black/40 z-10 gap-2">
+                  <Svg width={40} height={40} viewBox="0 0 40 40" fill="none">
+                    <Path
+                      d="M34 32.5L9 7.5M17 17.4026C16.3776 18.0888 16 18.9901 16 19.9772C16 22.1268 17.7909 23.8694 20 23.8694C21.0186 23.8694 21.9482 23.499 22.6544 22.889M34.0647 23.8694C35.4417 21.808 36 20.1269 36 20.1269C36 20.1269 32.359 8.5 20 8.5C19.3062 8.5 18.6398 8.53665 18 8.60582M29 28.9157C26.7043 30.3802 23.7489 31.4159 20 31.3546C7.79487 31.155 4 20.1269 4 20.1269C4 20.1269 5.76309 14.4968 11 11.0722"
+                      stroke="white"
+                      strokeWidth={2.34375}
+                      strokeLinecap="round"
+                    />
+                  </Svg>
                   <Text className="text-base font-medium text-white">
                     차단된 프로필입니다
                   </Text>
