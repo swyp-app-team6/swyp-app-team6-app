@@ -133,7 +133,7 @@ export default function StorageAllWidget() {
             onError: () => {
               openDialog({
                 type: 'alert',
-                message: '삭제에 실패했습니다',
+                message: '삭제 도중 문제가 발생하였습니다.',
               });
             },
           },
