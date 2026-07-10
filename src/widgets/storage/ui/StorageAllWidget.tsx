@@ -130,6 +130,13 @@ export default function StorageAllWidget() {
                 title: '선택한 프로필을 삭제했습니다',
               });
             },
+            onError: () => {
+              openDialog({
+                type: 'alert',
+                title: '삭제에 실패했습니다',
+                message: '잠시 후 다시 시도해주세요.',
+              });
+            },
           },
         );
       },
