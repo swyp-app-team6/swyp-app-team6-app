@@ -56,7 +56,7 @@ export default function FavTag({
       accessibilityRole="button"
       accessibilityState={{ selected }}
       className={cn(
-        'h-[52px] items-center justify-center rounded-xl px-4',
+        'h-[52px] justify-center rounded-xl px-4',
         selected ? 'bg-text-gray2' : 'bg-text-gray7',
         disabled ? 'opacity-50' : '',
         styleClass?.root,

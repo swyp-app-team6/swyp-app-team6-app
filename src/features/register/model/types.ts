@@ -144,17 +144,17 @@ export function tmiKey(answerKind: 'CHOICE' | 'TEXT', questionId: number): strin
  */
 export const INTEREST_EMOJI: Record<string, string> = {
   [INTEREST.TRAVEL]: '✈️',
-  [INTEREST.SPORTS]: '🏃',
+  [INTEREST.SPORTS]: '⚽',
   [INTEREST.MUSIC]: '🎵',
-  [INTEREST.VIDEO]: '📹',
+  [INTEREST.VIDEO]: '📱',
   [INTEREST.RESTAURANT]: '🍽️',
-  [INTEREST.CAFE]: '☕',
+  [INTEREST.CAFE]: '☕️',
   [INTEREST.CULTURE]: '🎭',
   [INTEREST.READING]: '📚',
   [INTEREST.GAME]: '🎮',
-  [INTEREST.SELF_DEVELOPMENT]: '📝',
+  [INTEREST.SELF_DEVELOPMENT]: '✏️',
   [INTEREST.INVESTING]: '💰',
-  [INTEREST.MOVIE]: '🎬',
+  [INTEREST.MOVIE]: '🍿',
 };
 
 
