@@ -173,7 +173,7 @@ const useRegisterFormStore = create<RegisterFormStore>()(
 
     /**
      * 2단계 유효성 검사 (나이, 직무분야, 활동 지역)
-     * - 나이: 입력 필수
+     * - 나이: 입력 필수, 만 14세 이상
      * - 직무분야: 입력 필수
      * - 활동 지역: 선택 필수
      */
@@ -181,6 +181,7 @@ const useRegisterFormStore = create<RegisterFormStore>()(
       const { form } = get();
       return (
         form.age.length > 0 &&
+        Number(form.age) >= 14 &&
         form.jobField.length > 0 &&
         form.region.length > 0
       );

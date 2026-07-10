@@ -69,6 +69,11 @@ export default function Step2DetailInfoView() {
             onChangeText={handleAgeChange}
             keyboardType="number-pad"
           />
+          {form.age.length > 0 && Number(form.age) < 14 && (
+            <Text className="text-red-500 text-sm mt-1">
+              만 14세 미만은 등록할 수 없습니다.
+            </Text>
+          )}
         </View>
 
         {/* 직무분야 */}
