@@ -16,6 +16,8 @@ const REPORT_TYPE_OPTIONS: { label: string; value: ReportReasonCode }[] = [
 ];
 
 interface Props {
+  /** 신고 대상 닉네임 */
+  nickname: string;
   /** 신고 제출 시 호출되는 콜백 */
   onSubmit: (reasonCodes: ReportReasonCode[], etcDetail?: string) => void;
 }
@@ -38,7 +40,7 @@ interface Props {
  * ```
  */
 const ReportBottomSheet = forwardRef<BottomSheetHandle, Props>(
-  ({ onSubmit }, ref) => {
+  ({ nickname, onSubmit }, ref) => {
     const modalRef = useRef<BottomSheetModal>(null);
     const [selectedTypes, setSelectedTypes] = useState<ReportReasonCode[]>([]);
     const [otherText, setOtherText] = useState('');
@@ -76,24 +78,10 @@ const ReportBottomSheet = forwardRef<BottomSheetHandle, Props>(
 
     return (
       <SafeBottomSheetModal ref={modalRef}>
-        {/* 닫기 버튼 */}
-        <View className="flex-row justify-end px-5 pt-1 pb-1">
-          <Pressable
-            onPress={() => modalRef.current?.dismiss()}
-            hitSlop={8}
-            accessibilityLabel="닫기"
-          >
-            <Text className="text-2xl text-gray-400">✕</Text>
-          </Pressable>
-        </View>
-
         {/* 타이틀 */}
         <View className="px-5 mb-4">
           <Text className="text-xl font-bold text-[#1A1A1A] leading-7">
-            신고하기
-          </Text>
-          <Text className="text-sm text-[#888888] mt-1">
-            신고 사유를 선택해주세요
+            {nickname} 님 신고하기
           </Text>
         </View>
 
@@ -102,29 +90,23 @@ const ReportBottomSheet = forwardRef<BottomSheetHandle, Props>(
           {REPORT_TYPE_OPTIONS.map((option) => {
             const isChecked = selectedTypes.includes(option.value);
             return (
-              <View
+              <Pressable
                 key={option.value}
-                className="flex-row items-center gap-3 py-3 px-4 rounded-xl"
-                style={{
-                  backgroundColor: isChecked ? '#F5EDFF' : '#F8F8F8',
-                  borderWidth: 1,
-                  borderColor: isChecked ? '#8C39FB' : '#E3E3E3',
-                }}
+                className="flex-row items-center gap-1 h-[52px] px-4 rounded-xl"
+                style={{ backgroundColor: '#F5F5F5' }}
+                onPress={() => toggleType(option.value)}
               >
                 <Checkbox
                   checked={isChecked}
                   onValueChange={() => toggleType(option.value)}
                 />
                 <Text
-                  className="text-base"
-                  style={{
-                    color: isChecked ? '#8C39FB' : '#4E4E4E',
-                    fontWeight: isChecked ? '600' : '400',
-                  }}
+                  className="flex-1 text-sm font-medium"
+                  style={{ color: '#888888' }}
                 >
                   {option.label}
                 </Text>
-              </View>
+              </Pressable>
             );
           })}
         </View>

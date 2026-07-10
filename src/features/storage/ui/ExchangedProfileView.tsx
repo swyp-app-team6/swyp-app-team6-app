@@ -86,7 +86,8 @@ export default function ExchangedProfileView({
           onSuccess: () => {
             openDialog({
               type: 'alert',
-              title: '차단이 완료되었습니다',
+              title: '차단이 완료되었습니다.',
+              message: '더 이상 서로의 프로필이\n보이지 않아요.',
             });
           },
           onError: () => {
@@ -337,7 +338,7 @@ export default function ExchangedProfileView({
         </BottomCTA>
       )}
 
-      <ReportBottomSheet ref={reportRef} onSubmit={handleReport} />
+      <ReportBottomSheet ref={reportRef} nickname={profile.nickname} onSubmit={handleReport} />
     </View>
   );
 }
