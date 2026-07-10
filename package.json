@@ -20,7 +20,7 @@
     "test:e2e:android": "detox test --configuration android.emu.debug",
     "fsd:mkdir": "mkdir -p ./{model, ui, api, lib, types}  && touch ./index.tsx",
     "android:apk": "ENVFILE=.env.production sh -c 'cd android && ./gradlew assembleRelease' && open android/app/build/outputs/apk/release",
-    "android:abb": "ENVFILE=.env.production && cd android && ENVFILE=.env.production ./gradlew bundleRelease",
+    "android:abb": "ENVFILE=.env.production sh -c 'cd android && ./gradlew bundleRelease' && open android/app/build/outputs/bundle/release",
     "prepare": "husky"
   },
   "dependencies": {
