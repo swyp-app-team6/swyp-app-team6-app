@@ -6,7 +6,6 @@ import UserProfileCard from '@/shared/ui/ProfileCard/UserProfileCard';
 import EmptyProfileCard from '@/shared/ui/ProfileCard/EmptyProfileCard';
 import ProfileFlipWrapper from '@/shared/ui/ProfileCard/ProfileFlipWrapper';
 import { ProfileShareQRModal } from '@/features/profileShare';
-import { getInterestLabel } from '@/features/register';
 import { useMyProfileQuery } from '@/entities/user';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 import { apiValueToCosmicType } from '@/entities/storage';
@@ -50,7 +49,7 @@ export default function HomeWidget() {
         profileImageUri={getProfileImageUrl(profile.image_key)}
         nickname={profile.nickname}
         age={String(profile.age)}
-        interests={profile.interests.map((i) => getInterestLabel(i.type))}
+        interests={profile.interests.map((i) => i.label)}
         badgeLevel={profile.cosmic_type ? apiValueToCosmicType(profile.cosmic_type) : undefined}
         onPress={() => navigation.navigate('profileDetail')}
         topRightSlot={

@@ -2,32 +2,32 @@
  * 관심사 목록
  * - 프로필 등록: 관심사 선택 시 선택할수있는 관심사 유형
  * - TRAVEL = 여행
- * - SPORTS = 스포츠
+ * - SPORTS = 운동
  * - MUSIC = 음악
- * - VIDEO = 영상
- * - RESTAURANT = 맛집
- * - CAFE = 카페
- * - CULTURE = 문화
+ * - VIDEO = 유튜브
+ * - RESTAURANT = 맛집탐방
+ * - CAFE = 카페투어
+ * - CULTURE = 문화생활
  * - READING = 독서
  * - GAME = 게임
  * - SELF_DEVELOPMENT = 자기계발
- * - INVESTING = 투자
- * - MOVIE = 영화
+ * - INVESTING = 재테크
+ * - MOVIE = 영화감상
  */
 export enum INTEREST {
   /** 여행 */
   TRAVEL = 'TRAVEL',
-  /** 스포츠 */
+  /** 운동 */
   SPORTS = 'SPORTS',
   /** 음악 */
   MUSIC = 'MUSIC',
-  /** 영상 */
+  /** 유튜브 */
   VIDEO = 'VIDEO',
-  /** 맛집 */
+  /** 맛집탐방 */
   RESTAURANT = 'RESTAURANT',
-  /** 카페 */
+  /** 카페투어 */
   CAFE = 'CAFE',
-  /** 문화 */
+  /** 문화생활 */
   CULTURE = 'CULTURE',
   /** 독서 */
   READING = 'READING',
@@ -35,9 +35,9 @@ export enum INTEREST {
   GAME = 'GAME',
   /** 자기계발 */
   SELF_DEVELOPMENT = 'SELF_DEVELOPMENT',
-  /** 투자 */
+  /** 재테크 */
   INVESTING = 'INVESTING',
-  /** 영화 */
+  /** 영화감상 */
   MOVIE = 'MOVIE',
 }
 

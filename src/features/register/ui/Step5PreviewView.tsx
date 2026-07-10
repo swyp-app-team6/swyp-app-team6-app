@@ -3,7 +3,7 @@ import { View, Text, ScrollView, Pressable } from 'react-native';
 import { BottomCTA, Button } from '@/shared/ui';
 import UserProfileCard from '@/shared/ui/ProfileCard/UserProfileCard';
 import useRegisterFormStore from '../model/useRegisterFormStore';
-import { getInterestLabel, REGION_OPTIONS } from '../model/types';
+import { INTEREST_LABEL, REGION_OPTIONS } from '../model/types';
 import { resolveRegionEnum, getRegionLabel } from '@/shared/lib/regionLabel';
 import BasicInfoSection from './BasicInfoSection';
 import InterestsSection from './InterestsSection';
@@ -56,7 +56,7 @@ export default function Step5PreviewView({ mode = 'register', onSubmit, loading 
           <UserProfileCard
             profileImageUri={form.profileImageUri}
             nickname={form.nickname}
-            interests={form.interests.map((i) => getInterestLabel(i))}
+            interests={form.interests.map((i) => INTEREST_LABEL[i] ?? i)}
           />
         </View>
 

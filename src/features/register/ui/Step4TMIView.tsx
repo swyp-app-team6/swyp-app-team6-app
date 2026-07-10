@@ -155,6 +155,23 @@ export default function Step4TMIView() {
     }));
   }, [form.tmiAnswers]);
 
+  /** 미리보기에서 TMI 질문 탭 시 답변 바텀시트로 이동 */
+  const handlePreviewItemPress = (item: (typeof selectedTMIList)[number]) => {
+    const original = allQuestions.find(
+      (q) => q.id === item.questionId && q.answerType === item.answerKind,
+    );
+    if (!original) return;
+    previewSheetRef.current?.close();
+    setActiveQuestion(original);
+    setTextInput(original.answerType === 'TEXT' ? item.answer : '');
+    setChoiceInput(
+      original.answerType === 'CHOICE' && original.answers
+        ? original.answers.find((a) => a.content === item.answer) ?? null
+        : null,
+    );
+    setTimeout(() => sheetRef.current?.open(), 300);
+  };
+
   if (isLoading) {
     return (
       <View className="flex-1 items-center justify-center">
@@ -353,6 +370,7 @@ export default function Step4TMIView() {
               question={item.question}
               answer={item.answer}
               selected
+              onPress={() => handlePreviewItemPress(item)}
             />
           ))}
         </View>

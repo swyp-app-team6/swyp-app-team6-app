@@ -1,7 +1,6 @@
 import React from 'react';
 import { ActivityIndicator, Modal as RNModal, Pressable, Text, View } from 'react-native';
 import { Button, ProfileCard } from '@/shared/ui';
-import { getInterestLabel } from '@/features/register';
 import { useMyProfileQuery } from '@/entities/user';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 
@@ -57,7 +56,7 @@ export default function ExchangePreviewModal({ visible, onExchange, onCancel }: 
                 profileImageUri={getProfileImageUrl(profile?.image_key)}
                 nickname={profile?.nickname}
                 age={profile ? String(profile.age) : undefined}
-                interests={profile?.interests.map((i) => getInterestLabel(i.type)) ?? []}
+                interests={profile?.interests.map((i) => i.label) ?? []}
               />
             )}
           </View>

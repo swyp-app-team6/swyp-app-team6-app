@@ -6,7 +6,6 @@ import ProfileCardContainer from '@/shared/ui/ProfileCard/ProfileCardContainer';
 import type { PopoverMenuItem } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
 import { openDialog } from '@/shared/ui/Dialog';
-import { getInterestLabel } from '@/features/register';
 import { useExchangeArchiveDetailQuery, apiValueToCosmicType } from '@/entities/storage';
 import type { ReportReasonCode, ReviewScore } from '@/entities/storage';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
@@ -263,7 +262,7 @@ export default function ExchangedProfileView({
                     {profile.interests.length > 0 && (
                       <View className="flex-row flex-wrap gap-1">
                         {profile.interests.map((i) => (
-                          <InterestTag key={i.type} label={getInterestLabel(i.type)} variant="overlay" />
+                          <InterestTag key={i.type} label={i.label} variant="overlay" />
                         ))}
                       </View>
                     )}

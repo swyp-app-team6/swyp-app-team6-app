@@ -2,7 +2,7 @@ import React from 'react';
 import { Image, Text, View } from 'react-native';
 import { InterestTag } from '@/shared/ui';
 import ProfileCardGradientBackground from '@/shared/ui/ProfileCard/ProfileCardGradientBackground';
-import { getInterestLabel } from '@/features/register';
+import { INTEREST_LABEL } from '@/features/register';
 import ProfileCardContainer from '../../shared/ui/ProfileCard/ProfileCardContainer';
 
 const profileCommonFound = require('@/assets/characters/profile-common-found.png');
@@ -66,7 +66,7 @@ export default function CommonInterestCard({
             {/* 관심사 태그 */}
             <View className="mt-2 flex-row flex-wrap justify-center gap-2">
               {interests.map((interest) => (
-                <InterestTag key={interest} label={getInterestLabel(interest)} variant="overlay" />
+                <InterestTag key={interest} label={INTEREST_LABEL[interest] ?? interest} variant="overlay" />
               ))}
             </View>
 

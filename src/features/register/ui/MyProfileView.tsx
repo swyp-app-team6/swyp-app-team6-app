@@ -2,7 +2,7 @@ import React, { useState, useRef, useMemo } from 'react';
 import { View, ScrollView } from 'react-native';
 import { BottomCTA, Button, ProfileCard } from '@/shared/ui';
 import { useProfileDataStore } from '@/entities/user';
-import { getInterestLabel, REGION_OPTIONS } from '../model/types';
+import { INTEREST_LABEL, REGION_OPTIONS } from '../model/types';
 import { resolveRegionEnum, getRegionLabel } from '@/shared/lib/regionLabel';
 import ProfileTabBar, { type TabType } from './ProfileTabBar';
 import BasicInfoSection from './BasicInfoSection';
@@ -63,7 +63,7 @@ export default function MyProfileView({ onSubmit, loading }: Props) {
             profileImageUri={form.profileImageUri}
             nickname={form.nickname}
             age={form.age}
-            interests={form.interests.map((i) => getInterestLabel(i))}
+            interests={form.interests.map((i) => INTEREST_LABEL[i] ?? i)}
           />
         </View>
 

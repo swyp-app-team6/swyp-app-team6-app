@@ -8,7 +8,6 @@ import { ProfileAPI } from '@/entities/user';
 import type { MyProfileResponse } from '@/entities/user';
 import { ExchangeAPI } from '@/entities/exchange';
 import { useExchangeFlowStore } from '@/features/exchange';
-import { getInterestLabel } from '@/features/register';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 import { ExchangeFlowStep } from '@/shared/enums';
 import type { NavigationPropType } from '@/shared/types';
@@ -219,7 +218,7 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
                   profileImageUri={getProfileImageUrl(receivedProfile.image_key)}
                   nickname={receivedProfile.nickname}
                   age={String(receivedProfile.age)}
-                  interests={receivedProfile.interests.map((i) => getInterestLabel(i.type))}
+                  interests={receivedProfile.interests.map((i) => i.label)}
                 />
               </View>
 

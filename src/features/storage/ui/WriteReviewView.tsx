@@ -6,7 +6,6 @@ import { ChevronDownIcon } from '@/shared/ui/icons';
 import { useExchangeFlowStore } from '@/features/exchange';
 import UserProfileCard from '@/shared/ui/ProfileCard/UserProfileCard';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
-import { getInterestLabel } from '@/features/register';
 import type { ReviewScore } from '@/entities/storage';
 
 /** 만남 후기 만족도 옵션 (value = API score 1-4) */
@@ -74,7 +73,7 @@ export default function WriteReviewView({
               profileImageUri={getProfileImageUrl(scannedProfile.image_key)}
               nickname={scannedProfile.nickname}
               age={String(scannedProfile.age)}
-              interests={scannedProfile.interests.map((i) => getInterestLabel(i.type))}
+              interests={scannedProfile.interests.map((i) => i.label)}
             />
           </View>
         )}

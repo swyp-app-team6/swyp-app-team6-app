@@ -86,12 +86,23 @@ export const REGION_SUB_AREAS: Record<string, string[]> = {
 };
 
 /**
- * INTEREST 값을 한국어 라벨로 변환
- * @param value INTEREST enum 값
+ * INTEREST enum → 한국어 라벨 매핑
+ * - API 응답 기준 라벨
  */
-export function getInterestLabel(value: string): string {
-  return INTEREST_OPTIONS.find((o) => o.value === value)?.label ?? value;
-}
+export const INTEREST_LABEL: Record<string, string> = {
+  [INTEREST.TRAVEL]: '여행',
+  [INTEREST.SPORTS]: '운동',
+  [INTEREST.MUSIC]: '음악',
+  [INTEREST.VIDEO]: '유튜브',
+  [INTEREST.RESTAURANT]: '맛집탐방',
+  [INTEREST.CAFE]: '카페투어',
+  [INTEREST.CULTURE]: '문화생활',
+  [INTEREST.READING]: '독서',
+  [INTEREST.GAME]: '게임',
+  [INTEREST.SELF_DEVELOPMENT]: '자기계발',
+  [INTEREST.INVESTING]: '재테크',
+  [INTEREST.MOVIE]: '영화감상',
+};
 
 /**
  * TMI 카테고리 필터 타입
@@ -127,24 +138,25 @@ export function tmiKey(answerKind: 'CHOICE' | 'TEXT', questionId: number): strin
 }
 
 /**
- * 관심사 옵션 목록 (PRD 12개)
- * - value: API에 전송하는 INTEREST 값
- * - label: 화면에 표시하는 한국어 라벨
+ * 관심사별 이모지 매핑
+ * - key: INTEREST enum 값
+ * - value: 화면에 표시하는 이모지
  */
-export const INTEREST_OPTIONS: { value: INTEREST; label: string; emoji: string }[] = [
-  { value: INTEREST.TRAVEL, label: '여행', emoji: '✈️' },
-  { value: INTEREST.SPORTS, label: '스포츠', emoji: '🏃' },
-  { value: INTEREST.MUSIC, label: '음악', emoji: '🎵' },
-  { value: INTEREST.VIDEO, label: '영상', emoji: '📹' },
-  { value: INTEREST.RESTAURANT, label: '맛집', emoji: '🍽️' },
-  { value: INTEREST.CAFE, label: '카페', emoji: '☕' },
-  { value: INTEREST.CULTURE, label: '문화', emoji: '🎭' },
-  { value: INTEREST.READING, label: '독서', emoji: '📚' },
-  { value: INTEREST.GAME, label: '게임', emoji: '🎮' },
-  { value: INTEREST.SELF_DEVELOPMENT, label: '자기계발', emoji: '📝' },
-  { value: INTEREST.INVESTING, label: '투자', emoji: '💰' },
-  { value: INTEREST.MOVIE, label: '영화', emoji: '🎬' },
-];
+export const INTEREST_EMOJI: Record<string, string> = {
+  [INTEREST.TRAVEL]: '✈️',
+  [INTEREST.SPORTS]: '🏃',
+  [INTEREST.MUSIC]: '🎵',
+  [INTEREST.VIDEO]: '📹',
+  [INTEREST.RESTAURANT]: '🍽️',
+  [INTEREST.CAFE]: '☕',
+  [INTEREST.CULTURE]: '🎭',
+  [INTEREST.READING]: '📚',
+  [INTEREST.GAME]: '🎮',
+  [INTEREST.SELF_DEVELOPMENT]: '📝',
+  [INTEREST.INVESTING]: '💰',
+  [INTEREST.MOVIE]: '🎬',
+};
+
 
 /**
  * # profileToFormState
