@@ -76,7 +76,7 @@ function UserProfileCard({
 
       {/* 상단: 유형 배지 + 우측 슬롯 */}
       <View className="absolute top-5 left-5 right-5 flex-row items-center justify-between">
-        {badgeLevel && <Badge level={badgeLevel} />}
+        <View>{badgeLevel && <Badge level={badgeLevel} />}</View>
         {topRightSlot}
       </View>
 
