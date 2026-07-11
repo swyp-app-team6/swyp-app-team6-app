@@ -18,6 +18,8 @@ export type WaitModalStep = 'QR' | 'PREVIEW' | 'ACCEPTING';
 interface UseExchangeWaitOptions {
   /** wait 504 타임아웃 시 호출되는 콜백 (QR 재발급 등) */
   onWaitTimeout?: () => void;
+  /** 409 등 복구 불가 에러 시 모달/UI 강제 닫기 콜백 */
+  onForceClose?: () => void;
 }
 
 interface UseExchangeWaitReturn {
@@ -55,6 +57,7 @@ interface UseExchangeWaitReturn {
  */
 export default function useExchangeWait(options?: UseExchangeWaitOptions): UseExchangeWaitReturn {
   const onWaitTimeout = options?.onWaitTimeout;
+  const onForceClose = options?.onForceClose;
   const abortRef = useRef<AbortController | null>(null);
   const [receivedProfile, setReceivedProfile] = useState<MyProfileResponse | null>(null);
   const [modalStep, setModalStep] = useState<WaitModalStep>('QR');
@@ -72,6 +75,10 @@ export default function useExchangeWait(options?: UseExchangeWaitOptions): UseEx
   /** onWaitTimeout ref — useCallback 재생성 방지 */
   const onWaitTimeoutRef = useRef(onWaitTimeout);
   onWaitTimeoutRef.current = onWaitTimeout;
+
+  /** onForceClose ref — useCallback 재생성 방지 */
+  const onForceCloseRef = useRef(onForceClose);
+  onForceCloseRef.current = onForceClose;
 
   /**
    * # startWait
@@ -104,7 +111,12 @@ export default function useExchangeWait(options?: UseExchangeWaitOptions): UseEx
           if (ctrl.signal.aborted) return;
           console.error('[Exchange] wait 실패:', err);
           const status = (err as AxiosError)?.response?.status;
-          if (status === 504) {
+          if (status === 409) {
+            // 409: 상대방이 교환 대기 중이 아님 — 교환 중단 + 모달 닫기
+            openErrorDialog({ title: '프로필 교환', message: '상대방이 교환 대기 중이 아닙니다' });
+            resetState();
+            onForceCloseRef.current?.();
+          } else if (status === 504) {
             // 504 타임아웃 시 QR 재발급 콜백 호출 + wait 자동 재시작
             onWaitTimeoutRef.current?.();
             const newController = new AbortController();
@@ -168,9 +180,15 @@ export default function useExchangeWait(options?: UseExchangeWaitOptions): UseEx
     } catch (err) {
       console.error('[Exchange] accept 실패:', err);
       const status = (err as AxiosError)?.response?.status;
-      if (status === 504) {
+      if (status === 409) {
+        // 409: 상대방이 교환 대기 중이 아님 — 교환 중단 + 모달 닫기
+        openErrorDialog({ title: '프로필 교환', message: '상대방이 교환 대기 중이 아닙니다' });
+        resetState();
+        onForceCloseRef.current?.();
+      } else if (status === 504) {
         openErrorDialog({ title: '프로필 교환', message: '교환 시간이 만료되었습니다. 다시 시도해 주세요' });
         resetState();
+        onForceCloseRef.current?.();
       } else {
         openErrorDialog({ title: '프로필 교환', message: '교환 수락 중 오류가 발생했습니다' });
         setModalStep('PREVIEW');

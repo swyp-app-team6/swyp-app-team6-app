@@ -38,7 +38,9 @@ export default function HomeWidget() {
     cancelWait,
     acceptExchange,
     declineExchange,
-  } = useExchangeWait();
+  } = useExchangeWait({
+    onForceClose: () => setQrVisible(false),
+  });
 
   /** QR 모달 열기 — wait가 활성 상태가 아니면 시작 */
   const handleOpenQR = useCallback(() => {
