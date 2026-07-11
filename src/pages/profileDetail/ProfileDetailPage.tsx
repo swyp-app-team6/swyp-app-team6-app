@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 import { Header, PopoverMenu, openDialog } from '@/shared/ui';
 import { ProfileActionIcon } from '@/shared/ui';
 import UserProfileCard from '@/shared/ui/ProfileCard/UserProfileCard';
-import { getInterestLabel } from '@/features/register';
 import { useDeleteProfileMutation, useMyProfileQuery } from '@/entities/user';
 import type { NavigationPropType } from '@/shared/types';
 import BasicInfoSection from '@/features/register/ui/BasicInfoSection';
@@ -84,7 +83,7 @@ export default function ProfileDetailPage() {
               { label: '삭제', destructive: true, onPress: handleDelete },
             ]}
           >
-            <View className="items-center justify-center">
+            <View className="w-10 h-10 items-center justify-center">
               <ProfileActionIcon size={12} color="#000000" orientation="vertical" />
             </View>
           </PopoverMenu>
@@ -97,7 +96,7 @@ export default function ProfileDetailPage() {
             profileImageUri={getProfileImageUrl(profile.image_key)}
             nickname={profile.nickname}
             age={String(profile.age)}
-            interests={interests.map((i) => getInterestLabel(i))}
+            interests={profile.interests.map((i) => i.label)}
             badgeLevel={profile.cosmic_type ? apiValueToCosmicType(profile.cosmic_type) : undefined}
           />
         </View>

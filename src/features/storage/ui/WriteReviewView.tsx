@@ -1,12 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { BottomCTA, Button, SafeBottomSheetModal, Textbox } from '@/shared/ui';
+import { BottomCTA, Button, Textbox } from '@/shared/ui';
 import { ChevronDownIcon } from '@/shared/ui/icons';
-import { useExchangeFlowStore } from '@/features/exchange';
 import UserProfileCard from '@/shared/ui/ProfileCard/UserProfileCard';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
-import { getInterestLabel } from '@/features/register';
+import { useExchangeArchiveDetailQuery } from '@/entities/storage';
 import type { ReviewScore } from '@/entities/storage';
 
 /** 만남 후기 만족도 옵션 (value = API score 1-4) */
@@ -31,7 +29,7 @@ interface Props {
  * ---
  * - 간단설명: 만남 후기 작성 폼 뷰 컴포넌트
  * - 제약사항 및 특이사항:
- *   - useExchangeFlowStore의 scannedProfile 데이터 사용
+ *   - useExchangeArchiveDetailQuery로 프로필 데이터 조회
  *   - 만족도 드롭다운 셀렉트
  *   - Textbox로 후기 내용 입력 (최대 300자)
  *   - 만족도 미선택 시 "등록하기" 버튼 비활성화
@@ -44,15 +42,16 @@ interface Props {
  * <WriteReviewView profileId={1} onSubmit={(rating, text) => submit(rating, text)} />
  */
 export default function WriteReviewView({
-  profileId: _profileId,
+  profileId,
   onSubmit,
   loading,
 }: Props) {
   const [selectedRating, setSelectedRating] = useState<ReviewScore | null>(null);
   const [reviewText, setReviewText] = useState('');
-  const ratingSheetRef = useRef<BottomSheetModal>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const scannedProfile = useExchangeFlowStore((s) => s.scannedProfile);
+  const { data: detail } = useExchangeArchiveDetailQuery(profileId);
+  const profile = detail?.profile;
 
   const selectedLabel = REVIEW_OPTIONS.find(
     (o) => o.value === selectedRating,
@@ -68,13 +67,13 @@ export default function WriteReviewView({
         keyboardShouldPersistTaps="handled"
       >
         {/* 프로필 카드 */}
-        {scannedProfile && (
+        {profile && (
           <View className="items-center pt-6 pb-6">
             <UserProfileCard
-              profileImageUri={getProfileImageUrl(scannedProfile.image_key)}
-              nickname={scannedProfile.nickname}
-              age={String(scannedProfile.age)}
-              interests={scannedProfile.interests.map((i) => getInterestLabel(i.type))}
+              profileImageUri={getProfileImageUrl(profile.image_key)}
+              nickname={profile.nickname}
+              age={String(profile.age)}
+              interests={profile.interests.map((i) => i.label)}
             />
           </View>
         )}
@@ -84,18 +83,56 @@ export default function WriteReviewView({
           <Text className="text-base font-medium text-[#18181B]">
             전체적인 만남은 어떠셨나요?
           </Text>
-          <Pressable
-            className="flex-row items-center justify-between p-4 bg-[#F5F5F5] rounded-xl"
-            onPress={() => ratingSheetRef.current?.present()}
+          <View
+            className="rounded-xl py-3"
+            style={{
+              backgroundColor: '#FFFFFF',
+              borderWidth: 1,
+              borderColor: '#E3E3E3',
+            }}
           >
-            <Text
-              className="flex-1 text-sm font-medium"
-              style={{ color: selectedLabel ? '#1A1A1A' : '#71717A' }}
+            {/* 셀렉트 트리거 */}
+            <Pressable
+              className="flex-row items-center justify-between mx-3 p-4 bg-[#F5F5F5] rounded-xl"
+              onPress={() => setIsDropdownOpen((prev) => !prev)}
             >
-              {selectedLabel ?? '만남은 어떠셨나요?'}
-            </Text>
-            <ChevronDownIcon size={24} color="#111111" />
-          </Pressable>
+              <Text
+                className="flex-1 text-sm font-medium"
+                style={{ color: selectedLabel ? '#1A1A1A' : '#888888' }}
+              >
+                {selectedLabel ?? '만남은 어떠셨나요?'}
+              </Text>
+              <ChevronDownIcon size={24} color="#111111" />
+            </Pressable>
+
+            {/* 드롭다운 옵션 목록 */}
+            {isDropdownOpen &&
+              REVIEW_OPTIONS.map((option) => {
+                const isSelected = selectedRating === option.value;
+                return (
+                  <Pressable
+                    key={option.value}
+                    className="px-6 py-4"
+                    style={{
+                      backgroundColor: isSelected ? '#F5EDFF' : '#FFFFFF',
+                    }}
+                    onPress={() => {
+                      setSelectedRating(option.value);
+                      setIsDropdownOpen(false);
+                    }}
+                  >
+                    <Text
+                      className="text-sm font-medium"
+                      style={{
+                        color: isSelected ? '#8C39FB' : '#1A1A1A',
+                      }}
+                    >
+                      {option.label}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+          </View>
         </View>
 
         {/* 메모 입력 */}
@@ -130,39 +167,6 @@ export default function WriteReviewView({
         />
       </BottomCTA>
 
-      {/* 만족도 선택 바텀시트 */}
-      <SafeBottomSheetModal ref={ratingSheetRef}>
-        <View className="px-5 pt-2 pb-2">
-          <Text className="text-lg font-bold text-[#1A1A1A]">
-            만남은 어떠셨나요?
-          </Text>
-        </View>
-        {REVIEW_OPTIONS.map((option) => {
-          const isSelected = selectedRating === option.value;
-          return (
-            <Pressable
-              key={option.value}
-              className="px-6 py-4"
-              style={{
-                backgroundColor: isSelected ? '#F5EDFF' : '#FFFFFF',
-              }}
-              onPress={() => {
-                setSelectedRating(option.value);
-                ratingSheetRef.current?.dismiss();
-              }}
-            >
-              <Text
-                className="text-sm font-medium"
-                style={{
-                  color: isSelected ? '#8C39FB' : '#18181B',
-                }}
-              >
-                {option.label}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </SafeBottomSheetModal>
     </View>
   );
 }

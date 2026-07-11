@@ -5,6 +5,7 @@ import type { ChoiceTemplate, ShortTemplate } from '@/entities/user';
 import { useUpdateProfileMutation } from '@/entities/user';
 import { resolveRegionEnum } from '@/shared/lib/regionLabel';
 import useRegisterFormStore from '../model/useRegisterFormStore';
+import useRegisterStepStore from '../model/useRegisterStepStore';
 import useRegisterMutation from '../api/useRegisterMutation';
 import type { RegisterFormState } from '../model/types';
 import Step1BasicInfoView from './Step1BasicInfoView';
@@ -75,7 +76,7 @@ function buildRegisterRequest(form: RegisterFormState) {
  *   - StepView로 6단계 슬라이드 전환
  *   - ProgressBar로 상단 진행률 표시
  *   - 등록/수정 완료 시 RegisterCompleteView로 교체
- *   - 언마운트 시 스토어 자동 리셋
+ *   - 마운트 시 스토어 초기화 (단계 + 폼 데이터)
  *   - mode='register': useRegisterMutation (POST /profile)
  *   - mode='edit': useUpdateProfileMutation (PATCH /profile)
  * ---
@@ -86,7 +87,8 @@ function buildRegisterRequest(form: RegisterFormState) {
  * <RegisterFormView mode="edit" initialData={formState} />
  */
 export default function RegisterFormView({ mode = 'register', initialData }: Props) {
-  const { currentStep, reset, updateForm } = useRegisterFormStore();
+  const { currentStep, resetStep } = useRegisterStepStore();
+  const { reset, updateForm } = useRegisterFormStore();
   const [isComplete, setIsComplete] = useState(false);
   const { mutateAsync: registerAsync, isPending: isRegistering } = useRegisterMutation();
   const { mutateAsync: updateAsync, isPending: isUpdating } = useUpdateProfileMutation();
@@ -95,16 +97,11 @@ export default function RegisterFormView({ mode = 'register', initialData }: Pro
   const isPending = isEdit ? isUpdating : isRegistering;
 
   useEffect(() => {
+    resetStep();
+    reset();
     if (isEdit && initialData) {
       updateForm(initialData);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      reset();
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

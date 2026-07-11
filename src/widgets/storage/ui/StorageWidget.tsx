@@ -40,7 +40,8 @@ export default function StorageWidget() {
   const { data, isLoading, refetch } = useExchangeArchiveListQuery(params);
   const { mutate: toggleLike } = useToggleLikeMutation();
 
-  const exchanges = data?.pages[0]?.exchanges ?? [];
+  /** 탈퇴 유저(nickname null) 제외 */
+  const exchanges = (data?.pages[0]?.exchanges ?? []).filter((e) => e.nickname !== null);
   const totalCount = data?.pages[0]?.total_count ?? 0;
   const isEmpty = exchanges.length === 0 && !isLoading;
 

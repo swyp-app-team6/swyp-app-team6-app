@@ -4,6 +4,18 @@ module.exports = {
   presets: [require('nativewind/preset')],
   theme: {
     extend: {
+      fontFamily: {
+        /** Pretendard 기본 */
+        sans: ['Pretendard-Regular'],
+        thin: ['Pretendard-Thin'],
+        extralight: ['Pretendard-ExtraLight'],
+        light: ['Pretendard-Light'],
+        medium: ['Pretendard-Medium'],
+        semibold: ['Pretendard-SemiBold'],
+        bold: ['Pretendard-Bold'],
+        extrabold: ['Pretendard-ExtraBold'],
+        black: ['Pretendard-Black'],
+      },
       colors: {
         /** Title color — 텍스트 및 아이콘용 그레이스케일 */
         text: {

@@ -2,6 +2,7 @@ import React, { forwardRef, useCallback, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useImperativeHandle, useRef } from 'react';
+import Svg, { Path } from 'react-native-svg';
 import { Button, SafeBottomSheetModal } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
 
@@ -219,12 +220,24 @@ const StorageFilterBottomSheet = forwardRef<BottomSheetHandle, Props>(
 
         {/* 하단 버튼 영역 */}
         <View className="flex-row items-center gap-3 px-5">
-          <Button
-            title="초기화"
-            variant="secondary"
+          <Pressable
             onPress={handleReset}
-            className="flex-none w-auto px-6"
-          />
+            className="flex-row items-center justify-center gap-1 rounded-xl px-6"
+            style={{ height: 56, backgroundColor: '#F5F5F5' }}
+          >
+            <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
+              <Path
+                d="M19.4221 8.01389C18.0322 5.61438 15.4343 4 12.4588 4C9.08513 4 6.19686 6.07535 5.00433 9.01736M16.9806 9.01736H21V5.00347M5.57787 16.0417C6.96782 18.4412 9.56573 20.0556 12.5412 20.0556C15.9149 20.0556 18.8031 17.9802 19.9957 15.0382M8.0194 15.0382H4V19.0521"
+                stroke="#3C3C3C"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </Svg>
+            <Text className="text-base font-bold" style={{ color: '#1A1A1A', lineHeight: 22.4 }}>
+              초기화
+            </Text>
+          </Pressable>
           <Button
             title="적용하기"
             variant="primary"

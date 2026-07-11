@@ -115,7 +115,7 @@ const BottomSheetComponent = forwardRef<BottomSheetHandle, Props>(
                   hitSlop={8}
                   accessibilityLabel="닫기"
                 >
-                  <Text className="text-2xl text-gray-400">✕</Text>
+                  <Text className="text-2xl text-primary">✕</Text>
                 </Pressable>
               )}
             </View>

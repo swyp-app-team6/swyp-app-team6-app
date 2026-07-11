@@ -9,6 +9,6 @@ export default function useSafePaddingBottom() {
   const { bottom } = useSafeAreaInsets();
 
   return {
-    paddingBottom: Platform.OS === 'ios' ? bottom : bottom + 32
+    paddingBottom: Platform.OS === 'ios' ? bottom : Math.max(bottom, 8)
   }
 }

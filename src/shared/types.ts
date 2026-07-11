@@ -30,6 +30,7 @@ export type NavigatorType = {
   writeReview: { profileId: number };
   cosmicTest: undefined;
   editProfile: undefined;
+  appSetting: undefined;
   accountEdit: undefined;
   withdrawalReason: undefined;
   withdrawalConfirm: { reason: string };

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Keyboard, Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Button, Header, Layout, MenuList, Textbox } from '@/shared/ui';
+import { Button, Header, Layout, Textbox } from '@/shared/ui';
 import ArrowIcon from '@/shared/ui/icons/ArrowIcon';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
@@ -46,75 +46,81 @@ function WithdrawalReasonPage() {
   const finalReason =
     selectedReason === '기타' ? customReason.trim() : (selectedReason || '');
 
-  /** 메뉴 아이템 오른쪽 chevron */
-  const chevronRight = <ArrowIcon direction="right" size={24} color="#8C39FB" />;
-
   return (
     <>
       <Header title="탈퇴하기" showBack />
       <Layout.Body styleClass={{ root: 'bg-white' }}>
-        {/* 제목 */}
-        <View className="px-5 py-4">
-          <Text className="text-[16px] font-semibold text-[#1A1A1A] leading-[22.4px]">
-            탈퇴 사유 선택
-          </Text>
-        </View>
+        <Pressable className="flex-1" onPress={Keyboard.dismiss}>
+          {/* 제목 */}
+          <View className="px-5 py-4">
+            <Text className="text-[16px] font-semibold text-[#1A1A1A] leading-[22.4px]">
+              탈퇴 사유 선택
+            </Text>
+          </View>
 
-        {/* 사유 목록 */}
-        <MenuList.Section styleClass={{ root: 'mb-0' }}>
-          {WITHDRAWAL_REASONS.map((reason) => (
-            <MenuList.Item
-              key={reason}
-              label={reason}
-              right={
-                reason === '기타' ? (
+          {/* 사유 목록 */}
+          <View>
+            {WITHDRAWAL_REASONS.map((reason) => (
+              <Pressable
+                key={reason}
+                className="h-14 px-5 py-2.5 flex-row items-center gap-3 border-b border-gray-100"
+                onPress={() => handleSelectReason(reason)}
+              >
+                <Text className="flex-1 text-[14px] font-medium text-[#1A1A1A] leading-[19.6px]">
+                  {reason}
+                </Text>
+                {reason === '기타' ? (
                   <ArrowIcon
                     direction={isOtherOpen ? 'up' : 'down'}
                     size={24}
-                    color="#8C39FB"
+                    color="#111111"
                   />
                 ) : (
-                  chevronRight
-                )
-              }
-              onPress={() => handleSelectReason(reason)}
-              showDivider={false}
-              styleClass={{
-                root: `px-5 h-14 ${selectedReason === reason ? 'bg-gray-50' : ''}`,
-                label: 'text-[14px] font-medium text-[#1A1A1A]',
-              }}
-            />
-          ))}
-        </MenuList.Section>
+                  <View
+                    className={`w-[18px] h-[18px] rounded-[4px] border-2 items-center justify-center ${
+                      selectedReason === reason
+                        ? 'border-primary bg-primary'
+                        : 'border-[#BFBFBF] bg-white'
+                    }`}
+                  >
+                    {selectedReason === reason && (
+                      <Text className="text-[10px] font-bold text-white">✓</Text>
+                    )}
+                  </View>
+                )}
+              </Pressable>
+            ))}
+          </View>
 
-        {/* 기타 사유 입력 */}
-        {isOtherOpen && (
-          <View className="px-5 mt-3 gap-3">
-            <Textbox
-              value={customReason}
-              onChangeText={setCustomReason}
-              placeholder="기타 사유를 입력해주세요."
-              maxLength={300}
-              minHeight={120}
-              styleClass={{
-                root: '',
-                input: 'bg-[#F5F5F5] rounded-xl p-4',
-              }}
+          {/* 기타 사유 입력 */}
+          {isOtherOpen && (
+            <View className="px-5 mt-3 gap-3">
+              <Textbox
+                value={customReason}
+                onChangeText={setCustomReason}
+                placeholder="기타 사유를 입력해주세요."
+                maxLength={300}
+                minHeight={120}
+                styleClass={{
+                  root: '',
+                  input: 'bg-[#F5F5F5] rounded-xl p-4',
+                }}
+              />
+            </View>
+          )}
+
+          {/* 다음 버튼 */}
+          <View className="px-5 mt-auto pb-6">
+            <Button
+              title="다음"
+              variant="primary"
+              disabled={!isNextEnabled}
+              onPress={() =>
+                navigation.navigate('withdrawalConfirm', { reason: finalReason })
+              }
             />
           </View>
-        )}
-
-        {/* 다음 버튼 */}
-        <View className="px-5 mt-auto pb-6">
-          <Button
-            title="다음"
-            variant="secondary"
-            disabled={!isNextEnabled}
-            onPress={() =>
-              navigation.navigate('withdrawalConfirm', { reason: finalReason })
-            }
-          />
-        </View>
+        </Pressable>
       </Layout.Body>
     </>
   );

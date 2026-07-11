@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { BottomCTA, Button } from '@/shared/ui';
-import useRegisterFormStore from '../model/useRegisterFormStore';
+import useRegisterStepStore from '../model/useRegisterStepStore';
 
 /**
  * # Step3TypeTestView
@@ -16,7 +16,7 @@ import useRegisterFormStore from '../model/useRegisterFormStore';
  * <Step3TypeTestView />
  */
 export default function Step3TypeTestView() {
-  const { nextStep } = useRegisterFormStore();
+  const { nextStep } = useRegisterStepStore();
 
   return (
     <View className="flex-1 bg-white">

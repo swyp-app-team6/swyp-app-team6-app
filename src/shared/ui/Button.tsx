@@ -10,8 +10,10 @@ import { cn } from "@/shared/lib/cn";
  * - black = 검정 배경
  * - outline = 흰 배경 + 보라 테두리
  * - dark-outline = 다크 배경 + 보라 테두리
+ * - chip = 회색 배경 (미선택 토글)
+ * - chip-selected = 검정 배경 (선택 토글)
  */
-export type ButtonVariant = "primary" | "secondary" | "ghost" | "black" | "outline" | "dark-outline";
+export type ButtonVariant = "primary" | "secondary" | "ghost" | "black" | "outline" | "dark-outline" | "chip" | "chip-selected";
 
 /**
  * # Button
@@ -86,6 +88,18 @@ const variantClass: Record<ButtonVariant, { pressable: string; text: string; dis
     disabledPressable: "h-14 rounded-xl bg-text-gray6 items-center justify-center",
     disabledText: "text-center text-base font-bold text-text-gray4",
   },
+  chip: {
+    pressable: "h-[52px] rounded-xl bg-gray7 items-center justify-center active:opacity-90",
+    text: "text-center text-base font-medium text-text-gray2",
+    disabledPressable: "h-[52px] rounded-xl bg-text-gray6 items-center justify-center",
+    disabledText: "text-center text-base font-medium text-text-gray4",
+  },
+  "chip-selected": {
+    pressable: "h-[52px] rounded-xl bg-gray2 items-center justify-center active:opacity-90",
+    text: "text-center text-base font-semibold text-white",
+    disabledPressable: "h-[52px] rounded-xl bg-text-gray6 items-center justify-center",
+    disabledText: "text-center text-base font-semibold text-text-gray4",
+  },
 };
 
 export function Button({
@@ -100,7 +114,7 @@ export function Button({
   const v = variantClass[variant];
   const isDisabled = disabled || loading;
 
-  const spinnerColor = ["primary", "black", "dark-outline"].includes(variant) ? "#fff" : "#8C39FB";
+  const spinnerColor = ["primary", "black", "dark-outline", "chip-selected"].includes(variant) ? "#fff" : "#8C39FB";
 
   return (
     <Pressable

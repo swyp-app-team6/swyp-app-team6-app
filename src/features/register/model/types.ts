@@ -4,10 +4,11 @@ import type { CosmicType } from '@/shared/enums';
 import { Region } from '@/shared/enums';
 import { TMIQuestionType } from '@/shared/enums';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
+import { getRegionLabel } from '@/shared/lib/regionLabel';
 
 /**
  * 프로필 등록 폼 상태
- * - nickname: 이름 (2~10자)
+ * - nickname: 이름 (3~10자)
  * - profileImageUri: 로컬 이미지 URI (미리보기용)
  * - profileImageKey: S3 업로드 후 발급된 이미지 키
  * - gender: 성별 (M=남성, F=여성)
@@ -86,12 +87,23 @@ export const REGION_SUB_AREAS: Record<string, string[]> = {
 };
 
 /**
- * INTEREST 값을 한국어 라벨로 변환
- * @param value INTEREST enum 값
+ * INTEREST enum → 한국어 라벨 매핑
+ * - API 응답 기준 라벨
  */
-export function getInterestLabel(value: string): string {
-  return INTEREST_OPTIONS.find((o) => o.value === value)?.label ?? value;
-}
+export const INTEREST_LABEL: Record<string, string> = {
+  [INTEREST.TRAVEL]: '여행',
+  [INTEREST.SPORTS]: '운동',
+  [INTEREST.MUSIC]: '음악',
+  [INTEREST.VIDEO]: '유튜브',
+  [INTEREST.RESTAURANT]: '맛집탐방',
+  [INTEREST.CAFE]: '카페투어',
+  [INTEREST.CULTURE]: '문화생활',
+  [INTEREST.READING]: '독서',
+  [INTEREST.GAME]: '게임',
+  [INTEREST.SELF_DEVELOPMENT]: '자기계발',
+  [INTEREST.INVESTING]: '재테크',
+  [INTEREST.MOVIE]: '영화감상',
+};
 
 /**
  * TMI 카테고리 필터 타입
@@ -126,25 +138,35 @@ export function tmiKey(answerKind: 'CHOICE' | 'TEXT', questionId: number): strin
   return `${answerKind}-${questionId}`;
 }
 
+
 /**
- * 관심사 옵션 목록 (PRD 12개)
- * - value: API에 전송하는 INTEREST 값
- * - label: 화면에 표시하는 한국어 라벨
+ * # deriveSubArea
+ * ---
+ * - 간단설명: Region enum 코드에서 REGION_SUB_AREAS에 매칭되는 상세지역 라벨을 추출
+ * - 제약사항 및 특이사항:
+ *   - 시/도 코드(SEOUL 등)는 "{시/도} 전체" 반환
+ *   - 하위 코드(SEOUL_GANGNAM 등)는 getRegionLabel에서 시/도 접두사를 제거하여 반환
+ * ---
+ * @param detail Region enum 코드 (예: 'SEOUL_GANGNAM')
+ * @param group 시/도 그룹명 (예: '서울')
+ * @example
+ * deriveSubArea('SEOUL_GANGNAM', '서울') // '강남구'
+ * deriveSubArea('SEOUL', '서울')         // '서울 전체'
  */
-export const INTEREST_OPTIONS: { value: INTEREST; label: string; emoji: string }[] = [
-  { value: INTEREST.TRAVEL, label: '여행', emoji: '✈️' },
-  { value: INTEREST.SPORTS, label: '스포츠', emoji: '🏃' },
-  { value: INTEREST.MUSIC, label: '음악', emoji: '🎵' },
-  { value: INTEREST.VIDEO, label: '영상', emoji: '📹' },
-  { value: INTEREST.RESTAURANT, label: '맛집', emoji: '🍽️' },
-  { value: INTEREST.CAFE, label: '카페', emoji: '☕' },
-  { value: INTEREST.CULTURE, label: '문화', emoji: '🎭' },
-  { value: INTEREST.READING, label: '독서', emoji: '📚' },
-  { value: INTEREST.GAME, label: '게임', emoji: '🎮' },
-  { value: INTEREST.SELF_DEVELOPMENT, label: '자기계발', emoji: '📝' },
-  { value: INTEREST.INVESTING, label: '투자', emoji: '💰' },
-  { value: INTEREST.MOVIE, label: '영화', emoji: '🎬' },
-];
+function deriveSubArea(detail: string, group: string): string {
+  const provinceOption = REGION_OPTIONS.find((o) => o.label === group);
+  if (!provinceOption) return '';
+
+  // 시/도 코드와 동일하면 전체 선택
+  if (provinceOption.value === detail) {
+    return `${group} 전체`;
+  }
+
+  // 상세 코드의 풀 라벨에서 시/도 접두사를 제거하여 하위 지역명만 추출
+  const fullLabel = getRegionLabel(detail);
+  const prefix = `${group} `;
+  return fullLabel.startsWith(prefix) ? fullLabel.slice(prefix.length) : fullLabel;
+}
 
 /**
  * # profileToFormState
@@ -186,7 +208,7 @@ export function profileToFormState(profile: MyProfileResponse): RegisterFormStat
     age: String(profile.age),
     jobField: profile.job,
     region: REGION_OPTIONS.find((o) => o.label === profile.region.group)?.value ?? profile.region.detail,
-    subArea: profile.region.label,
+    subArea: deriveSubArea(profile.region.detail, profile.region.group),
     bio: profile.bio ?? '',
     interests: profile.interests.map((i) => i.type),
     cosmicType: profile.cosmic_type ?? null,

@@ -54,7 +54,7 @@ export default function Header({ left, center, right, title, showBack = false }:
 
   return (
     <Layout.Header
-      styleClass={{ root: 'flex-row items-center px-4 bg-white border-b border-gray-100' }}
+      styleClass={{ root: 'flex-row items-center px-4 bg-white' }}
       style={{ paddingTop: top, height: 56 + top }}
     >
       <Layout styleClass={{ root: 'flex-1 items-start' }}>

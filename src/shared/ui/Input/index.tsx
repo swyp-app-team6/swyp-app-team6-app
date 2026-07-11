@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, TextInput, View, type TextInputProps } from 'react-native';
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { cn } from '@/shared/lib/cn';
@@ -67,6 +67,12 @@ function Input({
 }: InputProps) {
   const InputComponent = isBottomSheet ? BottomSheetTextInput : TextInput;
   const [length, setLength] = useState(props.value?.replace(/\s/g, '').length ?? 0);
+
+  useEffect(() => {
+    if (props.value !== undefined) {
+      setLength(props.value.replace(/\s/g, '').length);
+    }
+  }, [props.value]);
 
   const handleChangeText = (text: string) => {
     setLength(text.replace(/\s/g, '').length);

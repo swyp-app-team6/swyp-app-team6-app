@@ -1,7 +1,7 @@
 import React, { useRef, useState, useMemo } from 'react';
 import { Pressable, View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import { TMICard, BottomCTA, Button, ChipSelect, Textbox, SelectedTMIPreviewButton } from '@/shared/ui';
+import { TMICard, BottomCTA, Button, ChipSelect, Textbox, SelectedTMIPreviewButton, Checkbox } from '@/shared/ui';
 import Tag from '@/shared/ui/Tag';
 import BottomSheet, { type BottomSheetHandle } from '@/shared/ui/BottomSheet';
 import { useProfileDataStore } from '@/entities/user';
@@ -9,6 +9,7 @@ import { useQuestionsQuery } from '@/entities/question';
 import type { MultipleQuestion, ShortQuestion, QuestionAnswer } from '@/entities/question';
 import { TMIQuestionType } from '@/shared/enums';
 import useRegisterFormStore from '../model/useRegisterFormStore';
+import useRegisterStepStore from '../model/useRegisterStepStore';
 import { tmiKey, TMI_CATEGORY_OPTIONS, type TMICategoryFilter } from '../model/types';
 
 /**
@@ -40,7 +41,8 @@ interface TMIQuestionUI {
  * <Step4TMIView />
  */
 export default function Step4TMIView() {
-  const { form, addTMIAnswer, removeTMIAnswer, nextStep } = useRegisterFormStore();
+  const { form, addTMIAnswer, removeTMIAnswer } = useRegisterFormStore();
+  const { nextStep } = useRegisterStepStore();
   const { setProfileData } = useProfileDataStore();
   const { data: questionData, isLoading } = useQuestionsQuery();
   const [selectedCategory, setSelectedCategory] = useState<TMICategoryFilter>('ALL');
@@ -118,7 +120,7 @@ export default function Step4TMIView() {
 
   /** 서술형 답변 제출 */
   const handleTextSubmit = () => {
-    if (!activeQuestion || textInput.length < 5) return;
+    if (!activeQuestion || textInput.length < 1) return;
     addTMIAnswer({
       questionId: activeQuestion.id,
       answerKind: 'TEXT',
@@ -154,6 +156,23 @@ export default function Step4TMIView() {
       answer: a.answer,
     }));
   }, [form.tmiAnswers]);
+
+  /** 미리보기에서 TMI 질문 탭 시 답변 바텀시트로 이동 */
+  const handlePreviewItemPress = (item: (typeof selectedTMIList)[number]) => {
+    const original = allQuestions.find(
+      (q) => q.id === item.questionId && q.answerType === item.answerKind,
+    );
+    if (!original) return;
+    previewSheetRef.current?.close();
+    setActiveQuestion(original);
+    setTextInput(original.answerType === 'TEXT' ? item.answer : '');
+    setChoiceInput(
+      original.answerType === 'CHOICE' && original.answers
+        ? original.answers.find((a) => a.content === item.answer) ?? null
+        : null,
+    );
+    setTimeout(() => sheetRef.current?.open(), 300);
+  };
 
   if (isLoading) {
     return (
@@ -197,13 +216,10 @@ export default function Step4TMIView() {
             return (
               <View key={`${question.answerType}-${question.id}`} className="flex-row items-start gap-3">
                 {/* 체크박스 */}
-                <View className="w-6 h-6 items-center justify-center mt-4">
-                  <View
-                    className={`w-[18px] h-[18px] rounded-[4px] border-2 ${
-                      isSelected
-                        ? 'bg-primary border-primary'
-                        : 'bg-white border-[#BFBFBF]'
-                    }`}
+                <View className="mt-4">
+                  <Checkbox
+                    checked={isSelected}
+                    onValueChange={() => handleQuestionPress(question)}
                   />
                 </View>
                 {/* 카드 */}
@@ -327,14 +343,14 @@ export default function Step4TMIView() {
             <Textbox
               value={textInput}
               onChangeText={setTextInput}
-              placeholder="답변을 입력해주세요 (5~100자)"
+              placeholder="답변을 입력해주세요 (1~100자)"
               maxLength={100}
               minHeight={80}
               isBottomSheet
             />
             <Button
               title="답변 완료"
-              disabled={textInput.length < 5}
+              disabled={textInput.length < 1}
               onPress={handleTextSubmit}
               className="mt-3"
             />
@@ -356,6 +372,7 @@ export default function Step4TMIView() {
               question={item.question}
               answer={item.answer}
               selected
+              onPress={() => handlePreviewItemPress(item)}
             />
           ))}
         </View>

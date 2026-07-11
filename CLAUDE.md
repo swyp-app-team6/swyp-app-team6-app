@@ -8,6 +8,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - 전반적 작업 내용은 jira에서 확인
 - 브랜치 명은 티켓 이름을 그대로 사용
 
+# 커밋 시
+- 커밋규칙: commit xxx: 커밋 메세지를 xxx를 반드시 포함하여 작성
+
 필수 사항: 계획은 반드시 superpowers의 brainstorming skill 사용하여 진행
 
 <!-- - 세부 기획, 제약사항 등은 confluence에서 확인(현재 세팅 안되었으므로 무시)

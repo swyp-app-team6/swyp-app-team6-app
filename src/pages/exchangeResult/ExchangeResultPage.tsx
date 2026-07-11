@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Button, Header } from '@/shared/ui';
 import { useExchangeFlowStore } from '@/features/exchange';
@@ -55,7 +55,7 @@ export default function ExchangeResultPage() {
       <Header title="공통된 관심사 결과" showBack />
 
       {/* 본문 */}
-      <View className="flex-1 items-center pt-6">
+      <View className="flex-1 items-center px-5 pt-12">
         <CommonInterestCard
           hasCommon={hasCommon}
           interests={displayInterests}
@@ -66,8 +66,14 @@ export default function ExchangeResultPage() {
       {/* 하단 CTA */}
       <View className="px-5 pb-6 pt-3">
         <View className="flex-row gap-3">
-          <Button className="w-1/3" title="홈으로" variant="secondary" onPress={handleGoHome} />
-          <Button className="w-2/3" title="교환한 프로필 보기" variant="primary" onPress={handleViewProfile} />
+          <Pressable
+            className="h-14 items-center justify-center rounded-xl px-6"
+            style={{ backgroundColor: '#F5F5F5' }}
+            onPress={handleGoHome}
+          >
+            <Text className="text-center text-base font-bold" style={{ color: '#888888' }}>홈으로</Text>
+          </Pressable>
+          <Button className="flex-1" title="교환한 프로필 보기" variant="primary" onPress={handleViewProfile} />
         </View>
       </View>
     </View>

@@ -8,6 +8,7 @@ import RegisterPage from '@/pages/register/RegisterPage';
 import HomePage from '@/pages/home/HomePage';
 import ProfileCardPage from '@/pages/profileCard/ProfileCardPage';
 import MyPage from '@/pages/mypage/MyPage';
+import AppSettingPage from '@/pages/appSetting/AppSettingPage';
 import AccountEditPage from '@/pages/accountEdit/AccountEditPage';
 import WithdrawalReasonPage from '@/pages/withdrawal/WithdrawalReasonPage';
 import WithdrawalConfirmPage from '@/pages/withdrawal/WithdrawalConfirmPage';
@@ -65,6 +66,7 @@ export default function StackRouter({ initialRouteName = 'home' }: StackRouterPr
         <Stack.Screen name='registerProfile' component={RegisterPage} />
         <Stack.Screen name='cosmicTest' component={CosmicTestPage} />
         <Stack.Screen name='editProfile' component={EditProfilePage} />
+        <Stack.Screen name='appSetting' component={AppSettingPage} />
         <Stack.Screen name='accountEdit' component={AccountEditPage} />
         <Stack.Screen name='withdrawalReason' component={WithdrawalReasonPage} />
         <Stack.Screen name='withdrawalConfirm' component={WithdrawalConfirmPage} />

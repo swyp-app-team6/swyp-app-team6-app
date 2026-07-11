@@ -50,60 +50,63 @@ export default function CosmicResultFrontCard({
         colors={['rgba(80, 50, 213, 0.80)', 'rgba(135, 67, 237, 0.80)']}
         style={{ width: '100%', aspectRatio: 350 / 520 }}
       >
-        {/* 닉네임 + 유형명 */}
-        <View className="items-center gap-1" style={{ marginTop: '5.4%', paddingHorizontal: '9%' }}>
-          <Text className="text-base font-medium text-white text-center" style={{ lineHeight: 22.4 }}>
-            {nickname} 님은
-          </Text>
-          <Text className="text-xl font-bold text-white text-center" style={{ lineHeight: 28 }}>
-            {result.cosmic_type.label}
-          </Text>
-        </View>
+        {/* 콘텐츠 영역 - 세로 중앙 배치 */}
+        <View className="flex-1 justify-center items-center" style={{ paddingVertical: '6%', gap: 12 }}>
+          {/* 닉네임 + 유형명 */}
+          <View className="items-center gap-1" style={{ paddingHorizontal: '9%' }}>
+            <Text className="text-base font-medium text-white text-center" style={{ lineHeight: 22.4 }}>
+              {nickname} 님은
+            </Text>
+            <Text className="text-xl font-bold text-white text-center" style={{ lineHeight: 28 }}>
+              {result.cosmic_type.label}
+            </Text>
+          </View>
 
-        {/* 캐릭터 일러스트 영역 */}
-        <View className="items-center justify-center" style={{ width: '57%', aspectRatio: 1, alignSelf: 'center' }}>
-          {/* glow 효과 */}
-          <View
-            style={{
-              position: 'absolute',
-              width: '62%',
-              aspectRatio: 1,
-              borderRadius: 9999,
-              backgroundColor: 'rgba(255, 255, 255, 0.40)',
-            }}
-          />
-          {characterImage && (
-            <Image
-              source={characterImage}
-              style={{ width: '84%', aspectRatio: 1 }}
-              resizeMode="contain"
-            />
-          )}
-        </View>
-
-        {/* 태그 */}
-        <View className="flex-row justify-center items-center gap-1" style={{ paddingHorizontal: '9%' }}>
-          {result.tags.map((tag) => (
+          {/* 캐릭터 일러스트 영역 */}
+          <View className="items-center justify-center" style={{ width: 168, height: 168 }}>
+            {/* glow 효과 */}
             <View
-              key={tag}
-              className="rounded-[20px] px-3 py-2"
-              style={{ borderWidth: 1, borderColor: '#FFFFFF' }}
-            >
-              <Text className="text-xs text-white" style={{ lineHeight: 12 }}>
-                {tag}
-              </Text>
-            </View>
-          ))}
-        </View>
+              style={{
+                position: 'absolute',
+                width: 104,
+                height: 104,
+                borderRadius: 9999,
+                backgroundColor: 'rgba(255, 255, 255, 0.40)',
+              }}
+            />
+            {characterImage && (
+              <Image
+                source={characterImage}
+                style={{ width: 168, height: 168 }}
+                resizeMode="contain"
+              />
+            )}
+          </View>
 
-        {/* 한줄 설명 */}
-        <View className="items-center" style={{ marginTop: '2.5%', paddingHorizontal: '9%' }}>
-          <Text
-            className="text-sm font-semibold text-white text-center"
-            style={{ lineHeight: 19.6 }}
-          >
-            {result.detail}
-          </Text>
+          {/* 태그 */}
+          <View className="flex-row justify-center items-center gap-1" style={{ paddingHorizontal: '9%' }}>
+            {result.tags.map((tag) => (
+              <View
+                key={tag}
+                className="rounded-[20px] px-3 py-2"
+                style={{ borderWidth: 1, borderColor: '#FFFFFF' }}
+              >
+                <Text className="text-xs text-white" style={{ lineHeight: 12 }}>
+                  {tag}
+                </Text>
+              </View>
+            ))}
+          </View>
+
+          {/* 한줄 설명 */}
+          <View className="items-center" style={{ paddingHorizontal: '9%' }}>
+            <Text
+              className="text-sm font-semibold text-white text-center"
+              style={{ lineHeight: 19.6 }}
+            >
+              {result.detail}
+            </Text>
+          </View>
         </View>
       </ProfileCardGradientBackground>
     </View>

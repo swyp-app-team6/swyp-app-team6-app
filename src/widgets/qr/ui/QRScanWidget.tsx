@@ -4,12 +4,12 @@ import { useNavigation, useIsFocused, useFocusEffect } from '@react-navigation/n
 import { useCameraDevice } from 'react-native-vision-camera';
 import QRScanView from './QRScanView';
 import {
-  ExchangeConfirmModal,
   ExchangePreviewModal,
   ExchangeLoadingModal,
   ExchangeFlowStep,
   useExchangeFlowStore,
 } from '@/features/exchange';
+import { openDialog, closeDialog } from '@/shared/ui/Dialog';
 import type { NavigationPropType } from '@/shared/types';
 
 /**
@@ -64,11 +64,12 @@ export default function QRScanWidget() {
     });
   }, [startExchange, navigation]);
 
-  /** 철회하기 → 홈으로 이동 */
+  /** 철회하기 → 교환 상태 초기화 후 QR 스캔 화면으로 복귀 */
   const handleCancel = useCallback(() => {
     cancelExchange();
-    navigation.navigate('home');
-  }, [cancelExchange, navigation]);
+    isScanned.current = false;
+    setCameraKey((prev) => prev + 1);
+  }, [cancelExchange]);
 
   /** 닫기 → 이전 화면으로 이동 */
   const handleClose = useCallback(() => {
@@ -88,6 +89,28 @@ export default function QRScanWidget() {
     isScanned.current = false;
     setCameraKey((prev) => prev + 1);
   }, []);
+
+  /** step이 CONFIRM으로 변경되면 공용 Dialog로 교환 확인 표시 */
+  useEffect(() => {
+    if (step === ExchangeFlowStep.CONFIRM) {
+      openDialog({
+        type: 'confirm',
+        title: '상대의 프로필과 교환하시겠습니까?',
+        message: '교환한 프로필은 보관함에서 삭제가 가능하며,\n프로필 카드는 재교환할 수 있습니다.',
+        okLabel: '미리보기',
+        cancelLabel: '철회하기',
+        okFn: () => {
+          closeDialog();
+          goToPreview();
+        },
+        cancelFn: () => {
+          closeDialog();
+          handleCancel();
+        },
+        autoClose: false,
+      });
+    }
+  }, [step, goToPreview, handleCancel]);
 
   useEffect(() => {
     return () => {
@@ -117,21 +140,15 @@ export default function QRScanWidget() {
         <View className="flex-1 items-center justify-center" />
       )}
 
-      {/* 교환 확인 모달 */}
-      <ExchangeConfirmModal
-        visible={step === ExchangeFlowStep.CONFIRM}
-        onCancel={handleCancel}
-        onPreview={goToPreview}
-      />
-
       {/* 내 프로필 미리보기 모달 */}
       <ExchangePreviewModal
         visible={step === ExchangeFlowStep.PREVIEW}
         onExchange={handleStartExchange}
+        onCancel={handleCancel}
       />
 
       {/* 로딩 모달 */}
-      <ExchangeLoadingModal visible={step === ExchangeFlowStep.LOADING} />
+      <ExchangeLoadingModal visible={step === ExchangeFlowStep.LOADING} onCancel={handleCancel} />
     </View>
   );
 }

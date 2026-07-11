@@ -1,4 +1,5 @@
 import '../../global.css';
+import '@/shared/lib/setupDefaultFont';
 import React, { useEffect, useState } from 'react';
 import * as Sentry from '@sentry/react-native';
 import BootSplash from 'react-native-bootsplash';

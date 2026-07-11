@@ -69,8 +69,9 @@ export default function StorageAllWidget() {
   const { mutate: toggleLike } = useToggleLikeMutation();
   const { mutate: deleteArchives } = useDeleteArchivesMutation();
 
+  /** 탈퇴 유저(nickname null) 제외 */
   const exchanges: ExchangeArchiveItem[] = useMemo(
-    () => data?.pages.flatMap((page) => page.exchanges) ?? [],
+    () => (data?.pages.flatMap((page) => page.exchanges) ?? []).filter((e) => e.nickname !== null),
     [data],
   );
   const totalCount = data?.pages[0]?.total_count ?? 0;
@@ -128,6 +129,12 @@ export default function StorageAllWidget() {
               openDialog({
                 type: 'alert',
                 title: '선택한 프로필을 삭제했습니다',
+              });
+            },
+            onError: () => {
+              openDialog({
+                type: 'alert',
+                message: '삭제 도중 문제가 발생하였습니다.',
               });
             },
           },

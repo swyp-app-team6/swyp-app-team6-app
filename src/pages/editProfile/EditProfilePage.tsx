@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
-import { Header, Layout, AlertModal, ArrowIcon } from '@/shared/ui';
-import { RegisterFormView, useRegisterFormStore, profileToFormState } from '@/features/register';
+import { Header, Layout, ArrowIcon, openDialog } from '@/shared/ui';
+import { RegisterFormView, useRegisterFormStore, useRegisterStepStore, profileToFormState } from '@/features/register';
 import { ProfileAPI } from '@/entities/user';
 import type { MyProfileResponse } from '@/entities/user';
 import type { NavigationPropType } from '@/shared/types';
@@ -23,8 +23,8 @@ import type { NavigationPropType } from '@/shared/types';
 export default function EditProfilePage() {
   const navigation = useNavigation<NavigationPropType>();
   const queryClient = useQueryClient();
-  const { currentStep, prevStep, isDirty, reset } = useRegisterFormStore();
-  const [showExitModal, setShowExitModal] = useState(false);
+  const { currentStep, prevStep, resetStep } = useRegisterStepStore();
+  const { isDirty, reset } = useRegisterFormStore();
 
   const profileData = queryClient.getQueryData<MyProfileResponse>(
     ProfileAPI.query.me().queryKey,
@@ -36,22 +36,27 @@ export default function EditProfilePage() {
     if (currentStep > 0) {
       prevStep();
     } else if (isDirty()) {
-      setShowExitModal(true);
+      openDialog({
+        type: 'confirm',
+        title: '프로필 수정 중단',
+        message: '이미 수정한 정보가 있어요.\n프로필 수정을 그만두실건가요?',
+        okLabel: '나가기',
+        cancelLabel: '계속 수정',
+        okFn: () => {
+          resetStep();
+          reset();
+          navigation.goBack();
+        },
+      });
     } else {
       navigation.goBack();
     }
   };
 
-  /** 이탈 확인 후 나가기 */
-  const handleExitConfirm = () => {
-    setShowExitModal(false);
-    reset();
-    navigation.goBack();
-  };
-
   return (
     <>
       <Header
+        title="프로필 수정"
         left={
           <TouchableOpacity onPress={handleBack}>
             <ArrowIcon direction="left" />
@@ -64,16 +69,6 @@ export default function EditProfilePage() {
           initialData={initialFormData}
         />
       </Layout.Body>
-
-      <AlertModal
-        visible={showExitModal}
-        title="프로필 수정 중단"
-        message="이미 수정한 정보가 있어요. 프로필 수정을 그만두실건가요?"
-        confirmText="나가기"
-        cancelText="계속 수정"
-        onConfirm={handleExitConfirm}
-        onCancel={() => setShowExitModal(false)}
-      />
     </>
   );
 }

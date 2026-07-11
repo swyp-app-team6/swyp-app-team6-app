@@ -11,8 +11,6 @@ const queryClient = new QueryClient({
 });
 
 export default function QueryProvider({ children }: { children: React.ReactNode }) {
-  // useFcmMessage();
-
   return (
     <QueryClientProvider client={queryClient}>
       {children}

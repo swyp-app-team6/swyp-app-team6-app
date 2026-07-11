@@ -6,7 +6,6 @@ import UserProfileCard from '@/shared/ui/ProfileCard/UserProfileCard';
 import EmptyProfileCard from '@/shared/ui/ProfileCard/EmptyProfileCard';
 import ProfileFlipWrapper from '@/shared/ui/ProfileCard/ProfileFlipWrapper';
 import { ProfileShareQRModal } from '@/features/profileShare';
-import { getInterestLabel } from '@/features/register';
 import { useMyProfileQuery } from '@/entities/user';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 import { apiValueToCosmicType } from '@/entities/storage';
@@ -50,7 +49,7 @@ export default function HomeWidget() {
         profileImageUri={getProfileImageUrl(profile.image_key)}
         nickname={profile.nickname}
         age={String(profile.age)}
-        interests={profile.interests.map((i) => getInterestLabel(i.type))}
+        interests={profile.interests.map((i) => i.label)}
         badgeLevel={profile.cosmic_type ? apiValueToCosmicType(profile.cosmic_type) : undefined}
         onPress={() => navigation.navigate('profileDetail')}
         topRightSlot={
@@ -79,19 +78,17 @@ export default function HomeWidget() {
 
   return (
     <View className="mt-8 items-center">
-      {/* 프로필 존재 시: 타이틀 */}
-      {hasProfile && (
-        <View className="w-full flex-row items-center justify-between mb-5">
-          <View className="flex-row items-center gap-1">
-            <Text className="text-[16px] font-semibold leading-[22px] tracking-tight text-primary">
-              {profile.nickname}
-            </Text>
-            <Text className="text-[16px] font-medium leading-[22px] tracking-tight text-text-black">
-              님의 프로필 카드
-            </Text>
-          </View>
+      {/* 타이틀: 프로필 카드가 없어도 항상 표시, nickname 없으면 "사용자" */}
+      <View className="w-full flex-row items-center justify-between mb-5">
+        <View className="flex-row items-center gap-1">
+          <Text className="text-[16px] font-semibold leading-[22px] tracking-tight text-primary">
+            {profile?.nickname ?? '사용자'}
+          </Text>
+          <Text className="text-[16px] font-medium leading-[22px] tracking-tight text-text-black">
+            님의 프로필 카드
+          </Text>
         </View>
-      )}
+      </View>
 
       {/* 카드 영역 + flip 애니메이션 */}
       <ProfileFlipWrapper

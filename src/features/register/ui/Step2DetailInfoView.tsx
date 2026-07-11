@@ -1,8 +1,9 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { View, Text, ScrollView, Pressable } from 'react-native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Input, BottomCTA, Button, SafeBottomSheetModal } from '@/shared/ui';
 import useRegisterFormStore from '../model/useRegisterFormStore';
+import useRegisterStepStore from '../model/useRegisterStepStore';
 import { REGION_OPTIONS } from '../model/types';
 import RegionPicker from './RegionPicker';
 
@@ -20,17 +21,31 @@ import RegionPicker from './RegionPicker';
  * <Step2DetailInfoView />
  */
 export default function Step2DetailInfoView() {
-  const { form, updateForm, nextStep, isStep2Valid } = useRegisterFormStore();
+  const { form, updateForm, isStep2Valid } = useRegisterFormStore();
+  const { nextStep } = useRegisterStepStore();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
+  const [ageError, setAgeError] = useState(false);
 
-  /** 나이 변경 핸들러 */
+  /** 나이 변경 핸들러 — 만 14세 이하 입력 시 즉시 에러 표시 */
   const handleAgeChange = (text: string) => {
     updateForm({ age: text });
+    const age = Number(text);
+    setAgeError(text.length > 0 && age <= 14);
   };
 
-  /** 직무분야 변경 핸들러 */
+  /** 다음으로 버튼 클릭 핸들러 - 만 14세 이하 검증 후 다음 단계 이동 */
+  const handleNext = () => {
+    if (Number(form.age) <= 14) {
+      setAgeError(true);
+      return;
+    }
+    nextStep();
+  };
+
+  /** 직무분야 변경 핸들러 (연속 공백 방지) */
   const handleJobFieldChange = (text: string) => {
-    updateForm({ jobField: text });
+    const filtered = text.replace(/\s{2,}/g, ' ');
+    updateForm({ jobField: filtered });
   };
 
   /** 지역 선택완료 핸들러 */
@@ -69,6 +84,11 @@ export default function Step2DetailInfoView() {
             onChangeText={handleAgeChange}
             keyboardType="number-pad"
           />
+          {ageError && (
+            <Text className="text-red-500 text-sm mt-1">
+              만 14세 이하는 등록할 수 없습니다.
+            </Text>
+          )}
         </View>
 
         {/* 직무분야 */}
@@ -104,7 +124,7 @@ export default function Step2DetailInfoView() {
         <Button
           title="다음으로"
           disabled={!isStep2Valid()}
-          onPress={nextStep}
+          onPress={handleNext}
         />
       </BottomCTA>
 

@@ -1,14 +1,13 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { useCallback, useMemo, useRef } from 'react';
+import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { Accordion, BottomCTA, Button, PopoverMenu, ProfileActionIcon, ReportIcon, BlockUserIcon, Badge, InterestTag } from '@/shared/ui';
+import Svg, { Path } from 'react-native-svg';
 import ProfileCardContainer from '@/shared/ui/ProfileCard/ProfileCardContainer';
 import type { PopoverMenuItem } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
 import { openDialog } from '@/shared/ui/Dialog';
-import { getInterestLabel } from '@/features/register';
 import { useExchangeArchiveDetailQuery, apiValueToCosmicType } from '@/entities/storage';
-import type { ReportReasonCode } from '@/entities/storage';
+import type { ReportReasonCode, ReviewScore } from '@/entities/storage';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 import BasicInfoSection from '@/features/register/ui/BasicInfoSection';
 import InterestsSection from '@/features/register/ui/InterestsSection';
@@ -18,6 +17,9 @@ import InfoCard from '@/features/register/ui/InfoCard';
 import ReportBottomSheet from './ReportBottomSheet';
 import useReportMutation from '../api/useReportMutation';
 import useBlockMutation from '../api/useBlockMutation';
+import useBlockListQuery from '../api/useBlockListQuery';
+import useUnblockMutation from '../api/useUnblockMutation';
+import ReviewReadView from './ReviewReadView';
 
 interface Props {
   /** 프로필 ID */
@@ -48,24 +50,35 @@ export default function ExchangedProfileView({
   profileId,
   onNavigateToReview,
 }: Props) {
-  const navigation = useNavigation();
   const reportRef = useRef<BottomSheetHandle>(null);
-  const [isBlocked, _setIsBlocked] = useState(false);
 
   const { data: detail, isLoading } = useExchangeArchiveDetailQuery(profileId);
   const { mutate: submitReport } = useReportMutation();
   const { mutate: submitBlock } = useBlockMutation();
+  const { data: blockList = [] } = useBlockListQuery();
+  const { mutate: submitUnblock, isPending: isUnblocking } = useUnblockMutation();
 
   const profile = detail?.profile;
   const matchedInterests = detail?.matched_interests ?? [];
   const imageUri = getProfileImageUrl(profile?.image_key);
   const cosmicType = profile?.cosmic_type ? apiValueToCosmicType(profile.cosmic_type) : undefined;
 
+  /** 차단 목록에서 현재 프로필과 매칭되는 항목 조회 */
+  const blockEntry = useMemo(() => {
+    if (!profile) return undefined;
+    return blockList.find(
+      (b) => b.nickname === profile.nickname && b.image_key === (profile.image_key ?? null),
+    );
+  }, [blockList, profile]);
+
+  const isBlocked = !!blockEntry;
+  const hasReview = (detail?.score ?? 0) > 0;
+
   const handleBlock = useCallback(() => {
     openDialog({
       type: 'confirm',
       title: `${profile?.nickname ?? ''} 님을 차단할까요?`,
-      message: '더 이상 서로의 프로필이 보이지 않아요.',
+      message: '차단하면 프로필이\n노출되지 않아요.',
       okLabel: '차단',
       cancelLabel: '취소',
       okFn: () => {
@@ -73,10 +86,8 @@ export default function ExchangedProfileView({
           onSuccess: () => {
             openDialog({
               type: 'alert',
-              title: '차단이 완료되었습니다',
-              okFn: () => {
-                navigation.goBack();
-              },
+              title: '차단이 완료되었습니다.',
+              message: '더 이상 서로의 프로필이\n보이지 않아요.',
             });
           },
           onError: () => {
@@ -89,21 +100,49 @@ export default function ExchangedProfileView({
         });
       },
     });
-  }, [navigation, profile, submitBlock, profileId]);
+  }, [profile, submitBlock, profileId]);
+
+  /** 차단해제 핸들러 */
+  const handleUnblock = useCallback(() => {
+    if (!blockEntry) return;
+    openDialog({
+      type: 'confirm',
+      title: `${profile?.nickname ?? ''} 님의 차단을 해제할까요?`,
+      message: '프로필이 다시 정상적으로 표시됩니다.',
+      okLabel: '차단해제',
+      cancelLabel: '취소',
+      okFn: () => {
+        submitUnblock(blockEntry.block_id, {
+          onSuccess: () => {
+            openDialog({
+              type: 'alert',
+              title: '차단이 해제되었습니다',
+            });
+          },
+          onError: () => {
+            openDialog({
+              type: 'alert',
+              title: '차단 해제에 실패했습니다',
+              message: '잠시 후 다시 시도해주세요.',
+            });
+          },
+        });
+      },
+    });
+  }, [blockEntry, profile, submitUnblock]);
 
   /** 신고/차단 팝오버 메뉴 항목 */
   const popoverItems: PopoverMenuItem[] = useMemo(
     () => [
       {
-        label: '신고',
-        icon: <ReportIcon size={16} color="#888888" />,
-        onPress: () => reportRef.current?.open(),
+        label: '차단하기',
+        icon: <BlockUserIcon size={16} color="#1A1A1A" />,
+        onPress: handleBlock,
       },
       {
-        label: '차단',
-        icon: <BlockUserIcon size={16} color="#888888" />,
-        onPress: handleBlock,
-        destructive: true,
+        label: '신고하기',
+        icon: <ReportIcon size={16} color="#E01619" />,
+        onPress: () => reportRef.current?.open(),
       },
     ],
     [handleBlock],
@@ -121,7 +160,7 @@ export default function ExchangedProfileView({
           onSuccess: () => {
             openDialog({
               type: 'alert',
-              title: '신고가 접수되었습니다',
+              message: '신고가 접수되었습니다',
             });
           },
           onError: () => {
@@ -170,52 +209,67 @@ export default function ExchangedProfileView({
                   source={{ uri: imageUri }}
                   className="absolute w-full h-full"
                   resizeMode="cover"
+                  blurRadius={isBlocked ? 20 : 0}
                 />
               ) : (
                 <View className="absolute w-full h-full items-center justify-center">
                 </View>
               )}
 
-              {/* 상단: 배지 + 신고/차단 메뉴 */}
-              <View className="absolute top-5 left-5 right-5 flex-row items-center justify-between">
-                {cosmicType && <Badge level={cosmicType} />}
-                {!isBlocked && (
-                  <PopoverMenu items={popoverItems} align="right">
-                    <View className="w-10 h-10 items-center justify-center">
-                      <ProfileActionIcon size={28} color="#FFFFFF" orientation="vertical" />
-                    </View>
-                  </PopoverMenu>
-                )}
-              </View>
-
-              {/* 하단: 닉네임 + 나이 + 관심사 태그 */}
-              <View className="absolute bottom-0 left-0 right-0 px-5 pb-5 gap-2">
-                <View className="flex-row items-end gap-1">
-                  <Text className="text-xl font-bold text-white" style={{ lineHeight: 28 }}>
-                    {profile.nickname}
+              {/* 차단 오버레이 (카드 내부) */}
+              {isBlocked ? (
+                <View className="absolute w-full h-full items-center justify-center bg-black/40 z-10 gap-2">
+                  <Svg width={40} height={40} viewBox="0 0 40 40" fill="none">
+                    <Path
+                      d="M34 32.5L9 7.5M17 17.4026C16.3776 18.0888 16 18.9901 16 19.9772C16 22.1268 17.7909 23.8694 20 23.8694C21.0186 23.8694 21.9482 23.499 22.6544 22.889M34.0647 23.8694C35.4417 21.808 36 20.1269 36 20.1269C36 20.1269 32.359 8.5 20 8.5C19.3062 8.5 18.6398 8.53665 18 8.60582M29 28.9157C26.7043 30.3802 23.7489 31.4159 20 31.3546C7.79487 31.155 4 20.1269 4 20.1269C4 20.1269 5.76309 14.4968 11 11.0722"
+                      stroke="white"
+                      strokeWidth={2.34375}
+                      strokeLinecap="round"
+                    />
+                  </Svg>
+                  <Text className="text-base font-medium text-white">
+                    차단된 프로필입니다
                   </Text>
-                  <Text className="text-xl font-bold text-white" style={{ lineHeight: 28 }}>
-                    {profile.age}세
-                  </Text>
+                  <Pressable onPress={handleUnblock} disabled={isUnblocking}>
+                    <Text className="text-sm text-white underline mt-3">
+                      차단해제
+                    </Text>
+                  </Pressable>
                 </View>
-
-                {profile.interests.length > 0 && (
-                  <View className="flex-row flex-wrap gap-1">
-                    {profile.interests.map((i) => (
-                      <InterestTag key={i.type} label={getInterestLabel(i.type)} variant="overlay" />
-                    ))}
+              ) : (
+                <>
+                  {/* 상단: 배지 + 신고/차단 메뉴 */}
+                  <View className="absolute top-5 left-5 right-5 flex-row items-center justify-between">
+                    {cosmicType && <Badge level={cosmicType} />}
+                    <PopoverMenu items={popoverItems} align="right">
+                      <View className="w-10 h-10 items-center justify-center">
+                        <ProfileActionIcon size={12} color="#FFFFFF" orientation="vertical" />
+                      </View>
+                    </PopoverMenu>
                   </View>
-                )}
-              </View>
+
+                  {/* 하단: 닉네임 + 나이 + 관심사 태그 */}
+                  <View className="absolute bottom-0 left-0 right-0 px-5 pb-5 gap-2">
+                    <View className="flex-row items-end gap-1">
+                      <Text className="text-xl font-bold text-white" style={{ lineHeight: 28 }}>
+                        {profile.nickname}
+                      </Text>
+                      <Text className="text-xl font-bold text-white" style={{ lineHeight: 28 }}>
+                        {profile.age}세
+                      </Text>
+                    </View>
+
+                    {profile.interests.length > 0 && (
+                      <View className="flex-row flex-wrap gap-1">
+                        {profile.interests.map((i) => (
+                          <InterestTag key={i.type} label={i.label} variant="overlay" />
+                        ))}
+                      </View>
+                    )}
+                  </View>
+                </>
+              )}
             </ProfileCardContainer>
-            {/* 차단 오버레이 */}
-            {isBlocked && (
-              <View className="absolute w-full h-full items-center justify-center bg-black/40 rounded-xl">
-                <Text className="text-base font-medium text-white">
-                  차단된 프로필입니다
-                </Text>
-              </View>
-            )}
           </View>
         </View>
 
@@ -260,6 +314,12 @@ export default function ExchangedProfileView({
               {profile.cosmic_type && (
                 <CosmicTypeSection cosmicType={profile.cosmic_type} />
               )}
+              {hasReview && (
+                <ReviewReadView
+                  score={detail.score as ReviewScore}
+                  memo={detail.memo}
+                />
+              )}
             </Accordion.Item>
           </Accordion.Root>
         </View>
@@ -268,15 +328,17 @@ export default function ExchangedProfileView({
         <View className="h-24" />
       </ScrollView>
 
-      <BottomCTA>
-        <Button
-          title="만남후기 작성"
-          onPress={onNavigateToReview}
-          disabled={isBlocked}
-        />
-      </BottomCTA>
+      {!hasReview && (
+        <BottomCTA>
+          <Button
+            title="만남후기 작성"
+            onPress={onNavigateToReview}
+            disabled={isBlocked}
+          />
+        </BottomCTA>
+      )}
 
-      <ReportBottomSheet ref={reportRef} onSubmit={handleReport} />
+      <ReportBottomSheet ref={reportRef} nickname={profile.nickname} onSubmit={handleReport} />
     </View>
   );
 }

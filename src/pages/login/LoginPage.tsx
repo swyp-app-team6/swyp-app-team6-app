@@ -1,8 +1,9 @@
 import React, { useRef } from 'react';
 import { Image, Platform, Pressable, Text, View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { appleAuthAndroid } from '@invertase/react-native-apple-authentication';
-import { AppleLoginButton, GoogleLoginButton, Layout } from '@/shared/ui';
+import { AppleLoginButton, GoogleLoginButton } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
 import type { NavigationPropType } from '@/shared/types';
 import useGoogleLoginMutation from '@/features/login/googleLogin/api/useGoogleLoginMutation';
@@ -85,22 +86,21 @@ function LoginPage() {
   };
 
   return (
-    <Layout styleClass={{ root: 'bg-primary' }}>
+    <LinearGradient
+      colors={['#241A6F', '#7832D5']}
+      start={{ x: 0.5, y: 1 }}
+      end={{ x: 0.5, y: 0 }}
+      style={{ flex: 1 }}
+    >
       {/* 로고 영역 */}
       <View className="flex-1 justify-center items-center">
-        <Image
-          source={require('@/assets/orbits-character-icon.png')}
-          className="w-28 h-28 mb-4"
-          resizeMode="contain"
-        />
-        <Image
-          source={require('@/assets/orbits-name-icon.png')}
-          className="w-52 h-14"
-          resizeMode="contain"
-        />
-        <Text className="text-base text-white/80 mt-4">
-          대화를 여는 프로필 카드
-        </Text>
+        <View className="items-center gap-5">
+          <Image
+            source={require('@/assets/characters/login-icon.png')}
+            style={{ width: 216, height: 160 }}
+            resizeMode="contain"
+          />
+        </View>
       </View>
 
       {/* 소셜 로그인 버튼 */}
@@ -111,9 +111,9 @@ function LoginPage() {
         )}
 
         {/* 로그인 문제 링크 */}
-        <View className="items-center pt-2">
+        <View className="items-center pt-2 mb-10">
           <Pressable onPress={() => troubleRef.current?.open()} hitSlop={8}>
-            <Text className="text-xs text-white/60 underline">
+            <Text className="text-xs text-white/60">
               로그인에 문제가 있나요?
             </Text>
           </Pressable>
@@ -132,7 +132,7 @@ function LoginPage() {
         ref={troubleRef}
         onDefaultLogin={() => navigation.navigate('defaultLogin')}
       />
-    </Layout>
+    </LinearGradient>
   );
 }
 

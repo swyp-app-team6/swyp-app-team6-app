@@ -1,7 +1,6 @@
-import React from 'react'
-import { Layout } from '@/shared/ui'
-import withLayout from '@/shared/hoc/withLayout'
-import { QRScanWidget } from '@/widgets/qr'
+import React from 'react';
+import { View } from 'react-native';
+import { QRScanWidget } from '@/widgets/qr';
 
 /**
  * # QRPage
@@ -10,17 +9,15 @@ import { QRScanWidget } from '@/widgets/qr'
  * - 제약사항 및 특이사항:
  *   - Header 없음 — 카메라가 전체 화면을 채움
  *   - 안내 텍스트는 QRScanView 오버레이에 포함
- *   - withLayout 적용 (하단 탭 네비게이션)
+ *   - 하단 탭 네비게이션 없음 (전체 화면 카메라)
  * ---
  * @example
  * <QRPage />
  */
-function QRPage() {
+export default function QRPage() {
   return (
-    <Layout.Body styleClass={{ root: 'flex-1' }}>
+    <View className="flex-1">
       <QRScanWidget />
-    </Layout.Body>
+    </View>
   );
 }
-
-export default withLayout(QRPage);

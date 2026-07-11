@@ -4,7 +4,7 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useImperativeHandle } from 'react';
 import { Button, SafeBottomSheetModal } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
-import { CameraIcon, GalleryIcon, BellIcon } from '@/shared/ui/icons';
+import { CameraIcon, GalleryIcon } from '@/shared/ui/icons';
 
 interface Props {
   /** 확인 버튼 클릭 시 호출되는 콜백 */
@@ -19,7 +19,7 @@ interface Props {
  * - 간단설명: 앱 접근 권한 안내를 표시하는 바텀시트 컴포넌트
  * - 제약사항 및 특이사항:
  *   - 안내 목적으로만 사용 (실제 권한 요청은 각 기능 사용 시 수행)
- *   - 카메라, 사진보관함, PUSH 알림 3개 권한 항목 표시
+ *   - 카메라, 사진보관함 2개 권한 항목 표시
  *   - ref를 통해 open/close 제어
  * ---
  * @param onConfirm 확인 버튼 클릭 시 콜백
@@ -77,11 +77,6 @@ const PermissionGuideBottomSheet = forwardRef<BottomSheetHandle, Props>(
             icon={<GalleryIcon size={24} color="#8C39FB" />}
             title="사진보관함 사용 권한 [선택]"
             description="프로필 사진 저장 / 첨부 시 사용"
-          />
-          <PermissionItem
-            icon={<BellIcon size={24} color="#8C39FB" />}
-            title="PUSH 알림 권한 [선택]"
-            description="업데이트, 혜택 등 푸시 알림 시 사용"
           />
         </View>
 

@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import { createStore } from 'zustand/vanilla';
 import { useStore } from 'zustand';
 import { Modal } from '@/shared/ui/Modal';
@@ -84,14 +84,24 @@ export const dialogStore = createStore<DialogStore>((set) => ({
  * ```
  */
 export const openDialog = (params: Partial<IDialogParams>) => {
-  dialogStore.getState().openDialog({
-    type: 'alert',
+  const merged = {
+    type: 'alert' as const,
     title: '',
-    message: '',
+    message: '' as React.ReactNode,
     okLabel: '확인',
     cancelLabel: '취소',
     ...params,
-  });
+  };
+
+  /** title, message 중 하나만 있으면 message로 취급 */
+  const hasTitle = !!merged.title;
+  const hasMessage = !!merged.message;
+  if (hasTitle !== hasMessage) {
+    merged.message = merged.title || merged.message;
+    merged.title = '';
+  }
+
+  dialogStore.getState().openDialog(merged);
 };
 
 /**
@@ -177,7 +187,15 @@ export default function Dialog() {
     <Modal visible={isOpenDialog} onClose={handleCancel} title={title}>
       {message ? (
         typeof message === 'string' ? (
-          <Text className="text-sm text-text-gray3 leading-5 text-center">{message}</Text>
+          <Text
+            className={
+              !title
+                ? 'text-base font-medium text-text-black leading-[22.4px] text-center'
+                : 'text-sm text-text-gray3 leading-5 text-center'
+            }
+          >
+            {message}
+          </Text>
         ) : (
           <View>{message}</View>
         )
@@ -186,12 +204,15 @@ export default function Dialog() {
       )}
       <View className="mt-6 flex-row justify-end gap-3">
         {type === 'confirm' && (
-          <Button
-            title={cancelLabel || '취소'}
-            variant="ghost"
+          <Pressable
+            className="flex-1 h-12 rounded-lg items-center justify-center"
+            style={{ backgroundColor: '#F5F5F5' }}
             onPress={handleCancel}
-            className="flex-1 flex align-center justify-center"
-          />
+          >
+            <Text className="text-base font-bold" style={{ color: '#1A1A1A' }}>
+              {cancelLabel || '취소'}
+            </Text>
+          </Pressable>
         )}
         <Button
           title={okLabel || '확인'}

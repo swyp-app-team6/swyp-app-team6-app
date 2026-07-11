@@ -1,25 +1,27 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Linking, Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Button, Header, Layout, MenuList, AppVersion } from '@/shared/ui';
+import { Header, Layout, MenuList } from '@/shared/ui';
 import ArrowIcon from '@/shared/ui/icons/ArrowIcon';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
 import useAuthStore from '@/entities/user/model/authStore';
 import type { NavigationPropType } from '@/shared/types';
+import { NOTICE_URL, PRIVACY_URL, SERVICE_URL } from '../../shared/constants';
 
 /**
  * # MyPage
  * ---
  * - 간단설명: 메뉴 구성 및 계정 정보 수정 진입을 제공하는 마이페이지 메인 화면
  * - 제약사항 및 특이사항:
- *   - 설정 메뉴(신고하기, 앱 설정, 공지사항)는 UI만 구성, 동작 미구현
- *   - 약관 메뉴(이용 약관, 개인정보 처리방침)도 UI만 구성
+ *   - 설정 메뉴(앱 설정, 공지사항)
+ *   - 약관 메뉴(이용 약관, 개인정보 처리방침)는 노션 링크로 이동
  *   - 계정 정보 수정 버튼 클릭 시 accountEdit 페이지로 이동
  * ---
  * @example
  * <MyPage />
  */
+
 function MyPage() {
   const navigation = useNavigation<NavigationPropType>();
   const user = useAuthStore((state) => state.user);
@@ -43,11 +45,14 @@ function MyPage() {
 
         {/* 계정 정보 수정 버튼 */}
         <View className="mx-5">
-          <Button
-            title="계정 정보 수정"
-            variant="secondary"
+          <Pressable
+            className="h-12 rounded-xl bg-[#F5F5F5] items-center justify-center active:opacity-80"
             onPress={() => navigation.navigate('accountEdit')}
-          />
+          >
+            <Text className="text-[14px] font-medium text-[#8C39FB] leading-[19.6px]">
+              계정 정보 수정
+            </Text>
+          </Pressable>
         </View>
 
         {/* 설정 섹션 */}
@@ -60,19 +65,16 @@ function MyPage() {
             }}
           >
             <MenuList.Item
-              label="신고하기"
-              right={chevronRight}
-              styleClass={{ root: 'px-5 h-14', label: 'text-[14px] font-medium text-[#1A1A1A]' }}
-            />
-            <MenuList.Item
               label="앱 설정"
               right={chevronRight}
+              onPress={() => navigation.navigate('appSetting')}
               styleClass={{ root: 'px-5 h-14', label: 'text-[14px] font-medium text-[#1A1A1A]' }}
             />
             <MenuList.Item
               label="공지사항"
               right={chevronRight}
               showDivider={false}
+              onPress={() => Linking.openURL(NOTICE_URL)}
               styleClass={{ root: 'px-5 h-14', label: 'text-[14px] font-medium text-[#1A1A1A]' }}
             />
           </MenuList.Section>
@@ -86,21 +88,19 @@ function MyPage() {
             <MenuList.Item
               label="이용 약관"
               right={chevronRight}
+              onPress={() => Linking.openURL(SERVICE_URL)}
               styleClass={{ root: 'px-5 h-14', label: 'text-[14px] font-medium text-[#1A1A1A]' }}
             />
             <MenuList.Item
               label="개인정보 처리방침"
               right={chevronRight}
               showDivider={false}
+              onPress={() => Linking.openURL(PRIVACY_URL)}
               styleClass={{ root: 'px-5 h-14', label: 'text-[14px] font-medium text-[#1A1A1A]' }}
             />
           </MenuList.Section>
         </View>
 
-        {/* 앱 버전 */}
-        <View className="py-6">
-          <AppVersion />
-        </View>
       </Layout.Body>
     </>
   );
