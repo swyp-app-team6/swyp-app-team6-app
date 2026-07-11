@@ -40,9 +40,10 @@ export default function Step2DetailInfoView() {
     nextStep();
   };
 
-  /** 직무분야 변경 핸들러 */
+  /** 직무분야 변경 핸들러 (연속 공백 방지) */
   const handleJobFieldChange = (text: string) => {
-    updateForm({ jobField: text });
+    const filtered = text.replace(/\s{2,}/g, ' ');
+    updateForm({ jobField: filtered });
   };
 
   /** 지역 선택완료 핸들러 */

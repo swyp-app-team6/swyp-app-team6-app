@@ -19,9 +19,11 @@ import useRegisterFormStore from '../model/useRegisterFormStore';
 export default function Step3BioView() {
   const { form, updateForm, nextStep } = useRegisterFormStore();
 
-  /** 자기소개 변경 핸들러 (이모티콘 입력 불가) */
+  /** 자기소개 변경 핸들러 (이모티콘 입력 불가, 연속 공백 방지) */
   const handleBioChange = (text: string) => {
-    const filtered = text.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '');
+    const filtered = text
+      .replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '')
+      .replace(/[^\S\n]{2,}/g, ' ');
     updateForm({ bio: filtered });
   };
 

@@ -56,9 +56,9 @@ export default function Step1BasicInfoView() {
     }
   };
 
-  /** 이름 변경 핸들러 (한글/영문/숫자/공백만 허용, 특수문자·이모티콘 불가) */
+  /** 이름 변경 핸들러 (한글/영문/숫자만 허용, 특수문자·이모티콘·공백 불가) */
   const handleNicknameChange = (text: string) => {
-    const filtered = text.replace(/[^\p{L}\p{N}\s]/gu, '');
+    const filtered = text.replace(/[^\p{L}\p{N}]/gu, '');
     if (filtered.length <= 10) {
       updateForm({ nickname: filtered });
     }
