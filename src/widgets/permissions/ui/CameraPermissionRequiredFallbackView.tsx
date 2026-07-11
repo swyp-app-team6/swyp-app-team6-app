@@ -20,7 +20,7 @@ export default function CameraPermissionRequiredFallbackView() {
   const { cameraStatus, requestCameraPermission } = usePermissionStore();
   useEffect(() => {
     requestCameraPermission();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 16 }}>
@@ -28,9 +28,9 @@ export default function CameraPermissionRequiredFallbackView() {
       {cameraStatus === 'blocked' &&
         <View>
           <Text>옵션에서 권한 허용해주세요.</Text>
-          <Button title='옵션에서 권한 허용' onPress={() => Linking.openSettings()} />
+          <Button className='w-full' title='옵션에서 권한 허용' onPress={() => Linking.openSettings()} />
         </View>}
-      <Button title="권한 허용하기"
+      <Button className='w-full' title="권한 허용하기"
         onPress={requestCameraPermission}
       />
     </View>
