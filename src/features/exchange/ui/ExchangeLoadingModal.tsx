@@ -1,6 +1,5 @@
 import React from 'react';
-import { Image, Modal, Text, View } from 'react-native';
-
+import { Image, Modal, Pressable, Text, View } from 'react-native';
 
 interface Props {
   /** 모달 표시 여부 */
@@ -23,7 +22,7 @@ interface Props {
  * @example
  * <ExchangeLoadingModal visible={true} onCancel={handleCancel} />
  */
-export default function ExchangeLoadingModal({ visible }: Props) {
+export default function ExchangeLoadingModal({ visible, onCancel }: Props) {
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View
@@ -41,9 +40,9 @@ export default function ExchangeLoadingModal({ visible }: Props) {
               resizeMode="contain"
             />
           </View>
-          {/* <Pressable onPress={onCancel} hitSlop={8}>
+          <Pressable onPress={onCancel} hitSlop={8}>
             <Text className="text-sm text-[#999999] underline">취소하기</Text>
-          </Pressable> */}
+          </Pressable>
         </View>
       </View>
     </Modal>
