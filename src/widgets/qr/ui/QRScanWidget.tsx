@@ -37,6 +37,7 @@ export default function QRScanWidget() {
   const [cameraKey, setCameraKey] = useState(0);
 
   const step = useExchangeFlowStore((s) => s.step);
+  const error = useExchangeFlowStore((s) => s.error);
   const onScanComplete = useExchangeFlowStore((s) => s.onScanComplete);
   const goToPreview = useExchangeFlowStore((s) => s.goToPreview);
   const startExchange = useExchangeFlowStore((s) => s.startExchange);
@@ -127,6 +128,13 @@ export default function QRScanWidget() {
     return () => subscription.remove();
   }, []);
 
+  /** 에러 발생 시 카메라 강제 재시작 — 유효하지 않은 QR 등 스캔 실패 후 재스캔 허용 */
+  useEffect(() => {
+    if (error && step === ExchangeFlowStep.IDLE) {
+      handleReload();
+    }
+  }, [error, step, handleReload]);
+
   useEffect(() => {
     return () => {
       isScanned.current = false;
@@ -149,7 +157,10 @@ export default function QRScanWidget() {
               isScanned.current = true;
             }
           }}
-          onError={(error) => console.error('QR 스캔 오류:', error)}
+          onError={(error) => {
+            console.error('QR 스캔 오류:', error);
+            handleReload();
+          }}
         />
       ) : (
         <View className="flex-1 items-center justify-center" />
