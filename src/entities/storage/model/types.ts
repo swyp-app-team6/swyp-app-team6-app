@@ -1,5 +1,5 @@
 import type { BadgeLevel } from '@/shared/ui';
-import type { MyProfileResponse } from '@/entities/user';
+import type { MyProfileResponse, Region } from '@/entities/user';
 
 /**
  * 보관함 프로필 카드 데이터
@@ -117,8 +117,8 @@ export interface ExchangeArchiveItem {
   cosmic_type_image_key: string;
   /** 나이 */
   age?: number;
-  /** 활동 지역 */
-  region?: string;
+  /** 활동 지역 (Region 객체: group, detail, label) */
+  region?: Region;
   /** 직업 */
   job?: string;
   interests: InterestItem[];
