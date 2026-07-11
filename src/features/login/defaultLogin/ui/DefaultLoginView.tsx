@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Keyboard, Pressable, Text, View } from 'react-native';
 import { Button, Input } from '@/shared/ui';
 import { openErrorDialog } from '@/shared/ui/ErrorDialog';
 import useDefaultLoginMutation from '../api/useDefaultLoginMutation';
@@ -47,10 +47,10 @@ export default function DefaultLoginView({ onLoginSuccess }: Props) {
   };
 
   return (
-    <View className="flex-1">
+    <Pressable className="flex-1" onPress={Keyboard.dismiss}>
       {/* 안내 문구 */}
       <View className="px-5 pt-6 pb-8">
-        <Text className="text-sm text-gray-500 text-center leading-5">
+        <Text className="text-sm text-black text-center leading-5">
           {'운영팀의 안내를 받은 계정만 사용할 수 있습니다.\n새 계정 생성은 지원하지 않습니다.'}
         </Text>
       </View>
@@ -87,6 +87,6 @@ export default function DefaultLoginView({ onLoginSuccess }: Props) {
         />
       </View>
 
-    </View>
+    </Pressable>
   );
 }

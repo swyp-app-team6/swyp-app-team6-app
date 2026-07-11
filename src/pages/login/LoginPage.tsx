@@ -107,7 +107,7 @@ function LoginPage() {
         {/* 로그인 문제 링크 */}
         <View className="items-center pt-2">
           <Pressable onPress={() => troubleRef.current?.open()} hitSlop={8}>
-            <Text className="text-xs text-white/60 underline">
+            <Text className="text-xs text-white/60">
               로그인에 문제가 있나요?
             </Text>
           </Pressable>
