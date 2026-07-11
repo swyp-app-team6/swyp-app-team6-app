@@ -1,8 +1,7 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { Text, TextInput, View, type TextInputProps } from 'react-native';
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { cn } from '@/shared/lib/cn';
-import { useKoreanSafeValue } from '@/shared/lib/useKoreanSafeValue';
 
 interface Props extends Omit<TextInputProps, 'multiline'> {
   /** 입력 필드 상단 레이블 */
@@ -26,6 +25,7 @@ interface Props extends Omit<TextInputProps, 'multiline'> {
  *   - 항상 multiline 모드로 동작
  *   - maxLength 지정 시 글자수 카운터 표시
  *   - error 전달 시 빨간 테두리 + 에러 메시지 표시
+ *   - isBottomSheet=true 시 BottomSheetTextInput 사용
  * ---
  * @param label 입력 필드 상단 레이블
  * @param error 에러 메시지
@@ -56,41 +56,15 @@ export default function Textbox({
   onChangeText: parentOnChangeText,
   ...rest
 }: Props) {
-  const [length, setLength] = useState(value?.replace(/\s/g, '').length ?? 0);
   const InputComponent = isBottomSheet ? BottomSheetTextInput : TextInput;
-  const inputRef = useRef<TextInput>(null);
-  const prevValueRef = useRef(value);
+  const length = value?.replace(/\s/g, '').length ?? 0;
 
-  useEffect(() => {
-    if (value !== undefined) {
-      setLength(value.replace(/\s/g, '').length);
-    }
-  }, [value]);
-
-  /** BottomSheet 모드에서 외부 value 변경 시 네이티브 입력 동기화 */
-  useEffect(() => {
-    if (isBottomSheet && value !== undefined && value !== prevValueRef.current) {
-      inputRef.current?.setNativeProps({ text: value });
-    }
-    prevValueRef.current = value;
-  }, [isBottomSheet, value]);
-
-  /** 최신 parentOnChangeText를 ref로 보관하여 콜백 안정성 확보 */
   const parentOnChangeTextRef = useRef(parentOnChangeText);
   parentOnChangeTextRef.current = parentOnChangeText;
 
   const handleChangeText = useCallback((text: string) => {
-    setLength(text.replace(/\s/g, '').length);
     parentOnChangeTextRef.current?.(text);
   }, []);
-
-  /**
-   * BottomSheetTextInput은 자체 네이티브 텍스트 상태를 관리하므로:
-   * - value 전달 → iOS 한글 자음모음분리 발생
-   * - useKoreanSafeValue(value 조건부 생략) → 네이티브/JS 상태 충돌로 이중 호출
-   * 해결: 비제어 모드(defaultValue)로 동작시키고 onChangeText로만 부모 상태 동기화
-   */
-  const { valueProps, onChangeText } = useKoreanSafeValue(value, handleChangeText);
 
   return (
     <View className={cn(styleClass?.root)}>
@@ -100,7 +74,6 @@ export default function Textbox({
         </Text>
       )}
       <InputComponent
-        ref={inputRef}
         multiline
         textAlignVertical="top"
         maxLength={maxLength}
@@ -112,8 +85,8 @@ export default function Textbox({
         )}
         style={{ minHeight }}
         {...rest}
-        {...(isBottomSheet ? { defaultValue: value } : valueProps)}
-        onChangeText={isBottomSheet ? handleChangeText : onChangeText}
+        value={value}
+        onChangeText={handleChangeText}
       />
       <View className="flex-row justify-between mt-1.5">
         {error ? (

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Keyboard, Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Button, Header, Layout, MenuList, Textbox } from '@/shared/ui';
 import ArrowIcon from '@/shared/ui/icons/ArrowIcon';
@@ -53,68 +53,70 @@ function WithdrawalReasonPage() {
     <>
       <Header title="탈퇴하기" showBack />
       <Layout.Body styleClass={{ root: 'bg-white' }}>
-        {/* 제목 */}
-        <View className="px-5 py-4">
-          <Text className="text-[16px] font-semibold text-[#1A1A1A] leading-[22.4px]">
-            탈퇴 사유 선택
-          </Text>
-        </View>
+        <Pressable className="flex-1" onPress={Keyboard.dismiss}>
+          {/* 제목 */}
+          <View className="px-5 py-4">
+            <Text className="text-[16px] font-semibold text-[#1A1A1A] leading-[22.4px]">
+              탈퇴 사유 선택
+            </Text>
+          </View>
 
-        {/* 사유 목록 */}
-        <MenuList.Section styleClass={{ root: 'mb-0' }}>
-          {WITHDRAWAL_REASONS.map((reason) => (
-            <MenuList.Item
-              key={reason}
-              label={reason}
-              right={
-                reason === '기타' ? (
-                  <ArrowIcon
-                    direction={isOtherOpen ? 'up' : 'down'}
-                    size={24}
-                    color="#8C39FB"
-                  />
-                ) : (
-                  chevronRight
-                )
+          {/* 사유 목록 */}
+          <MenuList.Section styleClass={{ root: 'mb-0' }}>
+            {WITHDRAWAL_REASONS.map((reason) => (
+              <MenuList.Item
+                key={reason}
+                label={reason}
+                right={
+                  reason === '기타' ? (
+                    <ArrowIcon
+                      direction={isOtherOpen ? 'up' : 'down'}
+                      size={24}
+                      color="#8C39FB"
+                    />
+                  ) : (
+                    chevronRight
+                  )
+                }
+                onPress={() => handleSelectReason(reason)}
+                showDivider={false}
+                styleClass={{
+                  root: `px-5 h-14 ${selectedReason === reason ? 'bg-gray-50' : ''}`,
+                  label: 'text-[14px] font-medium text-[#1A1A1A]',
+                }}
+              />
+            ))}
+          </MenuList.Section>
+
+          {/* 기타 사유 입력 */}
+          {isOtherOpen && (
+            <View className="px-5 mt-3 gap-3">
+              <Textbox
+                value={customReason}
+                onChangeText={setCustomReason}
+                placeholder="기타 사유를 입력해주세요."
+                maxLength={300}
+                minHeight={120}
+                styleClass={{
+                  root: '',
+                  input: 'bg-[#F5F5F5] rounded-xl p-4',
+                }}
+              />
+            </View>
+          )}
+
+          {/* 다음 버튼 */}
+          <View className="px-5 mt-auto pb-6">
+            <Button
+              title="다음"
+              variant="secondary"
+              disabled={!isNextEnabled}
+              onPress={() =>
+                navigation.navigate('withdrawalConfirm', { reason: finalReason })
               }
-              onPress={() => handleSelectReason(reason)}
-              showDivider={false}
-              styleClass={{
-                root: `px-5 h-14 ${selectedReason === reason ? 'bg-gray-50' : ''}`,
-                label: 'text-[14px] font-medium text-[#1A1A1A]',
-              }}
-            />
-          ))}
-        </MenuList.Section>
-
-        {/* 기타 사유 입력 */}
-        {isOtherOpen && (
-          <View className="px-5 mt-3 gap-3">
-            <Textbox
-              value={customReason}
-              onChangeText={setCustomReason}
-              placeholder="기타 사유를 입력해주세요."
-              maxLength={300}
-              minHeight={120}
-              styleClass={{
-                root: '',
-                input: 'bg-[#F5F5F5] rounded-xl p-4',
-              }}
             />
           </View>
-        )}
-
-        {/* 다음 버튼 */}
-        <View className="px-5 mt-auto pb-6">
-          <Button
-            title="다음"
-            variant="secondary"
-            disabled={!isNextEnabled}
-            onPress={() =>
-              navigation.navigate('withdrawalConfirm', { reason: finalReason })
-            }
-          />
-        </View>
+        </Pressable>
       </Layout.Body>
     </>
   );
