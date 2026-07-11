@@ -43,7 +43,7 @@ export default function CosmicTypeResultView({
   const cardRef = useRef<View>(null);
 
   const handleSaveImage = useCallback(() => {
-    saveCardImage(cardRef);
+    void saveCardImage(cardRef);
   }, []);
 
   return (
