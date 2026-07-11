@@ -26,5 +26,6 @@ export { default as ReportIcon } from './ReportIcon';
 export { default as ProfileEditIcon } from './ProfileEditIcon';
 export { default as ProfileDeleteIcon } from './ProfileDeleteIcon';
 export { default as FilterIcon } from './FilterIcon';
+export { default as DownloadIcon } from './DownloadIcon';
 export { ErrorIcon } from './ErrorIcon';
 export type { IconProps, DirectionalIconProps, OrientedIconProps } from './types';
