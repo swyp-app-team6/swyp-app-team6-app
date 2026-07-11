@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, Modal, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Modal, Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Button, ProfileCard } from '@/shared/ui';
 import QRCode from 'react-native-qrcode-svg';
@@ -10,6 +10,7 @@ import { ExchangeAPI } from '@/entities/exchange';
 import { useExchangeFlowStore } from '@/features/exchange';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 import { ExchangeFlowStep } from '@/shared/enums';
+import { openErrorDialog } from '@/shared/ui/ErrorDialog';
 import type { NavigationPropType } from '@/shared/types';
 import useCountdownTimer from '../lib/useCountdownTimer';
 
@@ -113,7 +114,7 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
         .catch((err) => {
           if (controller.signal.aborted) return;
           console.error('[Exchange] wait 실패:', err);
-          Alert.alert('프로필 교환', '교환 대기 중 오류가 발생했습니다');
+          openErrorDialog({ title: '프로필 교환', message: '교환 대기 중 오류가 발생했습니다' });
         });
     } else {
       abortRef.current?.abort();
@@ -146,12 +147,12 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
         onClose();
         navigation.navigate('exchangeResult');
       } else {
-        Alert.alert('프로필 교환', '교환이 완료되지 않았습니다');
+        openErrorDialog({ title: '프로필 교환', message: '교환이 완료되지 않았습니다' });
         handleClose();
       }
     } catch (err) {
       console.error('[Exchange] accept 실패:', err);
-      Alert.alert('프로필 교환', '교환 수락 중 오류가 발생했습니다');
+      openErrorDialog({ title: '프로필 교환', message: '교환 수락 중 오류가 발생했습니다' });
       setModalStep('PREVIEW');
     }
   }, [receivedProfile, handleClose, onClose, navigation]);
