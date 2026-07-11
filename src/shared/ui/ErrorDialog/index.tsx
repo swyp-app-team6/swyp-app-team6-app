@@ -4,7 +4,6 @@ import { createStore } from 'zustand/vanilla';
 import { useStore } from 'zustand';
 import { Modal } from '@/shared/ui/Modal';
 import { Button } from '@/shared/ui/Button';
-import { ErrorIcon } from '@/shared/ui/icons/ErrorIcon';
 
 /**
  * ErrorDialog 파라미터
@@ -124,31 +123,32 @@ export default function ErrorDialog() {
   }, [storeClose]);
 
   return (
-    <Modal visible={isOpen} onClose={handleClose}>
-      <View className="items-center">
-        {title ? (
-          <>
-            <ErrorIcon />
-            <Text className="mt-4 text-center text-base font-bold text-text-black leading-[22.4px]">
-              {title}
-            </Text>
-            <Text className="mt-1 text-center text-sm text-text-gray3 leading-5">
-              {message}
-            </Text>
-          </>
-        ) : (
-          <Text className="text-center text-base font-medium leading-[22.4px]" style={{ color: '#1A1A1A' }}>
+    <Modal visible={isOpen} onClose={handleClose} title={title}>
+      {title ? (
+        <View className="items-center gap-4">
+          <Text className="text-center text-sm font-medium leading-[19.6px]" style={{ color: '#888888' }}>
             {message}
           </Text>
-        )}
-        <View className="mt-10 w-full">
           <Button
             title={buttonLabel}
             variant="primary"
             onPress={handleRetry}
           />
         </View>
-      </View>
+      ) : (
+        <View className="items-center">
+          <Text className="text-center text-base font-medium leading-[22.4px]" style={{ color: '#1A1A1A' }}>
+            {message}
+          </Text>
+          <View className="mt-10 w-full">
+            <Button
+              title={buttonLabel}
+              variant="primary"
+              onPress={handleRetry}
+            />
+          </View>
+        </View>
+      )}
     </Modal>
   );
 }
