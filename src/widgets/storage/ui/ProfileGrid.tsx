@@ -74,7 +74,7 @@ export default function ProfileGrid({
           <ProfileCard
             variant="grid"
             id={item.exchange_id}
-            name={item.nickname}
+            name={item.nickname ?? ''}
             cosmicTypeLabel={COSMIC_TYPE_LABEL[badgeLevel]}
             imageUri={getProfileImageUrl(item.image_key)}
             isFavorited={item.is_liked}

@@ -69,8 +69,9 @@ export default function StorageAllWidget() {
   const { mutate: toggleLike } = useToggleLikeMutation();
   const { mutate: deleteArchives } = useDeleteArchivesMutation();
 
+  /** 탈퇴 유저(nickname null) 제외 */
   const exchanges: ExchangeArchiveItem[] = useMemo(
-    () => data?.pages.flatMap((page) => page.exchanges) ?? [],
+    () => (data?.pages.flatMap((page) => page.exchanges) ?? []).filter((e) => e.nickname !== null),
     [data],
   );
   const totalCount = data?.pages[0]?.total_count ?? 0;
