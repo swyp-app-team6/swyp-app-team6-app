@@ -3,16 +3,14 @@ import { launchCamera, launchImageLibrary, type ImagePickerResponse } from 'reac
 
 const IMAGE_OPTIONS = {
   mediaType: 'photo' as const,
-  quality: 0.8 as const,
-  maxWidth: 512,
-  maxHeight: 512,
+  quality: 1 as const,
 };
 
 /**
  * # useImagePicker
  * ---
  * - 간단설명: 카메라 또는 갤러리에서 이미지를 선택하고 URI를 로컬 상태로 관리하는 훅
- * - 제약사항 및 특이사항: 최대 512x512로 리사이즈, quality 0.8 압축 적용
+ * - 제약사항 및 특이사항: 원본 이미지 그대로 사용 (압축/리사이즈 없음)
  * ---
  * @example
  * const { imageUri, openCamera, openGallery } = useImagePicker();
