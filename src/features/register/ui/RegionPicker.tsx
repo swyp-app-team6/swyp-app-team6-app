@@ -43,9 +43,15 @@ export default function RegionPicker({ selectedRegion, selectedSubArea, onConfir
 
   const subAreas = REGION_SUB_AREAS[activeProvince] ?? [];
 
-  /** 시/도 탭 핸들러 */
+  /** 시/도 탭 핸들러 — 시/도 변경 시 상세지역을 첫 번째 항목으로 초기화 */
   const handleProvincePress = (label: string) => {
     setActiveProvince(label);
+    const regionOption = REGION_OPTIONS.find((o) => o.label === label);
+    if (regionOption) {
+      const firstSubArea = REGION_SUB_AREAS[label]?.[0] ?? '';
+      setTempRegion(regionOption.value);
+      setTempSubArea(firstSubArea);
+    }
   };
 
   /** 하위 지역 탭 핸들러 — 임시 상태에만 저장 */
@@ -64,7 +70,7 @@ export default function RegionPicker({ selectedRegion, selectedSubArea, onConfir
 
   return (
     <View>
-      <View className="flex-row h-[288px]">
+      <View className="flex-row h-[240px]">
         {/* 시/도 컬럼 */}
         <BottomSheetScrollView className="w-[120px]" showsVerticalScrollIndicator={false}>
           {REGION_OPTIONS.map((option) => {
@@ -73,7 +79,7 @@ export default function RegionPicker({ selectedRegion, selectedSubArea, onConfir
               <Pressable
                 key={option.value}
                 onPress={() => handleProvincePress(option.label)}
-                className="h-12 px-4 rounded-xl justify-center mb-1"
+                className="h-12 px-4 rounded-xl justify-center mb-1 mr-4"
                 style={{ backgroundColor: isActive ? '#F5F5F5' : '#FFFFFF' }}
               >
                 <Text
@@ -94,7 +100,7 @@ export default function RegionPicker({ selectedRegion, selectedSubArea, onConfir
         <View className="w-px self-stretch" style={{ backgroundColor: '#D9D9D9' }} />
 
         {/* 하위 지역 컬럼 */}
-        <BottomSheetScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+        <BottomSheetScrollView className="w-[200px]" showsVerticalScrollIndicator={false}>
           {subAreas.map((area) => {
             const currentRegionValue = REGION_OPTIONS.find((o) => o.label === activeProvince)?.value;
             const isActive = tempRegion === currentRegionValue && tempSubArea === area;
@@ -102,7 +108,7 @@ export default function RegionPicker({ selectedRegion, selectedSubArea, onConfir
               <Pressable
                 key={area}
                 onPress={() => handleSubAreaPress(area)}
-                className="h-12 px-4 rounded-xl justify-center mb-1"
+                className="h-12 px-4 rounded-xl justify-center mb-1 ml-4"
                 style={{ backgroundColor: isActive ? '#F5F5F5' : '#FFFFFF' }}
               >
                 <Text
