@@ -6,7 +6,8 @@ import { SearchFallbackView } from '@/shared/ui/SearchFallbackView';
 import PullToRefreshWrapper from '@/shared/ui/PullToRefreshWrapper';
 import { ArrowIcon, SearchIcon } from '@/shared/ui/icons';
 import { useExchangeArchiveListQuery } from '@/entities/storage';
-import { useToggleLikeMutation } from '@/features/storage';
+import { useToggleLikeMutation, useUnblockMutation } from '@/features/storage';
+import { openDialog } from '@/shared/ui/Dialog';
 import type { NavigationPropType } from '@/shared/types';
 import ProfileGrid from './ProfileGrid';
 
@@ -39,6 +40,7 @@ export default function StorageWidget() {
 
   const { data, isLoading, refetch } = useExchangeArchiveListQuery(params);
   const { mutate: toggleLike } = useToggleLikeMutation();
+  const { mutate: submitUnblock } = useUnblockMutation();
 
   /** 탈퇴 유저(nickname null) 제외 */
   const exchanges = (data?.pages[0]?.exchanges ?? []).filter((e) => e.nickname !== null);
@@ -50,6 +52,32 @@ export default function StorageWidget() {
     if (item) {
       toggleLike({ exchangeId: id, liked: !item.is_liked });
     }
+  };
+
+  const handleUnblock = (id: number) => {
+    const item = exchanges.find((e) => e.exchange_id === id);
+    if (!item?.block_id) return;
+    openDialog({
+      type: 'confirm',
+      title: `${item.nickname ?? ''} 님의 차단을 해제할까요?`,
+      message: '프로필이 다시 정상적으로 표시됩니다.',
+      okLabel: '차단해제',
+      cancelLabel: '취소',
+      okFn: () => {
+        submitUnblock(item.block_id!, {
+          onSuccess: () => {
+            openDialog({ type: 'alert', title: '차단이 해제되었습니다' });
+          },
+          onError: () => {
+            openDialog({
+              type: 'alert',
+              title: '차단 해제에 실패했습니다',
+              message: '잠시 후 다시 시도해주세요.',
+            });
+          },
+        });
+      },
+    });
   };
 
   return (
@@ -97,6 +125,7 @@ export default function StorageWidget() {
           onPressProfile={(id) =>
             navigation.navigate('exchangedProfileDetail', { profileId: id })
           }
+          onUnblock={handleUnblock}
         />
       )}
     </PullToRefreshWrapper>

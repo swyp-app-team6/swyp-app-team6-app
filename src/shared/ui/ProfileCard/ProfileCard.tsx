@@ -82,6 +82,8 @@ interface GridProps {
   onToggleSelect?: (id: number) => void;
   /** 차단 여부 */
   isBlocked?: boolean;
+  /** 차단 해제 콜백 */
+  onUnblock?: (id: number) => void;
 }
 
 type ProfileCardProps = PreviewProps | CompactProps | GridProps;
@@ -273,6 +275,7 @@ function GridCard({
   isSelected = false,
   onToggleSelect,
   isBlocked = false,
+  onUnblock,
 }: GridProps) {
   return (
     <Pressable
@@ -306,6 +309,13 @@ function GridCard({
             <Text className="text-base font-medium text-white">
               차단된 프로필입니다
             </Text>
+            {onUnblock && (
+              <Pressable onPress={() => onUnblock(id)}>
+                <Text className="text-sm text-white underline mt-3">
+                  차단해제
+                </Text>
+              </Pressable>
+            )}
           </View>
         )}
         {isEditMode && (

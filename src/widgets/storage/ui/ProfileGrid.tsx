@@ -23,6 +23,8 @@ interface ProfileGridProps {
   onEndReached?: () => void;
   /** 다음 페이지 로딩 중 여부 */
   isFetchingNextPage?: boolean;
+  /** 차단 해제 콜백 */
+  onUnblock?: (id: number) => void;
 }
 
 /**
@@ -51,6 +53,7 @@ export default function ProfileGrid({
   onToggleSelect,
   onEndReached,
   isFetchingNextPage,
+  onUnblock,
 }: ProfileGridProps) {
   return (
     <FlatList
@@ -88,6 +91,7 @@ export default function ProfileGrid({
             isSelected={selectedIds?.has(item.exchange_id) ?? false}
             onToggleSelect={onToggleSelect}
             isBlocked={item.is_blocked}
+            onUnblock={onUnblock}
           />
         );
       }}
