@@ -16,7 +16,7 @@ const BioSection = memo(function BioSection({ bio }: { bio?: string }) {
   return (
     <InfoCard title="자기소개">
       <Text
-        className="text-sm font-medium text-text-black"
+        className="text-sm font-normal text-text-black"
         style={{ lineHeight: 19.6 }}
       >
         {bio || '등록된 자기소개가 없습니다'}
