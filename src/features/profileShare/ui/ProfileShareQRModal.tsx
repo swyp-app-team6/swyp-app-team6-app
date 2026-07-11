@@ -217,9 +217,18 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
           {(modalStep === 'PREVIEW' || modalStep === 'ACCEPTING') && receivedProfile && (
             <>
               {/* 상대 프로필 미리보기 */}
-              <Text className="mb-5 text-center text-[16px] font-bold leading-[22px] text-text-black">
-                상대방의 교환 요청
-              </Text>
+              <View className="mb-5 flex-row items-center justify-center">
+                <Text className="text-center text-[16px] font-bold leading-[22px] text-text-black">
+                  상대방의 교환 요청
+                </Text>
+                <Pressable
+                  className="absolute right-0"
+                  onPress={handleDecline}
+                  hitSlop={8}
+                >
+                  <Text className="text-[18px] text-[#999999]">✕</Text>
+                </Pressable>
+              </View>
 
               <View className="items-center">
                 <ProfileCard
@@ -231,16 +240,11 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
                 />
               </View>
 
-              <View className="mt-5 gap-3">
+              <View className="mt-5">
                 {modalStep === 'ACCEPTING' ? (
                   <ActivityIndicator size="small" color="#8C39FB" />
                 ) : (
-                  <>
-                    <Button title="수락하기" variant="primary" onPress={handleAccept} />
-                    <Pressable onPress={handleDecline} hitSlop={8}>
-                      <Text className="text-center text-sm text-[#999999] underline">교환 취소</Text>
-                    </Pressable>
-                  </>
+                  <Button title="수락하기" variant="primary" onPress={handleAccept} />
                 )}
               </View>
             </>
