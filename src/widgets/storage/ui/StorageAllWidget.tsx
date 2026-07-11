@@ -119,6 +119,7 @@ export default function StorageAllWidget() {
     openDialog({
       type: 'confirm',
       title: '선택한 프로필을 삭제하시겠어요?',
+      message: '삭제한 프로필은 복구할 수 없습니다.',
       okFn: () => {
         deleteArchives(
           { exchange_ids: Array.from(selectedIds) },
@@ -128,12 +129,14 @@ export default function StorageAllWidget() {
               setIsEditMode(false);
               openDialog({
                 type: 'alert',
-                title: '선택한 프로필을 삭제했습니다',
+                title: '삭제 완료',
+                message: '선택한 프로필을 삭제했습니다.',
               });
             },
             onError: () => {
               openDialog({
                 type: 'alert',
+                title: '삭제 실패',
                 message: '삭제 도중 문제가 발생하였습니다.',
               });
             },
@@ -177,29 +180,25 @@ export default function StorageAllWidget() {
                 {totalCount}개
               </Text>
             </View>
-            {!isEditMode && (
-              <>
-                <Pressable
-                  className="flex-row items-center gap-1"
-                  onPress={() => setIsFavoriteOnly((prev) => !prev)}
-                >
-                  <HeartIcon size={16} filled={isFavoriteOnly} />
-                  <Text
-                    className="text-sm"
-                    style={{ color: isFavoriteOnly ? '#8C39FB' : '#1A1A1A' }}
-                  >
-                    좋아요
-                  </Text>
-                </Pressable>
-                <Pressable
-                  className="flex-row items-center gap-1"
-                  onPress={() => filterRef.current?.open()}
-                >
-                  <FilterIcon size={20} color="#8C39FB" />
-                  <Text className="text-sm text-[#1A1A1A]">필터</Text>
-                </Pressable>
-              </>
-            )}
+            <Pressable
+              className="flex-row items-center gap-1"
+              onPress={() => setIsFavoriteOnly((prev) => !prev)}
+            >
+              <HeartIcon size={16} filled={isFavoriteOnly} />
+              <Text
+                className="text-sm"
+                style={{ color: isFavoriteOnly ? '#8C39FB' : '#1A1A1A' }}
+              >
+                좋아요
+              </Text>
+            </Pressable>
+            <Pressable
+              className="flex-row items-center gap-1"
+              onPress={() => filterRef.current?.open()}
+            >
+              <FilterIcon size={20} color="#8C39FB" />
+              <Text className="text-sm text-[#1A1A1A]">필터</Text>
+            </Pressable>
           </View>
           {!isEditMode && (
             <Pressable hitSlop={8} onPress={handleEnterEditMode}>

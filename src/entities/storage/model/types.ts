@@ -115,6 +115,12 @@ export interface ExchangeArchiveItem {
   image_key: string | null;
   cosmic_type: string;
   cosmic_type_image_key: string;
+  /** 나이 */
+  age?: number;
+  /** 활동 지역 */
+  region?: string;
+  /** 직업 */
+  job?: string;
   interests: InterestItem[];
   bio: string;
   matched_interests: InterestItem[];

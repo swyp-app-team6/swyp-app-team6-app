@@ -4,6 +4,7 @@ import { ProfileCard } from '@/shared/ui';
 import type { ExchangeArchiveItem } from '@/entities/storage';
 import { COSMIC_TYPE_LABEL, apiValueToCosmicType } from '@/entities/storage';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
+import { getRegionLabel } from '@/shared/lib/regionLabel';
 
 interface ProfileGridProps {
   /** 교환 프로필 목록 */
@@ -75,6 +76,9 @@ export default function ProfileGrid({
             variant="grid"
             id={item.exchange_id}
             name={item.nickname ?? ''}
+            age={item.age}
+            location={item.region ? getRegionLabel(item.region) : undefined}
+            job={item.job}
             cosmicTypeLabel={COSMIC_TYPE_LABEL[badgeLevel]}
             imageUri={getProfileImageUrl(item.image_key)}
             isFavorited={item.is_liked}

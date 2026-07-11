@@ -41,7 +41,7 @@ interface TMIQuestionUI {
  * <Step4TMIView />
  */
 export default function Step4TMIView() {
-  const { form, addTMIAnswer, removeTMIAnswer } = useRegisterFormStore();
+  const { form, addTMIAnswer } = useRegisterFormStore();
   const { nextStep } = useRegisterStepStore();
   const { setProfileData } = useProfileDataStore();
   const { data: questionData, isLoading } = useQuestionsQuery();
@@ -81,19 +81,24 @@ export default function Step4TMIView() {
     return allQuestions.filter((q) => q.type === selectedCategory);
   }, [selectedCategory, allQuestions]);
 
-  /** 질문 카드 탭 핸들러 */
+  /** 질문 카드 탭 핸들러 - 기존 답변이 있으면 답변을 유지한 채 바텀시트 재오픈 */
   const handleQuestionPress = (question: TMIQuestionUI) => {
     const key = tmiKey(question.answerType, question.id);
     const existing = form.tmiAnswers.find(
       (a) => tmiKey(a.answerKind, a.questionId) === key,
     );
-    if (existing) {
-      removeTMIAnswer(question.answerType, question.id);
-      return;
-    }
     setActiveQuestion(question);
-    setTextInput('');
-    setChoiceInput(null);
+    if (existing) {
+      setTextInput(existing.answerKind === 'TEXT' ? existing.answer : '');
+      setChoiceInput(
+        existing.answerKind === 'CHOICE' && question.answers
+          ? question.answers.find((a) => a.answer_id === existing.answerId) ?? null
+          : null,
+      );
+    } else {
+      setTextInput('');
+      setChoiceInput(null);
+    }
     sheetRef.current?.open();
   };
 

@@ -3,7 +3,7 @@ import { Pressable, Text, View } from 'react-native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useImperativeHandle, useRef } from 'react';
 import Svg, { Path } from 'react-native-svg';
-import { Button, SafeBottomSheetModal } from '@/shared/ui';
+import { Button, ChipSelect, SafeBottomSheetModal } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
 
 /**
@@ -55,75 +55,6 @@ interface Props {
   onApply: (filter: StorageFilterState) => void;
   /** 바텀시트 닫힘 시 호출되는 콜백 */
   onDismiss?: () => void;
-}
-
-interface FilterChipOption {
-  label: string;
-  value: string;
-}
-
-interface FilterChipGroupProps {
-  /** 선택 가능한 옵션 목록 */
-  options: FilterChipOption[];
-  /** 현재 선택된 값 배열 */
-  selected: string[];
-  /** 선택 변경 콜백 */
-  onSelect: (values: string[]) => void;
-}
-
-/**
- * # FilterChipGroup
- * ---
- * - 간단설명: 아웃라인 스타일 멀티 선택 칩 그룹
- * - 제약사항 및 특이사항:
- *   - 선택: 흰 배경 + 보라 테두리 + 보라 텍스트
- *   - 미선택: 흰 배경 + 회색 테두리 + 회색 텍스트
- * ---
- * @param options 선택 가능한 옵션 목록
- * @param selected 현재 선택된 값 배열
- * @param onSelect 선택 변경 콜백
- */
-function FilterChipGroup({ options, selected, onSelect }: FilterChipGroupProps) {
-  const handlePress = (value: string) => {
-    if (selected.includes(value)) {
-      onSelect(selected.filter(v => v !== value));
-    } else {
-      onSelect([...selected, value]);
-    }
-  };
-
-  return (
-    <View className="flex-row flex-wrap gap-2">
-      {options.map(option => {
-        const isSelected = selected.includes(option.value);
-        return (
-          <Pressable
-            key={option.value}
-            onPress={() => handlePress(option.value)}
-            accessibilityRole="button"
-            accessibilityState={{ selected: isSelected }}
-            className="rounded-full px-5 py-2 overflow-hidden"
-            style={{
-              backgroundColor: 'white',
-              borderWidth: 1,
-              borderColor: isSelected ? '#8C39FB' : '#979797',
-            }}
-          >
-            <Text
-              className="text-sm"
-              style={{
-                color: isSelected ? '#8C39FB' : '#4E4E4E',
-                fontWeight: isSelected ? '600' : '500',
-                lineHeight: 19.6,
-              }}
-            >
-              {option.label}
-            </Text>
-          </Pressable>
-        );
-      })}
-    </View>
-  );
 }
 
 /**
@@ -199,7 +130,7 @@ const StorageFilterBottomSheet = forwardRef<BottomSheetHandle, Props>(
           <Text className="text-base font-semibold text-black mb-6 leading-[22.4px]">
             지역
           </Text>
-          <FilterChipGroup
+          <ChipSelect
             options={REGION_OPTIONS}
             selected={selectedRegions}
             onSelect={setSelectedRegions}
@@ -211,7 +142,7 @@ const StorageFilterBottomSheet = forwardRef<BottomSheetHandle, Props>(
           <Text className="text-base font-semibold text-[#1A1A1A] mb-5 leading-[22.4px]">
             유형
           </Text>
-          <FilterChipGroup
+          <ChipSelect
             options={COSMIC_TYPE_OPTIONS}
             selected={selectedCosmicTypes}
             onSelect={setSelectedCosmicTypes}
