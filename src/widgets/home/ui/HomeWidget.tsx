@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { ProfileQRCodeIcon } from '@/shared/ui';
-import { openDialog, closeDialog } from '@/shared/ui/Dialog';
 import UserProfileCard from '@/shared/ui/ProfileCard/UserProfileCard';
 import EmptyProfileCard from '@/shared/ui/ProfileCard/EmptyProfileCard';
 import ProfileFlipWrapper from '@/shared/ui/ProfileCard/ProfileFlipWrapper';
@@ -65,29 +64,14 @@ export default function HomeWidget() {
   }, [declineExchange]);
 
   /**
-   * QR 모달이 닫힌 상태에서 교환 요청 수신 시 글로벌 다이얼로그 표시
+   * QR 모달이 닫힌 상태에서 교환 요청 수신 시 모달을 다시 열어 프로필 카드 미리보기 표시
    * — 모달 열린 상태에서는 모달 내부에서 PREVIEW 단계로 처리
    */
   useEffect(() => {
     if (receivedProfile && !qrVisible && modalStep === 'PREVIEW') {
-      openDialog({
-        type: 'confirm',
-        title: '프로필 교환',
-        message: '상대방이 교환을 요청했습니다.\n수락하시겠습니까?',
-        okLabel: '수락하기',
-        cancelLabel: '거절하기',
-        okFn: () => {
-          closeDialog();
-          acceptExchange(navigation);
-        },
-        cancelFn: () => {
-          closeDialog();
-          declineExchange();
-        },
-        autoClose: false,
-      });
+      setQrVisible(true);
     }
-  }, [receivedProfile, qrVisible, modalStep, acceptExchange, declineExchange, navigation]);
+  }, [receivedProfile, qrVisible, modalStep]);
 
   /** 컴포넌트 unmount 시 wait 정리 */
   useEffect(() => {
