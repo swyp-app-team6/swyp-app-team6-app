@@ -367,7 +367,7 @@ export default function Step4TMIView() {
       <BottomSheet
         ref={previewSheetRef}
         title="선택한 TMI 미리보기"
-        snapPoints={['60%']}
+        snapPoints={['60%', '90%']}
       >
         <View className="gap-3 pb-4">
           {selectedTMIList.map((item) => (

@@ -98,38 +98,73 @@ const BottomSheetComponent = forwardRef<BottomSheetHandle, Props>(
         android_keyboardInputMode="adjustPan"
         enablePanDownToClose
       >
-        <BottomSheetView className={cn(styleClass?.root)}>
-          {(title || showClose) && (
-            <View
-              className={cn(
-                'flex-row items-center justify-between px-5 pb-3 pt-1',
-                styleClass?.header,
-              )}
+        {snapPoints ? (
+          <View className={cn(styleClass?.root)} style={{ flex: 1 }}>
+            {(title || showClose) && (
+              <View
+                className={cn(
+                  'flex-row items-center justify-between px-5 pb-3 pt-1',
+                  styleClass?.header,
+                )}
+              >
+                <Text className="text-lg font-bold text-gray-900">
+                  {title ?? ''}
+                </Text>
+                {showClose && (
+                  <Pressable
+                    onPress={() => modalRef.current?.dismiss()}
+                    hitSlop={8}
+                    accessibilityLabel="닫기"
+                  >
+                    <Text className="text-2xl text-primary">✕</Text>
+                  </Pressable>
+                )}
+              </View>
+            )}
+            <BottomSheetScrollView
+              keyboardShouldPersistTaps="handled"
+              bounces={false}
             >
-              <Text className="text-lg font-bold text-gray-900">
-                {title ?? ''}
-              </Text>
-              {showClose && (
-                <Pressable
-                  onPress={() => modalRef.current?.dismiss()}
-                  hitSlop={8}
-                  accessibilityLabel="닫기"
-                >
-                  <Text className="text-2xl text-primary">✕</Text>
-                </Pressable>
-              )}
-            </View>
-          )}
-          <BottomSheetScrollView
-            keyboardShouldPersistTaps="handled"
-            bounces={false}
-          >
-            <View className={cn('px-5', styleClass?.content)}>
-              {children}
-            </View>
-            <View style={{ height: safePadding.paddingBottom + 16 }} />
-          </BottomSheetScrollView>
-        </BottomSheetView>
+              <View className={cn('px-5', styleClass?.content)}>
+                {children}
+              </View>
+              <View style={{ height: safePadding.paddingBottom + 16 }} />
+            </BottomSheetScrollView>
+          </View>
+        ) : (
+          <BottomSheetView className={cn(styleClass?.root)}>
+            {(title || showClose) && (
+              <View
+                className={cn(
+                  'flex-row items-center justify-between px-5 pb-3 pt-1',
+                  styleClass?.header,
+                )}
+              >
+                <Text className="text-lg font-bold text-gray-900">
+                  {title ?? ''}
+                </Text>
+                {showClose && (
+                  <Pressable
+                    onPress={() => modalRef.current?.dismiss()}
+                    hitSlop={8}
+                    accessibilityLabel="닫기"
+                  >
+                    <Text className="text-2xl text-primary">✕</Text>
+                  </Pressable>
+                )}
+              </View>
+            )}
+            <BottomSheetScrollView
+              keyboardShouldPersistTaps="handled"
+              bounces={false}
+            >
+              <View className={cn('px-5', styleClass?.content)}>
+                {children}
+              </View>
+              <View style={{ height: safePadding.paddingBottom + 16 }} />
+            </BottomSheetScrollView>
+          </BottomSheetView>
+        )}
       </BottomSheetModal>
     );
   },
