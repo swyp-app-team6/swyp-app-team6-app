@@ -87,6 +87,7 @@ export default function ProfileGrid({
             isEditMode={isEditMode}
             isSelected={selectedIds?.has(item.exchange_id) ?? false}
             onToggleSelect={onToggleSelect}
+            isBlocked={item.is_blocked}
           />
         );
       }}

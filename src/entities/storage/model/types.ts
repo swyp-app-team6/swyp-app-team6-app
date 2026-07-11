@@ -128,6 +128,10 @@ export interface ExchangeArchiveItem {
   score: number | null;
   is_liked: boolean;
   exchanged_at: string;
+  /** 내가 이 상대를 차단했는지 여부 */
+  is_blocked: boolean;
+  /** 차단 ID (차단 시 number, 미차단 시 null) */
+  block_id: number | null;
 }
 
 /**

@@ -1,5 +1,6 @@
 import { RefObject } from 'react';
-import { Alert, Platform, PermissionsAndroid } from 'react-native';
+import { Platform, PermissionsAndroid } from 'react-native';
+import { openDialog } from '@/shared/ui/Dialog';
 import { captureRef } from 'react-native-view-shot';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 
@@ -25,7 +26,7 @@ export async function saveCardImage(viewShotRef: RefObject<any>): Promise<void> 
   if (Platform.OS === 'android') {
     const granted = await requestAndroidPermission();
     if (!granted) {
-      Alert.alert('권한 필요', '이미지를 저장하려면 사진 접근 권한이 필요합니다.');
+      openDialog({ title: '권한 필요', message: '이미지를 저장하려면 사진 접근 권한이 필요합니다.' });
       return;
     }
   }
@@ -36,10 +37,15 @@ export async function saveCardImage(viewShotRef: RefObject<any>): Promise<void> 
       quality: 1,
     });
 
-    await CameraRoll.save(uri, { type: 'photo' });
-    Alert.alert('저장 완료', '이미지가 사진 앨범에 저장되었습니다.');
+    try {
+      await CameraRoll.save(uri, { type: 'photo' });
+    } catch {
+      // iOS "사진 추가만 허용" 권한 상태에서 저장은 성공하지만
+      // 저장된 asset URI 반환 시 읽기 권한 부재로 에러가 발생하므로 무시
+    }
+    openDialog({ title: '저장 완료', message: '이미지가 사진 앨범에 저장되었습니다.' });
   } catch {
-    Alert.alert('저장 실패', '이미지 저장 중 오류가 발생했습니다.');
+    openDialog({ title: '저장 실패', message: '이미지 저장 중 오류가 발생했습니다.' });
   }
 }
 
