@@ -25,11 +25,12 @@ interface Props {
 export default function ExchangeLoadingModal({ visible, onCancel }: Props) {
   return (
     <Modal visible={visible} transparent animationType="fade">
-      <View
+      <Pressable
         className="flex-1 items-center justify-center"
         style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+        onPress={onCancel}
       >
-        <View className="w-[300px] items-center rounded-xl bg-white px-5 py-7 gap-4">
+        <Pressable className="w-[300px] items-center rounded-xl bg-white px-5 py-7 gap-4">
           <Text className="text-center text-base font-bold leading-[22.4px] text-[#1A1A1A]">
             상대방과 프로필 교환을{'\n'}기다리고 있어요!
           </Text>
@@ -40,11 +41,8 @@ export default function ExchangeLoadingModal({ visible, onCancel }: Props) {
               resizeMode="contain"
             />
           </View>
-          <Pressable onPress={onCancel} hitSlop={8}>
-            <Text className="text-sm text-[#999999] underline">취소하기</Text>
-          </Pressable>
-        </View>
-      </View>
+        </Pressable>
+      </Pressable>
     </Modal>
   );
 }
