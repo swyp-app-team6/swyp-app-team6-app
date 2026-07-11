@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useRef } from 'react';
 import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { Accordion, BottomCTA, Button, PopoverMenu, ProfileActionIcon, ReportIcon, BlockUserIcon, Badge, InterestTag } from '@/shared/ui';
 import Svg, { Path } from 'react-native-svg';
 import ProfileCardContainer from '@/shared/ui/ProfileCard/ProfileCardContainer';
@@ -240,13 +241,29 @@ export default function ExchangedProfileView({
                 <>
                   {/* 상단: 배지 + 신고/차단 메뉴 */}
                   <View className="absolute top-5 left-5 right-5 flex-row items-center justify-between">
-                    {cosmicType && <Badge level={cosmicType} />}
+                    <View>{cosmicType && <Badge level={cosmicType} />}</View>
                     <PopoverMenu items={popoverItems} align="right">
                       <View className="w-10 h-10 items-center justify-center">
                         <ProfileActionIcon size={12} color="#FFFFFF" orientation="vertical" />
                       </View>
                     </PopoverMenu>
                   </View>
+
+                  {/* 하단 어두운 그라데이션 오버레이 */}
+                  <LinearGradient
+                    colors={['transparent', 'rgba(0, 0, 0, 0.4)']}
+                    start={{ x: 0.5, y: 0 }}
+                    end={{ x: 0.5, y: 1 }}
+                    style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      height: '40%',
+                      borderBottomLeftRadius: 10,
+                      borderBottomRightRadius: 10,
+                    }}
+                  />
 
                   {/* 하단: 닉네임 + 나이 + 관심사 태그 */}
                   <View className="absolute bottom-0 left-0 right-0 px-5 pb-5 gap-2">
@@ -282,7 +299,7 @@ export default function ExchangedProfileView({
           />
 
           {/* 공통관심사 섹션 */}
-          <InfoCard title="공통 관심사">
+          <InfoCard title="두 우주의 공통 관심사">
             {matchedInterests.length > 0 ? (
               <View className="flex-row flex-wrap gap-1">
                 {matchedInterests.map((interest) => (
