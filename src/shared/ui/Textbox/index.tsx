@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Text, TextInput, View, type TextInputProps } from 'react-native';
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { cn } from '@/shared/lib/cn';
@@ -58,6 +58,22 @@ export default function Textbox({
 }: Props) {
   const [length, setLength] = useState(value?.replace(/\s/g, '').length ?? 0);
   const InputComponent = isBottomSheet ? BottomSheetTextInput : TextInput;
+  const inputRef = useRef<TextInput>(null);
+  const prevValueRef = useRef(value);
+
+  useEffect(() => {
+    if (value !== undefined) {
+      setLength(value.replace(/\s/g, '').length);
+    }
+  }, [value]);
+
+  /** BottomSheet 모드에서 외부 value 변경 시 네이티브 입력 동기화 */
+  useEffect(() => {
+    if (isBottomSheet && value !== undefined && value !== prevValueRef.current) {
+      inputRef.current?.setNativeProps({ text: value });
+    }
+    prevValueRef.current = value;
+  }, [isBottomSheet, value]);
 
   /** 최신 parentOnChangeText를 ref로 보관하여 콜백 안정성 확보 */
   const parentOnChangeTextRef = useRef(parentOnChangeText);
@@ -84,6 +100,7 @@ export default function Textbox({
         </Text>
       )}
       <InputComponent
+        ref={inputRef}
         multiline
         textAlignVertical="top"
         maxLength={maxLength}

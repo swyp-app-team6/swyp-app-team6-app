@@ -23,7 +23,7 @@ export function useKoreanSafeValue(
   value: string | undefined,
   onChangeText?: (text: string) => void,
 ) {
-  const nativeTextRef = useRef(value);
+  const nativeTextRef = useRef<string | undefined>(undefined);
 
   const safeOnChangeText = useCallback(
     (text: string) => {
