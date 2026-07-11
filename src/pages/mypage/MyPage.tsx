@@ -7,7 +7,7 @@ import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
 import useAuthStore from '@/entities/user/model/authStore';
 import type { NavigationPropType } from '@/shared/types';
-import { PRIVACY_URL, SERVICE_URL } from '../../shared/constants';
+import { NOTICE_URL, PRIVACY_URL, SERVICE_URL } from '../../shared/constants';
 
 /**
  * # MyPage
@@ -74,6 +74,7 @@ function MyPage() {
               label="공지사항"
               right={chevronRight}
               showDivider={false}
+              onPress={() => Linking.openURL(NOTICE_URL)}
               styleClass={{ root: 'px-5 h-14', label: 'text-[14px] font-medium text-[#1A1A1A]' }}
             />
           </MenuList.Section>

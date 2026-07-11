@@ -14,3 +14,8 @@ export const PRIVACY_URL = 'https://real-jellyfish-10c.notion.site/39144f5610118
  * 이용 약관
  */
 export const SERVICE_URL = 'https://real-jellyfish-10c.notion.site/39144f56101180ab915eed4b439d5233?pvs=74';
+
+/**
+ * 공지사항
+ */
+export const NOTICE_URL = 'https://real-jellyfish-10c.notion.site/39544f56101180efac92fc343e305a1e?source=copy_link';
