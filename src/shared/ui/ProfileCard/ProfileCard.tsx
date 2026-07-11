@@ -310,9 +310,12 @@ function GridCard({
               차단된 프로필입니다
             </Text>
             {onUnblock && (
-              <Pressable onPress={() => onUnblock(id)}>
-                <Text className="text-sm text-white underline mt-3">
-                  차단해제
+              <Pressable
+                className="px-2 py-1 rounded-lg border border-white items-center justify-center mt-1"
+                onPress={() => onUnblock(id)}
+              >
+                <Text className="text-sm text-white" style={{ lineHeight: 19.6 }}>
+                  차단 해제
                 </Text>
               </Pressable>
             )}
