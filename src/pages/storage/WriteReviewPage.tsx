@@ -37,12 +37,9 @@ export default function WriteReviewPage() {
       {
         onSuccess: () => {
           openDialog({
-            type: 'confirm',
+            type: 'alert',
             message: '후기를 등록했습니다!',
-            cancelLabel: '뒤로 가기',
-            okLabel: '홈으로 가기',
-            cancelFn: () => navigation.goBack(),
-            okFn: () => navigation.navigate('home' as never),
+            okFn: () => navigation.goBack(),
           });
         },
         onError: () => {
