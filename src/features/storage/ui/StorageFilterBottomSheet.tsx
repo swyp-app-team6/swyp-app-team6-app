@@ -134,6 +134,7 @@ const StorageFilterBottomSheet = forwardRef<BottomSheetHandle, Props>(
             options={REGION_OPTIONS}
             selected={selectedRegions}
             onSelect={setSelectedRegions}
+            closable
           />
         </View>
 
@@ -146,6 +147,7 @@ const StorageFilterBottomSheet = forwardRef<BottomSheetHandle, Props>(
             options={COSMIC_TYPE_OPTIONS}
             selected={selectedCosmicTypes}
             onSelect={setSelectedCosmicTypes}
+            closable
           />
         </View>
 
