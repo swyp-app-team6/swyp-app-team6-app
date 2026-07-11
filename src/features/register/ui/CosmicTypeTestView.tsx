@@ -8,6 +8,20 @@ import type { CosmicTestQuestion, CosmicTestAnswer } from '@/entities/cosmic';
 import { CosmicType } from '@/shared/enums';
 import CosmicTypeResultView from './CosmicTypeResultView';
 
+/**
+ * 유형테스트 질문별 캐릭터 아이콘 이미지 배열
+ * - 인덱스 0~6 → cosmic-test-icon-1~7.png
+ */
+const COSMIC_TEST_ICONS = [
+  require('@/assets/characters/cosmic-test-icon-1.png'),
+  require('@/assets/characters/cosmic-test-icon-2.png'),
+  require('@/assets/characters/cosmic-test-icon-3.png'),
+  require('@/assets/characters/cosmic-test-icon-4.png'),
+  require('@/assets/characters/cosmic-test-icon-5.png'),
+  require('@/assets/characters/cosmic-test-icon-6.png'),
+  require('@/assets/characters/cosmic-test-icon-7.png'),
+];
+
 interface Props {
   /** 테스트 완료 시 호출되는 콜백 (계산된 코스믹 유형 전달) */
   onComplete: (cosmicType: CosmicType) => void;
@@ -202,7 +216,14 @@ export default function CosmicTypeTestView({ onComplete, nickname = '사용자',
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 24 }}
       >
-        {/* TODO: 여기에 질문유형별 캐릭터 png 필요함 */}
+        {/* 질문유형별 캐릭터 이미지 */}
+        <View className="items-center" style={{ marginBottom: 47 }}>
+          <Image
+            source={COSMIC_TEST_ICONS[currentIndex]}
+            style={{ width: 134, height: 106 }}
+            resizeMode="contain"
+          />
+        </View>
         {/* 질문 네비게이터 */}
         <View className="px-5 mb-2">
           <View className="flex-row items-center">
