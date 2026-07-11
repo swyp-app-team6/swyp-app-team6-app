@@ -7,14 +7,15 @@ import type { BottomSheetHandle } from '@/shared/ui';
 import type { TermsType } from '@/entities/terms';
 import useTermsQuery from '../api/useTermsQuery';
 import useTermsAgreementMutation from '../api/useTermsAgreementMutation';
+import { PRIVACY_URL, SERVICE_URL } from '../../../shared/constants';
 
 /**
  * 약관 유형별 폴백 URL 매핑
  * - content_url이 null일 경우 사용되는 기본 링크
  */
 const TERMS_FALLBACK_URL: Partial<Record<TermsType, string>> = {
-  PRIVACY: 'https://real-jellyfish-10c.notion.site/39144f5610118006bc88d377d1b92aa3',
-  SERVICE: 'https://real-jellyfish-10c.notion.site/39144f56101180ab915eed4b439d5233?pvs=74',
+  PRIVACY: PRIVACY_URL,
+  SERVICE: SERVICE_URL,
 };
 
 interface Props {

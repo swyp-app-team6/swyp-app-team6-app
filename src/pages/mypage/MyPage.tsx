@@ -7,6 +7,7 @@ import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
 import useAuthStore from '@/entities/user/model/authStore';
 import type { NavigationPropType } from '@/shared/types';
+import { PRIVACY_URL, SERVICE_URL } from '../../shared/constants';
 
 /**
  * # MyPage
@@ -20,10 +21,6 @@ import type { NavigationPropType } from '@/shared/types';
  * @example
  * <MyPage />
  */
-/** 이용약관 노션 링크 */
-const TERMS_URL = 'https://real-jellyfish-10c.notion.site/39144f56101180ab915eed4b439d5233?pvs=74';
-/** 개인정보 처리방침 노션 링크 */
-const PRIVACY_URL = 'https://real-jellyfish-10c.notion.site/39144f5610118006bc88d377d1b92aa3';
 
 function MyPage() {
   const navigation = useNavigation<NavigationPropType>();
@@ -90,7 +87,7 @@ function MyPage() {
             <MenuList.Item
               label="이용 약관"
               right={chevronRight}
-              onPress={() => Linking.openURL(TERMS_URL)}
+              onPress={() => Linking.openURL(SERVICE_URL)}
               styleClass={{ root: 'px-5 h-14', label: 'text-[14px] font-medium text-[#1A1A1A]' }}
             />
             <MenuList.Item
