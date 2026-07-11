@@ -54,6 +54,7 @@ export default function EditProfilePage() {
   return (
     <>
       <Header
+        title="프로필 수정"
         left={
           <TouchableOpacity onPress={handleBack}>
             <ArrowIcon direction="left" />

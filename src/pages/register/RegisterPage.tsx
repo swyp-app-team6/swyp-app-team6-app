@@ -43,6 +43,7 @@ export default function RegisterPage() {
   return (
     <>
       <Header
+        title="프로필 등록"
         left={
           <TouchableOpacity onPress={handleBack}>
             <ArrowIcon direction="left" />
