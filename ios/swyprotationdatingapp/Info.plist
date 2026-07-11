@@ -79,5 +79,7 @@
 		<string>Pretendard-ExtraLight.otf</string>
 		<string>Pretendard-SemiBold.otf</string>
 	</array>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>카드 이미지를 사진 앨범에 저장하기 위해 접근이 필요합니다.</string>
 </dict>
 </plist>

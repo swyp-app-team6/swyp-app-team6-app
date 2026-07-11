@@ -11,7 +11,7 @@ module.exports = {
         extralight: ['Pretendard-ExtraLight'],
         light: ['Pretendard-Light'],
         medium: ['Pretendard-Medium'],
-        semibold: ['Pretendard-SemiBold'],
+        semibold: ['Pretendard-Regular'],
         bold: ['Pretendard-Bold'],
         extrabold: ['Pretendard-ExtraBold'],
         black: ['Pretendard-Black'],

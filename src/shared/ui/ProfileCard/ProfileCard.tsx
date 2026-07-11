@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { View, Text, Image, Pressable, ActivityIndicator } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 import Badge from '../Badge';
 import Tag from '../Tag';
@@ -79,6 +80,10 @@ interface GridProps {
   isSelected?: boolean;
   /** 선택 토글 콜백 (편집 모드) */
   onToggleSelect?: (id: number) => void;
+  /** 차단 여부 */
+  isBlocked?: boolean;
+  /** 차단 해제 콜백 */
+  onUnblock?: (id: number) => void;
 }
 
 type ProfileCardProps = PreviewProps | CompactProps | GridProps;
@@ -269,12 +274,14 @@ function GridCard({
   isEditMode = false,
   isSelected = false,
   onToggleSelect,
+  isBlocked = false,
+  onUnblock,
 }: GridProps) {
   return (
     <Pressable
       className="flex-1 max-w-[50%] overflow-hidden rounded-xl pb-3"
       onPress={() => onPress?.(id)}
-      disabled={isEditMode}
+      disabled={isEditMode || isBlocked}
     >
       {/* 프로필 이미지 */}
       <View className="h-[184px] overflow-hidden rounded-lg">
@@ -283,9 +290,35 @@ function GridCard({
             source={{ uri: imageUri }}
             className="h-full w-full"
             resizeMode="cover"
+            blurRadius={isBlocked ? 20 : 0}
           />
         ) : (
           <View className="h-full w-full items-center justify-center bg-gray-200">
+          </View>
+        )}
+        {isBlocked && (
+          <View className="absolute w-full h-full items-center justify-center bg-black/40 z-10 gap-2">
+            <Svg width={40} height={40} viewBox="0 0 40 40" fill="none">
+              <Path
+                d="M34 32.5L9 7.5M17 17.4026C16.3776 18.0888 16 18.9901 16 19.9772C16 22.1268 17.7909 23.8694 20 23.8694C21.0186 23.8694 21.9482 23.499 22.6544 22.889M34.0647 23.8694C35.4417 21.808 36 20.1269 36 20.1269C36 20.1269 32.359 8.5 20 8.5C19.3062 8.5 18.6398 8.53665 18 8.60582M29 28.9157C26.7043 30.3802 23.7489 31.4159 20 31.3546C7.79487 31.155 4 20.1269 4 20.1269C4 20.1269 5.76309 14.4968 11 11.0722"
+                stroke="white"
+                strokeWidth={2.34375}
+                strokeLinecap="round"
+              />
+            </Svg>
+            <Text className="text-base font-medium text-white">
+              차단된 프로필입니다
+            </Text>
+            {onUnblock && (
+              <Pressable
+                className="px-2 py-1 rounded-lg border border-[white] items-center justify-center mt-1"
+                onPress={() => onUnblock(id)}
+              >
+                <Text className="text-sm text-white" style={{ lineHeight: 19.6 }}>
+                  차단 해제
+                </Text>
+              </Pressable>
+            )}
           </View>
         )}
         {isEditMode && (
@@ -307,9 +340,11 @@ function GridCard({
             variant="outline"
             styleClass={{ root: 'rounded px-2 py-1' }}
           />
-          <Pressable hitSlop={8} onPress={() => onToggleFavorite(id)}>
-            <HeartIcon filled={isFavorited} />
-          </Pressable>
+          {!isBlocked && (
+            <Pressable hitSlop={8} onPress={() => onToggleFavorite(id)}>
+              <HeartIcon filled={isFavorited} />
+            </Pressable>
+          )}
         </View>
 
         {/* 이름 + 나이 */}

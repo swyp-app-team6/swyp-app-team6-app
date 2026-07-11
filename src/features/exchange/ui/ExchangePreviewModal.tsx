@@ -1,8 +1,8 @@
 import React from 'react';
 import { ActivityIndicator, Modal as RNModal, Pressable, Text, View } from 'react-native';
 import { Button, ProfileCard } from '@/shared/ui';
-import { useMyProfileQuery } from '@/entities/user';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
+import useExchangeFlowStore from '../model/useExchangeFlowStore';
 
 interface Props {
   /** 모달 표시 여부 */
@@ -16,9 +16,9 @@ interface Props {
 /**
  * # ExchangePreviewModal
  * ---
- * - 간단설명: 교환할 프로필 카드를 미리보기하는 전체 화면 모달
+ * - 간단설명: 교환할 상대방 프로필 카드를 미리보기하는 전체 화면 모달
  * - 제약사항 및 특이사항:
- *   - 실제 프로필 데이터로 내 프로필 카드 표시
+ *   - 스캔된 상대방 프로필 데이터를 스토어에서 가져와 표시
  *   - 상단 제목 + X 닫기 버튼
  *   - 하단 '교환하기' CTA 1개
  * ---
@@ -30,7 +30,7 @@ interface Props {
  * <ExchangePreviewModal visible={true} onExchange={handleExchange} onCancel={handleCancel} />
  */
 export default function ExchangePreviewModal({ visible, onExchange, onCancel }: Props) {
-  const { data: profile, isLoading } = useMyProfileQuery();
+  const profile = useExchangeFlowStore((s) => s.scannedProfile);
 
   return (
     <RNModal visible={visible} transparent animationType="slide">
@@ -45,24 +45,24 @@ export default function ExchangePreviewModal({ visible, onExchange, onCancel }: 
           {/* 제목 + 닫기 버튼 */}
           <View className="flex-row items-center mb-6">
             <Text className="flex-1 text-center text-[16px] font-bold leading-[22px] text-text-black">
-              교환할 프로필 미리보기
+              상대방 프로필 미리보기
             </Text>
             <Pressable onPress={onCancel} hitSlop={8}>
               <Text className="text-2xl text-primary">✕</Text>
             </Pressable>
           </View>
 
-          {/* 내 프로필 카드 */}
+          {/* 상대방 프로필 카드 */}
           <View className="items-center">
-            {isLoading ? (
+            {!profile ? (
               <ActivityIndicator size="large" />
             ) : (
               <ProfileCard
                 variant="preview"
-                profileImageUri={getProfileImageUrl(profile?.image_key)}
-                nickname={profile?.nickname}
-                age={profile ? String(profile.age) : undefined}
-                interests={profile?.interests.map((i) => i.label) ?? []}
+                profileImageUri={getProfileImageUrl(profile.image_key)}
+                nickname={profile.nickname}
+                age={String(profile.age)}
+                interests={profile.interests.map((i) => i.label)}
               />
             )}
           </View>

@@ -4,6 +4,7 @@ import { ProfileCard } from '@/shared/ui';
 import type { ExchangeArchiveItem } from '@/entities/storage';
 import { COSMIC_TYPE_LABEL, apiValueToCosmicType } from '@/entities/storage';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
+import { getRegionLabel } from '@/shared/lib/regionLabel';
 
 interface ProfileGridProps {
   /** 교환 프로필 목록 */
@@ -22,6 +23,8 @@ interface ProfileGridProps {
   onEndReached?: () => void;
   /** 다음 페이지 로딩 중 여부 */
   isFetchingNextPage?: boolean;
+  /** 차단 해제 콜백 */
+  onUnblock?: (id: number) => void;
 }
 
 /**
@@ -50,6 +53,7 @@ export default function ProfileGrid({
   onToggleSelect,
   onEndReached,
   isFetchingNextPage,
+  onUnblock,
 }: ProfileGridProps) {
   return (
     <FlatList
@@ -75,6 +79,9 @@ export default function ProfileGrid({
             variant="grid"
             id={item.exchange_id}
             name={item.nickname ?? ''}
+            age={typeof item.age === 'number' ? item.age : undefined}
+            location={item.region?.detail ? getRegionLabel(item.region.detail) : undefined}
+            job={typeof item.job === 'string' ? item.job : undefined}
             cosmicTypeLabel={COSMIC_TYPE_LABEL[badgeLevel]}
             imageUri={getProfileImageUrl(item.image_key)}
             isFavorited={item.is_liked}
@@ -83,6 +90,8 @@ export default function ProfileGrid({
             isEditMode={isEditMode}
             isSelected={selectedIds?.has(item.exchange_id) ?? false}
             onToggleSelect={onToggleSelect}
+            isBlocked={item.is_blocked}
+            onUnblock={onUnblock}
           />
         );
       }}

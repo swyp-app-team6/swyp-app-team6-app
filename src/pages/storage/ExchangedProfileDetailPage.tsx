@@ -40,6 +40,7 @@ export default function ExchangedProfileDetailPage() {
         onNavigateToReview={() =>
           navigation.navigate('writeReview', { profileId })
         }
+        onBlockSuccess={() => navigation.goBack()}
       />
     </>
   );

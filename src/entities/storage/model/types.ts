@@ -1,5 +1,5 @@
 import type { BadgeLevel } from '@/shared/ui';
-import type { MyProfileResponse } from '@/entities/user';
+import type { MyProfileResponse, Region } from '@/entities/user';
 
 /**
  * 보관함 프로필 카드 데이터
@@ -115,6 +115,12 @@ export interface ExchangeArchiveItem {
   image_key: string | null;
   cosmic_type: string;
   cosmic_type_image_key: string;
+  /** 나이 */
+  age?: number;
+  /** 활동 지역 (Region 객체: group, detail, label) */
+  region?: Region;
+  /** 직업 */
+  job?: string;
   interests: InterestItem[];
   bio: string;
   matched_interests: InterestItem[];
@@ -122,6 +128,10 @@ export interface ExchangeArchiveItem {
   score: number | null;
   is_liked: boolean;
   exchanged_at: string;
+  /** 내가 이 상대를 차단했는지 여부 */
+  is_blocked: boolean;
+  /** 차단 ID (차단 시 number, 미차단 시 null) */
+  block_id: number | null;
 }
 
 /**

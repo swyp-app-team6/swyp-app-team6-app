@@ -18,6 +18,8 @@ interface ChipSelectProps {
   onSelect: (values: string[]) => void;
   /** 최대 선택 개수. 미지정 시 제한 없음 */
   max?: number;
+  /** 선택된 칩에 보라색 X 버튼 표시 여부 */
+  closable?: boolean;
   styleClass?: { root?: string; chip?: string; chipSelected?: string; label?: string };
 }
 
@@ -25,6 +27,7 @@ interface ChipProps {
   label: string;
   selected: boolean;
   onPress: () => void;
+  closable?: boolean;
   styleClass?: { chip?: string; chipSelected?: string; label?: string };
 }
 
@@ -40,6 +43,7 @@ interface ChipProps {
  * @param selected 현재 선택된 값 배열
  * @param onSelect 선택 변경 콜백
  * @param max 최대 선택 개수
+ * @param closable 선택된 칩에 보라색 X 버튼 표시 여부
  * ---
  * @example
  * ```tsx
@@ -57,7 +61,7 @@ interface ChipProps {
  * />
  * ```
  */
-function ChipSelect({ options, selected, onSelect, max, styleClass }: ChipSelectProps) {
+function ChipSelect({ options, selected, onSelect, max, closable, styleClass }: ChipSelectProps) {
   const handlePress = (value: string) => {
     if (selected.includes(value)) {
       onSelect(selected.filter(v => v !== value));
@@ -75,6 +79,7 @@ function ChipSelect({ options, selected, onSelect, max, styleClass }: ChipSelect
           label={option.label}
           selected={selected.includes(option.value)}
           onPress={() => handlePress(option.value)}
+          closable={closable}
           styleClass={styleClass}
         />
       ))}
@@ -91,29 +96,38 @@ function ChipSelect({ options, selected, onSelect, max, styleClass }: ChipSelect
  * @param selected 선택 여부
  * @param onPress 터치 콜백
  */
-function Chip({ label, selected, onPress, styleClass }: ChipProps) {
+function Chip({ label, selected, onPress, closable, styleClass }: ChipProps) {
+  const isClosable = closable && selected;
+
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
       accessibilityState={{ selected }}
       className={cn(
-        'rounded-full px-4 py-2 border',
-        selected
-          ? 'bg-primary border-primary'
-          : 'bg-white border-gray-300',
+        'rounded-full px-4 py-2 border flex-row items-center',
+        isClosable
+          ? 'bg-primary-lightest border-primary'
+          : selected
+            ? 'bg-primary border-primary'
+            : 'bg-white border-gray-300',
         selected ? styleClass?.chipSelected : styleClass?.chip,
       )}
     >
       <Text
         className={cn(
           'text-sm font-medium',
-          selected ? 'text-white' : 'text-gray-700',
+          isClosable ? 'text-primary' : selected ? 'text-white' : 'text-gray-700',
           styleClass?.label,
         )}
       >
         {label}
       </Text>
+      {isClosable && (
+        <Text className="ml-1 text-xs font-bold" style={{ color: '#8C39FB' }}>
+          ✕
+        </Text>
+      )}
     </Pressable>
   );
 }
