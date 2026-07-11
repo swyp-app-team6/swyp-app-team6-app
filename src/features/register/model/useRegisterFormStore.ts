@@ -27,7 +27,7 @@ const INITIAL_FORM: RegisterFormState = {
   nickname: '',
   profileImageUri: null,
   profileImageKey: null,
-  gender: null,
+  gender: 'M',
   age: '',
   jobField: '',
   region: '',
@@ -160,13 +160,14 @@ const useRegisterFormStore = create<RegisterFormStore>()(
 
     /**
      * 1단계 유효성 검사 (필수 정보)
-     * - 이름 2~10자, 한글/영문만
+     * - 이름 3~10자
      * - 성별 선택 필수
      * - 프로필 사진은 선택사항
      */
     isStep1Valid: () => {
       const { form } = get();
       return (
+        form.nickname.length >= 3 &&
         form.gender !== null
       );
     },

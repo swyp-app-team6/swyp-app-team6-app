@@ -4,7 +4,6 @@ import { FavTag, BottomCTA, Button } from '@/shared/ui';
 import useRegisterFormStore from '../model/useRegisterFormStore';
 import { useInterestsQuery } from '@/entities/interest';
 import type { INTEREST } from '@/entities/user';
-import { INTEREST_EMOJI } from '../model/types';
 
 /** 최대 선택 가능 관심사 수 */
 const MAX_INTERESTS = 5;
@@ -49,7 +48,7 @@ export default function Step2InterestsView() {
           본인의 관심사를 선택해주세요
         </Text>
         <Text className="text-sm text-text-gray4 mb-6">
-          관심사를 3~5개 선택해주세요 ({form.interests.length}/{MAX_INTERESTS})
+          최소 3개 ~ 최대 5개 ({form.interests.length}/{MAX_INTERESTS})
       </Text>
 
         {isLoading ? (
@@ -63,7 +62,7 @@ export default function Step2InterestsView() {
               return (
                 <View key={option.type} style={{ width: '48%' }}>
                   <FavTag
-                    emoji={INTEREST_EMOJI[option.type] ?? ''}
+                    emoji=""
                     label={option.label}
                     selected={selected}
                     disabled={!selected && isMaxSelected}

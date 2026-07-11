@@ -6,4 +6,4 @@ export { default as CosmicResultBackCard } from './ui/CosmicResultBackCard';
 export { default as MyProfileView } from './ui/MyProfileView';
 export { default as useRegisterMutation } from './api/useRegisterMutation';
 export { default as useRegisterFormStore } from './model/useRegisterFormStore';
-export { INTEREST_LABEL, INTEREST_EMOJI, profileToFormState } from './model/types';
+export { INTEREST_LABEL, profileToFormState } from './model/types';

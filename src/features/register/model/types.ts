@@ -8,7 +8,7 @@ import { getRegionLabel } from '@/shared/lib/regionLabel';
 
 /**
  * 프로필 등록 폼 상태
- * - nickname: 이름 (2~10자)
+ * - nickname: 이름 (3~10자)
  * - profileImageUri: 로컬 이미지 URI (미리보기용)
  * - profileImageKey: S3 업로드 후 발급된 이미지 키
  * - gender: 성별 (M=남성, F=여성)
@@ -137,26 +137,6 @@ export interface TMIAnswer {
 export function tmiKey(answerKind: 'CHOICE' | 'TEXT', questionId: number): string {
   return `${answerKind}-${questionId}`;
 }
-
-/**
- * 관심사별 이모지 매핑
- * - key: INTEREST enum 값
- * - value: 화면에 표시하는 이모지
- */
-export const INTEREST_EMOJI: Record<string, string> = {
-  [INTEREST.TRAVEL]: '✈️',
-  [INTEREST.SPORTS]: '⚽',
-  [INTEREST.MUSIC]: '🎵',
-  [INTEREST.VIDEO]: '📱',
-  [INTEREST.RESTAURANT]: '🍽️',
-  [INTEREST.CAFE]: '☕️',
-  [INTEREST.CULTURE]: '🎭',
-  [INTEREST.READING]: '📚',
-  [INTEREST.GAME]: '🎮',
-  [INTEREST.SELF_DEVELOPMENT]: '✏️',
-  [INTEREST.INVESTING]: '💰',
-  [INTEREST.MOVIE]: '🍿',
-};
 
 
 /**

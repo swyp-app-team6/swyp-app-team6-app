@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Header, Layout, AlertModal, ArrowIcon } from '@/shared/ui';
+import { Header, Layout, ArrowIcon, openDialog } from '@/shared/ui';
 import { RegisterFormView, useRegisterFormStore } from '@/features/register';
 import type { NavigationPropType } from '@/shared/types';
 
@@ -20,24 +20,26 @@ import type { NavigationPropType } from '@/shared/types';
 export default function RegisterPage() {
   const navigation = useNavigation<NavigationPropType>();
   const { currentStep, prevStep, nextStep, isDirty, reset } = useRegisterFormStore();
-  const [showExitModal, setShowExitModal] = useState(false);
 
   /** 뒤로가기 핸들러 */
   const handleBack = () => {
     if (currentStep > 0) {
       prevStep();
     } else if (isDirty()) {
-      setShowExitModal(true);
+      openDialog({
+        type: 'confirm',
+        title: '프로필 등록 중단',
+        message: '이미 입력한 정보가 있어요.\n프로필 등록을 그만두실건가요?',
+        okLabel: '나가기',
+        cancelLabel: '계속 작성',
+        okFn: () => {
+          reset();
+          navigation.goBack();
+        },
+      });
     } else {
       navigation.goBack();
     }
-  };
-
-  /** 이탈 확인 후 나가기 */
-  const handleExitConfirm = () => {
-    setShowExitModal(false);
-    reset();
-    navigation.goBack();
   };
 
   return (
@@ -60,16 +62,6 @@ export default function RegisterPage() {
       <Layout.Body styleClass={{ root: 'bg-white' }}>
         <RegisterFormView />
       </Layout.Body>
-
-      <AlertModal
-        visible={showExitModal}
-        title="프로필 등록 중단"
-        message="이미 입력한 정보가 있어요. 프로필 등록을 그만두실건가요?"
-        confirmText="나가기"
-        cancelText="계속 작성"
-        onConfirm={handleExitConfirm}
-        onCancel={() => setShowExitModal(false)}
-      />
     </>
   );
 }

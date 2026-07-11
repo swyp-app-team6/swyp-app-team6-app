@@ -13,7 +13,7 @@ import useRegisterFormStore from '../model/useRegisterFormStore';
  * - 간단설명: 프로필 등록 1단계 - 필수 정보 입력 (사진, 이름, 성별)
  * - 제약사항 및 특이사항:
  *   - 프로필 사진은 갤러리에서 선택 후 presign URL로 S3 업로드
- *   - 이름: 2~10자, 한글/영문만, 공백 불가
+ *   - 이름: 3~10자, 한글/영문만, 공백 불가
  *   - 성별: 남성/여성 중 택 1
  *   - 자기소개는 3단계로 분리됨
  *   - 모든 필수 항목 충족 시 "다음으로" 버튼 활성화
@@ -56,10 +56,11 @@ export default function Step1BasicInfoView() {
     }
   };
 
-  /** 이름 변경 핸들러 */
+  /** 이름 변경 핸들러 (한글/영문/숫자/공백만 허용, 특수문자·이모티콘 불가) */
   const handleNicknameChange = (text: string) => {
-    if (text.length <= 10) {
-      updateForm({ nickname: text });
+    const filtered = text.replace(/[^\p{L}\p{N}\s]/gu, '');
+    if (filtered.length <= 10) {
+      updateForm({ nickname: filtered });
     }
   };
 
@@ -90,6 +91,9 @@ export default function Step1BasicInfoView() {
             onChangeText={handleNicknameChange}
             maxLength={10}
           />
+          {form.nickname.length > 0 && form.nickname.length < 3 && (
+            <Text className="text-xs text-red-500 mt-1">최소 3글자 이상 입력해주세요</Text>
+          )}
         </View>
 
         {/* 성별 */}
