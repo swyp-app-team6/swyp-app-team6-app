@@ -63,13 +63,13 @@ export default function CosmicResultFrontCard({
           </View>
 
           {/* 캐릭터 일러스트 영역 */}
-          <View className="items-center justify-center" style={{ width: '57%', aspectRatio: 1 }}>
+          <View className="items-center justify-center" style={{ width: 168, height: 168 }}>
             {/* glow 효과 */}
             <View
               style={{
                 position: 'absolute',
-                width: '62%',
-                aspectRatio: 1,
+                width: 104,
+                height: 104,
                 borderRadius: 9999,
                 backgroundColor: 'rgba(255, 255, 255, 0.40)',
               }}
@@ -77,7 +77,7 @@ export default function CosmicResultFrontCard({
             {characterImage && (
               <Image
                 source={characterImage}
-                style={{ width: '84%', aspectRatio: 1 }}
+                style={{ width: 168, height: 168 }}
                 resizeMode="contain"
               />
             )}

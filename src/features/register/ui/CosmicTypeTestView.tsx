@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { View, Text, ScrollView, Pressable, ActivityIndicator, Image } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { BottomCTA, Button } from '@/shared/ui';
@@ -115,15 +115,22 @@ export default function CosmicTypeTestView({ onComplete, nickname = '사용자',
     }
   }, [currentIndex, totalQuestions]);
 
+  /** 자동 다음 문항 이동 타이머 ref — 연타 시 중복 이동 방지 */
+  const autoAdvanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   /** 선택지 선택 핸들러 */
   const handleSelect = useCallback(
     (answer: CosmicTestAnswer) => {
       if (!currentQuestion) return;
       setSelectedAnswers((prev) => ({ ...prev, [currentQuestion.question_id]: answer }));
       if (currentIndex < totalQuestions - 1) {
-        setTimeout(() => {
+        if (autoAdvanceTimer.current) {
+          clearTimeout(autoAdvanceTimer.current);
+        }
+        autoAdvanceTimer.current = setTimeout(() => {
+          autoAdvanceTimer.current = null;
           setCurrentIndex((prev) => prev + 1);
-        }, 300);
+        }, 100);
       }
     },
     [currentQuestion, currentIndex, totalQuestions],
