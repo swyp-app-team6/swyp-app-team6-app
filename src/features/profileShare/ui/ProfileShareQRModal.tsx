@@ -118,6 +118,17 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
     };
   }, [visible, handleClose, handleQrExpire, qrResetKey]);
 
+  /** 교환 취소(거절) 핸들러 — decline API 호출 후 모달 닫기 */
+  const handleDecline = useCallback(async () => {
+    if (!receivedProfile) return;
+    try {
+      await ExchangeAPI.decline(receivedProfile.id);
+    } catch (err) {
+      console.error('[Exchange] decline 실패:', err);
+    }
+    handleClose();
+  }, [receivedProfile, handleClose]);
+
   /** 수락하기 버튼 핸들러 — accept 응답의 교환 결과를 store에 저장 후 결과 페이지로 이동 */
   const handleAccept = useCallback(async () => {
     if (!receivedProfile) return;
@@ -220,11 +231,16 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
                 />
               </View>
 
-              <View className="mt-5">
+              <View className="mt-5 gap-3">
                 {modalStep === 'ACCEPTING' ? (
                   <ActivityIndicator size="small" color="#8C39FB" />
                 ) : (
-                  <Button title="수락하기" variant="primary" onPress={handleAccept} />
+                  <>
+                    <Button title="수락하기" variant="primary" onPress={handleAccept} />
+                    <Pressable onPress={handleDecline} hitSlop={8}>
+                      <Text className="text-center text-sm text-[#999999] underline">교환 취소</Text>
+                    </Pressable>
+                  </>
                 )}
               </View>
             </>
