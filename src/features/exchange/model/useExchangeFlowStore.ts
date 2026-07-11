@@ -59,6 +59,8 @@ function getErrorMessage(err: AxiosError): string {
       return '사용자 응답이 없습니다';
     case 409:
       return '상대방이 교환 대기 중이 아닙니다';
+    case 504:
+      return '교환 시간이 만료되었습니다. 다시 시도해 주세요';
     default:
       return '프로필 교환 도중 문제가 발생했습니다';
   }

@@ -6,6 +6,7 @@ import QRCode from 'react-native-qrcode-svg';
 import { useQuery } from '@tanstack/react-query';
 import { ProfileAPI } from '@/entities/user';
 import type { MyProfileResponse } from '@/entities/user';
+import type { AxiosError } from 'axios';
 import { ExchangeAPI } from '@/entities/exchange';
 import { useExchangeFlowStore } from '@/features/exchange';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
@@ -79,23 +80,6 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
   }, [onClose]);
 
   /**
-   * # handleDecline
-   * ---
-   * - 간단설명: 교환 거절 시 서버에 decline API 호출 후 모달 닫기
-   * ---
-   */
-  const handleDecline = useCallback(async () => {
-    if (receivedProfile?.id) {
-      try {
-        await ExchangeAPI.decline(receivedProfile.id);
-      } catch (err) {
-        console.error('[Exchange] decline 실패:', err);
-      }
-    }
-    handleClose();
-  }, [receivedProfile, handleClose]);
-
-  /**
    * 모달 열릴 때 exchange/wait 호출, 닫힐 때 취소
    * TODO: 여기 추후 리팩토링
    */
@@ -114,7 +98,13 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
         .catch((err) => {
           if (controller.signal.aborted) return;
           console.error('[Exchange] wait 실패:', err);
-          openErrorDialog({ title: '프로필 교환', message: '교환 대기 중 오류가 발생했습니다' });
+          const status = (err as AxiosError)?.response?.status;
+          if (status === 504) {
+            openErrorDialog({ title: '프로필 교환', message: '교환 시간이 만료되었습니다. 다시 시도해 주세요' });
+          } else {
+            openErrorDialog({ title: '프로필 교환', message: '교환 대기 중 오류가 발생했습니다' });
+          }
+          handleClose();
         });
     } else {
       abortRef.current?.abort();
@@ -125,7 +115,7 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
       abortRef.current?.abort();
       abortRef.current = null;
     };
-  }, [visible]);
+  }, [visible, handleClose]);
 
   /** 수락하기 버튼 핸들러 — accept 응답의 교환 결과를 store에 저장 후 결과 페이지로 이동 */
   const handleAccept = useCallback(async () => {
@@ -152,8 +142,14 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
       }
     } catch (err) {
       console.error('[Exchange] accept 실패:', err);
-      openErrorDialog({ title: '프로필 교환', message: '교환 수락 중 오류가 발생했습니다' });
-      setModalStep('PREVIEW');
+      const status = (err as AxiosError)?.response?.status;
+      if (status === 504) {
+        openErrorDialog({ title: '프로필 교환', message: '교환 시간이 만료되었습니다. 다시 시도해 주세요' });
+        handleClose();
+      } else {
+        openErrorDialog({ title: '프로필 교환', message: '교환 수락 중 오류가 발생했습니다' });
+        setModalStep('PREVIEW');
+      }
     }
   }, [receivedProfile, handleClose, onClose, navigation]);
 
@@ -223,17 +219,12 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
                 />
               </View>
 
-              <View className="mt-5 flex-row gap-3">
-                <View className="flex-1">
-                  <Button title="거절하기" variant="secondary" onPress={handleDecline} />
-                </View>
-                <View className="flex-1">
-                  {modalStep === 'ACCEPTING' ? (
-                    <ActivityIndicator size="small" color="#8C39FB" />
-                  ) : (
-                    <Button title="수락하기" variant="primary" onPress={handleAccept} />
-                  )}
-                </View>
+              <View className="mt-5">
+                {modalStep === 'ACCEPTING' ? (
+                  <ActivityIndicator size="small" color="#8C39FB" />
+                ) : (
+                  <Button title="수락하기" variant="primary" onPress={handleAccept} />
+                )}
               </View>
             </>
           )}
