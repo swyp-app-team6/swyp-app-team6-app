@@ -311,7 +311,7 @@ function GridCard({
             </Text>
             {onUnblock && (
               <Pressable
-                className="px-2 py-1 rounded-lg border border-white items-center justify-center mt-1"
+                className="px-2 py-1 rounded-lg border border-[white] items-center justify-center mt-1"
                 onPress={() => onUnblock(id)}
               >
                 <Text className="text-sm text-white" style={{ lineHeight: 19.6 }}>
