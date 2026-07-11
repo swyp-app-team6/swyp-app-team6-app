@@ -67,10 +67,10 @@ const LoginTroubleBottomSheet = forwardRef<BottomSheetHandle, Props>(
 
         {/* 안내 항목 */}
         <View className="px-5 gap-3">
-          <View className="rounded-xl border border-gray-200 px-4 py-3.5">
+          <View className="rounded-xl px-4 py-3.5">
             <Text className="text-base text-gray-900">1.소셜 로그인 다시 시도</Text>
           </View>
-          <View className="rounded-xl border border-gray-200 px-4 py-3.5">
+          <View className="rounded-xl px-4 py-3.5">
             <Text className="text-base text-gray-900">2.다른 소셜 계정으로 로그인</Text>
           </View>
         </View>

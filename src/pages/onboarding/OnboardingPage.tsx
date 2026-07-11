@@ -97,22 +97,22 @@ function OnboardingPage() {
                 <View className="flex-1 px-5">
                   {/* 제목 (이미지 위) */}
                   <View className="items-center pt-10 pb-5">
-                    <Text className="text-2xl font-bold text-gray-900 text-center mb-2">
+                    <Text className="text-2xl font-bold text-center mb-2" style={{ color: '#1A1A1A' }}>
                       {slide.title}
                     </Text>
-                    <Text className="text-sm text-gray-500 text-center leading-5">
+                    <Text className="text-base text-center" style={{ color: '#40403F', lineHeight: 22.4, fontWeight: '500' }}>
                       {slide.description}
                     </Text>
                   </View>
 
                   {/* 일러스트 이미지 */}
                   <View
-                    className="w-full bg-gray-100 items-center justify-center rounded-2xl"
+                    className="w-full items-center justify-center"
                     style={{ height: 440 }}
                   >
                     <Image
                       source={slide.image}
-                      style={{ width: 200, height: 200 }}
+                      style={{ width: 246, height: 246 }}
                       resizeMode="contain"
                     />
                   </View>
@@ -130,9 +130,8 @@ function OnboardingPage() {
           {ONBOARDING_SLIDES.map((_, index) => (
             <View
               key={index}
-              className={`w-2 h-2 rounded-full ${
-                index === currentStep ? 'bg-primary' : 'bg-gray-200'
-              }`}
+              className="w-2 h-2 rounded-full"
+              style={{ backgroundColor: index === currentStep ? '#8C39FB' : '#E3E3E3' }}
             />
           ))}
         </View>
@@ -141,7 +140,10 @@ function OnboardingPage() {
         <View className="items-center mb-4" style={{ minHeight: 24 }}>
           {!isLastStep && (
             <Pressable onPress={handleComplete} hitSlop={8}>
-              <Text className="text-sm text-gray-400 underline">건너뛰기</Text>
+              <View>
+                <Text className="text-sm" style={{ color: '#888888', fontWeight: '500' }}>건너뛰기</Text>
+                <View style={{ height: 1, backgroundColor: '#888888', marginTop: 4 }} />
+              </View>
             </Pressable>
           )}
         </View>

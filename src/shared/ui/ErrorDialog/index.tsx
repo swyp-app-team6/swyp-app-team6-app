@@ -34,7 +34,7 @@ interface ErrorDialogStore extends IErrorDialogParams {
 // TODO: 재시도인지 확인필요, 만약 재시도면 추후 구현 후 문구 "확인으로 변경"
 const initialState: Omit<ErrorDialogStore, 'openErrorDialog' | 'closeErrorDialog'> = {
   isOpen: false,
-  title: '일시적인 오류가 발생했어요',
+  title: '',
   message: '다시 시도 해주세요',
   buttonLabel: '다시 시도하기',
   onRetry: undefined,
@@ -126,14 +126,22 @@ export default function ErrorDialog() {
   return (
     <Modal visible={isOpen} onClose={handleClose}>
       <View className="items-center">
-        <ErrorIcon />
-        <Text className="mt-4 text-center text-base font-bold text-text-black leading-[22.4px]">
-          {title}
-        </Text>
-        <Text className="mt-1 text-center text-sm text-text-gray3 leading-5">
-          {message}
-        </Text>
-        <View className="mt-6 w-full">
+        {title ? (
+          <>
+            <ErrorIcon />
+            <Text className="mt-4 text-center text-base font-bold text-text-black leading-[22.4px]">
+              {title}
+            </Text>
+            <Text className="mt-1 text-center text-sm text-text-gray3 leading-5">
+              {message}
+            </Text>
+          </>
+        ) : (
+          <Text className="text-center text-base font-medium leading-[22.4px]" style={{ color: '#1A1A1A' }}>
+            {message}
+          </Text>
+        )}
+        <View className="mt-10 w-full">
           <Button
             title={buttonLabel}
             variant="primary"

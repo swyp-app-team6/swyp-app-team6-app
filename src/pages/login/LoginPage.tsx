@@ -88,19 +88,13 @@ function LoginPage() {
     <Layout styleClass={{ root: 'bg-primary' }}>
       {/* 로고 영역 */}
       <View className="flex-1 justify-center items-center">
-        <Image
-          source={require('@/assets/orbits-character-icon.png')}
-          className="w-28 h-28 mb-4"
-          resizeMode="contain"
-        />
-        <Image
-          source={require('@/assets/orbits-name-icon.png')}
-          className="w-52 h-14"
-          resizeMode="contain"
-        />
-        <Text className="text-base text-white/80 mt-4">
-          대화를 여는 프로필 카드
-        </Text>
+        <View className="items-center gap-5">
+          <Image
+            source={require('@/assets/characters/login-icon.png')}
+            style={{ width: 216, height: 160 }}
+            resizeMode="contain"
+          />
+        </View>
       </View>
 
       {/* 소셜 로그인 버튼 */}

@@ -56,7 +56,7 @@ export function Modal({ onClose, title, message, children, ...rest }: ModalProps
         onPress={onClose}
       >
         <Pressable
-          className="w-[300px] rounded-xl bg-white px-5 pb-7 pt-5"
+          className="w-[300px] rounded-xl bg-white px-5 pb-7 pt-10"
           onPress={e => e.stopPropagation()}
         >
           {title && (
@@ -70,7 +70,7 @@ export function Modal({ onClose, title, message, children, ...rest }: ModalProps
             </Text>
           )}
           {rest.visible && children && (
-            <View className="mt-5 w-[260px] self-center">
+            <View className="mt-10 w-[260px] self-center">
               {children}
             </View>
           )}
