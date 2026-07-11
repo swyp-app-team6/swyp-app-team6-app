@@ -8,3 +8,4 @@ export { default as useRegisterMutation } from './api/useRegisterMutation';
 export { default as useRegisterFormStore } from './model/useRegisterFormStore';
 export { default as useRegisterStepStore } from './model/useRegisterStepStore';
 export { INTEREST_LABEL, profileToFormState } from './model/types';
+export { saveCardImage } from './lib/saveCardImage';
