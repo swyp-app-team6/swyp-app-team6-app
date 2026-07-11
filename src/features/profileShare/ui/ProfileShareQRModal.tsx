@@ -81,7 +81,7 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
 
   /**
    * 모달 열릴 때 exchange/wait 호출, 닫힐 때 취소
-   * TODO: 여기 추후 리팩토링
+   * qrResetKey 변경 시(타이머 만료 or 504 재시도) 자동으로 wait 재호출
    */
   useEffect(() => {
     if (visible) {
@@ -100,11 +100,12 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
           console.error('[Exchange] wait 실패:', err);
           const status = (err as AxiosError)?.response?.status;
           if (status === 504) {
-            openErrorDialog({ title: '프로필 교환', message: '교환 시간이 만료되었습니다. 다시 시도해 주세요' });
+            // 타임아웃 시 QR 재발급 + 타이머 리셋 + wait 재시작
+            handleQrExpire();
           } else {
             openErrorDialog({ title: '프로필 교환', message: '교환 대기 중 오류가 발생했습니다' });
+            handleClose();
           }
-          handleClose();
         });
     } else {
       abortRef.current?.abort();
@@ -115,7 +116,7 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
       abortRef.current?.abort();
       abortRef.current = null;
     };
-  }, [visible, handleClose]);
+  }, [visible, handleClose, handleQrExpire, qrResetKey]);
 
   /** 수락하기 버튼 핸들러 — accept 응답의 교환 결과를 store에 저장 후 결과 페이지로 이동 */
   const handleAccept = useCallback(async () => {

@@ -129,7 +129,10 @@ const useExchangeFlowStore = create<ExchangeFlowState>((set, get) => ({
         });
       }
     } catch (err) {
-      if (abortController.signal.aborted) return;
+      if (abortController.signal.aborted) {
+        set({ ...initialState });
+        return;
+      }
       console.error('[Exchange] startExchange 실패:', err);
       const axiosErr = err as AxiosError;
       const message = getErrorMessage(axiosErr);

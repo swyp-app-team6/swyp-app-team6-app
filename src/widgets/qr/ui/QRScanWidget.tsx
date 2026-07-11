@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { View } from 'react-native';
+import { AppState, View } from 'react-native';
 import { useNavigation, useIsFocused, useFocusEffect } from '@react-navigation/native';
 import { useCameraDevice } from 'react-native-vision-camera';
 import QRScanView from './QRScanView';
@@ -111,6 +111,21 @@ export default function QRScanWidget() {
       });
     }
   }, [step, goToPreview, handleCancel]);
+
+  /** 앱이 백그라운드에서 포그라운드로 돌아올 때 LOADING 상태면 교환 취소 */
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (nextAppState === 'active') {
+        const currentStep = useExchangeFlowStore.getState().step;
+        if (currentStep === ExchangeFlowStep.LOADING) {
+          useExchangeFlowStore.getState().cancelExchange();
+          isScanned.current = false;
+          setCameraKey((prev) => prev + 1);
+        }
+      }
+    });
+    return () => subscription.remove();
+  }, []);
 
   useEffect(() => {
     return () => {
