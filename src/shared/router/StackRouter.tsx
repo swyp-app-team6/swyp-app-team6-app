@@ -26,7 +26,7 @@ import { NavigatorType } from '../types';
 import ComponentPlaygroundPage from '../../pages/playground/ComponentPlaygroundPage';
 import ApiLogPage from '../../pages/playground/ApiLogPage';
 import SafeAreaTestPage from '../../pages/playground/SafeAreaTestPage';
-import Config from 'react-native-config';
+import { PROJECT_ENV } from '@/shared/lib/env';
 
 const Stack = createNativeStackNavigator<NavigatorType>();
 
@@ -71,7 +71,7 @@ export default function StackRouter({ initialRouteName = 'home' }: StackRouterPr
         <Stack.Screen name='withdrawalReason' component={WithdrawalReasonPage} />
         <Stack.Screen name='withdrawalConfirm' component={WithdrawalConfirmPage} />
         {
-          Config.PROJECT_ENV === 'local' && (
+          PROJECT_ENV && (
             <>
               <Stack.Screen name='playground' component={ComponentPlaygroundPage} />
               <Stack.Screen name='apiLog' component={ApiLogPage} />

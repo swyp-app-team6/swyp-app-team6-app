@@ -12,6 +12,7 @@ import App from './src/app/App';
 import { name as appName } from './app.json';
 import * as Sentry from '@sentry/react-native';
 import Config from 'react-native-config';
+import { PROJECT_ENV } from './src/shared/lib/env';
 import setupInterceptors from './src/shared/api/setupInterceptors';
 import { startMsw } from './src/shared/api/mocks/startMsw';
 
@@ -33,7 +34,7 @@ Sentry.init({
   sendDefaultPii: false,
 
   // Enable Logs, 배포환경에서만 활성화
-  enableLogs: Config.PROJECT_ENV === 'prod',
+  enableLogs: !PROJECT_ENV,
 
   // Configure Session Replay
   replaysSessionSampleRate: 0,
