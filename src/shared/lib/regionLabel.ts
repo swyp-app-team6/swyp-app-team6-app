@@ -332,7 +332,8 @@ const REGION_LABEL_MAP: Record<Region, string> = {
  * getRegionLabel('BUSAN_JUNGGU')        // '부산 중구'
  * getRegionLabel(Region.GYEONGGI_SUWON) // '경기 수원시'
  */
-export function getRegionLabel(value: string): string {
+export function getRegionLabel(value: unknown): string {
+  if (typeof value !== 'string') return '';
   return REGION_LABEL_MAP[value as Region] ?? value;
 }
 

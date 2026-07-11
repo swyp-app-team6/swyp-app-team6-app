@@ -76,9 +76,9 @@ export default function ProfileGrid({
             variant="grid"
             id={item.exchange_id}
             name={item.nickname ?? ''}
-            age={item.age}
-            location={item.region ? getRegionLabel(item.region) : undefined}
-            job={item.job}
+            age={typeof item.age === 'number' ? item.age : undefined}
+            location={typeof item.region === 'string' ? getRegionLabel(item.region) : undefined}
+            job={typeof item.job === 'string' ? item.job : undefined}
             cosmicTypeLabel={COSMIC_TYPE_LABEL[badgeLevel]}
             imageUri={getProfileImageUrl(item.image_key)}
             isFavorited={item.is_liked}
