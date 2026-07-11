@@ -1,7 +1,7 @@
 import React, { useRef, useState, useMemo } from 'react';
 import { Pressable, View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import { TMICard, BottomCTA, Button, ChipSelect, Textbox, SelectedTMIPreviewButton, Checkbox } from '@/shared/ui';
+import { TMICard, BottomCTA, Button, Textbox, SelectedTMIPreviewButton, Checkbox } from '@/shared/ui';
 import Tag from '@/shared/ui/Tag';
 import BottomSheet, { type BottomSheetHandle } from '@/shared/ui/BottomSheet';
 import { useProfileDataStore } from '@/entities/user';
@@ -203,14 +203,34 @@ export default function Step4TMIView() {
           className="mt-6 mb-4"
           contentContainerStyle={{ gap: 8, paddingHorizontal: 20 }}
         >
-          {TMI_CATEGORY_OPTIONS.map((cat) => (
-            <ChipSelect.Chip
-              key={cat.value}
-              label={cat.label}
-              selected={selectedCategory === cat.value}
-              onPress={() => setSelectedCategory(cat.value)}
-            />
-          ))}
+          {TMI_CATEGORY_OPTIONS.map((cat) => {
+            const isSelected = selectedCategory === cat.value;
+            return (
+              <Pressable
+                key={cat.value}
+                onPress={() => setSelectedCategory(cat.value)}
+                style={{
+                  paddingHorizontal: 12,
+                  paddingVertical: 4,
+                  backgroundColor: isSelected ? '#1B1B1B' : '#F5F5F5',
+                  borderRadius: 8,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Text
+                  style={{
+                    color: isSelected ? '#FFFFFF' : '#40403F',
+                    fontSize: 14,
+                    fontWeight: '500',
+                    lineHeight: 19.6,
+                  }}
+                >
+                  {cat.label}
+                </Text>
+              </Pressable>
+            );
+          })}
         </ScrollView>
 
         {/* 질문 목록 */}
