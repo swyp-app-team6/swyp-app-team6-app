@@ -50,7 +50,7 @@ export default function Header({ left, center, right, title, showBack = false }:
     left ?? null
   );
 
-  const centerContent = center ?? (title ? <Text className="text-base font-bold">{title}</Text> : null);
+  const centerContent = center ?? (title ? <Text className="text-base font-bold" numberOfLines={1}>{title}</Text> : null);
 
   return (
     <Layout.Header
