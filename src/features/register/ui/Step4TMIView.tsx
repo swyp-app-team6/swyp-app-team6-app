@@ -9,6 +9,7 @@ import { useQuestionsQuery } from '@/entities/question';
 import type { MultipleQuestion, ShortQuestion, QuestionAnswer } from '@/entities/question';
 import { TMIQuestionType } from '@/shared/enums';
 import useRegisterFormStore from '../model/useRegisterFormStore';
+import useRegisterStepStore from '../model/useRegisterStepStore';
 import { tmiKey, TMI_CATEGORY_OPTIONS, type TMICategoryFilter } from '../model/types';
 
 /**
@@ -40,7 +41,8 @@ interface TMIQuestionUI {
  * <Step4TMIView />
  */
 export default function Step4TMIView() {
-  const { form, addTMIAnswer, removeTMIAnswer, nextStep } = useRegisterFormStore();
+  const { form, addTMIAnswer, removeTMIAnswer } = useRegisterFormStore();
+  const { nextStep } = useRegisterStepStore();
   const { setProfileData } = useProfileDataStore();
   const { data: questionData, isLoading } = useQuestionsQuery();
   const [selectedCategory, setSelectedCategory] = useState<TMICategoryFilter>('ALL');

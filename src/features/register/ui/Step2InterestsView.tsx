@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import { FavTag, BottomCTA, Button } from '@/shared/ui';
 import useRegisterFormStore from '../model/useRegisterFormStore';
+import useRegisterStepStore from '../model/useRegisterStepStore';
 import { useInterestsQuery } from '@/entities/interest';
 import type { INTEREST } from '@/entities/user';
 
@@ -23,7 +24,8 @@ const MAX_INTERESTS = 5;
  * <Step2InterestsView />
  */
 export default function Step2InterestsView() {
-  const { form, updateForm, nextStep } = useRegisterFormStore();
+  const { form, updateForm } = useRegisterFormStore();
+  const { nextStep } = useRegisterStepStore();
   const { data, isLoading } = useInterestsQuery();
 
   /** 관심사 토글 핸들러 */

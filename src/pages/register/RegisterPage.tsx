@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Header, Layout, ArrowIcon, openDialog } from '@/shared/ui';
-import { RegisterFormView, useRegisterFormStore } from '@/features/register';
+import { RegisterFormView, useRegisterFormStore, useRegisterStepStore } from '@/features/register';
 import type { NavigationPropType } from '@/shared/types';
 
 /**
@@ -19,7 +19,8 @@ import type { NavigationPropType } from '@/shared/types';
  */
 export default function RegisterPage() {
   const navigation = useNavigation<NavigationPropType>();
-  const { currentStep, prevStep, nextStep, isDirty, reset } = useRegisterFormStore();
+  const { currentStep, prevStep, nextStep, resetStep } = useRegisterStepStore();
+  const { isDirty, reset } = useRegisterFormStore();
 
   /** 뒤로가기 핸들러 */
   const handleBack = () => {
@@ -33,6 +34,7 @@ export default function RegisterPage() {
         okLabel: '나가기',
         cancelLabel: '계속 작성',
         okFn: () => {
+          resetStep();
           reset();
           navigation.goBack();
         },

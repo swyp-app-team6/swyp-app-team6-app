@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { Textbox, BottomCTA, Button } from '@/shared/ui';
 import useRegisterFormStore from '../model/useRegisterFormStore';
+import useRegisterStepStore from '../model/useRegisterStepStore';
 
 /**
  * # Step3BioView
@@ -17,7 +18,8 @@ import useRegisterFormStore from '../model/useRegisterFormStore';
  * <Step3BioView />
  */
 export default function Step3BioView() {
-  const { form, updateForm, nextStep } = useRegisterFormStore();
+  const { form, updateForm } = useRegisterFormStore();
+  const { nextStep } = useRegisterStepStore();
 
   /** 자기소개 변경 핸들러 (이모티콘 입력 불가, 연속 공백 방지) */
   const handleBioChange = (text: string) => {

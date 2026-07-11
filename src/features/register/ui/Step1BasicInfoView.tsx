@@ -5,6 +5,7 @@ import { Input, BottomCTA, Button, CameraUploadZone, openErrorDialog } from '@/s
 import { ProfileAPI } from '@/entities/user';
 import { usePermissionStore } from '@/widgets/permissions';
 import useRegisterFormStore from '../model/useRegisterFormStore';
+import useRegisterStepStore from '../model/useRegisterStepStore';
 
 
 /**
@@ -22,7 +23,8 @@ import useRegisterFormStore from '../model/useRegisterFormStore';
  * <Step1BasicInfoView />
  */
 export default function Step1BasicInfoView() {
-  const { form, updateForm, nextStep, isStep1Valid } = useRegisterFormStore();
+  const { form, updateForm, isStep1Valid } = useRegisterFormStore();
+  const { nextStep } = useRegisterStepStore();
   const { galleryStatus, requestGalleryPermission } = usePermissionStore();
   const [uploading, setUploading] = useState(false);
 

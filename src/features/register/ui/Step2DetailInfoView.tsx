@@ -3,6 +3,7 @@ import { View, Text, ScrollView, Pressable } from 'react-native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Input, BottomCTA, Button, SafeBottomSheetModal } from '@/shared/ui';
 import useRegisterFormStore from '../model/useRegisterFormStore';
+import useRegisterStepStore from '../model/useRegisterStepStore';
 import { REGION_OPTIONS } from '../model/types';
 import RegionPicker from './RegionPicker';
 
@@ -20,7 +21,8 @@ import RegionPicker from './RegionPicker';
  * <Step2DetailInfoView />
  */
 export default function Step2DetailInfoView() {
-  const { form, updateForm, nextStep, isStep2Valid } = useRegisterFormStore();
+  const { form, updateForm, isStep2Valid } = useRegisterFormStore();
+  const { nextStep } = useRegisterStepStore();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const [ageError, setAgeError] = useState(false);
 

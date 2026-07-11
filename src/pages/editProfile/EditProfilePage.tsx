@@ -3,7 +3,7 @@ import { TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 import { Header, Layout, ArrowIcon, openDialog } from '@/shared/ui';
-import { RegisterFormView, useRegisterFormStore, profileToFormState } from '@/features/register';
+import { RegisterFormView, useRegisterFormStore, useRegisterStepStore, profileToFormState } from '@/features/register';
 import { ProfileAPI } from '@/entities/user';
 import type { MyProfileResponse } from '@/entities/user';
 import type { NavigationPropType } from '@/shared/types';
@@ -23,7 +23,8 @@ import type { NavigationPropType } from '@/shared/types';
 export default function EditProfilePage() {
   const navigation = useNavigation<NavigationPropType>();
   const queryClient = useQueryClient();
-  const { currentStep, prevStep, isDirty, reset } = useRegisterFormStore();
+  const { currentStep, prevStep, resetStep } = useRegisterStepStore();
+  const { isDirty, reset } = useRegisterFormStore();
 
   const profileData = queryClient.getQueryData<MyProfileResponse>(
     ProfileAPI.query.me().queryKey,
@@ -42,6 +43,7 @@ export default function EditProfilePage() {
         okLabel: '나가기',
         cancelLabel: '계속 수정',
         okFn: () => {
+          resetStep();
           reset();
           navigation.goBack();
         },
