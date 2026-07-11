@@ -78,19 +78,17 @@ export default function HomeWidget() {
 
   return (
     <View className="mt-8 items-center">
-      {/* 프로필 존재 시: 타이틀 */}
-      {hasProfile && (
-        <View className="w-full flex-row items-center justify-between mb-5">
-          <View className="flex-row items-center gap-1">
-            <Text className="text-[16px] font-semibold leading-[22px] tracking-tight text-primary">
-              {profile.nickname}
-            </Text>
-            <Text className="text-[16px] font-medium leading-[22px] tracking-tight text-text-black">
-              님의 프로필 카드
-            </Text>
-          </View>
+      {/* 타이틀: 프로필 카드가 없어도 항상 표시, nickname 없으면 "사용자" */}
+      <View className="w-full flex-row items-center justify-between mb-5">
+        <View className="flex-row items-center gap-1">
+          <Text className="text-[16px] font-semibold leading-[22px] tracking-tight text-primary">
+            {profile?.nickname ?? '사용자'}
+          </Text>
+          <Text className="text-[16px] font-medium leading-[22px] tracking-tight text-text-black">
+            님의 프로필 카드
+          </Text>
         </View>
-      )}
+      </View>
 
       {/* 카드 영역 + flip 애니메이션 */}
       <ProfileFlipWrapper
