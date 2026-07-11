@@ -38,8 +38,9 @@ export default function DefaultLoginView({ onLoginSuccess }: Props) {
         },
         onError: () => {
           openErrorDialog({
-            message: '사용할 수 없는 계정입니다. 아이디,\n비밀번호를 다시 확인해주시길 바랍니다.',
-            buttonLabel: '확인',
+            title: "안내받은 계정이 아닙니다",
+            message: '사용할 수 없는 계정입니다. 아이디와 비밀번호를\n 다시 확인해주시기 바랍니다.',
+            buttonLabel: '다시 시도하기',
           });
         },
       },
