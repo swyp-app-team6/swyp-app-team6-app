@@ -125,6 +125,7 @@ export default function useExchangeWait(options?: UseExchangeWaitOptions): UseEx
           } else {
             openErrorDialog({ title: '프로필 교환', message: '교환 대기 중 오류가 발생했습니다' });
             resetState();
+            onForceCloseRef.current?.();
           }
         });
     };
@@ -176,6 +177,7 @@ export default function useExchangeWait(options?: UseExchangeWaitOptions): UseEx
       } else {
         openErrorDialog({ title: '프로필 교환', message: '교환이 완료되지 않았습니다' });
         resetState();
+        onForceCloseRef.current?.();
       }
     } catch (err) {
       console.error('[Exchange] accept 실패:', err);
@@ -191,7 +193,8 @@ export default function useExchangeWait(options?: UseExchangeWaitOptions): UseEx
         onForceCloseRef.current?.();
       } else {
         openErrorDialog({ title: '프로필 교환', message: '교환 수락 중 오류가 발생했습니다' });
-        setModalStep('PREVIEW');
+        resetState();
+        onForceCloseRef.current?.();
       }
     }
   }, [receivedProfile, resetState]);
@@ -211,6 +214,7 @@ export default function useExchangeWait(options?: UseExchangeWaitOptions): UseEx
     }
 
     resetState();
+    onForceCloseRef.current?.();
   }, [receivedProfile, resetState]);
 
   return {

@@ -41,6 +41,7 @@ export default function ExchangeLoadingModal({ visible, onCancel }: Props) {
               resizeMode="contain"
             />
           </View>
+          {/* 주의사항: 여기 취소하기 버튼 넣지 말것 */}
         </Pressable>
       </Pressable>
     </Modal>
