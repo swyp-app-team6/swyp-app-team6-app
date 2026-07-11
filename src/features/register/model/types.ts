@@ -4,6 +4,7 @@ import type { CosmicType } from '@/shared/enums';
 import { Region } from '@/shared/enums';
 import { TMIQuestionType } from '@/shared/enums';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
+import { getRegionLabel } from '@/shared/lib/regionLabel';
 
 /**
  * 프로필 등록 폼 상태
@@ -159,6 +160,35 @@ export const INTEREST_EMOJI: Record<string, string> = {
 
 
 /**
+ * # deriveSubArea
+ * ---
+ * - 간단설명: Region enum 코드에서 REGION_SUB_AREAS에 매칭되는 상세지역 라벨을 추출
+ * - 제약사항 및 특이사항:
+ *   - 시/도 코드(SEOUL 등)는 "{시/도} 전체" 반환
+ *   - 하위 코드(SEOUL_GANGNAM 등)는 getRegionLabel에서 시/도 접두사를 제거하여 반환
+ * ---
+ * @param detail Region enum 코드 (예: 'SEOUL_GANGNAM')
+ * @param group 시/도 그룹명 (예: '서울')
+ * @example
+ * deriveSubArea('SEOUL_GANGNAM', '서울') // '강남구'
+ * deriveSubArea('SEOUL', '서울')         // '서울 전체'
+ */
+function deriveSubArea(detail: string, group: string): string {
+  const provinceOption = REGION_OPTIONS.find((o) => o.label === group);
+  if (!provinceOption) return '';
+
+  // 시/도 코드와 동일하면 전체 선택
+  if (provinceOption.value === detail) {
+    return `${group} 전체`;
+  }
+
+  // 상세 코드의 풀 라벨에서 시/도 접두사를 제거하여 하위 지역명만 추출
+  const fullLabel = getRegionLabel(detail);
+  const prefix = `${group} `;
+  return fullLabel.startsWith(prefix) ? fullLabel.slice(prefix.length) : fullLabel;
+}
+
+/**
  * # profileToFormState
  * ---
  * - 간단설명: MyProfileResponse를 RegisterFormState로 변환하는 파싱 함수
@@ -198,7 +228,7 @@ export function profileToFormState(profile: MyProfileResponse): RegisterFormStat
     age: String(profile.age),
     jobField: profile.job,
     region: REGION_OPTIONS.find((o) => o.label === profile.region.group)?.value ?? profile.region.detail,
-    subArea: profile.region.label,
+    subArea: deriveSubArea(profile.region.detail, profile.region.group),
     bio: profile.bio ?? '',
     interests: profile.interests.map((i) => i.type),
     cosmicType: profile.cosmic_type ?? null,
