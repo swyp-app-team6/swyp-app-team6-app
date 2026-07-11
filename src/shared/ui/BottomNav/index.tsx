@@ -87,9 +87,9 @@ export default function BottomNav({ items, activeRoute, onPress, styleClass }: P
             {item.icon(isActive)}
             <Text
               style={{
-                fontSize: isActive ? 12 : 14,
+                fontSize: 12,
                 fontWeight: isActive ? '600' : '500',
-                lineHeight: isActive ? 18 : 14,
+                lineHeight: 14,
                 color: isActive ? '#742BD5' : '#1A1A1A',
                 textAlign: 'center',
               }}
