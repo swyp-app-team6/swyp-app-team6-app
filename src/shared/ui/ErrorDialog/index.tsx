@@ -125,15 +125,17 @@ export default function ErrorDialog() {
   return (
     <Modal visible={isOpen} onClose={handleClose} title={title}>
       {title ? (
-        <View className="items-center gap-4">
+        <View className="items-center gap-4 w-full">
           <Text className="text-center text-sm font-medium leading-[19.6px]" style={{ color: '#888888' }}>
             {message}
           </Text>
-          <Button
-            title={buttonLabel}
-            variant="primary"
-            onPress={handleRetry}
-          />
+          <View className="w-full">
+            <Button
+              title={buttonLabel}
+              variant="primary"
+              onPress={handleRetry}
+            />
+          </View>
         </View>
       ) : (
         <View className="items-center">

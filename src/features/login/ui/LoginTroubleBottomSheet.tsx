@@ -1,9 +1,7 @@
-import React, { forwardRef, useCallback, useRef } from 'react';
+import React, { forwardRef, useCallback, useImperativeHandle, useRef } from 'react';
 import { Text, View } from 'react-native';
-import { Pressable } from 'react-native';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { useImperativeHandle } from 'react';
-import { Button, SafeBottomSheetModal } from '@/shared/ui';
+import { Button } from '@/shared/ui';
+import BottomSheet from '@/shared/ui/BottomSheet';
 import type { BottomSheetHandle } from '@/shared/ui';
 
 interface Props {
@@ -19,6 +17,7 @@ interface Props {
  * - 간단설명: 소셜 로그인 실패 시 안내 및 안내받은 계정 로그인 진입 바텀시트
  * - 제약사항 및 특이사항:
  *   - ref를 통해 open/close 제어
+ *   - BottomSheet 컴포넌트 기반 (보라색 닫기 버튼 내장)
  *   - "안내 받은 계정이 있어요" 버튼으로 DefaultLoginPage 이동
  * ---
  * @param onDefaultLogin 안내받은 계정 로그인 화면 이동 콜백
@@ -30,43 +29,29 @@ interface Props {
  */
 const LoginTroubleBottomSheet = forwardRef<BottomSheetHandle, Props>(
   ({ onDefaultLogin, onDismiss }, ref) => {
-    const modalRef = useRef<BottomSheetModal>(null);
+    const sheetRef = useRef<BottomSheetHandle>(null);
 
     useImperativeHandle(ref, () => ({
-      open: () => modalRef.current?.present(),
-      close: () => modalRef.current?.dismiss(),
+      open: () => sheetRef.current?.open(),
+      close: () => sheetRef.current?.close(),
     }));
 
     const handleDefaultLogin = useCallback(() => {
-      modalRef.current?.dismiss();
+      sheetRef.current?.close();
       onDefaultLogin();
     }, [onDefaultLogin]);
 
     return (
-      <SafeBottomSheetModal
-        ref={modalRef}
-        onDismiss={onDismiss}
-      >
-        {/* 헤더: X 닫기 버튼 */}
-        <View className="flex-row justify-end px-5 pt-1 pb-1">
-          <Pressable
-            onPress={() => modalRef.current?.dismiss()}
-            hitSlop={8}
-            accessibilityLabel="닫기"
-          >
-            <Text className="text-2xl text-gray-400">✕</Text>
-          </Pressable>
-        </View>
-
+      <BottomSheet ref={sheetRef} onClose={onDismiss}>
         {/* 타이틀 */}
-        <View className="px-5 pb-6">
+        <View className="pb-6">
           <Text className="text-xl font-bold text-gray-900 leading-7">
             {'소셜 로그인에 실패했다면\n아래 방법을 먼저 확인해주세요'}
           </Text>
         </View>
 
         {/* 안내 항목 */}
-        <View className="px-5 gap-3">
+        <View className="gap-3">
           <View className="rounded-xl px-4 py-3.5">
             <Text className="text-base text-gray-900">1.소셜 로그인 다시 시도</Text>
           </View>
@@ -76,10 +61,13 @@ const LoginTroubleBottomSheet = forwardRef<BottomSheetHandle, Props>(
         </View>
 
         {/* CTA 버튼 */}
-        <View className="px-5 pt-6">
+        <View className="pt-6">
           <Button title="안내 받은 계정이 있어요" onPress={handleDefaultLogin} />
         </View>
-      </SafeBottomSheetModal>
+
+        {/* 하단 여백 */}
+        <View className="px-4 py-2" style={{ height: 34 }} />
+      </BottomSheet>
     );
   },
 );

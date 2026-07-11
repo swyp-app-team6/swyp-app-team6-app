@@ -70,7 +70,7 @@ export function Modal({ onClose, title, message, children, ...rest }: ModalProps
             </Text>
           )}
           {rest.visible && children && (
-            <View className="mt-10 w-[260px] self-center">
+            <View className={`${title ? 'mt-4' : 'mt-10'} w-[260px] self-center`}>
               {children}
             </View>
           )}
