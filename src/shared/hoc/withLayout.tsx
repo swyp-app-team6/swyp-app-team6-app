@@ -4,16 +4,16 @@ import { Layout, HomeIcon, QRIcon, StorageIcon } from '@/shared/ui'
 import LocalEnvBadge from '@/shared/ui/LocalEnvBadge';
 
 const ACTIVE_COLOR = '#8C39FB';
-const INACTIVE_COLOR = '#9ca3af';
+const INACTIVE_COLOR = '#1A1A1A';
 
 /**
  * 하단 탭 네비게이션 아이템 목록
  * - NavigatorType 키 기반으로 라우트 이름 관리
  */
 const NAV_ITEMS = [
-  { name: 'home', label: '홈', icon: (active: boolean) => <HomeIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
-  { name: 'qr', label: 'QR 스캔', icon: (active: boolean) => <QRIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
-  { name: 'storage', label: '보관함', icon: (active: boolean) => <StorageIcon size={22} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
+  { name: 'home', label: '홈', icon: (active: boolean) => <HomeIcon size={20} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
+  { name: 'qr', label: 'QR 스캔', icon: (active: boolean) => <QRIcon size={20} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
+  { name: 'storage', label: '보관함', icon: (active: boolean) => <StorageIcon size={20} color={active ? ACTIVE_COLOR : INACTIVE_COLOR} /> },
 ];
 
 /**

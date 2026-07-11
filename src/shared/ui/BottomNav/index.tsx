@@ -56,13 +56,16 @@ export default function BottomNav({ items, activeRoute, onPress, styleClass }: P
     <View
       className={cn('flex-row bg-white', styleClass?.root)}
       style={[
-        { height: 32 + safePadding.paddingBottom },
+        { height: 64 + safePadding.paddingBottom },
         Platform.select({
           ios: {
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: -2 },
-            shadowOpacity: 0.1,
-            shadowRadius: 4,
+            shadowColor: 'rgba(84, 84, 84, 1)',
+            shadowOffset: { width: 2, height: 0 },
+            shadowOpacity: 0.05,
+            shadowRadius: 15,
+          },
+          android: {
+            elevation: 4,
           },
         }),
       ]}
@@ -72,18 +75,24 @@ export default function BottomNav({ items, activeRoute, onPress, styleClass }: P
         return (
           <TouchableOpacity
             key={item.name}
-            className={cn('flex-1 items-center pt-2', styleClass?.tab)}
-            style={{ paddingBottom: safePadding.paddingBottom }}
+            className={cn('flex-1 items-center', styleClass?.tab)}
+            style={{
+              paddingTop: 12,
+              paddingBottom: 12 + safePadding.paddingBottom,
+              gap: 4,
+            }}
             onPress={() => onPress(item.name)}
             activeOpacity={0.7}
           >
             {item.icon(isActive)}
             <Text
-              className={cn(
-                'text-xs mt-0.5',
-                isActive ? 'text-primary font-semibold' : 'text-text-black',
-                styleClass?.label,
-              )}
+              style={{
+                fontSize: isActive ? 12 : 14,
+                fontWeight: isActive ? '600' : '500',
+                lineHeight: isActive ? 18 : 14,
+                color: isActive ? '#742BD5' : '#1A1A1A',
+                textAlign: 'center',
+              }}
             >
               {item.label}
             </Text>
