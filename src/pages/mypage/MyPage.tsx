@@ -1,7 +1,7 @@
 import React from 'react';
-import { Linking, Text, View } from 'react-native';
+import { Linking, Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Button, Header, Layout, MenuList, AppVersion } from '@/shared/ui';
+import { Header, Layout, MenuList } from '@/shared/ui';
 import ArrowIcon from '@/shared/ui/icons/ArrowIcon';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
@@ -13,7 +13,7 @@ import type { NavigationPropType } from '@/shared/types';
  * ---
  * - 간단설명: 메뉴 구성 및 계정 정보 수정 진입을 제공하는 마이페이지 메인 화면
  * - 제약사항 및 특이사항:
- *   - 설정 메뉴(신고하기, 공지사항)에서 공지사항은 노션 링크로 이동
+ *   - 설정 메뉴(앱 설정, 공지사항)
  *   - 약관 메뉴(이용 약관, 개인정보 처리방침)는 노션 링크로 이동
  *   - 계정 정보 수정 버튼 클릭 시 accountEdit 페이지로 이동
  * ---
@@ -48,11 +48,14 @@ function MyPage() {
 
         {/* 계정 정보 수정 버튼 */}
         <View className="mx-5">
-          <Button
-            title="계정 정보 수정"
-            variant="secondary"
+          <Pressable
+            className="h-12 rounded-xl bg-[#F5F5F5] items-center justify-center active:opacity-80"
             onPress={() => navigation.navigate('accountEdit')}
-          />
+          >
+            <Text className="text-[14px] font-medium text-[#8C39FB] leading-[19.6px]">
+              계정 정보 수정
+            </Text>
+          </Pressable>
         </View>
 
         {/* 설정 섹션 */}
@@ -65,8 +68,9 @@ function MyPage() {
             }}
           >
             <MenuList.Item
-              label="신고하기"
+              label="앱 설정"
               right={chevronRight}
+              onPress={() => navigation.navigate('appSetting')}
               styleClass={{ root: 'px-5 h-14', label: 'text-[14px] font-medium text-[#1A1A1A]' }}
             />
             <MenuList.Item
@@ -99,10 +103,6 @@ function MyPage() {
           </MenuList.Section>
         </View>
 
-        {/* 앱 버전 */}
-        <View className="py-6">
-          <AppVersion />
-        </View>
       </Layout.Body>
     </>
   );
