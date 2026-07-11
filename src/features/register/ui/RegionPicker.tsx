@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Button } from '@/shared/ui';
@@ -40,6 +40,16 @@ export default function RegionPicker({ selectedRegion, selectedSubArea, onConfir
   const [activeProvince, setActiveProvince] = useState(selectedLabel);
   const [tempRegion, setTempRegion] = useState(selectedRegion);
   const [tempSubArea, setTempSubArea] = useState(selectedSubArea);
+
+  /** props 변경 시 내부 상태 동기화 (프로필 수정 진입 등) */
+  useEffect(() => {
+    const option = REGION_OPTIONS.find((o) => o.value === selectedRegion);
+    const label = option?.label ?? REGION_OPTIONS[0].label;
+    setActiveProvince(label);
+    setTempRegion(selectedRegion);
+    const fallback = REGION_SUB_AREAS[label]?.[0] ?? '';
+    setTempSubArea(selectedSubArea || fallback);
+  }, [selectedRegion, selectedSubArea]);
 
   const subAreas = REGION_SUB_AREAS[activeProvince] ?? [];
 
