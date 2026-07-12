@@ -50,22 +50,22 @@ export default function Header({ left, center, right, title, showBack = false }:
     left ?? null
   );
 
-  const centerContent = center ?? (title ? <Text className="text-base font-bold" numberOfLines={1}>{title}</Text> : null);
+  const centerContent = center ?? (title ? <Text className="text-base font-bold" numberOfLines={1} adjustsFontSizeToFit>{title}</Text> : null);
 
   return (
     <Layout.Header
       styleClass={{ root: 'flex-row items-center px-4 bg-white' }}
       style={{ paddingTop: top, height: 56 + top }}
     >
-      <Layout styleClass={{ root: 'flex-1 items-start' }}>
+      <Layout styleClass={{ root: 'w-10 items-start' }}>
         {leftContent}
       </Layout>
 
-      <Layout styleClass={{ root: 'items-center' }}>
+      <Layout styleClass={{ root: 'flex-1 items-center' }}>
         {centerContent}
       </Layout>
 
-      <Layout styleClass={{ root: 'flex-1 items-end' }}>
+      <Layout styleClass={{ root: 'w-10 items-end' }}>
         {right ?? null}
       </Layout>
     </Layout.Header>
