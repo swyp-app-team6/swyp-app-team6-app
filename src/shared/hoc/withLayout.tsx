@@ -1,7 +1,16 @@
-import React from 'react'
+import React, { useCallback } from 'react'
+import { Linking, Platform } from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/native'
+import { request, PERMISSIONS } from 'react-native-permissions'
 import { Layout, HomeIcon, QRIcon, StorageIcon } from '@/shared/ui'
+import { openDialog, closeDialog } from '@/shared/ui/Dialog'
 import LocalEnvBadge from '@/shared/ui/LocalEnvBadge';
+
+/** 플랫폼별 카메라 권한 상수 */
+const CAMERA_PERMISSION =
+  Platform.OS === 'ios'
+    ? PERMISSIONS.IOS.CAMERA
+    : PERMISSIONS.ANDROID.CAMERA;
 
 const ACTIVE_COLOR = '#8C39FB';
 const INACTIVE_COLOR = '#1A1A1A';
@@ -30,6 +39,55 @@ export default function withLayout<P extends object>(WrappedComponent: React.Com
   function WithLayout(props: P) {
     const navigation = useNavigation<any>();
     const route = useRoute();
+    /**
+     * # handleNavPress
+     * ---
+     * - 간단설명: 하단 탭 네비게이션 아이템 클릭 핸들러 — QR 탭은 카메라 권한 확인 후 이동
+     * - 제약사항 및 특이사항:
+     *   - QR 탭 클릭 시 카메라 권한이 없으면 화면 이동 없이 권한 팝업 표시
+     *   - 권한 거절 시 홈으로 이동
+     *   - blocked 상태면 설정 앱 이동 유도
+     * ---
+     * @param name 네비게이션 라우트 이름
+     */
+    const handleNavPress = useCallback(async (name: string) => {
+      if (name !== 'qr') {
+        navigation.navigate(name);
+        return;
+      }
+
+      // QR 탭: 카메라 권한 요청
+      const status = await request(CAMERA_PERMISSION);
+
+      if (status === 'granted' || status === 'limited') {
+        navigation.navigate('qr');
+        return;
+      }
+
+      // blocked 상태: 설정 앱 이동 유도
+      if (status === 'blocked') {
+        openDialog({
+          type: 'confirm',
+          title: '카메라 권한 필요',
+          message: 'QR코드 인식을 위해 카메라 권한이 필요합니다.\n설정에서 카메라 권한을 허용해주세요.',
+          okLabel: '설정으로 이동',
+          cancelLabel: '취소',
+          okFn: () => {
+            closeDialog();
+            Linking.openSettings();
+          },
+          cancelFn: () => {
+            closeDialog();
+            navigation.navigate('home');
+          },
+          autoClose: false,
+        });
+        return;
+      }
+
+      // denied / unavailable: 권한 거절됨 → 홈으로 이동
+      navigation.navigate('home');
+    }, [navigation]);
 
     return (
       <Layout>
@@ -38,7 +96,7 @@ export default function withLayout<P extends object>(WrappedComponent: React.Com
         <Layout.BottomNav
           items={NAV_ITEMS}
           activeRoute={route.name}
-          onPress={(name) => navigation.navigate(name)}
+          onPress={handleNavPress}
         />
       </Layout>
     );
