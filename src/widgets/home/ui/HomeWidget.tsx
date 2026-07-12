@@ -137,7 +137,6 @@ export default function HomeWidget() {
       onPress={() => {
         if (!hasProfile) {
           openDialog({
-            title: '알림',
             message: '먼저 프로필 카드를 추가해주세요',
           });
           return;
