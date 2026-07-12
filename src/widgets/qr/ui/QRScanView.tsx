@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
 import { CodeScanner } from 'react-native-vision-camera-barcode-scanner';
 import Svg, { Rect, Path } from 'react-native-svg';
 import { usePermissionStore } from '../../permissions';
-import CameraPermissionRequiredFallbackView from '../../permissions/ui/CameraPermissionRequiredFallbackView';
 
 /** 스캔 영역 크기 (px) */
 const SCAN_SIZE = 240;
@@ -49,10 +48,15 @@ interface QRScanViewProps {
  * <QRScanView isActive={true} onScanned={(v) => console.log(v)} onError={console.error} />
  */
 export default function QRScanView({ isActive, onScanned, onError, onReload, onClose }: QRScanViewProps) {
-  const { cameraStatus } = usePermissionStore();
+  const { cameraStatus, requestCameraPermission } = usePermissionStore();
+
+  useEffect(() => {
+    requestCameraPermission();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (cameraStatus === 'denied' || cameraStatus === 'blocked') {
-    return <CameraPermissionRequiredFallbackView />;
+    return null;
   }
 
   return (
