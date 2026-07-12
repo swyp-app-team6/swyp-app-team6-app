@@ -1,7 +1,8 @@
 import React, { useRef } from 'react';
-import { Image, Platform, Pressable, Text, View } from 'react-native';
+import { Image, Platform, Pressable, StatusBar, Text, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
+import SystemNavigationBar from 'react-native-system-navigation-bar';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { appleAuthAndroid } from '@invertase/react-native-apple-authentication';
 import { AppleLoginButton, GoogleLoginButton, openDialog } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
@@ -31,6 +32,20 @@ function LoginPage() {
   const { mutateAsync: googleLogin, isPending: isGooglePending } = useGoogleLoginMutation();
   const { mutateAsync: appleLogin, isPending: isApplePending } = useAppleLoginMutation();
   const safePadding = useSafePaddingBottom();
+
+  /** Android 시스템 네비게이션 바 색상을 그라데이션 하단 색상으로 변경 */
+  useFocusEffect(
+    React.useCallback(() => {
+      if (Platform.OS === 'android') {
+        SystemNavigationBar.setNavigationColor('#241A6F', 'light');
+      }
+      return () => {
+        if (Platform.OS === 'android') {
+          SystemNavigationBar.setNavigationColor('#FFFFFF', 'dark');
+        }
+      };
+    }, []),
+  );
   const {
     isPermissionAllowed,
     setIsAgreedToTerms,
@@ -111,6 +126,11 @@ function LoginPage() {
       end={{ x: 0.5, y: 0 }}
       style={{ flex: 1 }}
     >
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="light-content"
+      />
       {/* 로고 영역 */}
       <View className="flex-1 justify-center items-center">
         <View className="items-center gap-5">

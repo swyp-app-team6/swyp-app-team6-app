@@ -7337,6 +7337,11 @@ react-native-svg@^15.15.5, react-native-svg@>=14.0.0:
     css-select "^5.1.0"
     css-tree "^1.1.3"
 
+react-native-system-navigation-bar@^2.8.0:
+  version "2.8.0"
+  resolved "https://registry.npmjs.org/react-native-system-navigation-bar/-/react-native-system-navigation-bar-2.8.0.tgz"
+  integrity sha512-VaBdTAUCnKfngphHJxZn/Axs6pzANYOr3UQDb9+iOzwqN6br43S4yFtqnnH85WPSMa+4aiOdm0AivG9e0tPUnA==
+
 react-native-toast-message@^2.3.3:
   version "2.3.3"
   resolved "https://registry.npmjs.org/react-native-toast-message/-/react-native-toast-message-2.3.3.tgz"
