@@ -205,7 +205,7 @@ export default function Dialog() {
       <View className="mt-6 flex-row justify-end gap-3">
         {type === 'confirm' && (
           <Pressable
-            className="flex-1 h-12 rounded-lg items-center justify-center"
+            className="flex-1 h-14 rounded-xl items-center justify-center"
             style={{ backgroundColor: '#F5F5F5' }}
             onPress={handleCancel}
           >
