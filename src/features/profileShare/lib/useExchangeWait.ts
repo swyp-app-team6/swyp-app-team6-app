@@ -173,6 +173,7 @@ export default function useExchangeWait(options?: UseExchangeWaitOptions): UseEx
           step: ExchangeFlowStep.RESULT,
         });
         resetState();
+        onForceCloseRef.current?.();
         navigation.navigate('exchangeResult');
       } else {
         openErrorDialog({ title: '프로필 교환', message: '교환이 완료되지 않았습니다' });
