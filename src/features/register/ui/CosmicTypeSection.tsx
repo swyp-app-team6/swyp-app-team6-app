@@ -88,7 +88,7 @@ const CosmicTypeSection = memo(function CosmicTypeSection({
           )}
         </View>
 
-        <View className="items-center gap-2" style={{ width: 244 }}>
+        <View className="items-center gap-2 w-full">
           <Text
             className="text-lg font-bold text-text-black text-center self-stretch"
             style={{ lineHeight: 25.2 }}
