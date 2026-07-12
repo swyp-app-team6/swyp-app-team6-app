@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import { FavTag, BottomCTA, Button } from '@/shared/ui';
 import useRegisterFormStore from '../model/useRegisterFormStore';
-import useRegisterStepStore from '../model/useRegisterStepStore';
 import { useInterestsQuery } from '@/entities/interest';
 import type { INTEREST } from '@/entities/user';
 
@@ -20,12 +19,12 @@ const MAX_INTERESTS = 5;
  *   - 3개 이상 선택 시 "다음" 버튼 활성화
  *   - 관심사 목록은 GET /interests API에서 조회
  * ---
+ * @param onNext 다음 단계 이동 콜백
  * @example
- * <Step2InterestsView />
+ * <Step2InterestsView onNext={() => navigation.navigate('profileStep4', { mode })} />
  */
-export default function Step2InterestsView() {
+export default function Step2InterestsView({ onNext }: { onNext: () => void }) {
   const { form, updateForm } = useRegisterFormStore();
-  const { nextStep } = useRegisterStepStore();
   const { data, isLoading } = useInterestsQuery();
 
   /** 관심사 토글 핸들러 */
@@ -83,7 +82,7 @@ export default function Step2InterestsView() {
         <Button
           title="다음으로"
           disabled={!isValid}
-          onPress={nextStep}
+          onPress={onNext}
         />
       </BottomCTA>
     </View>

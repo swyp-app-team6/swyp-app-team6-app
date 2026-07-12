@@ -9,7 +9,6 @@ import { useQuestionsQuery } from '@/entities/question';
 import type { MultipleQuestion, ShortQuestion, QuestionAnswer } from '@/entities/question';
 import { TMIQuestionType } from '@/shared/enums';
 import useRegisterFormStore from '../model/useRegisterFormStore';
-import useRegisterStepStore from '../model/useRegisterStepStore';
 import { tmiKey, TMI_CATEGORY_OPTIONS, type TMICategoryFilter } from '../model/types';
 
 /**
@@ -37,12 +36,12 @@ interface TMIQuestionUI {
  *   - 입력 없이 건너뛰기 가능
  *   - "다음으로" 클릭 시 form 데이터 전체를 useProfileDataStore에 저장 후 다음 단계로 이동
  * ---
+ * @param onNext 다음 단계 이동 콜백
  * @example
- * <Step4TMIView />
+ * <Step4TMIView onNext={() => navigation.navigate('profileStep6', { mode })} />
  */
-export default function Step4TMIView() {
+export default function Step4TMIView({ onNext }: { onNext: () => void }) {
   const { form, addTMIAnswer } = useRegisterFormStore();
-  const { nextStep } = useRegisterStepStore();
   const { setProfileData } = useProfileDataStore();
   const { data: questionData, isLoading } = useQuestionsQuery();
   const [selectedCategory, setSelectedCategory] = useState<TMICategoryFilter>('ALL');
@@ -289,7 +288,7 @@ export default function Step4TMIView() {
               interests: [...form.interests],
               tmiAnswers: form.tmiAnswers.map((a) => ({ ...a })),
             });
-            nextStep();
+            onNext();
           }}
         />
       </BottomCTA>

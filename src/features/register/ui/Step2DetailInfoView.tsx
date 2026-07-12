@@ -3,7 +3,6 @@ import { View, Text, ScrollView, Pressable } from 'react-native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Input, BottomCTA, Button, SafeBottomSheetModal } from '@/shared/ui';
 import useRegisterFormStore from '../model/useRegisterFormStore';
-import useRegisterStepStore from '../model/useRegisterStepStore';
 import { REGION_OPTIONS } from '../model/types';
 import RegionPicker from './RegionPicker';
 
@@ -17,12 +16,12 @@ import RegionPicker from './RegionPicker';
  *   - 활동 지역: Selectbox 트리거 → 바텀시트 내 시/도+구/군 2단 컬럼 피커
  *   - 모든 필수 항목 충족 시 "다음으로" 버튼 활성화
  * ---
+ * @param onNext 다음 단계 이동 콜백
  * @example
- * <Step2DetailInfoView />
+ * <Step2DetailInfoView onNext={() => navigation.navigate('profileStep3', { mode })} />
  */
-export default function Step2DetailInfoView() {
+export default function Step2DetailInfoView({ onNext }: { onNext: () => void }) {
   const { form, updateForm, isStep2Valid } = useRegisterFormStore();
-  const { nextStep } = useRegisterStepStore();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const [ageError, setAgeError] = useState(false);
 
@@ -39,7 +38,7 @@ export default function Step2DetailInfoView() {
       setAgeError(true);
       return;
     }
-    nextStep();
+    onNext();
   };
 
   /** 직무분야 변경 핸들러 (연속 공백 방지) */

@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { BottomCTA, Button } from '@/shared/ui';
-import useRegisterStepStore from '../model/useRegisterStepStore';
 
 /**
  * # Step3TypeTestView
@@ -12,11 +11,11 @@ import useRegisterStepStore from '../model/useRegisterStepStore';
  *   - 추후 6문항 4지선다 유형 테스트로 교체 예정
  *   - "건너뛰기" 버튼으로 다음 단계 이동
  * ---
+ * @param onNext 다음 단계 이동 콜백
  * @example
- * <Step3TypeTestView />
+ * <Step3TypeTestView onNext={() => {}} />
  */
-export default function Step3TypeTestView() {
-  const { nextStep } = useRegisterStepStore();
+export default function Step3TypeTestView({ onNext }: { onNext: () => void }) {
 
   return (
     <View className="flex-1 bg-white">
@@ -35,7 +34,7 @@ export default function Step3TypeTestView() {
         <Button
           title="건너뛰기"
           variant="secondary"
-          onPress={nextStep}
+          onPress={onNext}
         />
       </BottomCTA>
     </View>

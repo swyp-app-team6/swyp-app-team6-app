@@ -5,7 +5,6 @@ import { Input, BottomCTA, Button, CameraUploadZone, openErrorDialog } from '@/s
 import { ProfileAPI } from '@/entities/user';
 import { usePermissionStore } from '@/widgets/permissions';
 import useRegisterFormStore from '../model/useRegisterFormStore';
-import useRegisterStepStore from '../model/useRegisterStepStore';
 
 
 /**
@@ -19,12 +18,12 @@ import useRegisterStepStore from '../model/useRegisterStepStore';
  *   - 자기소개는 3단계로 분리됨
  *   - 모든 필수 항목 충족 시 "다음으로" 버튼 활성화
  * ---
+ * @param onNext 다음 단계 이동 콜백
  * @example
- * <Step1BasicInfoView />
+ * <Step1BasicInfoView onNext={() => navigation.navigate('profileStep2', { mode })} />
  */
-export default function Step1BasicInfoView() {
+export default function Step1BasicInfoView({ onNext }: { onNext: () => void }) {
   const { form, updateForm, isStep1Valid } = useRegisterFormStore();
-  const { nextStep } = useRegisterStepStore();
   const { galleryStatus, requestGalleryPermission } = usePermissionStore();
   const [uploading, setUploading] = useState(false);
 
@@ -124,7 +123,7 @@ export default function Step1BasicInfoView() {
         <Button
           title="다음으로"
           disabled={!isStep1Valid()}
-          onPress={nextStep}
+          onPress={onNext}
         />
       </BottomCTA>
     </View>

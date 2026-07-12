@@ -5,7 +5,7 @@ import { tmiKey, type RegisterFormState, type TMIAnswer } from './types';
 /**
  * 프로필 등록 폼 스토어 상태
  * - form: 폼 데이터 객체
- * - 단계(currentStep)는 useRegisterStepStore에서 별도 관리
+ * - 단계 관리는 React Navigation 스택에서 수행
  */
 interface RegisterFormStore {
   form: RegisterFormState;

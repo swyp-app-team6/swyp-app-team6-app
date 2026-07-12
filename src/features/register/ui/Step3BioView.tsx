@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { Textbox, BottomCTA, Button } from '@/shared/ui';
 import useRegisterFormStore from '../model/useRegisterFormStore';
-import useRegisterStepStore from '../model/useRegisterStepStore';
 
 /**
  * # Step3BioView
@@ -14,12 +13,12 @@ import useRegisterStepStore from '../model/useRegisterStepStore';
  *   - 100자 도달 시 카운터 빨간색 표시
  *   - 입력 없이도 "다음으로" 버튼 항상 활성화
  * ---
+ * @param onNext 다음 단계 이동 콜백
  * @example
- * <Step3BioView />
+ * <Step3BioView onNext={() => navigation.navigate('profileStep5', { mode })} />
  */
-export default function Step3BioView() {
+export default function Step3BioView({ onNext }: { onNext: () => void }) {
   const { form, updateForm } = useRegisterFormStore();
-  const { nextStep } = useRegisterStepStore();
 
   /** 자기소개 변경 핸들러 (이모티콘 입력 불가, 연속 공백 방지) */
   const handleBioChange = (text: string) => {
@@ -53,7 +52,7 @@ export default function Step3BioView() {
       <BottomCTA>
         <Button
           title="다음으로"
-          onPress={nextStep}
+          onPress={onNext}
         />
       </BottomCTA>
     </View>
