@@ -41,7 +41,7 @@ interface TMIQuestionUI {
  * <Step4TMIView onNext={() => navigation.navigate('profileStep6', { mode })} />
  */
 export default function Step4TMIView({ onNext }: { onNext: () => void }) {
-  const { form, addTMIAnswer } = useRegisterFormStore();
+  const { form, addTMIAnswer, removeTMIAnswer } = useRegisterFormStore();
   const { setProfileData } = useProfileDataStore();
   const { data: questionData, isLoading } = useQuestionsQuery();
   const [selectedCategory, setSelectedCategory] = useState<TMICategoryFilter>('ALL');
@@ -85,13 +85,14 @@ export default function Step4TMIView({ onNext }: { onNext: () => void }) {
     return allQuestions.filter((q) => q.type === selectedCategory);
   }, [selectedCategory, allQuestions]);
 
-  /** 체크박스 토글 핸들러 — 체크/체크해제만 수행, 답변 내용은 유지 */
+  /** 체크박스 토글 핸들러 — 체크/체크해제만 수행, 바텀시트 열지 않음 */
   const handleCheckToggle = (question: TMIQuestionUI) => {
     const key = tmiKey(question.answerType, question.id);
     setCheckedKeys((prev) => {
       const next = new Set(prev);
       if (next.has(key)) {
         next.delete(key);
+        removeTMIAnswer(question.answerType, question.id);
       } else {
         next.add(key);
       }
@@ -120,12 +121,12 @@ export default function Step4TMIView({ onNext }: { onNext: () => void }) {
     sheetRef.current?.open();
   };
 
-  /** 선택형 옵션 선택 — 이미 활성화된 선택지 탭 시 무시 */
+  /** 선택형 옵션 토글 */
   const handleChoiceToggle = (answer: QuestionAnswer) => {
-    setChoiceInput((prev) => (prev?.answer_id === answer.answer_id ? prev : answer));
+    setChoiceInput((prev) => (prev?.answer_id === answer.answer_id ? null : answer));
   };
 
-  /** 선택형 답변 확정 — 답변 저장만, 체크 활성화 안 함 */
+  /** 선택형 답변 확정 */
   const handleChoiceSubmit = () => {
     if (!activeQuestion || !choiceInput) return;
     addTMIAnswer({
@@ -136,12 +137,13 @@ export default function Step4TMIView({ onNext }: { onNext: () => void }) {
       answer: choiceInput.content,
       answerId: choiceInput.answer_id,
     });
+    setCheckedKeys((prev) => new Set(prev).add(tmiKey('CHOICE', activeQuestion.id)));
     sheetRef.current?.close();
     setActiveQuestion(null);
     setChoiceInput(null);
   };
 
-  /** 서술형 답변 제출 — 답변 저장만, 체크 활성화 안 함 */
+  /** 서술형 답변 제출 */
   const handleTextSubmit = () => {
     if (!activeQuestion || textInput.length < 1) return;
     addTMIAnswer({
@@ -151,6 +153,7 @@ export default function Step4TMIView({ onNext }: { onNext: () => void }) {
       question: activeQuestion.content,
       answer: textInput,
     });
+    setCheckedKeys((prev) => new Set(prev).add(tmiKey('TEXT', activeQuestion.id)));
     sheetRef.current?.close();
     setActiveQuestion(null);
     setTextInput('');
