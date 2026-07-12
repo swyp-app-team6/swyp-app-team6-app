@@ -20,7 +20,8 @@ import type { NavigationPropType } from '@/shared/types';
 export default function RegisterPage() {
   const navigation = useNavigation<NavigationPropType>();
   const { currentStep, prevStep, nextStep, resetStep } = useRegisterStepStore();
-  const { isDirty, reset } = useRegisterFormStore();
+  const isDirty = useRegisterFormStore((s) => s.isDirty);
+  const reset = useRegisterFormStore((s) => s.reset);
 
   /** 뒤로가기 핸들러 */
   const handleBack = () => {
@@ -40,6 +41,8 @@ export default function RegisterPage() {
         },
       });
     } else {
+      resetStep();
+      reset();
       navigation.goBack();
     }
   };

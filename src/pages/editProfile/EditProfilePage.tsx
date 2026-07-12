@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
@@ -24,12 +24,16 @@ export default function EditProfilePage() {
   const navigation = useNavigation<NavigationPropType>();
   const queryClient = useQueryClient();
   const { currentStep, prevStep, resetStep } = useRegisterStepStore();
-  const { isDirty, reset } = useRegisterFormStore();
+  const isDirty = useRegisterFormStore((s) => s.isDirty);
+  const reset = useRegisterFormStore((s) => s.reset);
 
   const profileData = queryClient.getQueryData<MyProfileResponse>(
     ProfileAPI.query.me().queryKey,
   );
-  const initialFormData = profileData ? profileToFormState(profileData) : undefined;
+  const initialFormData = useMemo(
+    () => profileData ? profileToFormState(profileData) : undefined,
+    [profileData],
+  );
 
   /** 뒤로가기 핸들러 */
   const handleBack = () => {
@@ -49,6 +53,8 @@ export default function EditProfilePage() {
         },
       });
     } else {
+      resetStep();
+      reset();
       navigation.goBack();
     }
   };
