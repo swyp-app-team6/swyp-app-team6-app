@@ -41,13 +41,18 @@ interface TMIQuestionUI {
  * <Step4TMIView onNext={() => navigation.navigate('profileStep6', { mode })} />
  */
 export default function Step4TMIView({ onNext }: { onNext: () => void }) {
-  const { form, addTMIAnswer } = useRegisterFormStore();
+  const { form, addTMIAnswer, removeTMIAnswer } = useRegisterFormStore();
   const { setProfileData } = useProfileDataStore();
   const { data: questionData, isLoading } = useQuestionsQuery();
   const [selectedCategory, setSelectedCategory] = useState<TMICategoryFilter>('ALL');
   const [activeQuestion, setActiveQuestion] = useState<TMIQuestionUI | null>(null);
   const [textInput, setTextInput] = useState('');
   const [choiceInput, setChoiceInput] = useState<QuestionAnswer | null>(null);
+  const [checkedKeys, setCheckedKeys] = useState<Set<string>>(() => {
+    const initial = new Set<string>();
+    form.tmiAnswers.forEach((a) => initial.add(tmiKey(a.answerKind, a.questionId)));
+    return initial;
+  });
   const sheetRef = useRef<BottomSheetHandle>(null);
   const previewSheetRef = useRef<BottomSheetHandle>(null);
 
@@ -79,6 +84,21 @@ export default function Step4TMIView({ onNext }: { onNext: () => void }) {
     if (selectedCategory === 'ALL') return allQuestions;
     return allQuestions.filter((q) => q.type === selectedCategory);
   }, [selectedCategory, allQuestions]);
+
+  /** 체크박스 토글 핸들러 — 체크/체크해제만 수행, 바텀시트 열지 않음 */
+  const handleCheckToggle = (question: TMIQuestionUI) => {
+    const key = tmiKey(question.answerType, question.id);
+    setCheckedKeys((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) {
+        next.delete(key);
+        removeTMIAnswer(question.answerType, question.id);
+      } else {
+        next.add(key);
+      }
+      return next;
+    });
+  };
 
   /** 질문 카드 탭 핸들러 - 기존 답변이 있으면 답변을 유지한 채 바텀시트 재오픈 */
   const handleQuestionPress = (question: TMIQuestionUI) => {
@@ -117,6 +137,7 @@ export default function Step4TMIView({ onNext }: { onNext: () => void }) {
       answer: choiceInput.content,
       answerId: choiceInput.answer_id,
     });
+    setCheckedKeys((prev) => new Set(prev).add(tmiKey('CHOICE', activeQuestion.id)));
     sheetRef.current?.close();
     setActiveQuestion(null);
     setChoiceInput(null);
@@ -132,6 +153,7 @@ export default function Step4TMIView({ onNext }: { onNext: () => void }) {
       question: activeQuestion.content,
       answer: textInput,
     });
+    setCheckedKeys((prev) => new Set(prev).add(tmiKey('TEXT', activeQuestion.id)));
     sheetRef.current?.close();
     setActiveQuestion(null);
     setTextInput('');
@@ -235,15 +257,16 @@ export default function Step4TMIView({ onNext }: { onNext: () => void }) {
         {/* 질문 목록 */}
         <View className="px-5 gap-3">
           {filteredQuestions.map((question) => {
+            const key = tmiKey(question.answerType, question.id);
             const answer = getAnswer(question.answerType, question.id);
-            const isSelected = !!answer;
+            const isChecked = checkedKeys.has(key);
             return (
-              <View key={`${question.answerType}-${question.id}`} className="flex-row items-start gap-3">
+              <View key={key} className="flex-row items-start gap-3">
                 {/* 체크박스 */}
                 <View className="mt-4">
                   <Checkbox
-                    checked={isSelected}
-                    onValueChange={() => handleQuestionPress(question)}
+                    checked={isChecked}
+                    onValueChange={() => handleCheckToggle(question)}
                   />
                 </View>
                 {/* 카드 */}
@@ -252,7 +275,7 @@ export default function Step4TMIView({ onNext }: { onNext: () => void }) {
                     tag={getCategoryLabel(question.type)}
                     question={question.content}
                     answer={answer}
-                    selected={isSelected}
+                    selected={isChecked}
                     onPress={() => handleQuestionPress(question)}
                   />
                 </View>

@@ -78,7 +78,7 @@ export default function TMICard({
     >
       {tag && (
         <View className={cn('mb-2', styleClass?.tag)}>
-          <Tag label={tag} variant={selected ? 'primary' : 'default'} />
+          <Tag label={tag} variant="primary" />
         </View>
       )}
 

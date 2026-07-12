@@ -71,8 +71,8 @@ export default function Tag({ label, variant = 'default', styleClass }: TagProps
   const v = variantClass[variant];
 
   return (
-    <View className={cn('self-start rounded-2xl px-3 py-2', v.root, styleClass?.root)}>
-      <Text className={cn('text-xs font-normal', v.label, styleClass?.label)}>
+    <View className={cn('self-start rounded-[20px] px-3 py-2', v.root, styleClass?.root)}>
+      <Text className={cn('text-xs font-medium', v.label, styleClass?.label)}>
         {label}
       </Text>
     </View>
