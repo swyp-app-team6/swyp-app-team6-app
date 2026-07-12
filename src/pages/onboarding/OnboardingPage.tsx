@@ -1,8 +1,9 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, Pressable, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, Pressable, Image, Platform } from 'react-native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
+import SystemNavigationBar from 'react-native-system-navigation-bar';
 import { Button, Layout, StepView } from '@/shared/ui';
 import type { NavigationPropType } from '@/shared/types';
 import useConditionStateStore from '@/shared/model/conditionStateStore';
@@ -55,6 +56,20 @@ function OnboardingPage() {
   const { setHasSeenOnboarding } = useConditionStateStore();
   const { top } = useSafeAreaInsets();
   const [currentStep, setCurrentStep] = useState(0);
+
+  /** 안드로이드 하단 시스템 네비게이션 바를 투명하게 설정 */
+  useFocusEffect(
+    React.useCallback(() => {
+      if (Platform.OS === 'android') {
+        SystemNavigationBar.setNavigationColor('transparent', 'dark');
+      }
+      return () => {
+        if (Platform.OS === 'android') {
+          SystemNavigationBar.setNavigationColor('#FFFFFF', 'dark');
+        }
+      };
+    }, []),
+  );
   const isLastStep = currentStep === ONBOARDING_SLIDES.length - 1;
 
   /** 온보딩 완료 후 로그인 화면으로 이동 */
