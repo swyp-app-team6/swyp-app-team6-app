@@ -97,11 +97,15 @@ export default function RegisterFormView({ mode = 'register', initialData }: Pro
   const isPending = isEdit ? isUpdating : isRegistering;
 
   useEffect(() => {
+    const { isInitialized } = useRegisterStepStore.getState();
+    if (isInitialized) return;
+
     resetStep();
     reset();
     if (isEdit && initialData) {
       updateForm(initialData);
     }
+    useRegisterStepStore.setState({ isInitialized: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

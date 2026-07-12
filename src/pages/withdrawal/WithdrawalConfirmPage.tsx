@@ -44,8 +44,8 @@ function WithdrawalConfirmPage() {
       const matchedReason = WITHDRAWAL_REASONS.find((r) => r === reason);
       const reasonCode = matchedReason
         ? REASON_CODE_MAP[matchedReason]
-        : 'OTHER';
-      const reasonDetail = reasonCode === 'OTHER' ? reason : undefined;
+        : 'ETC';
+      const reasonDetail = reasonCode === 'ETC' ? reason : undefined;
 
       await UserAPI.deleteUser({ reasonCode, reasonDetail });
       await clearAuth();

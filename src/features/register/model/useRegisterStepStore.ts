@@ -4,9 +4,11 @@ import { immer } from 'zustand/middleware/immer';
 /**
  * 프로필 등록 단계 상태
  * - currentStep: 현재 단계 (0~5, 총 6단계)
+ * - isInitialized: 폼 초기화 완료 여부 (remount 시 중복 초기화 방지)
  */
 interface RegisterStepStore {
   currentStep: number;
+  isInitialized: boolean;
   setStep: (step: number) => void;
   nextStep: () => void;
   prevStep: () => void;
@@ -28,6 +30,7 @@ interface RegisterStepStore {
 const useRegisterStepStore = create<RegisterStepStore>()(
   immer((set) => ({
     currentStep: 0,
+    isInitialized: false,
 
     /**
      * 현재 단계를 설정 (0~5 범위 클램프)
@@ -67,6 +70,7 @@ const useRegisterStepStore = create<RegisterStepStore>()(
     resetStep: () => {
       set((state) => {
         state.currentStep = 0;
+        state.isInitialized = false;
       });
     },
   })),

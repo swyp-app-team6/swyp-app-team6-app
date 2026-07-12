@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, View } from 'react-native';
-import Config from 'react-native-config';
 import { useNavigation } from '@react-navigation/native';
+import { PROJECT_ENV } from '@/shared/lib/env';
 import { NavigationPropType } from '@/shared/types';
 
 /**
@@ -9,7 +9,7 @@ import { NavigationPropType } from '@/shared/types';
  * ---
  * - 간단설명: PROJECT_ENV가 'local'일 때만 렌더링되는 로컬 환경 FAB 그룹
  * - 제약사항 및 특이사항:
- *   - Config.PROJECT_ENV === 'local'인 경우에만 표시됨
+ *   - PROJECT_ENV === true인 경우에만 표시됨
  *   - LOG FAB: API 로그 페이지로 이동
  *   - DOCS FAB: 컴포넌트 플레이그라운드로 이동
  * ---
@@ -19,7 +19,7 @@ import { NavigationPropType } from '@/shared/types';
 export default function LocalEnvBadge() {
   const navigation = useNavigation<NavigationPropType>();
 
-  if (Config.PROJECT_ENV !== 'local') {
+  if (!PROJECT_ENV) {
     return null;
   }
 

@@ -1,6 +1,7 @@
 import '../../global.css';
 import '@/shared/lib/setupDefaultFont';
 import React, { useEffect, useState } from 'react';
+import { StatusBar } from 'react-native';
 import * as Sentry from '@sentry/react-native';
 import BootSplash from 'react-native-bootsplash';
 import StackRouter from '@/shared/router/StackRouter';
@@ -75,6 +76,11 @@ function App() {
 
   return (
     <AppProviders>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
       <StackRouter initialRouteName={initialRoute} />
       <Dialog />
       <ErrorDialog />

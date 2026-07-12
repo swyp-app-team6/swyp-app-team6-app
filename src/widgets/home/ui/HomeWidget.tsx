@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { ProfileQRCodeIcon } from '@/shared/ui';
 import UserProfileCard from '@/shared/ui/ProfileCard/UserProfileCard';
 import EmptyProfileCard from '@/shared/ui/ProfileCard/EmptyProfileCard';
 import ProfileFlipWrapper from '@/shared/ui/ProfileCard/ProfileFlipWrapper';
-import { ProfileShareQRModal } from '@/features/profileShare';
+import { ProfileShareQRModal, useExchangeWait } from '@/features/profileShare';
 import { useMyProfileQuery } from '@/entities/user';
+import { openDialog } from '@/shared/ui/Dialog';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 import { apiValueToCosmicType } from '@/entities/storage';
 import type { NavigationPropType } from '@/shared/types';
@@ -19,6 +20,7 @@ import HomeCardBack from './HomeCardBack';
  * - 제약사항 및 특이사항:
  *   - 프로필 미등록: 빈 카드 앞뒤 + 생성하기/유형테스트 유도
  *   - 프로필 등록: 앞면(UserProfileCard) ↔ 뒷면(HomeCardBack) flip 전환 + QR공유
+ *   - QR 모달이 닫혀도 교환 대기가 유지되어 상대방 교환 요청 수신 가능
  * ---
  * @example
  * <HomeWidget />
@@ -28,6 +30,59 @@ export default function HomeWidget() {
   const [qrVisible, setQrVisible] = useState(false);
   const { data: profile, isLoading } = useMyProfileQuery();
   const hasProfile = !!profile;
+
+  const {
+    receivedProfile,
+    modalStep,
+    isWaiting,
+    startWait,
+    cancelWait,
+    acceptExchange,
+    declineExchange,
+  } = useExchangeWait({
+    onForceClose: () => setQrVisible(false),
+  });
+
+  /** QR 모달 열기 — wait가 활성 상태가 아니면 시작 */
+  const handleOpenQR = useCallback(() => {
+    setQrVisible(true);
+    if (!isWaiting) {
+      startWait();
+    }
+  }, [isWaiting, startWait]);
+
+  /** QR 모달 닫기 — wait는 유지, 모달만 닫음 */
+  const handleCloseQR = useCallback(() => {
+    setQrVisible(false);
+  }, []);
+
+  /** 수락하기 핸들러 */
+  const handleAccept = useCallback(() => {
+    acceptExchange(navigation);
+  }, [acceptExchange, navigation]);
+
+  /** 거절하기 핸들러 */
+  const handleDecline = useCallback(() => {
+    declineExchange();
+  }, [declineExchange]);
+
+  /**
+   * QR 모달이 닫힌 상태에서 교환 요청 수신 시 모달을 다시 열어 프로필 카드 미리보기 표시
+   * — 모달 열린 상태에서는 모달 내부에서 PREVIEW 단계로 처리
+   */
+  useEffect(() => {
+    if (receivedProfile && !qrVisible && modalStep === 'PREVIEW') {
+      setQrVisible(true);
+    }
+  }, [receivedProfile, qrVisible, modalStep]);
+
+  /** 컴포넌트 unmount 시 wait 정리 */
+  useEffect(() => {
+    return () => {
+      cancelWait();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (isLoading) {
     return (
@@ -55,14 +110,21 @@ export default function HomeWidget() {
         topRightSlot={
           <Pressable
             hitSlop={8}
-            onPress={() => setQrVisible(true)}
+            onPress={handleOpenQR}
             accessibilityLabel="프로필 카드 QR 공유"
           >
             <ProfileQRCodeIcon size={24} color="#FFFFFF" />
           </Pressable>
         }
       />
-      <ProfileShareQRModal visible={qrVisible} onClose={() => setQrVisible(false)} />
+      <ProfileShareQRModal
+        visible={qrVisible}
+        onClose={handleCloseQR}
+        modalStep={qrVisible ? modalStep : 'QR'}
+        receivedProfile={receivedProfile}
+        onAccept={handleAccept}
+        onDecline={handleDecline}
+      />
     </View>
   );
 
@@ -72,7 +134,15 @@ export default function HomeWidget() {
   ) : (
     <EmptyProfileCard
       text={'유형 테스트를 통해\n나의 유형을 찾아보세요!'}
-      onPress={() => navigation.navigate('cosmicTest')}
+      onPress={() => {
+        if (!hasProfile) {
+          openDialog({
+            message: '먼저 프로필 카드를 추가해주세요',
+          });
+          return;
+        }
+        navigation.navigate('cosmicTest');
+      }}
     />
   );
 

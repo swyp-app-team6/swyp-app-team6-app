@@ -5,7 +5,7 @@ import { ProfileAPI } from '@/entities/user';
 import { ExchangeAPI } from '@/entities/exchange';
 import type { ExchangeResult } from '@/entities/exchange';
 import { ExchangeFlowStep } from '@/shared/enums';
-import { openDialog, openErrorDialog } from '@/shared/ui';
+import { openDialog } from '@/shared/ui';
 
 interface ExchangeFlowState {
   /** 현재 교환 플로우 단계 */
@@ -129,7 +129,10 @@ const useExchangeFlowStore = create<ExchangeFlowState>((set, get) => ({
         });
       }
     } catch (err) {
-      if (abortController.signal.aborted) return;
+      if (abortController.signal.aborted) {
+        set({ ...initialState });
+        return;
+      }
       console.error('[Exchange] startExchange 실패:', err);
       const axiosErr = err as AxiosError;
       const message = getErrorMessage(axiosErr);
@@ -142,16 +145,20 @@ const useExchangeFlowStore = create<ExchangeFlowState>((set, get) => ({
     const { _abortController, scannedProfile, step } = get();
     _abortController?.abort();
 
-    if (step === ExchangeFlowStep.LOADING && scannedProfile?.id) {
+    const shouldCancel = step === ExchangeFlowStep.LOADING && !!scannedProfile?.id;
+    const profileId = scannedProfile?.id;
+
+    // 상태를 먼저 리셋하여 새 스캔과의 레이스 컨디션 방지
+    set({ ...initialState });
+
+    // 서버 취소는 상태 리셋 후 비동기로 처리
+    if (shouldCancel && profileId) {
       try {
-        await ExchangeAPI.cancelStart(scannedProfile.id);
+        await ExchangeAPI.cancelStart(profileId);
       } catch (err) {
         console.error('[Exchange] cancelExchange 실패:', err);
-        openErrorDialog({ message: '교환 취소에 실패했습니다' });
       }
     }
-
-    set({ ...initialState });
   },
 
   reset: () => {

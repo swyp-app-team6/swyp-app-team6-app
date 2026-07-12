@@ -71,7 +71,7 @@ function UserProfileCard({
         />
       ) : (
         <View className="absolute w-full h-full items-center justify-center">
-          사진이 없습니다
+          <Text className="text-sm text-text-gray4">사진이 없습니다</Text>
         </View>
       )}
 

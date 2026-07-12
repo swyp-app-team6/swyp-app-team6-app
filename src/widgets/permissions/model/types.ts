@@ -31,8 +31,8 @@ export interface PermissionState {
 export interface PermissionActions {
   /** 현재 카메라 권한 상태 조회 (팝업 없음) */
   checkCameraPermission: () => Promise<void>;
-  /** 카메라 권한 요청 팝업 표시 */
-  requestCameraPermission: () => Promise<void>;
+  /** 카메라 권한 요청 팝업 표시, 결과 상태 반환 */
+  requestCameraPermission: () => Promise<PermissionStatus>;
   /** 현재 갤러리 권한 상태 조회 (팝업 없음) */
   checkGalleryPermission: () => Promise<void>;
   /** 갤러리 권한 요청 팝업 표시 */

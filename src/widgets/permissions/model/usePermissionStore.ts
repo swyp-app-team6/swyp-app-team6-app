@@ -46,6 +46,7 @@ const usePermissionStore = create<PermissionStore>((set) => ({
   requestCameraPermission: async () => {
     const status = await request(CAMERA_PERMISSION);
     set({ cameraStatus: status });
+    return status;
   },
 
   checkGalleryPermission: async () => {

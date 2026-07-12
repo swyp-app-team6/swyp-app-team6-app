@@ -64,7 +64,7 @@ export default function ExchangeResultPage() {
       </View>
 
       {/* 하단 CTA */}
-      <View className="px-5 pb-6 pt-3">
+      <View className="px-5 pb-16 pt-3">
         <View className="flex-row gap-3">
           <Pressable
             className="h-14 items-center justify-center rounded-xl px-6"

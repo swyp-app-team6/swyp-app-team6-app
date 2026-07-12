@@ -1,36 +1,32 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { ActivityIndicator, Modal, Pressable, Text, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { Button, ProfileCard } from '@/shared/ui';
 import QRCode from 'react-native-qrcode-svg';
 import { useQuery } from '@tanstack/react-query';
 import { ProfileAPI } from '@/entities/user';
 import type { MyProfileResponse } from '@/entities/user';
-import type { AxiosError } from 'axios';
-import { ExchangeAPI } from '@/entities/exchange';
-import { useExchangeFlowStore } from '@/features/exchange';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
-import { ExchangeFlowStep } from '@/shared/enums';
-import { openErrorDialog } from '@/shared/ui/ErrorDialog';
-import type { NavigationPropType } from '@/shared/types';
+import type { WaitModalStep } from '../lib/useExchangeWait';
 import useCountdownTimer from '../lib/useCountdownTimer';
 
 /** QR 유효 시간 (초) */
 const QR_EXPIRY_SECONDS = 60;
-
-/**
- * 대기자 모달 화면 단계
- * - QR = QR 코드 표시 + 카운트다운
- * - PREVIEW = 상대 프로필 미리보기 + 수락하기 CTA
- * - ACCEPTING = 수락 처리 중
- */
-type ModalStep = 'QR' | 'PREVIEW' | 'ACCEPTING';
 
 interface Props {
   /** 모달 표시 여부 */
   visible: boolean;
   /** 모달 닫기 콜백 */
   onClose: () => void;
+  /** 대기자 모달 단계 (부모에서 useExchangeWait으로 관리) */
+  modalStep: WaitModalStep;
+  /** 스캐너로부터 수신된 프로필 */
+  receivedProfile: MyProfileResponse | null;
+  /** 수락하기 버튼 핸들러 */
+  onAccept: () => void;
+  /** 거절하기 핸들러 */
+  onDecline: () => void;
+  /** QR 만료 시 콜백 (wait 재시작 트리거) */
+  onQrExpire?: () => void;
 }
 
 /**
@@ -39,19 +35,37 @@ interface Props {
  * - 간단설명: 내 프로필 카드 QR 코드 공유 + 교환 수락 모달
  * - 제약사항 및 특이사항:
  *   - QR 코드에 프로필 uuid를 인코딩
- *   - 60초 카운트다운 후 자동 닫힘
- *   - 모달 열릴 때 exchange/wait API 호출로 대기 상태 진입
- *   - wait 응답 수신 시 상대 프로필 미리보기 + 수락하기 CTA 표시
- *   - 수락 시 exchange/accept API 호출
+ *   - 60초 카운트다운 후 QR 재발급
+ *   - wait 생명주기는 부모(HomeWidget)의 useExchangeWait에서 관리
+ *   - 모달이 닫혀도 wait가 유지되어 교환 요청 수신 가능
  * ---
  * @param visible 모달 표시 여부
  * @param onClose 모달 닫기 콜백
+ * @param modalStep 대기자 모달 단계
+ * @param receivedProfile 스캐너로부터 수신된 프로필
+ * @param onAccept 수락하기 버튼 핸들러
+ * @param onDecline 거절하기 핸들러
+ * @param onQrExpire QR 만료 시 콜백
  * ---
  * @example
- * <ProfileShareQRModal visible={showQR} onClose={() => setShowQR(false)} />
+ * <ProfileShareQRModal
+ *   visible={qrVisible}
+ *   onClose={handleCloseQR}
+ *   modalStep={modalStep}
+ *   receivedProfile={receivedProfile}
+ *   onAccept={() => acceptExchange(navigation)}
+ *   onDecline={() => declineExchange()}
+ * />
  */
-export default function ProfileShareQRModal({ visible, onClose }: Props) {
-  const navigation = useNavigation<NavigationPropType>();
+export default function ProfileShareQRModal({
+  visible,
+  onClose,
+  modalStep,
+  receivedProfile,
+  onAccept,
+  onDecline,
+  onQrExpire,
+}: Props) {
   const { data: qrData, refetch: refetchQr } = useQuery({
     ...ProfileAPI.query.fetchUuid(),
     enabled: visible,
@@ -64,101 +78,17 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
   const handleQrExpire = useCallback(() => {
     refetchQr();
     setQrResetKey((prev) => prev + 1);
-  }, [refetchQr]);
+    onQrExpire?.();
+  }, [refetchQr, onQrExpire]);
 
   const remainSeconds = useCountdownTimer(QR_EXPIRY_SECONDS, visible, handleQrExpire, qrResetKey);
-  const abortRef = useRef<AbortController | null>(null);
-
-  const [modalStep, setModalStep] = useState<ModalStep>('QR');
-  const [receivedProfile, setReceivedProfile] = useState<MyProfileResponse | null>(null);
-
-  /** 모달 닫힐 때 상태 초기화 */
-  const handleClose = useCallback(() => {
-    setModalStep('QR');
-    setReceivedProfile(null);
-    onClose();
-  }, [onClose]);
-
-  /**
-   * 모달 열릴 때 exchange/wait 호출, 닫힐 때 취소
-   * TODO: 여기 추후 리팩토링
-   */
-  useEffect(() => {
-    if (visible) {
-      const controller = new AbortController();
-      abortRef.current = controller;
-
-      ExchangeAPI.wait(controller.signal)
-        .then((res) => {
-          if (controller.signal.aborted) return;
-          console.log('[Exchange] wait 응답:', res.data);
-          setReceivedProfile(res.data as MyProfileResponse);
-          setModalStep('PREVIEW');
-        })
-        .catch((err) => {
-          if (controller.signal.aborted) return;
-          console.error('[Exchange] wait 실패:', err);
-          const status = (err as AxiosError)?.response?.status;
-          if (status === 504) {
-            openErrorDialog({ title: '프로필 교환', message: '교환 시간이 만료되었습니다. 다시 시도해 주세요' });
-          } else {
-            openErrorDialog({ title: '프로필 교환', message: '교환 대기 중 오류가 발생했습니다' });
-          }
-          handleClose();
-        });
-    } else {
-      abortRef.current?.abort();
-      abortRef.current = null;
-    }
-
-    return () => {
-      abortRef.current?.abort();
-      abortRef.current = null;
-    };
-  }, [visible, handleClose]);
-
-  /** 수락하기 버튼 핸들러 — accept 응답의 교환 결과를 store에 저장 후 결과 페이지로 이동 */
-  const handleAccept = useCallback(async () => {
-    if (!receivedProfile) return;
-    setModalStep('ACCEPTING');
-
-    try {
-      const { data } = await ExchangeAPI.accept(receivedProfile.id);
-      console.log('[Exchange] accept 응답:', data);
-
-      if (data.status === 'ACCEPTED' && data.result) {
-        useExchangeFlowStore.setState({
-          scannedProfile: data.result.profile ?? useExchangeFlowStore.getState().scannedProfile,
-          exchangeResult: data.result,
-          step: ExchangeFlowStep.RESULT,
-        });
-        setModalStep('QR');
-        setReceivedProfile(null);
-        onClose();
-        navigation.navigate('exchangeResult');
-      } else {
-        openErrorDialog({ title: '프로필 교환', message: '교환이 완료되지 않았습니다' });
-        handleClose();
-      }
-    } catch (err) {
-      console.error('[Exchange] accept 실패:', err);
-      const status = (err as AxiosError)?.response?.status;
-      if (status === 504) {
-        openErrorDialog({ title: '프로필 교환', message: '교환 시간이 만료되었습니다. 다시 시도해 주세요' });
-        handleClose();
-      } else {
-        openErrorDialog({ title: '프로필 교환', message: '교환 수락 중 오류가 발생했습니다' });
-        setModalStep('PREVIEW');
-      }
-    }
-  }, [receivedProfile, handleClose, onClose, navigation]);
 
   return (
     <Modal visible={visible} transparent animationType="fade">
       <Pressable
         className="flex-1 items-center justify-center"
         style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
-        onPress={modalStep === 'QR' ? handleClose : undefined}
+        onPress={modalStep === 'QR' ? onClose : undefined}
       >
         <Pressable
           className="w-[320px] rounded-xl bg-white px-5 py-7"
@@ -196,7 +126,7 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
                 </View>
 
                 <View className="w-full">
-                  <Button title="닫기" onPress={handleClose} />
+                  <Button title="닫기" onPress={onClose} />
                 </View>
               </View>
             </>
@@ -205,9 +135,18 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
           {(modalStep === 'PREVIEW' || modalStep === 'ACCEPTING') && receivedProfile && (
             <>
               {/* 상대 프로필 미리보기 */}
-              <Text className="mb-5 text-center text-[16px] font-bold leading-[22px] text-text-black">
-                상대방의 교환 요청
-              </Text>
+              <View className="mb-5 flex-row items-center justify-center">
+                <Text className="text-center text-[16px] font-bold leading-[22px] text-text-black">
+                  상대방의 교환 요청
+                </Text>
+                <Pressable
+                  className="absolute right-0"
+                  onPress={onDecline}
+                  hitSlop={8}
+                >
+                  <Text className="text-[18px] text-[#999999]">✕</Text>
+                </Pressable>
+              </View>
 
               <View className="items-center">
                 <ProfileCard
@@ -223,7 +162,7 @@ export default function ProfileShareQRModal({ visible, onClose }: Props) {
                 {modalStep === 'ACCEPTING' ? (
                   <ActivityIndicator size="small" color="#8C39FB" />
                 ) : (
-                  <Button title="수락하기" variant="primary" onPress={handleAccept} />
+                  <Button title="수락하기" variant="primary" onPress={onAccept} />
                 )}
               </View>
             </>

@@ -1,6 +1,5 @@
 import React from 'react';
-import { Image, Modal, Text, View } from 'react-native';
-
+import { Image, Modal, Pressable, Text, View } from 'react-native';
 
 interface Props {
   /** 모달 표시 여부 */
@@ -23,14 +22,15 @@ interface Props {
  * @example
  * <ExchangeLoadingModal visible={true} onCancel={handleCancel} />
  */
-export default function ExchangeLoadingModal({ visible, onCancel: _onCancel }: Props) {
+export default function ExchangeLoadingModal({ visible, onCancel }: Props) {
   return (
     <Modal visible={visible} transparent animationType="fade">
-      <View
+      <Pressable
         className="flex-1 items-center justify-center"
         style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+        onPress={onCancel}
       >
-        <View className="w-[300px] items-center rounded-xl bg-white px-5 py-7 gap-4">
+        <Pressable className="w-[300px] items-center rounded-xl bg-white px-5 py-7 gap-4">
           <Text className="text-center text-base font-bold leading-[22.4px] text-[#1A1A1A]">
             상대방과 프로필 교환을{'\n'}기다리고 있어요!
           </Text>
@@ -41,8 +41,9 @@ export default function ExchangeLoadingModal({ visible, onCancel: _onCancel }: P
               resizeMode="contain"
             />
           </View>
-        </View>
-      </View>
+          {/* 주의사항: 여기 취소하기 버튼 넣지 말것 */}
+        </Pressable>
+      </Pressable>
     </Modal>
   );
 }

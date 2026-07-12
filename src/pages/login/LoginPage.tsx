@@ -1,9 +1,10 @@
 import React, { useRef } from 'react';
-import { Image, Platform, Pressable, Text, View } from 'react-native';
+import { Image, Platform, Pressable, StatusBar, Text, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
+import SystemNavigationBar from 'react-native-system-navigation-bar';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { appleAuthAndroid } from '@invertase/react-native-apple-authentication';
-import { AppleLoginButton, GoogleLoginButton } from '@/shared/ui';
+import { AppleLoginButton, GoogleLoginButton, openDialog } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
 import type { NavigationPropType } from '@/shared/types';
 import useGoogleLoginMutation from '@/features/login/googleLogin/api/useGoogleLoginMutation';
@@ -31,6 +32,20 @@ function LoginPage() {
   const { mutateAsync: googleLogin, isPending: isGooglePending } = useGoogleLoginMutation();
   const { mutateAsync: appleLogin, isPending: isApplePending } = useAppleLoginMutation();
   const safePadding = useSafePaddingBottom();
+
+  /** Android 시스템 네비게이션 바 색상을 그라데이션 하단 색상으로 변경 */
+  useFocusEffect(
+    React.useCallback(() => {
+      if (Platform.OS === 'android') {
+        SystemNavigationBar.setNavigationColor('#241A6F', 'light');
+      }
+      return () => {
+        if (Platform.OS === 'android') {
+          SystemNavigationBar.setNavigationColor('#FFFFFF', 'dark');
+        }
+      };
+    }, []),
+  );
   const {
     isPermissionAllowed,
     setIsAgreedToTerms,
@@ -54,16 +69,35 @@ function LoginPage() {
     }
   };
 
+  /** 로그인 실패 시 안내 다이얼로그 표시 */
+  const showLoginFailDialog = () => {
+    openDialog({
+      type: 'alert',
+      title: '앗! 로그인에 실패했어요',
+      message: '다른 소셜 계정을 통해 로그인 또는\n회원가입을 재시도해주세요',
+      okLabel: '확인',
+    });
+  };
+
   const handleGoogleLogin = async () => {
-    const result = await googleLogin();
-    if (!result) return;
-    handleLoginSuccess(result.requires_terms_agreement);
+    try {
+      const result = await googleLogin();
+      if (!result) return;
+      handleLoginSuccess(result.requires_terms_agreement);
+    } catch {
+      showLoginFailDialog();
+    }
   };
 
   const handleAppleLogin = async () => {
-    const result = await appleLogin();
-    if (!result) return;
-    handleLoginSuccess(result.requires_terms_agreement);
+    try {
+      const result = await appleLogin();
+      if (!result) return;
+      handleLoginSuccess(result.requires_terms_agreement);
+    } catch (error) {
+      if ((error as any)?.code === '1001') return;
+      showLoginFailDialog();
+    }
   };
 
   /** Apple 로그인 버튼 노출 여부 (iOS: 항상, Android: API 19+ 지원 시) */
@@ -92,6 +126,11 @@ function LoginPage() {
       end={{ x: 0.5, y: 0 }}
       style={{ flex: 1 }}
     >
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="light-content"
+      />
       {/* 로고 영역 */}
       <View className="flex-1 justify-center items-center">
         <View className="items-center gap-5">

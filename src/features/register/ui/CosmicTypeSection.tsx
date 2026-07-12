@@ -76,19 +76,19 @@ const CosmicTypeSection = memo(function CosmicTypeSection({
       {/* 캐릭터 이미지 + 유형 정보 */}
       <View className="items-center pt-4 gap-4">
         <View
-          className="overflow-hidden items-center justify-center"
+          className="items-center justify-center"
           style={{ width: 160, height: 160 }}
         >
           {characterImage && (
             <Image
               source={characterImage}
-              style={{ width: 172, height: 169, position: 'absolute' }}
+              style={{ width: 160, height: 160 }}
               resizeMode="contain"
             />
           )}
         </View>
 
-        <View className="items-center gap-2" style={{ width: 244 }}>
+        <View className="items-center gap-2 w-full">
           <Text
             className="text-lg font-bold text-text-black text-center self-stretch"
             style={{ lineHeight: 25.2 }}
