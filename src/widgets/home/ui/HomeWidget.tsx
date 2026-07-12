@@ -7,6 +7,7 @@ import EmptyProfileCard from '@/shared/ui/ProfileCard/EmptyProfileCard';
 import ProfileFlipWrapper from '@/shared/ui/ProfileCard/ProfileFlipWrapper';
 import { ProfileShareQRModal, useExchangeWait } from '@/features/profileShare';
 import { useMyProfileQuery } from '@/entities/user';
+import { openDialog } from '@/shared/ui/Dialog';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 import { apiValueToCosmicType } from '@/entities/storage';
 import type { NavigationPropType } from '@/shared/types';
@@ -133,7 +134,16 @@ export default function HomeWidget() {
   ) : (
     <EmptyProfileCard
       text={'유형 테스트를 통해\n나의 유형을 찾아보세요!'}
-      onPress={() => navigation.navigate('cosmicTest')}
+      onPress={() => {
+        if (!hasProfile) {
+          openDialog({
+            title: '알림',
+            message: '먼저 프로필 카드를 추가해주세요',
+          });
+          return;
+        }
+        navigation.navigate('cosmicTest');
+      }}
     />
   );
 
