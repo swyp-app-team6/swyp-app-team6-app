@@ -30,7 +30,7 @@ export default function ProfileDetailPage() {
   const { mutate: deleteProfile } = useDeleteProfileMutation();
 
   const handleEdit = () => {
-    navigation.navigate('editProfile');
+    navigation.navigate('profileStep1', { mode: 'edit' });
   };
 
   const handleDelete = () => {

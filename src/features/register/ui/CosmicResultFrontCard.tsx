@@ -3,6 +3,7 @@ import { View, Text, Image } from 'react-native';
 import type { ImageSourcePropType } from 'react-native';
 import type { CosmicTypeResponse } from '@/entities/cosmic';
 import ProfileCardGradientBackground from '@/shared/ui/ProfileCard/ProfileCardGradientBackground';
+import { CharacterEllipseIcon } from '@/shared/ui/icons';
 
 /**
  * 코스믹 유형별 캐릭터 이미지 매핑
@@ -64,16 +65,10 @@ export default function CosmicResultFrontCard({
 
           {/* 캐릭터 일러스트 영역 */}
           <View className="items-center justify-center" style={{ width: 168, height: 168 }}>
-            {/* glow 효과 */}
-            <View
-              style={{
-                position: 'absolute',
-                width: 104,
-                height: 104,
-                borderRadius: 9999,
-                backgroundColor: 'rgba(255, 255, 255, 0.40)',
-              }}
-            />
+            {/* 블러 글로우 배경 */}
+            <View style={{ position: 'absolute' }}>
+              <CharacterEllipseIcon size={168} />
+            </View>
             {characterImage && (
               <Image
                 source={characterImage}

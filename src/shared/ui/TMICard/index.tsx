@@ -72,13 +72,13 @@ export default function TMICard({
       {...(onPress ? { onPress, accessibilityRole: 'button' as const } : {})}
       className={cn(
         'w-full rounded-xl p-4 border',
-        selected ? 'border-primary bg-primary-lightest' : 'border-text-gray6 bg-white',
+        selected ? 'border-primary bg-white' : 'border-text-gray6 bg-white',
         styleClass?.root,
       )}
     >
       {tag && (
         <View className={cn('mb-2', styleClass?.tag)}>
-          <Tag label={tag} variant={selected ? 'primary' : 'default'} />
+          <Tag label={tag} variant="primary" />
         </View>
       )}
 

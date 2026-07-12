@@ -9,7 +9,6 @@ import { useQuestionsQuery } from '@/entities/question';
 import type { MultipleQuestion, ShortQuestion, QuestionAnswer } from '@/entities/question';
 import { TMIQuestionType } from '@/shared/enums';
 import useRegisterFormStore from '../model/useRegisterFormStore';
-import useRegisterStepStore from '../model/useRegisterStepStore';
 import { tmiKey, TMI_CATEGORY_OPTIONS, type TMICategoryFilter } from '../model/types';
 
 /**
@@ -37,18 +36,23 @@ interface TMIQuestionUI {
  *   - 입력 없이 건너뛰기 가능
  *   - "다음으로" 클릭 시 form 데이터 전체를 useProfileDataStore에 저장 후 다음 단계로 이동
  * ---
+ * @param onNext 다음 단계 이동 콜백
  * @example
- * <Step4TMIView />
+ * <Step4TMIView onNext={() => navigation.navigate('profileStep6', { mode })} />
  */
-export default function Step4TMIView() {
+export default function Step4TMIView({ onNext }: { onNext: () => void }) {
   const { form, addTMIAnswer } = useRegisterFormStore();
-  const { nextStep } = useRegisterStepStore();
   const { setProfileData } = useProfileDataStore();
   const { data: questionData, isLoading } = useQuestionsQuery();
   const [selectedCategory, setSelectedCategory] = useState<TMICategoryFilter>('ALL');
   const [activeQuestion, setActiveQuestion] = useState<TMIQuestionUI | null>(null);
   const [textInput, setTextInput] = useState('');
   const [choiceInput, setChoiceInput] = useState<QuestionAnswer | null>(null);
+  const [checkedKeys, setCheckedKeys] = useState<Set<string>>(() => {
+    const initial = new Set<string>();
+    form.tmiAnswers.forEach((a) => initial.add(tmiKey(a.answerKind, a.questionId)));
+    return initial;
+  });
   const sheetRef = useRef<BottomSheetHandle>(null);
   const previewSheetRef = useRef<BottomSheetHandle>(null);
 
@@ -81,6 +85,20 @@ export default function Step4TMIView() {
     return allQuestions.filter((q) => q.type === selectedCategory);
   }, [selectedCategory, allQuestions]);
 
+  /** 체크박스 토글 핸들러 — 체크/체크해제만 수행, 답변 내용은 유지 */
+  const handleCheckToggle = (question: TMIQuestionUI) => {
+    const key = tmiKey(question.answerType, question.id);
+    setCheckedKeys((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) {
+        next.delete(key);
+      } else {
+        next.add(key);
+      }
+      return next;
+    });
+  };
+
   /** 질문 카드 탭 핸들러 - 기존 답변이 있으면 답변을 유지한 채 바텀시트 재오픈 */
   const handleQuestionPress = (question: TMIQuestionUI) => {
     const key = tmiKey(question.answerType, question.id);
@@ -102,12 +120,12 @@ export default function Step4TMIView() {
     sheetRef.current?.open();
   };
 
-  /** 선택형 옵션 토글 */
+  /** 선택형 옵션 선택 — 이미 활성화된 선택지 탭 시 무시 */
   const handleChoiceToggle = (answer: QuestionAnswer) => {
-    setChoiceInput((prev) => (prev?.answer_id === answer.answer_id ? null : answer));
+    setChoiceInput((prev) => (prev?.answer_id === answer.answer_id ? prev : answer));
   };
 
-  /** 선택형 답변 확정 */
+  /** 선택형 답변 확정 — 답변 저장만, 체크 활성화 안 함 */
   const handleChoiceSubmit = () => {
     if (!activeQuestion || !choiceInput) return;
     addTMIAnswer({
@@ -123,7 +141,7 @@ export default function Step4TMIView() {
     setChoiceInput(null);
   };
 
-  /** 서술형 답변 제출 */
+  /** 서술형 답변 제출 — 답변 저장만, 체크 활성화 안 함 */
   const handleTextSubmit = () => {
     if (!activeQuestion || textInput.length < 1) return;
     addTMIAnswer({
@@ -236,15 +254,16 @@ export default function Step4TMIView() {
         {/* 질문 목록 */}
         <View className="px-5 gap-3">
           {filteredQuestions.map((question) => {
+            const key = tmiKey(question.answerType, question.id);
             const answer = getAnswer(question.answerType, question.id);
-            const isSelected = !!answer;
+            const isChecked = checkedKeys.has(key);
             return (
-              <View key={`${question.answerType}-${question.id}`} className="flex-row items-start gap-3">
+              <View key={key} className="flex-row items-start gap-3">
                 {/* 체크박스 */}
                 <View className="mt-4">
                   <Checkbox
-                    checked={isSelected}
-                    onValueChange={() => handleQuestionPress(question)}
+                    checked={isChecked}
+                    onValueChange={() => handleCheckToggle(question)}
                   />
                 </View>
                 {/* 카드 */}
@@ -253,7 +272,7 @@ export default function Step4TMIView() {
                     tag={getCategoryLabel(question.type)}
                     question={question.content}
                     answer={answer}
-                    selected={isSelected}
+                    selected={isChecked}
                     onPress={() => handleQuestionPress(question)}
                   />
                 </View>
@@ -289,7 +308,7 @@ export default function Step4TMIView() {
               interests: [...form.interests],
               tmiAnswers: form.tmiAnswers.map((a) => ({ ...a })),
             });
-            nextStep();
+            onNext();
           }}
         />
       </BottomCTA>

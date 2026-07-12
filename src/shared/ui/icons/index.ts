@@ -28,4 +28,5 @@ export { default as ProfileDeleteIcon } from './ProfileDeleteIcon';
 export { default as FilterIcon } from './FilterIcon';
 export { default as DownloadIcon } from './DownloadIcon';
 export { ErrorIcon } from './ErrorIcon';
+export { CharacterEllipseIcon } from './CharacterEllipseIcon';
 export type { IconProps, DirectionalIconProps, OrientedIconProps } from './types';

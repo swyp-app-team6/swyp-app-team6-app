@@ -4,7 +4,13 @@ import React from 'react'
 import { navigationRef } from './navigationRef';
 import OnboardingPage from '@/pages/onboarding/OnboardingPage';
 import LoginPage from '@/pages/login/LoginPage';
-import RegisterPage from '@/pages/register/RegisterPage';
+import ProfileStep1Page from '@/pages/profileStep/ProfileStep1Page';
+import ProfileStep2Page from '@/pages/profileStep/ProfileStep2Page';
+import ProfileStep3Page from '@/pages/profileStep/ProfileStep3Page';
+import ProfileStep4Page from '@/pages/profileStep/ProfileStep4Page';
+import ProfileStep5Page from '@/pages/profileStep/ProfileStep5Page';
+import ProfileStep6Page from '@/pages/profileStep/ProfileStep6Page';
+import ProfileCompletePage from '@/pages/profileStep/ProfileCompletePage';
 import HomePage from '@/pages/home/HomePage';
 import ProfileCardPage from '@/pages/profileCard/ProfileCardPage';
 import MyPage from '@/pages/mypage/MyPage';
@@ -21,7 +27,6 @@ import WriteReviewPage from '@/pages/storage/WriteReviewPage';
 import ProfileDetailPage from '@/pages/profileDetail/ProfileDetailPage';
 import CosmicTestPage from '@/pages/cosmicTest/CosmicTestPage';
 import ExchangeResultPage from '@/pages/exchangeResult/ExchangeResultPage';
-import EditProfilePage from '@/pages/editProfile/EditProfilePage';
 import { NavigatorType } from '../types';
 import ComponentPlaygroundPage from '../../pages/playground/ComponentPlaygroundPage';
 import ApiLogPage from '../../pages/playground/ApiLogPage';
@@ -63,9 +68,14 @@ export default function StackRouter({ initialRouteName = 'home' }: StackRouterPr
         <Stack.Screen name='exchangedProfileDetail' component={ExchangedProfileDetailPage} />
         <Stack.Screen name='writeReview' component={WriteReviewPage} />
         <Stack.Screen name='profileDetail' component={ProfileDetailPage} />
-        <Stack.Screen name='registerProfile' component={RegisterPage} />
+        <Stack.Screen name='profileStep1' component={ProfileStep1Page} />
+        <Stack.Screen name='profileStep2' component={ProfileStep2Page} />
+        <Stack.Screen name='profileStep3' component={ProfileStep3Page} />
+        <Stack.Screen name='profileStep4' component={ProfileStep4Page} />
+        <Stack.Screen name='profileStep5' component={ProfileStep5Page} />
+        <Stack.Screen name='profileStep6' component={ProfileStep6Page} />
+        <Stack.Screen name='profileComplete' component={ProfileCompletePage} />
         <Stack.Screen name='cosmicTest' component={CosmicTestPage} />
-        <Stack.Screen name='editProfile' component={EditProfilePage} />
         <Stack.Screen name='appSetting' component={AppSettingPage} />
         <Stack.Screen name='accountEdit' component={AccountEditPage} />
         <Stack.Screen name='withdrawalReason' component={WithdrawalReasonPage} />

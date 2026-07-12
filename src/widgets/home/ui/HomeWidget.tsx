@@ -96,7 +96,7 @@ export default function HomeWidget() {
   const frontCard = !hasProfile ? (
     <EmptyProfileCard
       text={'새로운 프로필 카드를\n추가하세요'}
-      onPress={() => navigation.navigate('registerProfile')}
+      onPress={() => navigation.navigate('profileStep1', { mode: 'register' })}
     />
   ) : (
     <View>

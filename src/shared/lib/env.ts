@@ -9,4 +9,4 @@
  * import { PROJECT_ENV } from '@/shared/lib/env';
  * if (PROJECT_ENV) { showDebugTools(); }
  */
-export const PROJECT_ENV = true;
+export const PROJECT_ENV = false;

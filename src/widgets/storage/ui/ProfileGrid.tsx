@@ -73,7 +73,7 @@ export default function ProfileGrid({
         ) : null
       }
       renderItem={({ item }) => {
-        const badgeLevel = apiValueToCosmicType(item.cosmic_type);
+        const badgeLevel = item.cosmic_type ? apiValueToCosmicType(item.cosmic_type) : undefined;
         return (
           <ProfileCard
             variant="grid"
@@ -82,7 +82,7 @@ export default function ProfileGrid({
             age={typeof item.age === 'number' ? item.age : undefined}
             location={item.region?.detail ? getRegionLabel(item.region.detail) : undefined}
             job={typeof item.job === 'string' ? item.job : undefined}
-            cosmicTypeLabel={COSMIC_TYPE_LABEL[badgeLevel]}
+            cosmicTypeLabel={badgeLevel ? COSMIC_TYPE_LABEL[badgeLevel] : undefined}
             imageUri={getProfileImageUrl(item.image_key)}
             isFavorited={item.is_liked}
             onToggleFavorite={onToggleFavorite}

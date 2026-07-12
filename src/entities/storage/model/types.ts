@@ -88,8 +88,8 @@ const BADGE_TO_API: Record<BadgeLevel, string> = {
  * @param apiValue API 응답의 cosmic_type 값
  * @example apiValueToCosmicType('SHOOTING_STAR') // 'star'
  */
-export function apiValueToCosmicType(apiValue: string): BadgeLevel {
-  return API_TO_BADGE[apiValue] ?? 'star';
+export function apiValueToCosmicType(apiValue: string): BadgeLevel | undefined {
+  return API_TO_BADGE[apiValue];
 }
 
 /**
@@ -113,8 +113,8 @@ export interface ExchangeArchiveItem {
   nickname: string | null;
   /** 프로필 이미지 S3 키 */
   image_key: string | null;
-  cosmic_type: string;
-  cosmic_type_image_key: string;
+  cosmic_type: string | null;
+  cosmic_type_image_key: string | null;
   /** 나이 */
   age?: number;
   /** 활동 지역 (Region 객체: group, detail, label) */
