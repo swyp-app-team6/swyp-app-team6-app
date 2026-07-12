@@ -2,6 +2,7 @@ import React from 'react';
 import { ActivityIndicator, Modal as RNModal, Pressable, Text, View } from 'react-native';
 import { Button, ProfileCard } from '@/shared/ui';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
+import { apiValueToCosmicType } from '@/entities/storage';
 import useExchangeFlowStore from '../model/useExchangeFlowStore';
 
 interface Props {
@@ -63,6 +64,7 @@ export default function ExchangePreviewModal({ visible, onExchange, onCancel }: 
                 nickname={profile.nickname}
                 age={String(profile.age)}
                 interests={profile.interests.map((i) => i.label)}
+                badgeLevel={profile.cosmic_type ? apiValueToCosmicType(profile.cosmic_type) : undefined}
               />
             )}
           </View>

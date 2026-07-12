@@ -64,8 +64,8 @@ interface GridProps {
   location?: string;
   /** 직업 */
   job?: string;
-  /** 코스믹 유형 라벨 (변환된 한국어) */
-  cosmicTypeLabel: string;
+  /** 코스믹 유형 라벨 (변환된 한국어, 미지정 시 태그 미노출) */
+  cosmicTypeLabel?: string;
   /** 프로필 이미지 URI */
   imageUri?: string;
   /** 즐겨찾기 여부 */
@@ -130,7 +130,7 @@ function PreviewCard({
   nickname,
   age,
   interests,
-  badgeLevel = 'star',
+  badgeLevel,
   topRightSlot,
 }: PreviewProps) {
   return (
@@ -167,7 +167,7 @@ function PreviewCard({
 
       {/* 상단: 유형 배지 + 우측 슬롯 */}
       <View className="absolute top-5 left-5 right-5 flex-row items-center justify-between">
-        <Badge level={badgeLevel} />
+        <View>{badgeLevel && <Badge level={badgeLevel} />}</View>
         {topRightSlot}
       </View>
 
@@ -335,11 +335,13 @@ function GridCard({
       <View className="mt-3 gap-2">
         {/* 코스믹 유형 태그 + 하트 */}
         <View className="flex-row items-center justify-between">
-          <Tag
-            label={cosmicTypeLabel}
-            variant="outline"
-            styleClass={{ root: 'rounded px-2 py-1' }}
-          />
+          {cosmicTypeLabel ? (
+            <Tag
+              label={cosmicTypeLabel}
+              variant="outline"
+              styleClass={{ root: 'rounded px-2 py-1' }}
+            />
+          ) : <View />}
           {!isBlocked && (
             <Pressable hitSlop={8} onPress={() => onToggleFavorite(id)}>
               <HeartIcon filled={isFavorited} />
