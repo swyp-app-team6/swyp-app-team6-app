@@ -333,7 +333,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.swyp.rotationdatingapp;
-				PRODUCT_NAME = swyprotationdatingapp;
+				PRODUCT_NAME = "오르비츠";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -368,7 +368,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.swyp.rotationdatingapp;
-				PRODUCT_NAME = swyprotationdatingapp;
+				PRODUCT_NAME = "오르비츠";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
