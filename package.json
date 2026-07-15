@@ -21,7 +21,7 @@
     "fsd:mkdir": "mkdir -p ./{model, ui, api, lib, types}  && touch ./index.tsx",
     "android:apk": "ENVFILE=.env.production sh -c 'cd android && ./gradlew assembleRelease' && open android/app/build/outputs/apk/release",
     "android:apk:debug": "ENVFILE=.env.production sh -c 'cd android && ./gradlew assembleDebug' && open android/app/build/outputs/apk/debug",
-    "android:abb": "ENVFILE=.env.production sh -c 'cd android && ./gradlew bundleRelease' && open android/app/build/outputs/bundle/release",
+    "android:aab": "ENVFILE=.env.production sh -c 'cd android && ./gradlew bundleRelease' && open android/app/build/outputs/bundle/release",
     "prepare": "husky"
   },
   "dependencies": {
