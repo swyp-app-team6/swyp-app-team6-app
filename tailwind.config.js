@@ -8,7 +8,7 @@ module.exports = {
         /** Pretendard 기본 */
         extralight: ['Pretendard-ExtraLight'],
         light: ['Pretendard-Light'],
-        medium: ['Pretendard-Medium'],
+        // medium: ['Pretendard-Regular'], // ios에서 두껍게 나옴
         semibold: ['Pretendard-SemiBold'],
         bold: ['Pretendard-Bold'],
       },
