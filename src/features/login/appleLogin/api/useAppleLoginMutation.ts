@@ -5,6 +5,7 @@ import {
   appleAuthAndroid,
 } from '@invertase/react-native-apple-authentication';
 import 'react-native-get-random-values';
+import * as Sentry from '@sentry/react-native';
 import { v4 as uuid } from 'uuid';
 import Config from 'react-native-config';
 import { UserAPI, useAuthStore } from '@/entities/user';
@@ -115,6 +116,7 @@ export default function useAppleLoginMutation() {
     },
     onError: (error) => {
       console.error(error);
+      Sentry.captureException(error, { tags: { feature: 'apple-login' } });
       // Apple 취소 에러(1001)는 사용자 의도이므로 Alert 미표시
       if ((error as any)?.code === '1001') return;
     },
