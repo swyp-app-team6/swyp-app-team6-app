@@ -90,6 +90,7 @@ export default function WriteReviewView({
         className="flex-1"
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
+        automaticallyAdjustKeyboardInsets
       >
         {/* 프로필 카드 */}
         {profile && (
@@ -108,55 +109,51 @@ export default function WriteReviewView({
           <Text className="text-base font-medium text-[#18181B]">
             전체적인 만남은 어떠셨나요?
           </Text>
-          <View
-            className="rounded-xl py-3"
-            style={{
-              backgroundColor: '#FFFFFF',
-              borderWidth: 1,
-              borderColor: '#E3E3E3',
-            }}
-          >
-            {/* 셀렉트 트리거 */}
+          <View>
+            {/* 셀렉트 트리거 — Input 컴포넌트와 동일한 스타일 */}
             <Pressable
-              className="flex-row items-center justify-between mx-3 p-4 bg-[#F5F5F5] rounded-xl"
+              className="h-14 flex-row items-center rounded-xl bg-text-gray7 px-4"
               onPress={() => setIsDropdownOpen((prev) => !prev)}
             >
               <Text
-                className="flex-1 text-sm font-medium"
-                style={{ color: selectedLabel ? '#1A1A1A' : '#888888' }}
+                className="flex-1 text-base"
+                style={{ color: selectedLabel ? '#1A1A1A' : '#BFBFBF' }}
               >
                 {selectedLabel ?? '만남은 어떠셨나요?'}
               </Text>
-              <ChevronDownIcon size={24} color="#111111" />
+              <ChevronDownIcon size={16} color="#111111" />
             </Pressable>
 
             {/* 드롭다운 옵션 목록 */}
-            {isDropdownOpen &&
-              REVIEW_OPTIONS.map((option) => {
-                const isSelected = selectedRating === option.value;
-                return (
-                  <Pressable
-                    key={option.value}
-                    className="px-6 py-4"
-                    style={{
-                      backgroundColor: isSelected ? '#F5EDFF' : '#FFFFFF',
-                    }}
-                    onPress={() => {
-                      setSelectedRating(option.value);
-                      setIsDropdownOpen(false);
-                    }}
-                  >
-                    <Text
-                      className="text-sm font-medium"
+            {isDropdownOpen && (
+              <View className="mt-2 rounded-xl bg-text-gray7 overflow-hidden">
+                {REVIEW_OPTIONS.map((option) => {
+                  const isSelected = selectedRating === option.value;
+                  return (
+                    <Pressable
+                      key={option.value}
+                      className="h-14 justify-center px-4"
                       style={{
-                        color: isSelected ? '#8C39FB' : '#1A1A1A',
+                        backgroundColor: isSelected ? '#F5EDFF' : undefined,
+                      }}
+                      onPress={() => {
+                        setSelectedRating(option.value);
+                        setIsDropdownOpen(false);
                       }}
                     >
-                      {option.label}
-                    </Text>
-                  </Pressable>
-                );
-              })}
+                      <Text
+                        className="text-base"
+                        style={{
+                          color: isSelected ? '#8C39FB' : '#1A1A1A',
+                        }}
+                      >
+                        {option.label}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
+            )}
           </View>
         </View>
 

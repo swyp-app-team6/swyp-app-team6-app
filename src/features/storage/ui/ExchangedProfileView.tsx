@@ -283,7 +283,7 @@ export default function ExchangedProfileView({
 
       <BottomCTA>
         <Button
-          title={hasReview ? '만남후기 수정' : '만남후기 작성'}
+          title={hasReview ? '만남 후기 수정하기' : '만남 후기 작성하기'}
           onPress={() => onNavigateToReview(hasReview)}
         />
       </BottomCTA>
