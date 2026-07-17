@@ -35,30 +35,35 @@ export default function WriteReviewPage() {
 
   const [isDirty, setIsDirty] = useState(false);
 
+  const exitDialogTitle = isEdit ? '만남 후기 수정 중단' : '만남 후기 작성 중단';
+  const exitDialogMessage = isEdit
+    ? '이미 수정한 정보가 있어요\n만남 후기 수정을 그만두실건가요?'
+    : '이미 입력한 정보가 있어요\n만남 후기 작성을 그만두실건가요?';
+
   /**
    * # showExitDialog
    * ---
-   * - 간단설명: 수정 중단 확인 팝업 표시
+   * - 간단설명: 작성/수정 중단 확인 팝업 표시
    * @param onExit 나가기 시 실행할 콜백
    */
   const showExitDialog = useCallback(
     (onExit: () => void) => {
       openDialog({
         type: 'confirm',
-        title: '만남 후기 수정 중단',
-        message: '이미 수정한 정보가 있어요\n만남 후기 수정을 그만두실건가요?',
+        title: exitDialogTitle,
+        message: exitDialogMessage,
         cancelLabel: '계속 작성',
         okLabel: '나가기',
         okFn: onExit,
       });
     },
-    [],
+    [exitDialogTitle, exitDialogMessage],
   );
 
   /**
    * # handleBack
    * ---
-   * - 간단설명: 뒤로가기 버튼 핸들러 (수정 모드)
+   * - 간단설명: 뒤로가기 버튼 핸들러
    * - 변경사항 있으면 팝업, 없으면 교환 프로필 상세로 이동
    */
   const handleBack = useCallback(() => {
@@ -72,7 +77,7 @@ export default function WriteReviewPage() {
   /**
    * # handleClose
    * ---
-   * - 간단설명: 닫기(✕) 버튼 핸들러 (수정 모드)
+   * - 간단설명: 닫기(✕) 버튼 핸들러
    * - 변경사항 있으면 팝업, 없으면 교환함으로 이동
    */
   const handleClose = useCallback(() => {
@@ -83,16 +88,15 @@ export default function WriteReviewPage() {
     }
   }, [isDirty, showExitDialog, navigation]);
 
-  /** Android 하드웨어 백 버튼 처리 (수정 모드) */
+  /** Android 하드웨어 백 버튼 처리 */
   useFocusEffect(
     useCallback(() => {
-      if (!isEdit) return;
       const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
         handleBack();
         return true;
       });
       return () => subscription.remove();
-    }, [isEdit, handleBack]),
+    }, [handleBack]),
   );
 
   const handleSubmit = (score: ReviewScore, review: string) => {
@@ -146,23 +150,19 @@ export default function WriteReviewPage() {
 
   return (
     <>
-      {isEdit ? (
-        <Header
-          left={
-            <TouchableOpacity onPress={handleBack}>
-              <ArrowIcon size={24} color="black" direction="left" />
-            </TouchableOpacity>
-          }
-          title="만남 후기 수정하기"
-          right={
-            <TouchableOpacity onPress={handleClose}>
-              <Text className="text-2xl text-gray-400">✕</Text>
-            </TouchableOpacity>
-          }
-        />
-      ) : (
-        <Header title="교환한 프로필 보기" />
-      )}
+      <Header
+        left={
+          <TouchableOpacity onPress={handleBack}>
+            <ArrowIcon size={24} color="black" direction="left" />
+          </TouchableOpacity>
+        }
+        title={isEdit ? '만남 후기 수정하기' : '만남 후기 작성하기'}
+        right={
+          <TouchableOpacity onPress={handleClose}>
+            <Text className="text-2xl text-gray-400">✕</Text>
+          </TouchableOpacity>
+        }
+      />
       <WriteReviewView
         profileId={profileId}
         onSubmit={handleSubmit}

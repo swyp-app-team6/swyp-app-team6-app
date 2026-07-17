@@ -82,7 +82,7 @@ export default function WriteReviewView({
     (o) => o.value === selectedRating,
   )?.label;
 
-  const isDisabled = !selectedRating;
+  const isDisabled = !selectedRating || !reviewText.trim();
 
   return (
     <View className="flex-1 bg-white">
