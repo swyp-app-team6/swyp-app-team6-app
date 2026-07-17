@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { BottomCTA, Button, Textbox } from '@/shared/ui';
 import { ChevronDownIcon } from '@/shared/ui/icons';
@@ -18,37 +18,62 @@ const REVIEW_OPTIONS: { label: string; value: ReviewScore }[] = [
 interface Props {
   /** 프로필 ID */
   profileId: number;
-  /** 후기 등록 콜백 */
+  /** 후기 등록/수정 콜백 */
   onSubmit: (score: ReviewScore, review: string) => void;
   /** 등록 중 로딩 상태 */
   loading?: boolean;
+  /** 수정 모드: 기존 만족도 초기값 */
+  initialScore?: ReviewScore | null;
+  /** 수정 모드: 기존 메모 초기값 */
+  initialMemo?: string;
+  /** 제출 버튼 텍스트 (기본: "등록하기") */
+  buttonTitle?: string;
+  /** dirty 상태 변경 시 부모에게 알림 */
+  onDirtyChange?: (isDirty: boolean) => void;
 }
 
 /**
  * # WriteReviewView
  * ---
- * - 간단설명: 만남 후기 작성 폼 뷰 컴포넌트
+ * - 간단설명: 만남 후기 작성/수정 폼 뷰 컴포넌트
  * - 제약사항 및 특이사항:
  *   - useExchangeArchiveDetailQuery로 프로필 데이터 조회
  *   - 만족도 드롭다운 셀렉트
  *   - Textbox로 후기 내용 입력 (최대 300자)
- *   - 만족도 미선택 시 "등록하기" 버튼 비활성화
+ *   - 만족도 미선택 시 버튼 비활성화
+ *   - 수정 모드 시 initialScore/initialMemo로 초기값 설정, dirty 상태 감지
  * ---
  * @param profileId 대상 프로필 ID
- * @param onSubmit 후기 등록 콜백 (score, review)
+ * @param onSubmit 후기 등록/수정 콜백 (score, review)
  * @param loading 로딩 상태
+ * @param initialScore 수정 모드 시 기존 만족도
+ * @param initialMemo 수정 모드 시 기존 메모
+ * @param buttonTitle 제출 버튼 텍스트 (기본: "등록하기")
+ * @param onDirtyChange dirty 상태 변경 알림
  * ---
  * @example
  * <WriteReviewView profileId={1} onSubmit={(rating, text) => submit(rating, text)} />
+ * <WriteReviewView profileId={1} onSubmit={handleSubmit} initialScore={3} initialMemo="좋았어요" buttonTitle="수정하기" onDirtyChange={setIsDirty} />
  */
 export default function WriteReviewView({
   profileId,
   onSubmit,
   loading,
+  initialScore,
+  initialMemo,
+  buttonTitle = '등록하기',
+  onDirtyChange,
 }: Props) {
-  const [selectedRating, setSelectedRating] = useState<ReviewScore | null>(null);
-  const [reviewText, setReviewText] = useState('');
+  const [selectedRating, setSelectedRating] = useState<ReviewScore | null>(initialScore ?? null);
+  const [reviewText, setReviewText] = useState(initialMemo ?? '');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    const isDirty =
+      selectedRating !== (initialScore ?? null) ||
+      reviewText !== (initialMemo ?? '');
+    onDirtyChange?.(isDirty);
+  }, [selectedRating, reviewText, initialScore, initialMemo, onDirtyChange]);
 
   const { data: detail } = useExchangeArchiveDetailQuery(profileId);
   const profile = detail?.profile;
@@ -57,7 +82,7 @@ export default function WriteReviewView({
     (o) => o.value === selectedRating,
   )?.label;
 
-  const isDisabled = !selectedRating;
+  const isDisabled = !selectedRating || !reviewText.trim();
 
   return (
     <View className="flex-1 bg-white">
@@ -65,6 +90,7 @@ export default function WriteReviewView({
         className="flex-1"
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
+        automaticallyAdjustKeyboardInsets
       >
         {/* 프로필 카드 */}
         {profile && (
@@ -83,55 +109,51 @@ export default function WriteReviewView({
           <Text className="text-base font-medium text-[#18181B]">
             전체적인 만남은 어떠셨나요?
           </Text>
-          <View
-            className="rounded-xl py-3"
-            style={{
-              backgroundColor: '#FFFFFF',
-              borderWidth: 1,
-              borderColor: '#E3E3E3',
-            }}
-          >
-            {/* 셀렉트 트리거 */}
+          <View>
+            {/* 셀렉트 트리거 — Input 컴포넌트와 동일한 스타일 */}
             <Pressable
-              className="flex-row items-center justify-between mx-3 p-4 bg-[#F5F5F5] rounded-xl"
+              className="h-14 flex-row items-center rounded-xl bg-text-gray7 px-4"
               onPress={() => setIsDropdownOpen((prev) => !prev)}
             >
               <Text
-                className="flex-1 text-sm font-medium"
-                style={{ color: selectedLabel ? '#1A1A1A' : '#888888' }}
+                className="flex-1 text-base"
+                style={{ color: selectedLabel ? '#1A1A1A' : '#BFBFBF' }}
               >
                 {selectedLabel ?? '만남은 어떠셨나요?'}
               </Text>
-              <ChevronDownIcon size={24} color="#111111" />
+              <ChevronDownIcon size={16} color="#111111" />
             </Pressable>
 
             {/* 드롭다운 옵션 목록 */}
-            {isDropdownOpen &&
-              REVIEW_OPTIONS.map((option) => {
-                const isSelected = selectedRating === option.value;
-                return (
-                  <Pressable
-                    key={option.value}
-                    className="px-6 py-4"
-                    style={{
-                      backgroundColor: isSelected ? '#F5EDFF' : '#FFFFFF',
-                    }}
-                    onPress={() => {
-                      setSelectedRating(option.value);
-                      setIsDropdownOpen(false);
-                    }}
-                  >
-                    <Text
-                      className="text-sm font-medium"
+            {isDropdownOpen && (
+              <View className="mt-2 rounded-xl bg-text-gray7 overflow-hidden">
+                {REVIEW_OPTIONS.map((option) => {
+                  const isSelected = selectedRating === option.value;
+                  return (
+                    <Pressable
+                      key={option.value}
+                      className="h-14 justify-center px-4"
                       style={{
-                        color: isSelected ? '#8C39FB' : '#1A1A1A',
+                        backgroundColor: isSelected ? '#F5EDFF' : undefined,
+                      }}
+                      onPress={() => {
+                        setSelectedRating(option.value);
+                        setIsDropdownOpen(false);
                       }}
                     >
-                      {option.label}
-                    </Text>
-                  </Pressable>
-                );
-              })}
+                      <Text
+                        className="text-base"
+                        style={{
+                          color: isSelected ? '#8C39FB' : '#1A1A1A',
+                        }}
+                      >
+                        {option.label}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
+            )}
           </View>
         </View>
 
@@ -160,7 +182,7 @@ export default function WriteReviewView({
 
       <BottomCTA>
         <Button
-          title="등록하기"
+          title={buttonTitle}
           onPress={() => onSubmit(selectedRating!, reviewText.trim())}
           disabled={isDisabled}
           loading={loading}

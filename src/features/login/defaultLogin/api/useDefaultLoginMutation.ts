@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import * as Sentry from '@sentry/react-native';
 import { useAuthStore } from '../../../../entities/user';
 import { UserAPI } from '../../../../entities/user/api/userApi';
 import type { DefaultLoginRequest } from '../../../../entities/user/api/userApi';
@@ -27,6 +28,10 @@ export default function useDefaultLoginMutation() {
         accessToken: data.access_token,
         refreshToken: data.refresh_token,
       });
+    },
+    onError: (error) => {
+      console.error(error);
+      Sentry.captureException(error, { tags: { feature: 'default-login' } });
     },
   });
 }

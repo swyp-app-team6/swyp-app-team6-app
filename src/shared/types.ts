@@ -29,7 +29,7 @@ export type NavigatorType = {
   profileDetail: undefined;
   exchangeResult: undefined;
   exchangedProfileDetail: { profileId: number };
-  writeReview: { profileId: number };
+  writeReview: { profileId: number; mode?: 'write' | 'edit' };
   cosmicTest: undefined;
   profileStep1: ProfileStepParams;
   profileStep2: ProfileStepParams;

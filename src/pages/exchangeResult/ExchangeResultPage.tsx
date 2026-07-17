@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View, useWindowDimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Button, Header } from '@/shared/ui';
 import { useExchangeFlowStore } from '@/features/exchange';
@@ -21,6 +21,7 @@ import CommonInterestCard from './CommonInterestCard';
  */
 export default function ExchangeResultPage() {
   const navigation = useNavigation<NavigationPropType>();
+  const { height } = useWindowDimensions();
 
   const scannedProfile = useExchangeFlowStore((s) => s.scannedProfile);
   const exchangeResult = useExchangeFlowStore((s) => s.exchangeResult);
@@ -55,13 +56,18 @@ export default function ExchangeResultPage() {
       <Header title="공통된 관심사 결과" showBack />
 
       {/* 본문 */}
-      <View className="flex-1 items-center px-5 pt-12">
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}
+        className="flex-1 px-5"
+        style={{ paddingTop: height * 0.04 }}
+        showsVerticalScrollIndicator={false}
+      >
         <CommonInterestCard
           hasCommon={hasCommon}
           interests={displayInterests}
           theirName={theirName}
         />
-      </View>
+      </ScrollView>
 
       {/* 하단 CTA */}
       <View className="px-5 pb-16 pt-3">

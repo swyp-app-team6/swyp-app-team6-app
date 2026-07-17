@@ -22,8 +22,8 @@ import ReviewReadView from './ReviewReadView';
 interface Props {
   /** 프로필 ID */
   profileId: number;
-  /** 만남후기 작성 버튼 콜백 */
-  onNavigateToReview: () => void;
+  /** 만남후기 작성/수정 버튼 콜백 (isEdit: 수정 모드 여부) */
+  onNavigateToReview: (isEdit: boolean) => void;
   /** 차단 성공 콜백 */
   onBlockSuccess?: () => void;
 }
@@ -281,14 +281,12 @@ export default function ExchangedProfileView({
         <View className="h-24" />
       </ScrollView>
 
-      {!hasReview && (
-        <BottomCTA>
-          <Button
-            title="만남후기 작성"
-            onPress={onNavigateToReview}
-          />
-        </BottomCTA>
-      )}
+      <BottomCTA>
+        <Button
+          title={hasReview ? '만남 후기 수정하기' : '만남 후기 작성하기'}
+          onPress={() => onNavigateToReview(hasReview)}
+        />
+      </BottomCTA>
 
       <ReportBottomSheet ref={reportRef} nickname={profile.nickname} onSubmit={handleReport} />
     </View>

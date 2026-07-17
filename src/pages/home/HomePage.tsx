@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, Pressable, Text, View } from 'react-native';
+import { Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Header, Layout, SettingIcon } from '@/shared/ui';
 import withLayout from '@/shared/hoc/withLayout';
@@ -40,14 +40,20 @@ function HomePage() {
           </View>
         }
       />
-      <Layout.Body styleClass={{ root: 'px-5 pt-2 bg-white' }}>
-        {/* 홈화면 타이틀 */}
-        <Text className="text-[20px] font-semibold leading-[30px] tracking-tight text-text-black">
-          {'오르비츠와 함께 새로운 만남을\n시작할 준비가 되셨나요?'}
-        </Text>
+      <Layout.Body styleClass={{ root: 'bg-white' }}>
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          className="px-5 pt-2"
+          showsVerticalScrollIndicator={false}
+        >
+          {/* 홈화면 타이틀 */}
+          <Text className="text-[20px] font-semibold leading-[30px] tracking-tight text-text-black">
+            {'오르비츠와 함께 새로운 만남을\n시작할 준비가 되셨나요?'}
+          </Text>
 
-        {/* 프로필 카드 섹션 */}
-        <HomeWidget />
+          {/* 프로필 카드 섹션 */}
+          <HomeWidget />
+        </ScrollView>
       </Layout.Body>
     </>
   );
