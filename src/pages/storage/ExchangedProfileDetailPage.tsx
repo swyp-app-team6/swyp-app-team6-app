@@ -37,8 +37,11 @@ export default function ExchangedProfileDetailPage() {
       />
       <ExchangedProfileView
         profileId={profileId}
-        onNavigateToReview={() =>
-          navigation.navigate('writeReview', { profileId })
+        onNavigateToReview={(isEdit) =>
+          navigation.navigate('writeReview', {
+            profileId,
+            mode: isEdit ? 'edit' : 'write',
+          })
         }
         onBlockSuccess={() => navigation.goBack()}
       />
