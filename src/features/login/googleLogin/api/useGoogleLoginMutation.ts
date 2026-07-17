@@ -5,6 +5,7 @@ import {
   isSuccessResponse,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
+import * as Sentry from '@sentry/react-native';
 import Config from 'react-native-config';
 import { UserAPI, useAuthStore } from '@/entities/user';
 import type { GoogleLoginResponse } from '@/entities/user';
@@ -31,7 +32,6 @@ export default function useGoogleLoginMutation() {
         webClientId: Config.GOOGLE_WEB_CLIENT,
         iosClientId: Config.GOOGLE_IOS_CLIENT_ID
       });
-
       await GoogleSignin.hasPlayServices();
       await GoogleSignin.signOut();
       const response = await GoogleSignin.signIn();
@@ -56,6 +56,7 @@ export default function useGoogleLoginMutation() {
     },
     onError: (error) => {
       console.error(error);
+      Sentry.captureException(error, { tags: { feature: 'google-login' } });
       if (isErrorWithCode(error)) {
         switch (error.code) {
           case statusCodes.IN_PROGRESS:
