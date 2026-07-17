@@ -184,9 +184,111 @@ export default memo(TodoListItem, (prev, next) => {
 
 ## 화면 구성
 
-| 화면 | 경로 | 설명 |
+### 라우트 설정
+- 라우트 정의: `src/shared/router/StackRouter.tsx`
+- 타입 정의: `src/shared/types.ts` (`NavigatorType`)
+- 내비게이션 ref: `src/shared/router/navigationRef.ts`
+
+### 페이지 목록
+
+| 라우트명 | 페이지 컴포넌트 | 경로 | 파라미터 |
+|---|---|---|---|
+| `onboarding` | OnboardingPage | `src/pages/onboarding/OnboardingPage.tsx` | - |
+| `login` | LoginPage | `src/pages/login/LoginPage.tsx` | - |
+| `defaultLogin` | DefaultLoginPage | `src/pages/login/DefaultLoginPage.tsx` | - |
+| `home` | HomePage | `src/pages/home/HomePage.tsx` | - |
+| `profileCard` | ProfileCardPage | `src/pages/profileCard/ProfileCardPage.tsx` | - |
+| `mypage` | MyPage | `src/pages/mypage/MyPage.tsx` | - |
+| `qr` | QRPage | `src/pages/qr/QRPage.tsx` | - |
+| `storage` | StoragePage | `src/pages/storage/StoragePage.tsx` | - |
+| `storageAll` | StorageAllPage | `src/pages/storage/StorageAllPage.tsx` | - |
+| `exchangeResult` | ExchangeResultPage | `src/pages/exchangeResult/ExchangeResultPage.tsx` | - |
+| `exchangedProfileDetail` | ExchangedProfileDetailPage | `src/pages/storage/ExchangedProfileDetailPage.tsx` | `{ profileId: number }` |
+| `writeReview` | WriteReviewPage | `src/pages/storage/WriteReviewPage.tsx` | `{ profileId: number; mode?: 'write' \| 'edit' }` |
+| `profileDetail` | ProfileDetailPage | `src/pages/profileDetail/ProfileDetailPage.tsx` | - |
+| `profileStep1` | ProfileStep1Page | `src/pages/profileStep/ProfileStep1Page.tsx` | `{ mode: 'register' \| 'edit' }` |
+| `profileStep2` | ProfileStep2Page | `src/pages/profileStep/ProfileStep2Page.tsx` | `{ mode: 'register' \| 'edit' }` |
+| `profileStep3` | ProfileStep3Page | `src/pages/profileStep/ProfileStep3Page.tsx` | `{ mode: 'register' \| 'edit' }` |
+| `profileStep4` | ProfileStep4Page | `src/pages/profileStep/ProfileStep4Page.tsx` | `{ mode: 'register' \| 'edit' }` |
+| `profileStep5` | ProfileStep5Page | `src/pages/profileStep/ProfileStep5Page.tsx` | `{ mode: 'register' \| 'edit' }` |
+| `profileStep6` | ProfileStep6Page | `src/pages/profileStep/ProfileStep6Page.tsx` | `{ mode: 'register' \| 'edit' }` |
+| `profileComplete` | ProfileCompletePage | `src/pages/profileStep/ProfileCompletePage.tsx` | `{ mode: 'register' \| 'edit' }` |
+| `cosmicTest` | CosmicTestPage | `src/pages/cosmicTest/CosmicTestPage.tsx` | - |
+| `appSetting` | AppSettingPage | `src/pages/appSetting/AppSettingPage.tsx` | - |
+| `accountEdit` | AccountEditPage | `src/pages/accountEdit/AccountEditPage.tsx` | - |
+| `withdrawalReason` | WithdrawalReasonPage | `src/pages/withdrawal/WithdrawalReasonPage.tsx` | - |
+| `withdrawalConfirm` | WithdrawalConfirmPage | `src/pages/withdrawal/WithdrawalConfirmPage.tsx` | `{ reason: string }` |
+
+### 하단 탭 네비게이션
+
+| 탭 | 라우트 | 설명 |
 |---|---|---|
-| Todo | `pages/todo/TodoPage` | Todo CRUD 메인 화면 |
+| 홈 | `home` | 프로필 카드 영역 |
+| QR스캔 | `qr` | QR 스캔/생성 |
+| 보관함 | `storage` | 교환 프로필 보관함 |
+
+### Widgets (독립 UI 블록)
+
+| 위젯 | 경로 | 역할 |
+|---|---|---|
+| HomeWidget | `src/widgets/home/ui/HomeWidget.tsx` | 홈 프로필 카드 위젯 |
+| HomeCardBack | `src/widgets/home/ui/HomeCardBack.tsx` | 프로필 카드 뒷면 |
+| QRWidget | `src/widgets/qr/ui/QRWidget.tsx` | QR 스캔/생성 탭 |
+| QRCodeView | `src/widgets/qr/ui/QRCodeView.tsx` | QR 코드 생성 뷰 |
+| QRScanView | `src/widgets/qr/ui/QRScanView.tsx` | QR 스캔 카메라 뷰 |
+| StorageWidget | `src/widgets/storage/ui/StorageWidget.tsx` | 보관함 프리뷰 (최신 4개) |
+| StorageAllWidget | `src/widgets/storage/ui/StorageAllWidget.tsx` | 보관함 전체 목록 |
+| ProfileGrid | `src/widgets/storage/ui/ProfileGrid.tsx` | 프로필 그리드 표시 |
+| EditToolbar | `src/widgets/storage/ui/EditToolbar.tsx` | 보관함 일괄 삭제 툴바 |
+
+### Features (비즈니스 기능)
+
+| 기능 | 경로 | 역할 |
+|---|---|---|
+| 프로필 등록 | `src/features/register/` | 6단계 프로필 등록 (ui/model/api/lib) |
+| 프로필 수정 | `src/features/editProfile/` | 프로필 편집 (ui/model/api/lib) |
+| 프로필 이미지 | `src/features/profile/editProfileImage/` | 이미지 선택/업로드 |
+| 소셜 로그인 | `src/features/login/` | 로그인 + 문제 안내 바텀시트 |
+| 기본 로그인 | `src/features/login/defaultLogin/` | 안내 로그인 폴백 |
+| QR 교환 | `src/features/exchange/` | 교환 확인/로딩/미리보기/결과 모달 |
+| 프로필 공유 | `src/features/profileShare/` | QR 모달로 프로필 공유 |
+| 보관함 상세 | `src/features/storage/` | 교환 프로필 상세/후기/신고/필터 |
+| 이용약관 | `src/features/terms/` | 약관 동의 바텀시트 |
+| 권한 안내 | `src/features/permissionGuide/` | 앱 접근권한 안내 바텀시트 |
+| 탈퇴 | `src/features/withdrawal/` | 탈퇴 사유/확인 |
+
+### Entities (도메인 모델)
+
+| 엔티티 | 경로 | 포함 내용 |
+|---|---|---|
+| user | `src/entities/user/` | authStore, profileDataStore, userApi, profileApi |
+| exchange | `src/entities/exchange/` | 교환 데이터 타입/API |
+| storage | `src/entities/storage/` | 보관함 데이터 타입/API |
+| cosmic | `src/entities/cosmic/` | 코스믹 유형 테스트 타입/API |
+| interest | `src/entities/interest/` | 관심사 태그 타입/API |
+| question | `src/entities/question/` | TMI 질문 타입/API |
+| terms | `src/entities/terms/` | 이용약관 타입/API |
+
+### Shared (공용 모듈)
+
+| 분류 | 경로 | 주요 항목 |
+|---|---|---|
+| UI 컴포넌트 | `src/shared/ui/` | Button, Header, Layout, BottomSheet, Card, ProfileCard, ChipSelect, Input, Dialog 등 |
+| 아이콘 | `src/shared/ui/icons/` | 50+ SVG 아이콘 컴포넌트 |
+| API | `src/shared/api/` | httpClient(Axios), interceptors |
+| 라우터 | `src/shared/router/` | StackRouter, navigationRef |
+| 상태 | `src/shared/model/` | authStore, conditionStateStore |
+| 유틸 | `src/shared/lib/` | cn, toast, uploadToS3, regionLabel, env 등 |
+| HOC | `src/shared/hoc/` | withLayout, withAuthorization |
+
+### 상태 관리 Store 목록
+
+| Store | 위치 | 역할 |
+|---|---|---|
+| authStore | `src/entities/user/model/authStore.ts` | 인증 토큰, 로그인 상태 |
+| profileDataStore | `src/entities/user/model/profileDataStore.ts` | 유저 프로필 데이터 |
+| conditionStateStore | `src/shared/model/conditionStateStore.ts` | 앱 상태 플래그 (온보딩 완료 등) |
+| permissionStore | `src/widgets/permissions/model/usePermissionStore.ts` | 권한 상태 |
 
 ## 환경 변수
 
