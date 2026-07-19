@@ -261,7 +261,7 @@ export default function ComponentPlaygroundPage() {
                   variant="secondary"
                   onPress={() => {
                     testLogEvent();
-                    Alert.alert('Analytics', 'review_completed 이벤트 전송됨');
+                    Alert.alert('Analytics', 'test event 이벤트 전송됨');
                   }}
                 />
                 <Button
