@@ -34,7 +34,7 @@ Sentry.init({
   sendDefaultPii: false,
 
   // Enable Logs, 배포환경에서만 활성화
-  enableLogs: !PROJECT_ENV,
+  enableLogs: !__DEV__,
 
   // Configure Session Replay
   replaysSessionSampleRate: 0,
