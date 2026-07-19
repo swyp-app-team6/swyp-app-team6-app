@@ -1,0 +1,59 @@
+# 로그인 → 마이페이지 내 정보 확인 플로우
+# 전제: ENVFILE=.env.mock 으로 앱 실행 (MSW 활성화)
+appId: com.swyp.rotationdatingapp
+
+---
+
+# 1. 온보딩이 표시되면 완료 처리
+- runFlow:
+    when:
+      visible: "다음으로"
+    commands:
+      - tapOn: "다음으로"
+      - tapOn: "다음으로"
+      - tapOn: "다음으로"
+      - tapOn: "시작하기"
+
+# 2. 로그인 화면 확인
+- assertVisible:
+    text: "로그인에 문제가 있나요?"
+    timeout: 5000
+
+# 3. 안내받은 계정 로그인 바텀시트 열기
+- tapOn: "로그인에 문제가 있나요?"
+
+# 4. 바텀시트에서 안내받은 계정 로그인 진입
+- tapOn: "안내 받은 계정이 있어요"
+
+# 5. DefaultLogin 화면 확인
+- assertVisible:
+    text: "안내받은 계정 로그인"
+    timeout: 3000
+
+# 6. 아이디 입력
+- tapOn: "안내받은 아이디를 입력해주세요."
+- inputText: "test@example.com"
+
+# 7. 비밀번호 입력
+- tapOn: "안내받은 비밀번호를 입력해주세요."
+- inputText: "password123"
+
+# 8. 로그인 버튼 탭
+- tapOn: "로그인"
+
+# 9. 홈 화면 도달 확인
+- assertVisible:
+    text: "오르비츠와 함께 새로운 만남을"
+    timeout: 5000
+
+# 10. 마이페이지 이동 (설정 아이콘 탭)
+- tapOn:
+    id: "mypage-button"
+
+# 11. 마이페이지 내 정보 확인
+- assertVisible:
+    text: "마이페이지"
+    timeout: 3000
+- assertVisible: "mock"
+- assertVisible: "오늘도 새로운 인연을 만나보세요!"
+- assertVisible: "계정 정보 수정"

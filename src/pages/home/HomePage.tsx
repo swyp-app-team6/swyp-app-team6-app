@@ -34,7 +34,7 @@ function HomePage() {
         }
         right={
           <View className="flex-row items-center gap-3">
-            <Pressable hitSlop={8} onPress={() => navigation.navigate('mypage')}>
+            <Pressable hitSlop={8} onPress={() => navigation.navigate('mypage')} testID="mypage-button" accessibilityLabel="마이페이지">
               <SettingIcon size={24} color="#8C39FB" />
             </Pressable>
           </View>
