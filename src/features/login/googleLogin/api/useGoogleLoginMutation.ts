@@ -9,6 +9,7 @@ import * as Sentry from '@sentry/react-native';
 import Config from 'react-native-config';
 import { UserAPI, useAuthStore } from '@/entities/user';
 import type { GoogleLoginResponse } from '@/entities/user';
+import { logEvent, setAnalyticsUserId } from '@/shared/lib/analytics';
 
 /**
  * # useGoogleLoginMutation
@@ -52,6 +53,14 @@ export default function useGoogleLoginMutation() {
       const { access_token, refresh_token } = data;
       await setTokens({ accessToken: access_token, refreshToken: refresh_token });
       await fetchUserInfo();
+
+      // Firebase Analytics: 사용자 ID 설정 + 가입 완료 이벤트
+      const user = useAuthStore.getState().user;
+      if (user) {
+        setAnalyticsUserId(String(user.id));
+        logEvent('signup_complete');
+      }
+
       return data;
     },
     onError: (error) => {

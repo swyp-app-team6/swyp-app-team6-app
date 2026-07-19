@@ -6,6 +6,7 @@ import { useExchangeFlowStore } from '@/features/exchange';
 import { ExchangeFlowStep } from '@/shared/enums';
 import { openErrorDialog } from '@/shared/ui/ErrorDialog';
 import type { NavigationPropType } from '@/shared/types';
+import { logEvent } from '@/shared/lib/analytics';
 
 /**
  * 대기자 모달 화면 단계
@@ -172,6 +173,7 @@ export default function useExchangeWait(options?: UseExchangeWaitOptions): UseEx
           exchangeResult: data.result,
           step: ExchangeFlowStep.RESULT,
         });
+        logEvent('profile_exchange_completed');
         resetState();
         onForceCloseRef.current?.();
         navigation.navigate('exchangeResult');

@@ -2,6 +2,7 @@ import {
   getAnalytics,
   logEvent as firebaseLogEvent,
   logScreenView as firebaseLogScreenView,
+  setUserId as firebaseSetUserId,
 } from '@react-native-firebase/analytics';
 
 /**
@@ -60,4 +61,26 @@ export const logEvent = async (
   }
 
   await firebaseLogEvent(getAnalytics(), eventName, params);
+};
+
+/**
+ * # setAnalyticsUserId
+ * ---
+ * - 간단설명: Firebase Analytics에 사용자 ID를 설정하여 사용자 기준 집계를 활성화한다
+ * - 제약사항 및 특이사항:
+ *   - 개발 환경(__DEV__)에서는 콘솔 로그만 출력
+ *   - 로그인 성공 직후 호출해야 함
+ * ---
+ * @param userId 사용자 고유 ID (User.id를 문자열로 변환)
+ * ---
+ * @example
+ * setAnalyticsUserId(String(user.id));
+ */
+export const setAnalyticsUserId = async (userId: string): Promise<void> => {
+  if (__DEV__) {
+    console.log('[Analytics] setUserId:', userId);
+    return;
+  }
+
+  await firebaseSetUserId(getAnalytics(), userId);
 };
