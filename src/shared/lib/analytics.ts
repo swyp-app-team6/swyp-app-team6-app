@@ -63,6 +63,13 @@ export const logEvent = async (
   await firebaseLogEvent(getAnalytics(), eventName, params);
 };
 
+export const testLogEvent = async () => {
+  await firebaseLogEvent(getAnalytics(), 'test_event', {
+    value: 1000,
+    name: 'hello'
+  });
+}
+
 /**
  * # setAnalyticsUserId
  * ---
