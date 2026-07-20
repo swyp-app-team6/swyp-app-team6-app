@@ -203,7 +203,7 @@ export default function Dialog() {
       ) : (
         <View className="pt-2" />
       )}
-      <View className={cn("flex-row items-center gap-3", type === 'confirm' ? "mt-6" : undefined)}>
+      <View className={cn("flex-row items-center gap-3", (type === 'confirm' || !title) ? "mt-6" : undefined)}>
         {type === 'confirm' && (
           <Button
             title={cancelLabel || '취소'}
