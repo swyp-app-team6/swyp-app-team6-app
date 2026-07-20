@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { ActivityIndicator, Modal, Pressable, Text, View } from 'react-native';
-import { Button, ProfileCard } from '@/shared/ui';
+import { Button } from '@/shared/ui';
+import UserProfileCard from '@/shared/ui/ProfileCard/UserProfileCard';
 import QRCode from 'react-native-qrcode-svg';
 import { useQuery } from '@tanstack/react-query';
 import { ProfileAPI } from '@/entities/user';
@@ -150,8 +151,7 @@ export default function ProfileShareQRModal({
               </View>
 
               <View className="items-center">
-                <ProfileCard
-                  variant="preview"
+                <UserProfileCard
                   profileImageUri={getProfileImageUrl(receivedProfile.image_key)}
                   nickname={receivedProfile.nickname}
                   age={String(receivedProfile.age)}

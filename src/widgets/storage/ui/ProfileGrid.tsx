@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlatList, StyleSheet, ActivityIndicator, View } from 'react-native';
-import { ProfileCard } from '@/shared/ui';
+import GridProfileCard from '@/shared/ui/ProfileCard/GridProfileCard';
 import type { ExchangeArchiveItem } from '@/entities/storage';
 import { COSMIC_TYPE_LABEL, apiValueToCosmicType } from '@/entities/storage';
 import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
@@ -33,7 +33,7 @@ interface ProfileGridProps {
  * - 간단설명: 교환 프로필 카드를 2열 그리드로 렌더링하는 컴포넌트
  * - 제약사항 및 특이사항:
  *   - FlatList numColumns=2, 12px 간격
- *   - ExchangeArchiveItem → ProfileCard props 내부 변환
+ *   - ExchangeArchiveItem → GridProfileCard props 내부 변환
  *   - onEndReached 전달 시 무한스크롤 지원
  * ---
  * @param profiles 교환 프로필 목록
@@ -75,8 +75,7 @@ export default function ProfileGrid({
       renderItem={({ item }) => {
         const badgeLevel = item.cosmic_type ? apiValueToCosmicType(item.cosmic_type) : undefined;
         return (
-          <ProfileCard
-            variant="grid"
+          <GridProfileCard
             id={item.exchange_id}
             name={item.nickname ?? ''}
             age={typeof item.age === 'number' ? item.age : undefined}
