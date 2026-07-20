@@ -1,23 +1,9 @@
 import { useRef } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import Svg, { Path } from 'react-native-svg';
 import { Button } from '@/shared/ui';
 import SafeBottomSheetModal from '@/shared/ui/SafeBottomSheetModal';
 import Section from './Section';
-
-/**
- * # CloseIcon
- * ---
- * - 간단설명: 보라색 X 닫기 아이콘
- */
-function CloseIcon() {
-  return (
-    <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
-      <Path d="M18 6L6 18M18 18L6 6" stroke="#8C39FB" strokeWidth={2} strokeLinecap="round" />
-    </Svg>
-  );
-}
 
 /**
  * # SafeBottomSheetModalExample
@@ -50,11 +36,6 @@ export default function SafeBottomSheetModalExample() {
 
       {/* 기본 바텀시트 */}
       <SafeBottomSheetModal ref={basicRef}>
-        <View className="items-end px-5">
-          <TouchableOpacity onPress={() => basicRef.current?.dismiss()}>
-            <CloseIcon />
-          </TouchableOpacity>
-        </View>
         <View className="px-5 pb-4">
           <Text className="text-[20px] font-bold leading-[1.4] tracking-[-0.2px] text-[#1a1a1a]">
             기본 바텀시트
@@ -73,11 +54,6 @@ export default function SafeBottomSheetModalExample() {
 
       {/* 긴 컨텐츠 바텀시트 */}
       <SafeBottomSheetModal ref={longContentRef}>
-        <View className="items-end px-5">
-          <TouchableOpacity onPress={() => longContentRef.current?.dismiss()}>
-            <CloseIcon />
-          </TouchableOpacity>
-        </View>
         <View className="px-5 pb-4">
           <Text className="text-[20px] font-bold leading-[1.4] tracking-[-0.2px] text-[#1a1a1a]">
             긴 컨텐츠

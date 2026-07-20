@@ -78,21 +78,11 @@ const ReportBottomSheet = forwardRef<BottomSheetHandle, Props>(
 
     return (
       <SafeBottomSheetModal ref={modalRef}>
-        {/* 닫기 버튼 */}
-        <View className="flex-row items-center justify-between px-5 pb-3 pt-1">
-          <Text className="text-lg font-bold text-gray-900">
+        <View className="px-5">
+          {/* 타이틀 */}
+          <Text className="text-lg font-bold text-gray-900 pb-3">
             {`${nickname} 님 신고하기`}
           </Text>
-          <Pressable
-            onPress={() => modalRef.current?.dismiss()}
-            hitSlop={8}
-            accessibilityLabel="닫기"
-          >
-            <Text className="text-2xl text-gray-400">✕</Text>
-          </Pressable>
-        </View>
-
-        <View className="px-5">
           {/* 신고 유형 체크박스 목록 */}
           <View className="gap-2 mb-4">
             {REPORT_TYPE_OPTIONS.map((option) => {

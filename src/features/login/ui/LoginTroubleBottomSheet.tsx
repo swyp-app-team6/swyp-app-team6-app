@@ -1,5 +1,5 @@
 import React, { forwardRef, useCallback, useImperativeHandle, useRef } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Button, SafeBottomSheetModal } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
@@ -43,17 +43,6 @@ const LoginTroubleBottomSheet = forwardRef<BottomSheetHandle, Props>(
 
     return (
       <SafeBottomSheetModal ref={modalRef} onDismiss={onDismiss}>
-        {/* 닫기 버튼 */}
-        <View className="flex-row justify-end px-5 pt-1 pb-1">
-          <Pressable
-            onPress={() => modalRef.current?.dismiss()}
-            hitSlop={8}
-            accessibilityLabel="닫기"
-          >
-            <Text className="text-2xl text-gray-400">✕</Text>
-          </Pressable>
-        </View>
-
         <View className="px-5">
           {/* 타이틀 */}
           <View className="pb-6">

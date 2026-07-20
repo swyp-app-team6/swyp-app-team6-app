@@ -328,17 +328,6 @@ export default function Step4TMIView({ onNext }: { onNext: () => void }) {
           setChoiceInput(null);
         }}
       >
-        {/* 닫기 버튼 */}
-        <View className="flex-row justify-end px-5 pt-1 pb-1">
-          <Pressable
-            onPress={() => sheetRef.current?.dismiss()}
-            hitSlop={8}
-            accessibilityLabel="닫기"
-          >
-            <Text className="text-2xl text-gray-400">✕</Text>
-          </Pressable>
-        </View>
-
         <View className="px-5">
           {activeQuestion?.answerType === 'CHOICE' && activeQuestion.answers ? (
             <View className="gap-4 pb-4">
@@ -427,18 +416,11 @@ export default function Step4TMIView({ onNext }: { onNext: () => void }) {
         snapPoints={['60%', '90%']}
         enableDynamicSizing={false}
       >
-        {/* 타이틀 + 닫기 버튼 */}
-        <View className="flex-row items-center justify-between px-5 pb-3 pt-1">
+        {/* 타이틀 */}
+        <View className="px-5 pb-3">
           <Text className="text-lg font-bold text-gray-900">
             선택한 TMI 미리보기
           </Text>
-          <Pressable
-            onPress={() => previewSheetRef.current?.dismiss()}
-            hitSlop={8}
-            accessibilityLabel="닫기"
-          >
-            <Text className="text-2xl text-gray-400">✕</Text>
-          </Pressable>
         </View>
 
         <BottomSheetScrollView
