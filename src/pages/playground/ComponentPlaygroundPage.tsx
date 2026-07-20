@@ -7,7 +7,6 @@ import {
   TextFieldExample,
   InputExample,
   TextboxExample,
-  SelectboxExample,
   AlertModalExample,
   ErrorDialogExample,
   PopoverMenuExample,
@@ -32,6 +31,7 @@ import {
   FirebaseAnalyticsExample,
   TokenTestExample,
   SentryTestExample,
+  SafeBottomSheetModalExample,
 } from './examples';
 
 // ────────────────────────────────────────────────────────────────────────────────
@@ -98,7 +98,6 @@ export default function ComponentPlaygroundPage() {
             <TextFieldExample />
             <InputExample />
             <TextboxExample />
-            <SelectboxExample />
             <AlertModalExample />
             <ErrorDialogExample />
             <PopoverMenuExample />
@@ -119,6 +118,7 @@ export default function ComponentPlaygroundPage() {
             <CameraUploadZoneExample />
             <SelectedTMIPreviewButtonExample />
             <IconsExample />
+            <SafeBottomSheetModalExample />
           </ScrollView>
         )}
       </Layout>

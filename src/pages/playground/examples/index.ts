@@ -29,3 +29,4 @@ export { default as SafeAreaTestExample } from './SafeAreaTestExample';
 export { default as FirebaseAnalyticsExample } from './FirebaseAnalyticsExample';
 export { default as TokenTestExample } from './TokenTestExample';
 export { default as SentryTestExample } from './SentryTestExample';
+export { default as SafeBottomSheetModalExample } from './SafeBottomSheetModalExample';

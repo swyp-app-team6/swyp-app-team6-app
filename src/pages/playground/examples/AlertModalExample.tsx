@@ -32,6 +32,7 @@ export default function AlertModalExample() {
           variant="secondary"
           onPress={() =>
             openDialog({
+              type: 'alert',
               message: '회원 탈퇴가 완료되었습니다.',
             })
           }
