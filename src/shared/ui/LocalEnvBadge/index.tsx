@@ -1,7 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { PROJECT_ENV } from '@/shared/lib/env';
 import { NavigationPropType } from '@/shared/types';
 
 /**
@@ -19,7 +18,7 @@ import { NavigationPropType } from '@/shared/types';
 export default function LocalEnvBadge() {
   const navigation = useNavigation<NavigationPropType>();
 
-  if (!PROJECT_ENV) {
+  if (!__DEV__) {
     return null;
   }
 
@@ -37,7 +36,7 @@ export default function LocalEnvBadge() {
         className="bg-red-500 w-14 h-14 rounded-full items-center justify-center shadow-lg elevation-5"
         onPress={() => navigation.navigate('playground')}
       >
-        <Text className="text-white text-sm font-bold">DOCS</Text>
+        <Text className="text-white text-sm font-bold">DEV</Text>
       </TouchableOpacity>
     </View>
   );

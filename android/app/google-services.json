@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "787106074070",
+    "project_id": "orbits-9005c",
+    "storage_bucket": "orbits-9005c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:787106074070:android:4f754b0d9161fd04dfe877",
+        "android_client_info": {
+          "package_name": "com.swyp.rotationdatingapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDIv0z61RwJJ4Imuk_pAm9Z_K_XAp8uJE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

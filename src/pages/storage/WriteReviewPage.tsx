@@ -10,6 +10,7 @@ import type { ReviewScore } from '@/entities/storage';
 import { useExchangeArchiveDetailQuery } from '@/entities/storage';
 import WriteReviewView from '@/features/storage/ui/WriteReviewView';
 import useUpdateReviewMutation from '@/features/storage/api/useUpdateReviewMutation';
+import { logEvent } from '@/shared/lib/analytics';
 
 /**
  * # WriteReviewPage
@@ -119,6 +120,7 @@ export default function WriteReviewPage() {
               autoClose: false,
             });
           } else {
+            logEvent('review_completed');
             openDialog({
               type: 'alert',
               message: '후기를 등록했습니다!',
