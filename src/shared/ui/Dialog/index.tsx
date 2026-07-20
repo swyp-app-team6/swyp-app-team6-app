@@ -1,9 +1,10 @@
 import React, { useCallback } from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text } from 'react-native';
 import { createStore } from 'zustand/vanilla';
 import { useStore } from 'zustand';
 import { Modal } from '@/shared/ui/Modal';
 import { Button, type ButtonVariant } from '@/shared/ui/Button';
+import { cn } from '@/shared/lib/cn';
 
 /**
  * Dialog 모달 파라미터
@@ -202,23 +203,20 @@ export default function Dialog() {
       ) : (
         <View className="pt-2" />
       )}
-      <View className="mt-6 flex-row justify-end gap-3">
+      <View className={cn("flex-row items-center gap-3", type === 'confirm' ? "mt-6" : undefined)}>
         {type === 'confirm' && (
-          <Pressable
-            className="flex-1 h-14 rounded-xl items-center justify-center"
-            style={{ backgroundColor: '#F5F5F5' }}
+          <Button
+            title={cancelLabel || '취소'}
+            variant="cancel"
             onPress={handleCancel}
-          >
-            <Text className="text-base font-bold" style={{ color: '#1A1A1A' }}>
-              {cancelLabel || '취소'}
-            </Text>
-          </Pressable>
+            className="flex-1"
+          />
         )}
         <Button
           title={okLabel || '확인'}
           variant={okVariant || 'primary'}
           onPress={handleOk}
-          className="flex-1"
+          className="flex-1 rounded-lg"
         />
       </View>
     </Modal>

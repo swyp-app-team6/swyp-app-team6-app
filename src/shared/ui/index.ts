@@ -21,7 +21,6 @@ export { default as BottomSheet, type BottomSheetHandle } from './BottomSheet';
 export { default as Avatar } from './Avatar';
 export { default as Tab } from './Tab';
 export { default as Textbox } from './Textbox';
-export { default as AlertModal } from './AlertModal';
 export { default as Dialog, openDialog, closeDialog, dialogStore, type IDialogParams } from './Dialog';
 export { default as ErrorDialog, openErrorDialog, closeErrorDialog, errorDialogStore, type IErrorDialogParams } from './ErrorDialog';
 export { default as MenuList } from './MenuList';
