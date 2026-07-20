@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Alert, RefreshControl, ScrollView, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NavigationPropType } from '@/shared/types';
@@ -6,43 +6,30 @@ import * as Sentry from '@sentry/react-native';
 import { useAuthStore } from '@/entities/user';
 import { setAnalyticsUserId, testLogEvent } from '@/shared/lib/analytics';
 import CommonInterestCard from '@/pages/exchangeResult/CommonInterestCard';
-import { ProfileCard } from '@/shared/ui';
 import UserProfileCard from '@/shared/ui/ProfileCard/UserProfileCard';
 import EmptyProfileCard from '@/shared/ui/ProfileCard/EmptyProfileCard';
 import ProfileFlipWrapper from '@/shared/ui/ProfileCard/ProfileFlipWrapper';
-import ProfileCardContainer from '@/shared/ui/ProfileCard/ProfileCardContainer';
 import ProfileCardGradientBackground from '@/shared/ui/ProfileCard/ProfileCardGradientBackground';
 import CosmicResultFrontCard from '@/features/register/ui/CosmicResultFrontCard';
 import CosmicResultBackCard from '@/features/register/ui/CosmicResultBackCard';
 import { CosmicType } from '@/shared/enums';
-import { useBlockListQuery, useUnblockMutation } from '@/features/storage';
 import {
-  Accordion,
   AlertModal,
-  Dialog,
-  openDialog,
   ErrorDialog,
   openErrorDialog,
   Anim,
-  Avatar,
   Badge,
-  BlockUserIcon,
-  BottomCTA,
   Button,
-  BottomSheet,
   CameraUploadZone,
   Card,
   Checkbox,
   ChipSelect,
-  ChooseButton,
   FavTag,
   CameraIcon,
   GalleryIcon,
   Header,
   Input,
   Layout,
-  MenuList,
-  Modal,
   PlaygroundIcon,
   ProfileIcon,
   ProgressBar,
@@ -51,12 +38,9 @@ import {
   HomeIcon,
   CardIcon,
   MyPageIcon,
-  SearchFallbackView,
   SearchIcon,
   SelectedTMIPreviewButton,
-  SelectCard,
   Selectbox,
-  Skeleton,
   KakaoLoginButton,
   GoogleLoginButton,
   AppleLoginButton,
@@ -64,15 +48,12 @@ import {
   GoogleIcon,
   AppleIcon,
   PopoverMenu,
-  StepView,
   SwipeableCard,
-  Tab,
   Tag,
   TextField,
   Textbox,
   TMICard,
   Toast,
-  type BottomSheetHandle,
 } from '@/shared/ui';
 
 // ────────────────────────────────────────────────────────────────────────────────
@@ -131,10 +112,9 @@ function Section({ title, children }: { title: string; children: React.ReactNode
  */
 export default function ComponentPlaygroundPage() {
   const navigation = useNavigation<NavigationPropType>();
-  const [activeTab, setActiveTab] = useState<'ui' | 'dev' | 'block'>('ui');
+  const [activeTab, setActiveTab] = useState<'ui' | 'dev'>('ui');
   const { setTokens } = useAuthStore();
   const [checked, setChecked] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
   const [selectValue, setSelectValue] = useState<string | undefined>();
   const [animType, setAnimType] = useState<'in' | 'out'>('in');
   const [refreshing, setRefreshing] = useState(false);
@@ -145,17 +125,8 @@ export default function ComponentPlaygroundPage() {
     { id: '3', title: '세 번째 카드', description: '삭제 버튼을 탭하면 사라집니다.' },
   ]);
 
-  // StepView 상태
-  const [step, setStep] = useState(0);
-
   // ChipSelect 상태
   const [chipSelected, setChipSelected] = useState<string[]>([]);
-
-  // SelectCard 상태
-  const [selectedCard, setSelectedCard] = useState('');
-
-  // BottomSheet ref
-  const bottomSheetRef = useRef<BottomSheetHandle>(null);
 
   // AlertModal 상태
   const [alertVisible, setAlertVisible] = useState(false);
@@ -166,9 +137,6 @@ export default function ComponentPlaygroundPage() {
   // ProgressBar 상태
   const [progress, setProgress] = useState(40);
 
-  // ChooseButton 상태
-  const [chooseValue, setChooseValue] = useState('');
-
   // TMICard 상태
   const [selectedTMI, setSelectedTMI] = useState('');
 
@@ -178,42 +146,25 @@ export default function ComponentPlaygroundPage() {
   // CommonInterestCard 상태
   const [commonInterestHasCommon, setCommonInterestHasCommon] = useState(true);
 
-  // 차단 프로필 API 연동
-  const { data: blockedUsers = [], refetch: refetchBlockList, isLoading: isBlockListLoading } = useBlockListQuery();
-  const { mutate: unblock } = useUnblockMutation();
-
-  // ProfileCard grid 상태
-  const [gridFavorited, setGridFavorited] = useState<Record<number, boolean>>({});
-  const [gridEditMode, setGridEditMode] = useState(false);
-  const [gridSelected, setGridSelected] = useState<Set<number>>(new Set());
-
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setChecked(false);
-    setModalVisible(false);
     setSelectValue(undefined);
     setAnimType('in');
-    setStep(0);
     setChipSelected([]);
-    setSelectedCard('');
     setAlertVisible(false);
     setTextboxValue('');
     setProgress(40);
-    setChooseValue('');
     setSelectedTMI('');
     setFavTags({});
     setCommonInterestHasCommon(true);
-    setGridFavorited({});
-    setGridEditMode(false);
-    setGridSelected(new Set());
-    refetchBlockList();
     setCards([
       { id: '1', title: '첫 번째 카드', description: '오른쪽으로 스와이프해서 삭제하세요.' },
       { id: '2', title: '두 번째 카드', description: '카드 컴포넌트 예시입니다.' },
       { id: '3', title: '세 번째 카드', description: '삭제 버튼을 탭하면 사라집니다.' },
     ]);
     setRefreshing(false);
-  }, [refetchBlockList]);
+  }, []);
 
   return (
     <Toast.Provider>
@@ -233,12 +184,6 @@ export default function ComponentPlaygroundPage() {
             variant={activeTab === 'dev' ? 'primary' : 'ghost'}
             className="flex-1"
             onPress={() => setActiveTab('dev')}
-          />
-          <Button
-            title="차단"
-            variant={activeTab === 'block' ? 'primary' : 'ghost'}
-            className="flex-1"
-            onPress={() => setActiveTab('block')}
           />
         </View>
 
@@ -296,69 +241,26 @@ export default function ComponentPlaygroundPage() {
                 />
               </View>
             </Section>
-          </ScrollView>
-        )}
 
-        {/* ── 차단 탭 ──────────────────────────────────────────────────────── */}
-        {activeTab === 'block' && (
-          <ScrollView className="flex-1 bg-white" contentContainerClassName="p-5 pb-20">
-            <Section title="차단 프로필 — 차단 목록 조회 & 차단 해제">
-              {isBlockListLoading ? (
-                <View className="items-center py-8">
-                  <Text className="text-sm text-text-gray4">불러오는 중...</Text>
-                </View>
-              ) : blockedUsers.length === 0 ? (
-                <View className="items-center py-8">
-                  <BlockUserIcon size={40} color="#BFBFBF" />
-                  <Text className="mt-3 text-sm text-text-gray4">차단한 사용자가 없습니다</Text>
-                </View>
-              ) : (
-                <View className="gap-2">
-                  {blockedUsers.map((user) => (
-                    <View
-                      key={user.block_id}
-                      className="flex-row items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3"
-                    >
-                      <View className="flex-row items-center gap-3">
-                        <Avatar size={40} name={user.nickname ?? undefined} />
-                        <View>
-                          <Text className="text-sm font-semibold text-text-black">
-                            {user.nickname ?? '알 수 없는 사용자'}
-                          </Text>
-                          <Text className="text-xs text-text-gray4">
-                            차단일: {new Date(user.created_at).toLocaleDateString('ko-KR')}
-                          </Text>
-                        </View>
-                      </View>
-                      <Button
-                        title="해제"
-                        variant="outline"
-                        onPress={() =>
-                          openDialog({
-                            type: 'confirm',
-                            title: '차단 해제',
-                            message: `${user.nickname ?? '이 사용자'}의 차단을 해제하시겠습니까?`,
-                            okLabel: '해제',
-                            okFn: () => {
-                              unblock(user.block_id, {
-                                onSuccess: () => {
-                                  Alert.alert('차단 해제', `${user.nickname ?? '사용자'}의 차단이 해제되었습니다.`);
-                                },
-                                onError: () => {
-                                  openErrorDialog({ title: '차단 해제 실패', message: '다시 시도해주세요.' });
-                                },
-                              });
-                            },
-                          })
-                        }
-                      />
-                    </View>
-                  ))}
-                </View>
-              )}
+            <Section title="Sentry — 에러 리포팅 연동 테스트">
+              <View className="gap-3">
+                <Button
+                  title="captureException 전송"
+                  variant="secondary"
+                  onPress={() => {
+                    const error = new Error('[Sentry 테스트] 수동 captureException 호출');
+                    Sentry.captureException(error);
+                    Alert.alert('Sentry 테스트', 'Sentry에 에러를 전송했습니다.\nSentry 대시보드에서 확인하세요.');
+                  }}
+                />
+                <Button
+                  title="렌더 에러 발생 (ErrorBoundary)"
+                  variant="secondary"
+                  onPress={() => setThrowRenderError(true)}
+                />
+                <SentryRenderErrorTrigger shouldThrow={throwRenderError} />
+              </View>
             </Section>
-            <Dialog />
-            <ErrorDialog />
           </ScrollView>
         )}
 
@@ -417,26 +319,6 @@ export default function ComponentPlaygroundPage() {
                   <Text className="text-[9px] text-text-gray5">{c.hex}</Text>
                 </View>
               ))}
-            </View>
-          </Section>
-
-          {/* ── Button ─────────────────────────────────────────────────────────── */}
-          <Section title="Button — 공용 액션 버튼 (6가지 variant)">
-            <View className="gap-2">
-              <Button title="Primary" variant="primary" />
-              <Button title="Secondary" variant="secondary" />
-              <Button title="Ghost" variant="ghost" />
-              <Button title="Black" variant="black" />
-              <Button title="Outline" variant="outline" />
-              <Button title="Dark Outline" variant="dark-outline" />
-              <Button title="이미지 저장" variant="outline" icon={<Text>⬇</Text>} />
-              <Button title="Loading" variant="primary" loading />
-              <Button title="Disabled" variant="primary" disabled />
-              <Text className="mt-2 text-xs text-text-gray4">Dual 레이아웃 (Button 2개)</Text>
-              <View className="flex-row gap-3">
-                <Button title="보조 버튼" variant="secondary" className="flex-1" />
-                <Button title="메인 버튼" variant="primary" className="flex-1" />
-              </View>
             </View>
           </Section>
 
@@ -516,18 +398,6 @@ export default function ComponentPlaygroundPage() {
             />
           </Section>
 
-          {/* ── Modal ──────────────────────────────────────────────────────────── */}
-          <Section title="Modal — 커스텀 컨텐츠 모달">
-            <Button title="모달 열기" variant="secondary" onPress={() => setModalVisible(true)} />
-            <Modal
-              visible={modalVisible}
-              onClose={() => setModalVisible(false)}
-              message={"사용할 수 없는 계정입니다. 아이디,\n비밀번호를 다시 확인해주시길 바랍니다."}
-            >
-              <Button className="w-full" title="확인" onPress={() => setModalVisible(false)} />
-            </Modal>
-          </Section>
-
           {/* ── AlertModal ─────────────────────────────────────────────────────── */}
           <Section title="AlertModal — 확인/취소 알림 팝업">
             <Button title="알림 모달 열기" variant="secondary" onPress={() => setAlertVisible(true)} />
@@ -543,37 +413,6 @@ export default function ComponentPlaygroundPage() {
               }}
               onCancel={() => setAlertVisible(false)}
             />
-          </Section>
-
-          {/* ── Dialog ────────────────────────────────────────────────────────── */}
-          <Section title="Dialog — 전역 alert/confirm 다이얼로그 (함수 호출)">
-            <View className="gap-2">
-              <Button
-                title="Alert 다이얼로그"
-                variant="secondary"
-                onPress={() =>
-                  openDialog({
-                    title: '알림',
-                    message: '저장이 완료되었습니다.',
-                  })
-                }
-              />
-              <Button
-                title="Confirm 다이얼로그"
-                variant="secondary"
-                onPress={() =>
-                  openDialog({
-                    type: 'confirm',
-                    title: '삭제 확인',
-                    message: '정말 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.',
-                    okLabel: '삭제',
-                    okVariant: 'secondary',
-                    okFn: () => Alert.alert('삭제됨', '항목이 삭제되었습니다.'),
-                  })
-                }
-              />
-            </View>
-            <Dialog />
           </Section>
 
           {/* ── ErrorDialog ────────────────────────────────────────────────────── */}
@@ -628,63 +467,6 @@ export default function ComponentPlaygroundPage() {
             </View>
           </Section>
 
-          {/* ── BottomSheet ────────────────────────────────────────────────────── */}
-          <Section title="BottomSheet — 하단 슬라이드업 시트">
-            <Button
-              title="바텀시트 열기"
-              variant="secondary"
-              onPress={() => bottomSheetRef.current?.open()}
-            />
-            <BottomSheet ref={bottomSheetRef} title="옵션 선택" onClose={() => { }}>
-              <View className="gap-3 pb-4">
-                <Text className="text-base text-gray-700">바텀시트 컨텐츠 영역입니다.</Text>
-                <Button
-                  title="확인"
-                  variant="primary"
-                  onPress={() => bottomSheetRef.current?.close()}
-                />
-              </View>
-            </BottomSheet>
-          </Section>
-
-          {/* ── StepView ───────────────────────────────────────────────────────── */}
-          <Section title="StepView — 단계별 슬라이드 뷰 (회원가입 등)">
-            <View className="flex-row gap-2 mb-3">
-              <Button
-                title="이전"
-                variant="secondary"
-                onPress={() => setStep(s => Math.max(0, s - 1))}
-                disabled={step === 0}
-              />
-              <Button
-                title="다음"
-                variant="secondary"
-                onPress={() => setStep(s => Math.min(2, s + 1))}
-                disabled={step === 2}
-              />
-              <Text className="self-center text-sm text-gray-500">현재: {step + 1}/3</Text>
-            </View>
-            <View className="h-24 rounded-xl overflow-hidden border border-gray-200">
-              <StepView currentStep={step}>
-                <StepView.Step>
-                  <View className="flex-1 items-center justify-center bg-blue-50">
-                    <Text className="text-blue-800 font-semibold">1단계: 정보 입력</Text>
-                  </View>
-                </StepView.Step>
-                <StepView.Step>
-                  <View className="flex-1 items-center justify-center bg-green-50">
-                    <Text className="text-green-800 font-semibold">2단계: 프로필 설정</Text>
-                  </View>
-                </StepView.Step>
-                <StepView.Step>
-                  <View className="flex-1 items-center justify-center bg-purple-50">
-                    <Text className="text-purple-800 font-semibold">3단계: 완료</Text>
-                  </View>
-                </StepView.Step>
-              </StepView>
-            </View>
-          </Section>
-
           {/* ── ChipSelect ─────────────────────────────────────────────────────── */}
           <Section title="ChipSelect — 다중 선택 칩 (최대 N개)">
             <ChipSelect
@@ -702,143 +484,6 @@ export default function ComponentPlaygroundPage() {
             <Text className="mt-2 text-xs text-gray-400">
               선택: {chipSelected.length > 0 ? chipSelected.join(', ') : '없음'}
             </Text>
-          </Section>
-
-          {/* ── SelectCard ─────────────────────────────────────────────────────── */}
-          <Section title="SelectCard — 카드형 단일 선택">
-            <View className="gap-3">
-              {['A', 'B', 'C'].map(option => (
-                <SelectCard
-                  key={option}
-                  selected={selectedCard === option}
-                  onPress={() => setSelectedCard(option)}
-                >
-                  <Text className="font-semibold text-gray-900">옵션 {option}</Text>
-                  <Text className="text-sm text-gray-500 mt-1">
-                    옵션 {option}에 대한 설명입니다.
-                  </Text>
-                </SelectCard>
-              ))}
-            </View>
-          </Section>
-
-          {/* ── Avatar ─────────────────────────────────────────────────────────── */}
-          <Section title="Avatar — 프로필 이미지/이니셜 표시">
-            <View className="flex-row items-center gap-4">
-              <View className="items-center gap-1">
-                <Avatar size={56} name="홍길동" />
-                <Text className="text-xs text-gray-500">이니셜</Text>
-              </View>
-              <View className="items-center gap-1">
-                <Avatar size={56} name="김철수" />
-                <Text className="text-xs text-gray-500">이니셜</Text>
-              </View>
-              <View className="items-center gap-1">
-                <Avatar size={56} />
-                <Text className="text-xs text-gray-500">기본</Text>
-              </View>
-              <View className="items-center gap-1">
-                <Avatar size={40} name="A" />
-                <Text className="text-xs text-gray-500">작은 사이즈</Text>
-              </View>
-            </View>
-          </Section>
-
-          {/* ── Tab ────────────────────────────────────────────────────────────── */}
-          <Section title="Tab — 탭 전환 (언더바 탭)">
-            <View className="rounded-xl overflow-hidden border border-gray-200 bg-white">
-              <Tab.Root defaultValue="tab1">
-                <Tab.List>
-                  <Tab.Trigger value="tab1" label="프로필" />
-                  <Tab.Trigger value="tab2" label="활동" />
-                  <Tab.Trigger value="tab3" label="설정" />
-                </Tab.List>
-                <Tab.Content value="tab1">
-                  <View className="p-4">
-                    <Text className="text-gray-700">프로필 탭 내용입니다.</Text>
-                  </View>
-                </Tab.Content>
-                <Tab.Content value="tab2">
-                  <View className="p-4">
-                    <Text className="text-gray-700">활동 탭 내용입니다.</Text>
-                  </View>
-                </Tab.Content>
-                <Tab.Content value="tab3">
-                  <View className="p-4">
-                    <Text className="text-gray-700">설정 탭 내용입니다.</Text>
-                  </View>
-                </Tab.Content>
-              </Tab.Root>
-            </View>
-          </Section>
-
-          {/* ── MenuList ───────────────────────────────────────────────────────── */}
-          <Section title="MenuList — 마이페이지 설정 메뉴 목록">
-            <MenuList.Section title="계정">
-              <MenuList.Item label="프로필 수정" onPress={() => { }} right={<Text className="text-gray-400">›</Text>} />
-              <MenuList.Item label="비밀번호 변경" onPress={() => { }} right={<Text className="text-gray-400">›</Text>} />
-              <MenuList.Item label="알림 설정" onPress={() => { }} right={<Text className="text-gray-400">›</Text>} showDivider={false} />
-            </MenuList.Section>
-            <MenuList.Section title="앱 정보">
-              <MenuList.Item label="버전" right={<Text className="text-xs text-gray-400">1.0.0</Text>} />
-              <MenuList.Item label="이용약관" onPress={() => { }} right={<Text className="text-gray-400">›</Text>} showDivider={false} />
-            </MenuList.Section>
-          </Section>
-
-          {/* ── Accordion ──────────────────────────────────────────────────────── */}
-          <Section title="Accordion — FAQ 접기/펼치기">
-            <View className="rounded-xl overflow-hidden border border-gray-200 bg-white">
-              <Accordion.Root>
-                <Accordion.Item itemKey="faq1" title="자주 묻는 질문 1">
-                  <Text className="text-gray-600">
-                    답변 내용 1입니다. 아코디언 컴포넌트는 접기/펼치기 UI를 제공합니다.
-                  </Text>
-                </Accordion.Item>
-                <Accordion.Item itemKey="faq2" title="자주 묻는 질문 2">
-                  <Text className="text-gray-600">
-                    답변 내용 2입니다. multiple 옵션으로 동시에 여러 항목을 열 수 있습니다.
-                  </Text>
-                </Accordion.Item>
-                <Accordion.Item itemKey="faq3" title="자주 묻는 질문 3">
-                  <Text className="text-gray-600">
-                    답변 내용 3입니다. 기본적으로 하나의 항목만 열립니다.
-                  </Text>
-                </Accordion.Item>
-              </Accordion.Root>
-            </View>
-          </Section>
-
-          {/* ── BottomCTA ──────────────────────────────────────────────────────── */}
-          <Section title="BottomCTA — 하단 고정 액션 버튼 영역">
-            <View className="rounded-xl overflow-hidden border border-gray-200">
-              <BottomCTA>
-                <Button title="다음 단계로" variant="primary" onPress={() => { }} />
-              </BottomCTA>
-            </View>
-          </Section>
-
-          {/* ── Skeleton ───────────────────────────────────────────────────────── */}
-          <Section title="Skeleton — 로딩 플레이스홀더">
-            <Skeleton.Container styleClass={{ root: 'gap-3' }}>
-              <Skeleton.Box styleClass={{ root: 'h-5 w-3/4' }} />
-              <Skeleton.Box styleClass={{ root: 'h-5 w-full' }} />
-              <View className="flex-row gap-3">
-                <Skeleton.Circle styleClass={{ root: 'h-10 w-10' }} />
-                <View className="flex-1 gap-2">
-                  <Skeleton.Box styleClass={{ root: 'h-4 w-2/3' }} />
-                  <Skeleton.Box styleClass={{ root: 'h-4 w-full' }} />
-                </View>
-              </View>
-            </Skeleton.Container>
-          </Section>
-
-          {/* ── SearchFallbackView ─────────────────────────────────────────────── */}
-          <Section title="SearchFallbackView — 검색 결과 없음 안내">
-            <SearchFallbackView
-              message="검색 결과가 없습니다"
-              icon={<Text className="text-4xl">🔍</Text>}
-              styleClass={{ root: 'py-8' }}
-            />
           </Section>
 
           {/* ── Anim ───────────────────────────────────────────────────────────── */}
@@ -963,22 +608,6 @@ export default function ComponentPlaygroundPage() {
             </View>
           </Section>
 
-          {/* ── ChooseButton ───────────────────────────────────────────────────── */}
-          <Section title="ChooseButton — 2지선다 선택 버튼">
-            <View className="gap-2">
-              <ChooseButton
-                label="적극적으로 다가가는 편"
-                selected={chooseValue === 'A'}
-                onPress={() => setChooseValue('A')}
-              />
-              <ChooseButton
-                label="자연스럽게 친해지는 편"
-                selected={chooseValue === 'B'}
-                onPress={() => setChooseValue('B')}
-              />
-            </View>
-          </Section>
-
           {/* ── 소셜 로그인 버튼 ──────────────────────────────────────────────── */}
           <Section title="소셜 로그인 — 카카오/구글/애플 로그인 버튼">
             <View className="gap-2">
@@ -1011,70 +640,6 @@ export default function ComponentPlaygroundPage() {
                 }
                 theirName="민수"
               />
-            </View>
-          </Section>
-
-          {/* ── ProfileCard (deprecated) — preview ──────────────────────────── */}
-          <Section title="ProfileCard (deprecated) — variant=preview">
-            <View className="items-center">
-              <ProfileCard
-                variant="preview"
-                profileImageUri="https://picsum.photos/284/392"
-                nickname="홍길동"
-                age="25"
-                interests={['여행', '음악', '카페']}
-                badgeLevel="galaxy"
-              />
-            </View>
-          </Section>
-
-          {/* ── ProfileCard (deprecated) — compact ──────────────────────────── */}
-          <Section title="ProfileCard (deprecated) — variant=compact">
-            <ProfileCard
-              variant="compact"
-              profileImageUri="https://picsum.photos/80/80"
-              nickname="김철수"
-              job="개발자"
-              region="서울"
-            />
-          </Section>
-
-          {/* ── ProfileCard (deprecated) — grid ─────────────────────────────── */}
-          <Section title="ProfileCard (deprecated) — variant=grid">
-            <View className="mb-3 flex-row gap-2">
-              <Button
-                title={gridEditMode ? '편집 해제' : '편집 모드'}
-                variant={gridEditMode ? 'primary' : 'secondary'}
-                onPress={() => { setGridEditMode(!gridEditMode); setGridSelected(new Set()); }}
-              />
-            </View>
-            <View className="flex-row gap-2">
-              {[
-                { id: 1, name: '민수', age: 27, cosmicTypeLabel: '별빛 탐험가', location: '서울', job: '디자이너' },
-                { id: 2, name: '수진', age: 24, cosmicTypeLabel: '우주 몽상가', location: '부산', job: '마케터' },
-              ].map((item) => (
-                <ProfileCard
-                  key={item.id}
-                  variant="grid"
-                  id={item.id}
-                  name={item.name}
-                  age={item.age}
-                  cosmicTypeLabel={item.cosmicTypeLabel}
-                  imageUri="https://picsum.photos/200/184"
-                  location={item.location}
-                  job={item.job}
-                  isFavorited={!!gridFavorited[item.id]}
-                  onToggleFavorite={(id) => setGridFavorited(prev => ({ ...prev, [id]: !prev[id] }))}
-                  onPress={(id) => Alert.alert('카드 클릭', `ID: ${id}`)}
-                  isEditMode={gridEditMode}
-                  isSelected={gridSelected.has(item.id)}
-                  onToggleSelect={(id) => setGridSelected(prev => {
-                    const next = new Set(prev);
-                    next.has(id) ? next.delete(id) : next.add(id);
-                    return next;
-                  })}
-                />
-              ))}
             </View>
           </Section>
 
@@ -1133,37 +698,6 @@ export default function ComponentPlaygroundPage() {
             </View>
           </Section>
 
-          {/* ── ProfileCardContainer ────────────────────────────────────────── */}
-          <Section title="ProfileCardContainer — 프레임 프리미티브 (284×392)">
-            <View className="items-center gap-4">
-              <ProfileCardContainer onPress={() => Alert.alert('ProfileCardContainer', '기본 프레임 클릭')}>
-                <Text className="text-sm text-text-gray4">기본 프레임 (284×392)</Text>
-              </ProfileCardContainer>
-              <Text className="text-xs text-text-gray4">responsive=true (width: 100%)</Text>
-              <ProfileCardContainer responsive>
-                <Text className="text-sm text-text-gray4">반응형 프레임</Text>
-              </ProfileCardContainer>
-            </View>
-          </Section>
-
-          {/* ── ProfileCardGradientBackground ───────────────────────────────── */}
-          <Section title="ProfileCardGradientBackground — 그라디언트 배경 카드">
-            <View className="items-center gap-4">
-              <ProfileCardGradientBackground>
-                <View className="flex-1 items-center justify-center p-5">
-                  <Text className="text-lg font-bold text-white">기본 그라디언트</Text>
-                  <Text className="mt-2 text-sm text-white/80">indigo → violet</Text>
-                </View>
-              </ProfileCardGradientBackground>
-              <ProfileCardGradientBackground colors={['rgba(67, 56, 202, 1)', 'rgba(124, 58, 237, 1)']}>
-                <View className="flex-1 items-center justify-center p-5">
-                  <Text className="text-lg font-bold text-white">커스텀 색상</Text>
-                  <Text className="mt-2 text-sm text-white/80">solid indigo → violet</Text>
-                </View>
-              </ProfileCardGradientBackground>
-            </View>
-          </Section>
-
           {/* ── CosmicResultCard (앞/뒤) ───────────────────────────────────── */}
           <Section title="CosmicResultCard — 코스믹 유형 결과 카드 (앞/뒤)">
             <View className="items-center gap-4">
@@ -1197,27 +731,6 @@ export default function ComponentPlaygroundPage() {
                   ],
                 }}
               />
-            </View>
-          </Section>
-
-          {/* ── Sentry 에러 테스트 ────────────────────────────────────────────── */}
-          <Section title="Sentry — 에러 리포팅 연동 테스트 (개발용)">
-            <View className="gap-3">
-              <Button
-                title="captureException 전송"
-                variant="secondary"
-                onPress={() => {
-                  const error = new Error('[Sentry 테스트] 수동 captureException 호출');
-                  Sentry.captureException(error);
-                  Alert.alert('Sentry 테스트', 'Sentry에 에러를 전송했습니다.\nSentry 대시보드에서 확인하세요.');
-                }}
-              />
-              <Button
-                title="렌더 에러 발생 (ErrorBoundary)"
-                variant="secondary"
-                onPress={() => setThrowRenderError(true)}
-              />
-              <SentryRenderErrorTrigger shouldThrow={throwRenderError} />
             </View>
           </Section>
 
