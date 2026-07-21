@@ -135,10 +135,10 @@ export function Button({
       ) : icon ? (
         <View className="flex-row items-center justify-center gap-1">
           {icon}
-          <Text className={isDisabled ? v.disabledText : v.text}>{title}</Text>
+          <Text numberOfLines={1} className={isDisabled ? v.disabledText : v.text}>{title}</Text>
         </View>
       ) : (
-        <Text className={isDisabled ? v.disabledText : v.text}>{title}</Text>
+        <Text numberOfLines={1} className={isDisabled ? v.disabledText : v.text}>{title}</Text>
       )}
     </Pressable>
   );
