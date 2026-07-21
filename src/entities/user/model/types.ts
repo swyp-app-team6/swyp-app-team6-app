@@ -60,6 +60,16 @@ export interface AuthTokens {
 }
 
 /**
+ * 로그인 API 서버 응답 토큰 (snake_case)
+ * - access_token: 액세스 토큰
+ * - refresh_token: 리프레시 토큰
+ */
+export interface LoginTokenResponse {
+  access_token: string;
+  refresh_token: string;
+}
+
+/**
  * 지역 정보 객체
  * - group = 시/도 그룹명 (예: "서울")
  * - detail = 시/도 코드 (예: "SEOUL")

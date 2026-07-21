@@ -8,7 +8,7 @@ import useRegisterMutation from '@/features/register/api/useRegisterMutation';
 import Step5PreviewView from '@/features/register/ui/Step5PreviewView';
 import { buildRegisterRequest } from '@/features/register/lib/buildRegisterRequest';
 import type { NavigatorType, NavigationPropType } from '@/shared/types';
-import { logEvent } from '@/shared/lib/analytics';
+import { logProfileCompleted } from '@/shared/lib/analytics';
 
 /**
  * # ProfileStep6Page
@@ -41,7 +41,7 @@ export default function ProfileStep6Page() {
         await updateAsync(request);
       } else {
         await registerAsync(request);
-        logEvent('profile_completed');
+        logProfileCompleted();
       }
       navigation.navigate('profileComplete', { mode });
     } catch (e) {

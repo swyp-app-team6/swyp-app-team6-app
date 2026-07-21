@@ -9,7 +9,7 @@ import * as Sentry from '@sentry/react-native';
 import Config from 'react-native-config';
 import { UserAPI, useAuthStore } from '@/entities/user';
 import type { GoogleLoginResponse } from '@/entities/user';
-import { logEvent, setAnalyticsUserId } from '@/shared/lib/analytics';
+import { logSignupComplete, setAnalyticsUserId } from '@/shared/lib/analytics';
 
 /**
  * # useGoogleLoginMutation
@@ -58,7 +58,7 @@ export default function useGoogleLoginMutation() {
       const user = useAuthStore.getState().user;
       if (user) {
         setAnalyticsUserId(String(user.id));
-        logEvent('signup_complete');
+        logSignupComplete();
       }
 
       return data;

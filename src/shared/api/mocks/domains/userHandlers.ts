@@ -16,6 +16,9 @@ const mockUser: User = {
   email: 'mock@example.com',
   role: 'USER',
   provider: 'GOOGLE',
+  profile_registered: true,
+  profile_exchanged: false,
+  review_registered: false,
 };
 
 export const userHandlers = [
