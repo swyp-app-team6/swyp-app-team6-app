@@ -1,6 +1,6 @@
 import { Alert } from 'react-native';
 import { View } from 'react-native';
-import { Button, ErrorDialog, openErrorDialog } from '@/shared/ui';
+import { Button, openErrorDialog } from '@/shared/ui';
 import Section from './Section';
 
 /**
@@ -33,7 +33,6 @@ export default function ErrorDialogExample() {
           }
         />
       </View>
-      <ErrorDialog />
     </Section>
   );
 }
