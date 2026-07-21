@@ -1,5 +1,6 @@
 import { API } from '@/shared/api';
 import type {
+  AuthTokens,
   User,
 } from '../model/types';
 import { createQueryKeys } from "@lukemorales/query-key-factory";
@@ -10,9 +11,7 @@ import { createQueryKeys } from "@lukemorales/query-key-factory";
  * - refresh_token: 리프레시 토큰 (snake_case)
  * - requires_terms_agreement: 약관 동의 필요 여부 (false = 미동의, 약관 동의 바텀시트 노출)
  */
-export interface GoogleLoginResponse {
-  access_token: string;
-  refresh_token: string;
+export interface GoogleLoginResponse extends AuthTokens {
   requires_terms_agreement: boolean;
 }
 
@@ -22,9 +21,7 @@ export interface GoogleLoginResponse {
  * - refresh_token: 리프레시 토큰 (snake_case)
  * - requires_terms_agreement: 약관 동의 필요 여부 (false = 미동의, 약관 동의 바텀시트 노출)
  */
-export interface AppleLoginResponse {
-  access_token: string;
-  refresh_token: string;
+export interface AppleLoginResponse extends AuthTokens {
   requires_terms_agreement: boolean;
 }
 
@@ -46,23 +43,9 @@ export interface DefaultLoginRequest {
  * - refresh_token: 리프레시 토큰 (snake_case)
  * - requires_terms_agreement: 약관 동의 필요 여부 (false = 미동의, 약관 동의 바텀시트 노출)
  */
-export interface DefaultLoginResponse {
-  /** 액세스 토큰 */
-  access_token: string;
-  /** 리프레시 토큰 */
-  refresh_token: string;
+export interface DefaultLoginResponse extends AuthTokens {
   /** 약관 동의 필요 여부 */
   requires_terms_agreement: boolean;
-}
-
-/**
- * 토큰 갱신 API 응답
- * - access_token: 새 액세스 토큰 (snake_case)
- * - refresh_token: 새 리프레시 토큰 (snake_case)
- */
-export interface RefreshTokenResponse {
-  access_token: string;
-  refresh_token: string;
 }
 
 /**
@@ -124,7 +107,7 @@ export class UserAPI {
    * @param refreshToken 리프레시 토큰
    */
   static refreshTokens(refreshToken: string) {
-    return API.post<RefreshTokenResponse>('/auth/refresh', { refresh_token: refreshToken }, { skipAuth: true });
+    return API.post<AuthTokens>('/auth/refresh', { refresh_token: refreshToken }, { skipAuth: true });
   }
 
   /**

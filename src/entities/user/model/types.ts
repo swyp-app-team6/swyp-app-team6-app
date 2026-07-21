@@ -50,6 +50,10 @@ export interface User {
   review_registered: boolean;
 }
 
+/**
+ * jwt tokens
+ * - access token, refresh token
+ */
 export interface AuthTokens {
   accessToken: string;
   refreshToken: string;
