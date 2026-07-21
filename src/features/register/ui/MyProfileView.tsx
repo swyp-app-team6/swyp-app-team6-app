@@ -1,6 +1,7 @@
 import React, { useState, useRef, useMemo } from 'react';
 import { View, ScrollView } from 'react-native';
-import { BottomCTA, Button, ProfileCard } from '@/shared/ui';
+import { BottomCTA, Button } from '@/shared/ui';
+import UserProfileCard from '@/shared/ui/ProfileCard/UserProfileCard';
 import { useProfileDataStore } from '@/entities/user';
 import { INTEREST_LABEL, REGION_OPTIONS } from '../model/types';
 import { resolveRegionEnum, getRegionLabel } from '@/shared/lib/regionLabel';
@@ -58,8 +59,7 @@ export default function MyProfileView({ onSubmit, loading }: Props) {
       >
         {/* ── 프로필 카드 ── */}
         <View className="items-center pt-6 pb-4">
-          <ProfileCard
-            variant="preview"
+          <UserProfileCard
             profileImageUri={form.profileImageUri}
             nickname={form.nickname}
             age={form.age}

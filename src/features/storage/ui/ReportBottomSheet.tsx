@@ -1,8 +1,8 @@
 import React, { forwardRef, useCallback, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { useImperativeHandle, useRef } from 'react';
-import { BottomSheet, Button, Checkbox } from '@/shared/ui';
+import { Button, Checkbox, SafeBottomSheetModal } from '@/shared/ui';
 import type { BottomSheetHandle } from '@/shared/ui';
 
 import type { ReportReasonCode } from '@/entities/storage';
@@ -41,7 +41,7 @@ interface Props {
  */
 const ReportBottomSheet = forwardRef<BottomSheetHandle, Props>(
   ({ nickname, onSubmit }, ref) => {
-    const modalRef = useRef<BottomSheetHandle>(null);
+    const modalRef = useRef<BottomSheetModal>(null);
     const [selectedTypes, setSelectedTypes] = useState<ReportReasonCode[]>([]);
     const [otherText, setOtherText] = useState('');
 
@@ -49,9 +49,9 @@ const ReportBottomSheet = forwardRef<BottomSheetHandle, Props>(
       open: () => {
         setSelectedTypes([]);
         setOtherText('');
-        modalRef.current?.open();
+        modalRef.current?.present();
       },
-      close: () => modalRef.current?.close(),
+      close: () => modalRef.current?.dismiss(),
     }));
 
     const toggleType = useCallback((value: ReportReasonCode) => {
@@ -68,7 +68,7 @@ const ReportBottomSheet = forwardRef<BottomSheetHandle, Props>(
         selectedTypes,
         selectedTypes.includes('ETC') ? otherText : undefined,
       );
-      modalRef.current?.close();
+      modalRef.current?.dismiss();
     }, [onSubmit, selectedTypes, otherText]);
 
     const hasOther = selectedTypes.includes('ETC');
@@ -77,60 +77,66 @@ const ReportBottomSheet = forwardRef<BottomSheetHandle, Props>(
       (hasOther && otherText.trim().length === 0);
 
     return (
-      <BottomSheet ref={modalRef} title={`${nickname} 님 신고하기`}>
-        {/* 신고 유형 체크박스 목록 */}
-        <View className="gap-2 mb-4">
-          {REPORT_TYPE_OPTIONS.map((option) => {
-            const isChecked = selectedTypes.includes(option.value);
-            return (
-              <Pressable
-                key={option.value}
-                className="flex-row items-center gap-1 h-[52px] px-4 rounded-xl"
-                style={{ backgroundColor: '#F5F5F5' }}
-                onPress={() => toggleType(option.value)}
-              >
-                <Checkbox
-                  checked={isChecked}
-                  onValueChange={() => toggleType(option.value)}
-                />
-                <Text
-                  className="flex-1 text-sm font-medium"
-                  style={{ color: '#888888' }}
+      <SafeBottomSheetModal ref={modalRef}>
+        <View className="px-5">
+          {/* 타이틀 */}
+          <Text className="text-lg font-bold text-gray-900 pb-3">
+            {`${nickname} 님 신고하기`}
+          </Text>
+          {/* 신고 유형 체크박스 목록 */}
+          <View className="gap-2 mb-4">
+            {REPORT_TYPE_OPTIONS.map((option) => {
+              const isChecked = selectedTypes.includes(option.value);
+              return (
+                <Pressable
+                  key={option.value}
+                  className="flex-row items-center gap-1 h-[52px] px-4 rounded-xl"
+                  style={{ backgroundColor: '#F5F5F5' }}
+                  onPress={() => toggleType(option.value)}
                 >
-                  {option.label}
-                </Text>
-              </Pressable>
-            );
-          })}
-        </View>
-
-        {/* 기타 텍스트 입력 */}
-        {hasOther && (
-          <View className="mb-4">
-            <BottomSheetTextInput
-              defaultValue={otherText}
-              onChangeText={setOtherText}
-              placeholder="신고 사유를 입력해주세요"
-              placeholderTextColor="#AAAAAA"
-              multiline
-              maxLength={200}
-              className="bg-[#F8F8F8] rounded-xl px-4 py-3 text-base text-[#1A1A1A] min-h-[100px]"
-              style={{ textAlignVertical: 'top' }}
-            />
-            <Text className="text-xs text-[#AAAAAA] text-right mt-1">
-              {otherText.length}/200
-            </Text>
+                  <Checkbox
+                    checked={isChecked}
+                    onValueChange={() => toggleType(option.value)}
+                  />
+                  <Text
+                    className="flex-1 text-sm font-medium"
+                    style={{ color: '#888888' }}
+                  >
+                    {option.label}
+                  </Text>
+                </Pressable>
+              );
+            })}
           </View>
-        )}
 
-        {/* 제출 버튼 */}
-        <Button
-          title="신고제출"
-          variant="primary"
-          onPress={handleSubmit}
-          disabled={isSubmitDisabled}
-        />
-      </BottomSheet>
+          {/* 기타 텍스트 입력 */}
+          {hasOther && (
+            <View className="mb-4">
+              <BottomSheetTextInput
+                defaultValue={otherText}
+                onChangeText={setOtherText}
+                placeholder="신고 사유를 입력해주세요"
+                placeholderTextColor="#AAAAAA"
+                multiline
+                maxLength={200}
+                className="bg-[#F8F8F8] rounded-xl px-4 py-3 text-base text-[#1A1A1A] min-h-[100px]"
+                style={{ textAlignVertical: 'top' }}
+              />
+              <Text className="text-xs text-[#AAAAAA] text-right mt-1">
+                {otherText.length}/200
+              </Text>
+            </View>
+          )}
+
+          {/* 제출 버튼 */}
+          <Button
+            title="신고제출"
+            variant="primary"
+            onPress={handleSubmit}
+            disabled={isSubmitDisabled}
+          />
+        </View>
+      </SafeBottomSheetModal>
     );
   },
 );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActivityIndicator, Modal as RNModal, Pressable, Text, View } from 'react-native';
-import { Button, ProfileCard } from '@/shared/ui';
-import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
+import { Button } from '@/shared/ui';
+import UserProfileCard from '@/shared/ui/ProfileCard/UserProfileCard';
 import { apiValueToCosmicType } from '@/entities/storage';
 import useExchangeFlowStore from '../model/useExchangeFlowStore';
 
@@ -58,9 +58,8 @@ export default function ExchangePreviewModal({ visible, onExchange, onCancel }: 
             {!profile ? (
               <ActivityIndicator size="large" />
             ) : (
-              <ProfileCard
-                variant="preview"
-                profileImageUri={getProfileImageUrl(profile.image_key)}
+              <UserProfileCard
+                profileImageUri={profile.image_key ?? undefined}
                 nickname={profile.nickname}
                 age={String(profile.age)}
                 interests={profile.interests.map((i) => i.label)}

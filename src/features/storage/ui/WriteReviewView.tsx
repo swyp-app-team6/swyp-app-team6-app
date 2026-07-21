@@ -3,7 +3,6 @@ import { Pressable, ScrollView, Text, View } from 'react-native';
 import { BottomCTA, Button, Textbox } from '@/shared/ui';
 import { ChevronDownIcon } from '@/shared/ui/icons';
 import UserProfileCard from '@/shared/ui/ProfileCard/UserProfileCard';
-import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 import { useExchangeArchiveDetailQuery } from '@/entities/storage';
 import type { ReviewScore } from '@/entities/storage';
 
@@ -96,7 +95,7 @@ export default function WriteReviewView({
         {profile && (
           <View className="items-center pt-6 pb-6">
             <UserProfileCard
-              profileImageUri={getProfileImageUrl(profile.image_key)}
+              profileImageUri={profile.image_key ?? undefined}
               nickname={profile.nickname}
               age={String(profile.age)}
               interests={profile.interests.map((i) => i.label)}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
-import { AlertModal, Button, Checkbox, Header, Layout, openErrorDialog } from '@/shared/ui';
+import { Button, Checkbox, Header, Layout, openErrorDialog, openDialog } from '@/shared/ui';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
 import useAuthStore from '@/entities/user/model/authStore';
@@ -28,7 +28,7 @@ function WithdrawalConfirmPage() {
   const route = useRoute<RouteProp<NavigatorType, 'withdrawalConfirm'>>();
   const clearAuth = useAuthStore((state) => state.clear);
   const [confirmed, setConfirmed] = useState(false);
-  const [showCompleteModal, setShowCompleteModal] = useState(false);
+
 
   /** route params에서 전달받은 사유 텍스트 */
   const reason = route.params?.reason || '';
@@ -50,7 +50,17 @@ function WithdrawalConfirmPage() {
       await UserAPI.deleteUser({ reasonCode, reasonDetail });
       await clearAuth();
       queryClient.resetQueries();
-      setShowCompleteModal(true);
+      openDialog({
+        title: '탈퇴 완료',
+        message: '회원 탈퇴가 완료되었습니다.',
+        okLabel: '확인',
+        okFn: () => {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'home' }],
+          });
+        },
+      });
     } catch (e) {
       console.error(e);
       openErrorDialog({ message: '회원탈퇴에 실패했습니다' });
@@ -119,19 +129,6 @@ function WithdrawalConfirmPage() {
         </View>
       </Layout.Body>
 
-      <AlertModal
-        visible={showCompleteModal}
-        title="탈퇴 완료"
-        message="회원 탈퇴가 완료되었습니다."
-        confirmText="확인"
-        onConfirm={() => {
-          setShowCompleteModal(false);
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'home' }],
-          });
-        }}
-      />
     </>
   );
 }

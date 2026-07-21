@@ -4,8 +4,11 @@ import useAuthStore from '../authStore';
 const MOCK_USER = {
   id: 1,
   email: 'test@example.com',
-  role: 'USER',
-  provider: 'GOOGLE',
+  role: 'USER' as const,
+  provider: 'GOOGLE' as const,
+  profile_registered: false,
+  profile_exchanged: false,
+  review_registered: false,
 };
 
 describe('useAuthStore', () => {

@@ -107,17 +107,6 @@ const StorageFilterBottomSheet = forwardRef<BottomSheetHandle, Props>(
 
     return (
       <SafeBottomSheetModal ref={modalRef} onDismiss={onDismiss}>
-        {/* 닫기 버튼 */}
-        <View className="flex-row justify-end px-5 pt-1 pb-1">
-          <Pressable
-            onPress={() => modalRef.current?.dismiss()}
-            hitSlop={8}
-            accessibilityLabel="닫기"
-          >
-            <Text className="text-2xl text-gray-400">✕</Text>
-          </Pressable>
-        </View>
-
         {/* 타이틀 */}
         <View className="px-5">
           <Text className="text-xl font-bold text-[#1A1A1A] leading-7">

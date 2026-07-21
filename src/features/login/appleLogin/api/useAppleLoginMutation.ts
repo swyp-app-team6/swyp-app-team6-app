@@ -10,7 +10,7 @@ import { v4 as uuid } from 'uuid';
 import Config from 'react-native-config';
 import { UserAPI, useAuthStore } from '@/entities/user';
 import type { AppleLoginResponse } from '@/entities/user';
-import { logEvent, setAnalyticsUserId } from '@/shared/lib/analytics';
+import { setAnalyticsUserId } from '@/shared/lib/analytics';
 
 /**
  * # performAppleLoginIOS
@@ -117,7 +117,6 @@ export default function useAppleLoginMutation() {
       const user = useAuthStore.getState().user;
       if (user) {
         setAnalyticsUserId(String(user.id));
-        logEvent('signup_complete');
       }
 
       return data;

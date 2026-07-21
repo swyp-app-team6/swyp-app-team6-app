@@ -129,17 +129,6 @@ const TermsAgreementBottomSheet = forwardRef<BottomSheetHandle, Props>(
         ref={modalRef}
         onDismiss={handleDismiss}
       >
-        {/* 헤더: X 닫기 버튼 */}
-        <View className="flex-row justify-end px-5 pt-1 pb-1">
-          <Pressable
-            onPress={() => modalRef.current?.dismiss()}
-            hitSlop={8}
-            accessibilityLabel="닫기"
-          >
-            <Text className="text-2xl text-gray-400">✕</Text>
-          </Pressable>
-        </View>
-
         {/* 타이틀 */}
         <View className="px-5 pb-4">
           <Text className="text-xl font-bold text-gray-900 leading-7">

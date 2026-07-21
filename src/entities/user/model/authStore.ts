@@ -1,10 +1,13 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { QueryClient } from '@tanstack/react-query';
 import type { User, AuthTokens } from './types';
 import { UserAPI } from '../api/userApi';
 import { STORAGE_KEYS } from '@/shared/lib/storageKeys';
 import { openErrorDialog } from '@/shared/ui';
+import { navigationRef } from '@/shared/router/navigationRef';
 
 /**
  * 인증 상태
@@ -27,14 +30,17 @@ interface AuthState {
  * - fetchUserInfo: /users/me API를 호출하여 사용자 정보를 조회·저장
  * - refreshAccessToken: 토큰 갱신 큐를 관리하며 새 accessToken을 반환
  * - clear: 인증 상태 초기화 및 저장된 토큰 삭제
+ * - logout: 서버 로그아웃 API 호출 후 로컬 인증 초기화 및 홈 화면 이동
  * - initTokenFromStorage: 앱 시작 시 EncryptedStorage에서 토큰 복원
  */
 interface AuthActions {
   setTokens: (tokens: AuthTokens) => void;
   setUser: (user: User) => void;
+  updateUser: (fields: Partial<User>) => void;
   fetchUserInfo: () => Promise<void>;
   refreshAccessToken: () => Promise<string>;
   clear: () => void;
+  logout: (queryClient?: QueryClient) => Promise<void>;
   initTokenFromStorage: () => Promise<boolean>;
 }
 
@@ -105,7 +111,20 @@ const useAuthStore = create<AuthState & AuthActions>()(
     },
 
     /**
+     * 사용자 정보를 부분 업데이트
+     * @param fields - 업데이트할 User 필드
+     */
+    updateUser: (fields) => {
+      set((state) => {
+        if (state.user) {
+          Object.assign(state.user, fields);
+        }
+      });
+    },
+
+    /**
      * /users/me API를 호출하여 사용자 정보를 조회하고 스토어에 저장
+     * - 실패 시 에러 다이얼로그를 띄우고, 버튼 클릭 시 로그아웃 처리
      */
     fetchUserInfo: async () => {
       try {
@@ -115,7 +134,13 @@ const useAuthStore = create<AuthState & AuthActions>()(
         });
       } catch (error) {
         console.error('fetchUserInfo 실패:', error);
-        openErrorDialog();
+        openErrorDialog({
+          message: '사용자 정보를 찾을 수 없습니다.',
+          buttonLabel: '다시 로그인하기',
+          onRetry: () => {
+            get().logout();
+          },
+        });
       }
     },
 
@@ -157,6 +182,41 @@ const useAuthStore = create<AuthState & AuthActions>()(
         throw refreshError;
       } finally {
         isRefreshing = false;
+      }
+    },
+
+    /**
+     * # logout
+     * ---
+     * - 간단설명: 서버 로그아웃 API 호출 후 로컬 인증 초기화 및 홈 화면 이동
+     * - 제약사항 및 특이사항:
+     *   - Google 로그인이 아닌 경우 Google signOut 실패는 무시
+     *   - queryClient 전달 시 쿼리 캐시도 초기화
+     * ---
+     * @param queryClient - React Query 클라이언트 (선택)
+     */
+    logout: async (queryClient) => {
+      try {
+        const { refreshToken } = get();
+        if (refreshToken) {
+          await UserAPI.logout(refreshToken);
+        }
+        try {
+          await GoogleSignin.signOut();
+        } catch {
+          // Google 로그인이 아닌 경우 signOut 실패 무시
+        }
+        await get().clear();
+        queryClient?.resetQueries();
+        if (navigationRef.isReady()) {
+          navigationRef.resetRoot({
+            index: 0,
+            routes: [{ name: 'home' }],
+          });
+        }
+      } catch (e) {
+        console.error('로그아웃 실패:', e);
+        openErrorDialog({ message: '로그아웃에 실패했습니다' });
       }
     },
 

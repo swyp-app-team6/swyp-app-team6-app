@@ -1,30 +1,27 @@
 import { API } from '@/shared/api';
 import type {
+  LoginTokenResponse,
   User,
 } from '../model/types';
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 
 /**
  * Google 로그인 API 응답
- * - access_token: 액세스 토큰 (snake_case)
- * - refresh_token: 리프레시 토큰 (snake_case)
+ * - access_token: 액세스 토큰 (snake_case, 서버 응답 원본)
+ * - refresh_token: 리프레시 토큰 (snake_case, 서버 응답 원본)
  * - requires_terms_agreement: 약관 동의 필요 여부 (false = 미동의, 약관 동의 바텀시트 노출)
  */
-export interface GoogleLoginResponse {
-  access_token: string;
-  refresh_token: string;
+export interface GoogleLoginResponse extends LoginTokenResponse {
   requires_terms_agreement: boolean;
 }
 
 /**
  * Apple 로그인 API 응답
- * - access_token: 액세스 토큰 (snake_case)
- * - refresh_token: 리프레시 토큰 (snake_case)
+ * - access_token: 액세스 토큰 (snake_case, 서버 응답 원본)
+ * - refresh_token: 리프레시 토큰 (snake_case, 서버 응답 원본)
  * - requires_terms_agreement: 약관 동의 필요 여부 (false = 미동의, 약관 동의 바텀시트 노출)
  */
-export interface AppleLoginResponse {
-  access_token: string;
-  refresh_token: string;
+export interface AppleLoginResponse extends LoginTokenResponse {
   requires_terms_agreement: boolean;
 }
 
@@ -42,27 +39,13 @@ export interface DefaultLoginRequest {
 
 /**
  * 일반 로그인 API 응답
- * - access_token: 액세스 토큰 (snake_case)
- * - refresh_token: 리프레시 토큰 (snake_case)
+ * - access_token: 액세스 토큰 (snake_case, 서버 응답 원본)
+ * - refresh_token: 리프레시 토큰 (snake_case, 서버 응답 원본)
  * - requires_terms_agreement: 약관 동의 필요 여부 (false = 미동의, 약관 동의 바텀시트 노출)
  */
-export interface DefaultLoginResponse {
-  /** 액세스 토큰 */
-  access_token: string;
-  /** 리프레시 토큰 */
-  refresh_token: string;
+export interface DefaultLoginResponse extends LoginTokenResponse {
   /** 약관 동의 필요 여부 */
   requires_terms_agreement: boolean;
-}
-
-/**
- * 토큰 갱신 API 응답
- * - access_token: 새 액세스 토큰 (snake_case)
- * - refresh_token: 새 리프레시 토큰 (snake_case)
- */
-export interface RefreshTokenResponse {
-  access_token: string;
-  refresh_token: string;
 }
 
 /**
@@ -124,7 +107,7 @@ export class UserAPI {
    * @param refreshToken 리프레시 토큰
    */
   static refreshTokens(refreshToken: string) {
-    return API.post<RefreshTokenResponse>('/auth/refresh', { refresh_token: refreshToken }, { skipAuth: true });
+    return API.post<LoginTokenResponse>('/auth/refresh', { refresh_token: refreshToken }, { skipAuth: true });
   }
 
   /**

@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 import type { AxiosError } from 'axios';
 import type { MyProfileResponse } from '@/entities/user';
-import { ProfileAPI } from '@/entities/user';
+import { ProfileAPI, useAuthStore } from '@/entities/user';
 import { ExchangeAPI } from '@/entities/exchange';
 import type { ExchangeResult } from '@/entities/exchange';
 import { ExchangeFlowStep } from '@/shared/enums';
 import { openDialog } from '@/shared/ui';
-import { logEvent } from '@/shared/lib/analytics';
+import { logProfileExchangeCompleted } from '@/shared/lib/analytics';
 
 interface ExchangeFlowState {
   /** 현재 교환 플로우 단계 */
@@ -118,7 +118,8 @@ const useExchangeFlowStore = create<ExchangeFlowState>((set, get) => ({
           step: ExchangeFlowStep.RESULT,
           _abortController: null,
         });
-        logEvent('profile_exchange_completed');
+        logProfileExchangeCompleted();
+        useAuthStore.getState().updateUser({ profile_exchanged: true });
         onComplete?.();
       } else {
         const declineMsg = '상대방이 교환을 거절했습니다';

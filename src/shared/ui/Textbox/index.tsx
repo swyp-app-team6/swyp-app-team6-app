@@ -55,6 +55,7 @@ export default function Textbox({
   styleClass,
   value,
   onChangeText: parentOnChangeText,
+  onFocus: parentOnFocus,
   ...rest
 }: Props) {
   const InputComponent = isBottomSheet ? BottomSheetTextInput : TextInput;
@@ -67,7 +68,7 @@ export default function Textbox({
     parentOnChangeTextRef.current?.(text);
   }, []);
 
-  const { valueProps, onChangeText } = useKoreanSafeValue(value, handleChangeText);
+  const { valueProps, onChangeText, onFocus: hookOnFocus } = useKoreanSafeValue(value, handleChangeText);
 
   return (
     <View className={cn(styleClass?.root)}>
@@ -90,6 +91,10 @@ export default function Textbox({
         {...rest}
         {...valueProps}
         onChangeText={onChangeText}
+        onFocus={(e) => {
+          hookOnFocus();
+          parentOnFocus?.(e);
+        }}
       />
       <View className="flex-row justify-between mt-1.5">
         {error ? (

@@ -12,8 +12,9 @@ import { cn } from "@/shared/lib/cn";
  * - dark-outline = 다크 배경 + 보라 테두리
  * - chip = 회색 배경 (미선택 토글)
  * - chip-selected = 검정 배경 (선택 토글)
+ * - cancel = 회색 배경 + 회색 텍스트 (다이얼로그 취소용)
  */
-export type ButtonVariant = "primary" | "secondary" | "ghost" | "black" | "outline" | "dark-outline" | "chip" | "chip-selected";
+export type ButtonVariant = "primary" | "secondary" | "ghost" | "black" | "outline" | "dark-outline" | "chip" | "chip-selected" | "cancel";
 
 /**
  * # Button
@@ -99,6 +100,12 @@ const variantClass: Record<ButtonVariant, { pressable: string; text: string; dis
     text: "text-center text-base font-semibold text-white",
     disabledPressable: "h-[52px] rounded-xl bg-text-gray6 items-center justify-center",
     disabledText: "text-center text-base font-semibold text-text-gray4",
+  },
+  cancel: {
+    pressable: "h-14 rounded-lg bg-text-gray7 items-center justify-center active:opacity-90",
+    text: "text-center text-base font-bold text-text-gray4",
+    disabledPressable: "h-12 rounded-lg bg-text-gray6 items-center justify-center",
+    disabledText: "text-center text-base font-bold text-text-gray5",
   },
 };
 

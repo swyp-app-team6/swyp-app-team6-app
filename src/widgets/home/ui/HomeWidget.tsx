@@ -8,7 +8,6 @@ import ProfileFlipWrapper from '@/shared/ui/ProfileCard/ProfileFlipWrapper';
 import { ProfileShareQRModal, useExchangeWait } from '@/features/profileShare';
 import { useMyProfileQuery } from '@/entities/user';
 import { openDialog } from '@/shared/ui/Dialog';
-import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 import { apiValueToCosmicType } from '@/entities/storage';
 import type { NavigationPropType } from '@/shared/types';
 import HomeCardBack from './HomeCardBack';
@@ -101,7 +100,7 @@ export default function HomeWidget() {
   ) : (
     <View>
       <UserProfileCard
-        profileImageUri={getProfileImageUrl(profile.image_key)}
+        profileImageUri={profile.image_key ?? undefined}
         nickname={profile.nickname}
         age={String(profile.age)}
         interests={profile.interests.map((i) => i.label)}

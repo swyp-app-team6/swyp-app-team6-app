@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import { ActivityIndicator, Modal, Pressable, Text, View } from 'react-native';
-import { Button, ProfileCard } from '@/shared/ui';
+import { Button } from '@/shared/ui';
+import UserProfileCard from '@/shared/ui/ProfileCard/UserProfileCard';
 import QRCode from 'react-native-qrcode-svg';
 import { useQuery } from '@tanstack/react-query';
 import { ProfileAPI } from '@/entities/user';
 import type { MyProfileResponse } from '@/entities/user';
-import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 import { apiValueToCosmicType } from '@/entities/storage';
 import type { WaitModalStep } from '../lib/useExchangeWait';
 import useCountdownTimer from '../lib/useCountdownTimer';
@@ -150,9 +150,8 @@ export default function ProfileShareQRModal({
               </View>
 
               <View className="items-center">
-                <ProfileCard
-                  variant="preview"
-                  profileImageUri={getProfileImageUrl(receivedProfile.image_key)}
+                <UserProfileCard
+                  profileImageUri={receivedProfile.image_key ?? undefined}
                   nickname={receivedProfile.nickname}
                   age={String(receivedProfile.age)}
                   interests={receivedProfile.interests.map((i) => i.label)}

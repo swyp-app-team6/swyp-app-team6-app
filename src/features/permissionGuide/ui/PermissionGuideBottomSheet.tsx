@@ -1,5 +1,5 @@
 import React, { forwardRef, useCallback, useRef } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useImperativeHandle } from 'react';
 import { Button, SafeBottomSheetModal } from '@/shared/ui';
@@ -48,17 +48,6 @@ const PermissionGuideBottomSheet = forwardRef<BottomSheetHandle, Props>(
         ref={modalRef}
         onDismiss={onDismiss}
       >
-        {/* 헤더: X 닫기 버튼 */}
-        <View className="flex-row justify-end px-5 pt-1 pb-1">
-          <Pressable
-            onPress={() => modalRef.current?.dismiss()}
-            hitSlop={8}
-            accessibilityLabel="닫기"
-          >
-            <Text className="text-2xl text-gray-400">✕</Text>
-          </Pressable>
-        </View>
-
         {/* 타이틀 */}
         <View className="px-5 pb-6">
           <Text className="text-xl font-bold text-gray-900">

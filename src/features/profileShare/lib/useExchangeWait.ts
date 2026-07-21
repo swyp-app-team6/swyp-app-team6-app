@@ -1,12 +1,13 @@
 import { useCallback, useRef, useState } from 'react';
 import type { AxiosError } from 'axios';
 import type { MyProfileResponse } from '@/entities/user';
+import { useAuthStore } from '@/entities/user';
 import { ExchangeAPI } from '@/entities/exchange';
 import { useExchangeFlowStore } from '@/features/exchange';
 import { ExchangeFlowStep } from '@/shared/enums';
 import { openErrorDialog } from '@/shared/ui/ErrorDialog';
 import type { NavigationPropType } from '@/shared/types';
-import { logEvent } from '@/shared/lib/analytics';
+import { logProfileExchangeCompleted } from '@/shared/lib/analytics';
 
 /**
  * 대기자 모달 화면 단계
@@ -173,7 +174,8 @@ export default function useExchangeWait(options?: UseExchangeWaitOptions): UseEx
           exchangeResult: data.result,
           step: ExchangeFlowStep.RESULT,
         });
-        logEvent('profile_exchange_completed');
+        logProfileExchangeCompleted();
+        useAuthStore.getState().updateUser({ profile_exchanged: true });
         resetState();
         onForceCloseRef.current?.();
         navigation.navigate('exchangeResult');

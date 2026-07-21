@@ -19,3 +19,18 @@ export const SERVICE_URL = 'https://real-jellyfish-10c.notion.site/39444f5610118
  * 공지사항
  */
 export const NOTICE_URL = 'https://real-jellyfish-10c.notion.site/39544f56101180efac92fc343e305a1e?pvs=74';
+
+/**
+ * Firebase Analytics 이벤트 ID
+ * - PROFILE_COMPLETED = 프로필 등록 완료
+ * - PROFILE_EXCHANGE_COMPLETED = 프로필 교환 완료
+ * - REVIEW_COMPLETED = 교환 후기 작성 완료
+ */
+export const ANALYTICS_EVENT = {
+  /** 프로필 등록 완료 */
+  PROFILE_COMPLETED: 'profile_completed',
+  /** 프로필 교환 완료 */
+  PROFILE_EXCHANGE_COMPLETED: 'profile_exchange_completed',
+  /** 교환 후기 작성 완료 */
+  REVIEW_COMPLETED: 'review_completed',
+} as const;

@@ -1,15 +1,13 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Header, Layout, MenuList, openErrorDialog } from '@/shared/ui';
+import { Header, Layout, MenuList } from '@/shared/ui';
 import ArrowIcon from '@/shared/ui/icons/ArrowIcon';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
 import useAuthStore from '@/entities/user/model/authStore';
-import { UserAPI } from '@/entities/user/api/userApi';
 import type { NavigationPropType } from '@/shared/types';
 import { useQueryClient } from '@tanstack/react-query';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 /**
  * # 프로바이더 → 표시 텍스트 매핑
@@ -38,8 +36,7 @@ function AccountEditPage() {
   const queryClient = useQueryClient();
   const navigation = useNavigation<NavigationPropType>();
   const user = useAuthStore((state) => state.user);
-  const refreshToken = useAuthStore((state) => state.refreshToken);
-  const clearAuth = useAuthStore((state) => state.clear);
+  const logout = useAuthStore((state) => state.logout);
 
   /** 메뉴 아이템 오른쪽 chevron */
   const chevronRight = <ArrowIcon direction="right" size={24} color="#8C39FB" />;
@@ -47,29 +44,11 @@ function AccountEditPage() {
   /**
    * # handleLogout
    * ---
-   * - 간단설명: 서버 로그아웃 API 호출 후 로컬 인증 초기화 및 홈 화면 이동
+   * - 간단설명: authStore의 logout 액션을 호출하여 로그아웃 처리
    * ---
    */
-  const handleLogout = async () => {
-    try {
-      if (refreshToken) {
-        await UserAPI.logout(refreshToken);
-      }
-      try {
-        await GoogleSignin.signOut();
-      } catch {
-        // Google 로그인이 아닌 경우 signOut 실패 무시
-      }
-      await clearAuth();
-      queryClient.resetQueries();
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'home' }],
-      });
-    } catch (e) {
-      console.error(e);
-      openErrorDialog({ message: '로그아웃에 실패했습니다' });
-    }
+  const handleLogout = () => {
+    logout(queryClient);
   };
 
   return (

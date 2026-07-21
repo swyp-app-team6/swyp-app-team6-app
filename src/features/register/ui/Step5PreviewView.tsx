@@ -55,6 +55,7 @@ export default function Step5PreviewView({ mode = 'register', onSubmit, loading 
         <View className="items-center pt-6 pb-4">
           <UserProfileCard
             profileImageUri={form.profileImageUri}
+            age={form.age}
             nickname={form.nickname}
             interests={form.interests.map((i) => INTEREST_LABEL[i] ?? i)}
           />
@@ -74,9 +75,8 @@ export default function Step5PreviewView({ mode = 'register', onSubmit, loading 
               className="py-3"
             >
               <Text
-                className={`text-base font-semibold ${
-                  activeTab === tab ? 'text-primary' : 'text-text-gray4'
-                }`}
+                className={`text-base font-semibold ${activeTab === tab ? 'text-primary' : 'text-text-gray4'
+                  }`}
                 style={{ letterSpacing: -0.4 }}
               >
                 {tab}
