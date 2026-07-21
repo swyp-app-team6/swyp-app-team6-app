@@ -32,6 +32,7 @@ interface AuthState {
 interface AuthActions {
   setTokens: (tokens: AuthTokens) => void;
   setUser: (user: User) => void;
+  updateUser: (fields: Partial<User>) => void;
   fetchUserInfo: () => Promise<void>;
   refreshAccessToken: () => Promise<string>;
   clear: () => void;
@@ -101,6 +102,18 @@ const useAuthStore = create<AuthState & AuthActions>()(
     setUser: (user) => {
       set((state) => {
         state.user = user;
+      });
+    },
+
+    /**
+     * 사용자 정보를 부분 업데이트
+     * @param fields - 업데이트할 User 필드
+     */
+    updateUser: (fields) => {
+      set((state) => {
+        if (state.user) {
+          Object.assign(state.user, fields);
+        }
       });
     },
 

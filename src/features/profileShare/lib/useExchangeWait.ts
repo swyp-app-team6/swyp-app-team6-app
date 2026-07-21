@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import type { AxiosError } from 'axios';
 import type { MyProfileResponse } from '@/entities/user';
+import { useAuthStore } from '@/entities/user';
 import { ExchangeAPI } from '@/entities/exchange';
 import { useExchangeFlowStore } from '@/features/exchange';
 import { ExchangeFlowStep } from '@/shared/enums';
@@ -174,6 +175,7 @@ export default function useExchangeWait(options?: UseExchangeWaitOptions): UseEx
           step: ExchangeFlowStep.RESULT,
         });
         logProfileExchangeCompleted();
+        useAuthStore.getState().updateUser({ profile_exchanged: true });
         resetState();
         onForceCloseRef.current?.();
         navigation.navigate('exchangeResult');

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import type { AxiosError } from 'axios';
 import type { MyProfileResponse } from '@/entities/user';
-import { ProfileAPI } from '@/entities/user';
+import { ProfileAPI, useAuthStore } from '@/entities/user';
 import { ExchangeAPI } from '@/entities/exchange';
 import type { ExchangeResult } from '@/entities/exchange';
 import { ExchangeFlowStep } from '@/shared/enums';
@@ -119,6 +119,7 @@ const useExchangeFlowStore = create<ExchangeFlowState>((set, get) => ({
           _abortController: null,
         });
         logProfileExchangeCompleted();
+        useAuthStore.getState().updateUser({ profile_exchanged: true });
         onComplete?.();
       } else {
         const declineMsg = '상대방이 교환을 거절했습니다';
