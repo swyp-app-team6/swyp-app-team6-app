@@ -3,17 +3,51 @@ import { INTEREST, CosmicType, TMIQuestionType } from '@/shared/enums';
 export { INTEREST, CosmicType, TMIQuestionType };
 
 /**
- * 사용자 정보 (/users/me 응답)
- * - id: 사용자 고유 ID
- * - email: 이메일
- * - role: 사용자 역할 (USER 등)
- * - provider: OAuth 제공자 (GOOGLE 등)
+ * # User
+ * ---
+ * - 간단설명: /users/me API 응답 사용자 정보 인터페이스
+ * - 제약사항 및 특이사항:
+ *   - role은 현재 'USER'만 존재
+ *   - provider는 'GOOGLE' | 'APPLE' | 'LOCAL' 중 하나
+ * ---
+ * @example
+ * const user: User = {
+ *   id: 1,
+ *   email: 'user@example.com',
+ *   role: 'USER',
+ *   provider: 'GOOGLE',
+ *   profile_registered: true,
+ *   profile_exchanged: false,
+ *   review_registered: false,
+ * }
  */
 export interface User {
+  /** 사용자 고유 ID */
   id: number;
+  /** 로그인 식별자 (이메일 형식이 아닐 수 있음) */
   email: string;
-  role: string;
-  provider: string;
+  /** 사용자 역할 */
+  role: 'USER';
+  /** OAuth 제공자 또는 로컬 인증 방식 */
+  provider: 'GOOGLE' | 'APPLE' | 'LOCAL';
+  /** 
+   * 프로필 등록을 1번이라도 수행했는지 여부
+   * - 1번이상 수행시 true
+   * - analytics 데이터 전송에 사용됨
+   *  */
+  profile_registered: boolean;
+  /** 
+   * 프로필 교환을 1번이라도 수행했는지 여부
+   * - 1번이상 수행시 true
+   * - analytics 데이터 전송에 사용됨
+   * */
+  profile_exchanged: boolean;
+  /** 
+   * 후기 작성을 1번이라도 수행했는지 여부
+   * - 1번이상 수행시 true
+   * - analytics 데이터 전송에 사용됨
+   * */
+  review_registered: boolean;
 }
 
 export interface AuthTokens {
