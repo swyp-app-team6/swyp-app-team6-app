@@ -3,7 +3,6 @@ import { FlatList, StyleSheet, ActivityIndicator, View } from 'react-native';
 import GridProfileCard from '@/shared/ui/ProfileCard/GridProfileCard';
 import type { ExchangeArchiveItem } from '@/entities/storage';
 import { COSMIC_TYPE_LABEL, apiValueToCosmicType } from '@/entities/storage';
-import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 import { getRegionLabel } from '@/shared/lib/regionLabel';
 
 interface ProfileGridProps {
@@ -82,7 +81,7 @@ export default function ProfileGrid({
             location={item.region?.detail ? getRegionLabel(item.region.detail) : undefined}
             job={typeof item.job === 'string' ? item.job : undefined}
             cosmicTypeLabel={badgeLevel ? COSMIC_TYPE_LABEL[badgeLevel] : undefined}
-            imageUri={getProfileImageUrl(item.image_key)}
+            imageUri={item.image_key ?? undefined}
             isFavorited={item.is_liked}
             onToggleFavorite={onToggleFavorite}
             onPress={onPressProfile}

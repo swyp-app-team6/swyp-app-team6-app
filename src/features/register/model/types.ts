@@ -3,7 +3,6 @@ import type { MyProfileResponse } from '@/entities/user';
 import type { CosmicType } from '@/shared/enums';
 import { Region } from '@/shared/enums';
 import { TMIQuestionType } from '@/shared/enums';
-import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 import { getRegionLabel } from '@/shared/lib/regionLabel';
 
 /**
@@ -173,7 +172,7 @@ function deriveSubArea(detail: string, group: string): string {
  * ---
  * - 간단설명: MyProfileResponse를 RegisterFormState로 변환하는 파싱 함수
  * - 제약사항 및 특이사항:
- *   - image_key는 getProfileImageUrl()로 URI 변환
+ *   - image_key를 그대로 URI로 사용
  *   - choice_template/short_template를 TMIAnswer[]로 변환
  * ---
  * @param profile 프로필 응답 데이터
@@ -202,7 +201,7 @@ export function profileToFormState(profile: MyProfileResponse): RegisterFormStat
 
   return {
     nickname: profile.nickname,
-    profileImageUri: getProfileImageUrl(profile.image_key) ?? null,
+    profileImageUri: profile.image_key ?? null,
     profileImageKey: profile.image_key ?? null,
     gender: profile.gender,
     age: String(profile.age),

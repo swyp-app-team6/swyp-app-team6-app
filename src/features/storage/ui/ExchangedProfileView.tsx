@@ -8,7 +8,6 @@ import type { BottomSheetHandle } from '@/shared/ui';
 import { openDialog } from '@/shared/ui/Dialog';
 import { useExchangeArchiveDetailQuery, apiValueToCosmicType } from '@/entities/storage';
 import type { ReportReasonCode, ReviewScore } from '@/entities/storage';
-import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 import BasicInfoSection from '@/features/register/ui/BasicInfoSection';
 import InterestsSection from '@/features/register/ui/InterestsSection';
 import BioSection from '@/features/register/ui/BioSection';
@@ -59,7 +58,7 @@ export default function ExchangedProfileView({
 
   const profile = detail?.profile;
   const matchedInterests = detail?.matched_interests ?? [];
-  const imageUri = getProfileImageUrl(profile?.image_key);
+  const imageUri = profile?.image_key ?? undefined;
   const cosmicType = profile?.cosmic_type ? apiValueToCosmicType(profile.cosmic_type) : undefined;
 
   const hasReview = (detail?.score ?? 0) > 0;

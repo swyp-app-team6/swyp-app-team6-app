@@ -6,7 +6,6 @@ import QRCode from 'react-native-qrcode-svg';
 import { useQuery } from '@tanstack/react-query';
 import { ProfileAPI } from '@/entities/user';
 import type { MyProfileResponse } from '@/entities/user';
-import { getProfileImageUrl } from '@/shared/lib/getProfileImageUrl';
 import { apiValueToCosmicType } from '@/entities/storage';
 import type { WaitModalStep } from '../lib/useExchangeWait';
 import useCountdownTimer from '../lib/useCountdownTimer';
@@ -152,7 +151,7 @@ export default function ProfileShareQRModal({
 
               <View className="items-center">
                 <UserProfileCard
-                  profileImageUri={getProfileImageUrl(receivedProfile.image_key)}
+                  profileImageUri={receivedProfile.image_key ?? undefined}
                   nickname={receivedProfile.nickname}
                   age={String(receivedProfile.age)}
                   interests={receivedProfile.interests.map((i) => i.label)}
