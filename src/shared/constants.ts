@@ -28,8 +28,6 @@ export const NOTICE_URL = 'https://real-jellyfish-10c.notion.site/39544f56101180
  * - REVIEW_COMPLETED = 교환 후기 작성 완료
  */
 export const ANALYTICS_EVENT = {
-  /** 회원가입(소셜 로그인) 완료 */
-  SIGNUP_COMPLETE: 'signup_complete',
   /** 프로필 등록 완료 */
   PROFILE_COMPLETED: 'profile_completed',
   /** 프로필 교환 완료 */

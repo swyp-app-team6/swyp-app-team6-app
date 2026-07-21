@@ -28,39 +28,33 @@ const logEvent = async (
 };
 
 /**
- * # logSignupComplete
- * ---
- * - 간단설명: 회원가입(소셜 로그인) 완료 이벤트를 기록한다
- * ---
- * @example
- * logSignupComplete();
- */
-export const logSignupComplete = () => logEvent(ANALYTICS_EVENT.SIGNUP_COMPLETE);
-
-/**
  * # logProfileCompleted
  * ---
- * - 간단설명: 프로필 등록 완료 이벤트를 기록한다
+ * - 간단설명: 프로필 등록 완료 이벤트 전송
  * ---
  * @example
  * logProfileCompleted();
  */
-export const logProfileCompleted = () => logEvent(ANALYTICS_EVENT.PROFILE_COMPLETED);
+export const logProfileCompleted = async () => {
+  logEvent(ANALYTICS_EVENT.PROFILE_COMPLETED);
+};
 
 /**
  * # logProfileExchangeCompleted
  * ---
- * - 간단설명: 프로필 교환 완료 이벤트를 기록한다
+ * - 간단설명: 프로필 교환 완료 이벤트 전송
  * ---
  * @example
  * logProfileExchangeCompleted();
  */
-export const logProfileExchangeCompleted = () => logEvent(ANALYTICS_EVENT.PROFILE_EXCHANGE_COMPLETED);
+export const logProfileExchangeCompleted = async () => {
+  await logEvent(ANALYTICS_EVENT.PROFILE_EXCHANGE_COMPLETED);
+}
 
 /**
  * # logReviewCompleted
  * ---
- * - 간단설명: 교환 후기 작성 완료 이벤트를 기록한다
+ * - 간단설명: 교환 후기 작성 완료 이벤트 전송
  * ---
  * @example
  * logReviewCompleted();
