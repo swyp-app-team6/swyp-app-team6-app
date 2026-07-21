@@ -22,7 +22,6 @@ export const NOTICE_URL = 'https://real-jellyfish-10c.notion.site/39544f56101180
 
 /**
  * Firebase Analytics 이벤트 ID
- * - SIGNUP_COMPLETE = 회원가입(소셜 로그인) 완료
  * - PROFILE_COMPLETED = 프로필 등록 완료
  * - PROFILE_EXCHANGE_COMPLETED = 프로필 교환 완료
  * - REVIEW_COMPLETED = 교환 후기 작성 완료
