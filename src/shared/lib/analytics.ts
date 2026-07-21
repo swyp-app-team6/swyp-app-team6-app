@@ -4,6 +4,7 @@ import {
   setUserId as firebaseSetUserId,
 } from '@react-native-firebase/analytics';
 import { ANALYTICS_EVENT } from '@/shared/constants';
+import { useAuthStore } from '../../entities/user';
 
 /**
  * # logEvent
@@ -36,7 +37,10 @@ const logEvent = async (
  * logProfileCompleted();
  */
 export const logProfileCompleted = async () => {
-  logEvent(ANALYTICS_EVENT.PROFILE_COMPLETED);
+  const { user } = useAuthStore.getState();
+  if (!user?.profile_registered) {
+    logEvent(ANALYTICS_EVENT.PROFILE_COMPLETED);
+  }
 };
 
 /**
@@ -48,7 +52,10 @@ export const logProfileCompleted = async () => {
  * logProfileExchangeCompleted();
  */
 export const logProfileExchangeCompleted = async () => {
-  await logEvent(ANALYTICS_EVENT.PROFILE_EXCHANGE_COMPLETED);
+  const { user } = useAuthStore.getState();
+  if (!user?.profile_exchanged) {
+    await logEvent(ANALYTICS_EVENT.PROFILE_EXCHANGE_COMPLETED);
+  }
 }
 
 /**
@@ -59,7 +66,12 @@ export const logProfileExchangeCompleted = async () => {
  * @example
  * logReviewCompleted();
  */
-export const logReviewCompleted = () => logEvent(ANALYTICS_EVENT.REVIEW_COMPLETED);
+export const logReviewCompleted = async () => {
+  const { user } = useAuthStore.getState();
+  if (!user?.review_registered) {
+    await logEvent(ANALYTICS_EVENT.REVIEW_COMPLETED);
+  }
+};
 
 /** 테스트용 이벤트 전송 */
 export const testLogEvent = async () => {
