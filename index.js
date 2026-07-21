@@ -8,7 +8,8 @@ if (__DEV__) {
 }
 
 import { AppRegistry } from 'react-native';
-import codePush from 'react-native-code-push';
+// import codePush from 'react-native-code-push';
+import codePush from "@revopush/react-native-code-push";
 import App from './src/app/App';
 import { name as appName } from './app.json';
 import * as Sentry from '@sentry/react-native';
