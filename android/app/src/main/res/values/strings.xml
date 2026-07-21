@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">오르비츠</string>
+    <string moduleConfig="true" name="CodePushDeploymentKey">YOUR_ANDROID_DEPLOYMENT_KEY_HERE</string>
 </resources>

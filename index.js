@@ -8,6 +8,7 @@ if (__DEV__) {
 }
 
 import { AppRegistry } from 'react-native';
+import codePush from 'react-native-code-push';
 import App from './src/app/App';
 import { name as appName } from './app.json';
 import * as Sentry from '@sentry/react-native';
@@ -45,6 +46,19 @@ Sentry.init({
   // spotlight: __DEV__,
 });
 
+/**
+ * # CodePush OTA 업데이트 설정
+ * ---
+ * - 간단설명: 앱 재개(resume) 시 OTA 업데이트 확인, 다음 재개 시 설치
+ * ---
+ */
+const codePushOptions = {
+  checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
+  installMode: codePush.InstallMode.ON_NEXT_RESUME,
+};
+
+const CodePushApp = codePush(codePushOptions)(App);
+
 startMsw().then(() => {
-  AppRegistry.registerComponent(appName, () => App);
+  AppRegistry.registerComponent(appName, () => CodePushApp);
 });
