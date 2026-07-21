@@ -22,7 +22,9 @@
     "android:apk": "ENVFILE=.env.production sh -c 'cd android && ./gradlew assembleRelease' && open android/app/build/outputs/apk/release",
     "android:apk:debug": "ENVFILE=.env.production sh -c 'cd android && ./gradlew assembleDebug' && open android/app/build/outputs/apk/debug",
     "android:aab": "ENVFILE=.env.production sh -c 'cd android && ./gradlew bundleRelease' && open android/app/build/outputs/bundle/release",
-    "prepare": "husky"
+    "prepare": "husky",
+    "revo-deploy:and": "revopush release-react orbits android -d Production",
+    "revo-deploy:ios": "revopush release-react orbits ios -d Production"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^5.2.14",

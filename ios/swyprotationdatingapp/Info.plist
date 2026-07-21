@@ -72,6 +72,6 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>카드 이미지를 사진 앨범에 저장하기 위해 접근이 필요합니다.</string>
 	<key>CodePushDeploymentKey</key>
-	<string>YOUR_IOS_DEPLOYMENT_KEY_HERE</string>
+	<string>gnlwBzY3weVxKZ62RBrgpAAJZG2BV1oQnE_NVx</string>
 </dict>
 </plist>
