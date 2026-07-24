@@ -1,6 +1,6 @@
 {
   "name": "swyp-rotation-dating-app",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "private": true,
   "scripts": {
     "android:local": "ENVFILE=.env.development npx react-native run-android",
