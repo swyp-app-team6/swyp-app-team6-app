@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import { Header, Layout, ArrowIcon, ProgressBar, openErrorDialog } from '@/shared/ui';
-import { useUpdateProfileMutation } from '@/entities/user';
+import { useUpdateProfileMutation, type ProfileRegisterRequest } from '@/entities/user';
 import { useRegisterFormStore } from '@/features/register';
 import useRegisterMutation from '@/features/register/api/useRegisterMutation';
 import Step5PreviewView from '@/features/register/ui/Step5PreviewView';
@@ -35,13 +35,12 @@ export default function ProfileStep6Page() {
   /** 프로필 등록/수정 API 호출 */
   const handleSubmit = useCallback(async () => {
     const form = useRegisterFormStore.getState().form;
-    const request = buildRegisterRequest(form);
 
     try {
       if (isEdit) {
-        await updateAsync(request);
+        await updateAsync(buildRegisterRequest(form, true));
       } else {
-        await registerAsync(request);
+        await registerAsync(buildRegisterRequest(form) as ProfileRegisterRequest);
         logProfileCompleted();
         useAuthStore.getState().updateUser({ profile_registered: true });
       }

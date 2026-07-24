@@ -19,11 +19,13 @@ import { getRegionLabel } from '@/shared/lib/regionLabel';
  * - interests: 관심사 목록 (3~5개)
  * - cosmicType: 코스믹 유형 테스트 결과
  * - tmiAnswers: TMI 답변 목록
+ * - imageChanged: 이미지 변경 여부 (수정 모드에서 image_key 전송 판단용)
  */
 export interface RegisterFormState {
   nickname: string;
   profileImageUri: string | null;
   profileImageKey: string | null;
+  imageChanged: boolean;
   gender: 'M' | 'F' | null;
   age: string;
   jobField: string;
@@ -212,6 +214,7 @@ export function profileToFormState(profile: MyProfileResponse): RegisterFormStat
     interests: profile.interests.map((i) => i.type),
     cosmicType: profile.cosmic_type ?? null,
     tmiAnswers,
+    imageChanged: false,
   };
 }
 

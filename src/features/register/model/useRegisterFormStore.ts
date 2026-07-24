@@ -23,6 +23,7 @@ const INITIAL_FORM: RegisterFormState = {
   nickname: '',
   profileImageUri: null,
   profileImageKey: null,
+  imageChanged: false,
   gender: 'M',
   age: '',
   jobField: '',
