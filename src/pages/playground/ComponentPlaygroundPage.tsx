@@ -33,6 +33,7 @@ import {
   SentryTestExample,
   SafeBottomSheetModalExample,
 } from './examples';
+import CardFlipAnimationExample from './examples/CardFlipAnimationExample';
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Page
@@ -119,6 +120,7 @@ export default function ComponentPlaygroundPage() {
             <SelectedTMIPreviewButtonExample />
             <IconsExample />
             <SafeBottomSheetModalExample />
+            <CardFlipAnimationExample />
           </ScrollView>
         )}
       </Layout>
