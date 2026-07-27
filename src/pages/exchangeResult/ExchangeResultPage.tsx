@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Button, Header } from '@/shared/ui';
 import { useExchangeFlowStore } from '@/features/exchange';
 import type { NavigationPropType } from '@/shared/types';
+import withSafeArea from '@/shared/hoc/withSafeArea';
 import CommonInterestCard from './CommonInterestCard';
 
 /**
@@ -19,7 +20,7 @@ import CommonInterestCard from './CommonInterestCard';
  * @example
  * <ExchangeResultPage />
  */
-export default function ExchangeResultPage() {
+function ExchangeResultPage() {
   const navigation = useNavigation<NavigationPropType>();
   const { height } = useWindowDimensions();
 
@@ -85,3 +86,5 @@ export default function ExchangeResultPage() {
     </View>
   );
 }
+
+export default withSafeArea(ExchangeResultPage);

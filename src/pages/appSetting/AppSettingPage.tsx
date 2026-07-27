@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 import { Header, Layout } from '@/shared/ui';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
+import withSafeArea from '@/shared/hoc/withSafeArea';
 
 // @ts-ignore — package.json에서 버전 직접 참조
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -37,4 +38,4 @@ function AppSettingPage() {
   );
 }
 
-export default withAuthorization(withLayout(AppSettingPage));
+export default withSafeArea(withAuthorization(withLayout(AppSettingPage)));

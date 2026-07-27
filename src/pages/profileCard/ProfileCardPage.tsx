@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { Header, Layout } from '@/shared/ui';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
+import withSafeArea from '@/shared/hoc/withSafeArea';
 
 /**
  * # ProfileCardPage
@@ -21,4 +22,4 @@ function ProfileCardPage() {
   );
 }
 
-export default withAuthorization(withLayout(ProfileCardPage));
+export default withSafeArea(withAuthorization(withLayout(ProfileCardPage)));

@@ -3,6 +3,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import { Header } from '@/shared/ui';
 import type { NavigatorType, NavigationPropType } from '@/shared/types';
+import withSafeArea from '@/shared/hoc/withSafeArea';
 import ExchangedProfileView from '@/features/storage/ui/ExchangedProfileView';
 
 /**
@@ -17,7 +18,7 @@ import ExchangedProfileView from '@/features/storage/ui/ExchangedProfileView';
  * @example
  * navigation.navigate('exchangedProfileDetail', { profileId: 1 })
  */
-export default function ExchangedProfileDetailPage() {
+function ExchangedProfileDetailPage() {
   const navigation = useNavigation<NavigationPropType>();
   const route =
     useRoute<RouteProp<NavigatorType, 'exchangedProfileDetail'>>();
@@ -42,3 +43,5 @@ export default function ExchangedProfileDetailPage() {
     </>
   );
 }
+
+export default withSafeArea(ExchangedProfileDetailPage);

@@ -45,7 +45,7 @@ interface Props {
  * @example
  * <ExchangedProfileView profileId={1} onNavigateToReview={() => navigate('writeReview')} />
  */
-export default function ExchangedProfileView({
+function ExchangedProfileView({
   profileId,
   onNavigateToReview,
   onBlockSuccess,
@@ -291,3 +291,5 @@ export default function ExchangedProfileView({
     </View>
   );
 }
+
+export default ExchangedProfileView;

@@ -3,6 +3,7 @@ import { Header, Layout } from '@/shared/ui';
 import { useRoute, type RouteProp } from '@react-navigation/native';
 import RegisterCompleteView from '@/features/register/ui/RegisterCompleteView';
 import type { NavigatorType } from '@/shared/types';
+import withSafeArea from '@/shared/hoc/withSafeArea';
 
 /**
  * # ProfileCompletePage
@@ -14,7 +15,7 @@ import type { NavigatorType } from '@/shared/types';
  * @example
  * navigation.navigate('profileComplete', { mode: 'register' })
  */
-export default function ProfileCompletePage() {
+function ProfileCompletePage() {
   const route = useRoute<RouteProp<NavigatorType, 'profileComplete'>>();
   const { mode } = route.params;
 
@@ -27,3 +28,5 @@ export default function ProfileCompletePage() {
     </>
   );
 }
+
+export default withSafeArea(ProfileCompletePage);

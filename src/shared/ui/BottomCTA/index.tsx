@@ -30,7 +30,7 @@ export default function BottomCTA({ children, styleClass }: Props) {
 
   return (
     <View
-      className={cn('bg-white px-5 pt-3 border-t border-gray-100', styleClass?.root)}
+      className={cn('bg-white px-5 pt-3', styleClass?.root)}
       style={{ paddingBottom: Math.max(safePadding.paddingBottom, 16) }}
     >
       {children}

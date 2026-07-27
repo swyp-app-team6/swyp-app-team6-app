@@ -5,6 +5,7 @@ import { Header, Layout, MenuList } from '@/shared/ui';
 import ArrowIcon from '@/shared/ui/icons/ArrowIcon';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
+import withSafeArea from '@/shared/hoc/withSafeArea';
 import useAuthStore from '@/entities/user/model/authStore';
 import type { NavigationPropType } from '@/shared/types';
 import { useQueryClient } from '@tanstack/react-query';
@@ -113,4 +114,4 @@ function AccountEditPage() {
   );
 }
 
-export default withAuthorization(withLayout(AccountEditPage));
+export default withSafeArea(withAuthorization(withLayout(AccountEditPage)));

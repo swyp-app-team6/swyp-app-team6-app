@@ -4,6 +4,7 @@ import { useNavigation, useRoute, type RouteProp } from '@react-navigation/nativ
 import { Button, Checkbox, Header, Layout, openErrorDialog, openDialog } from '@/shared/ui';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
+import withSafeArea from '@/shared/hoc/withSafeArea';
 import useAuthStore from '@/entities/user/model/authStore';
 import { UserAPI } from '@/entities/user/api/userApi';
 import { REASON_CODE_MAP, WITHDRAWAL_REASONS } from '@/features/withdrawal';
@@ -133,4 +134,4 @@ function WithdrawalConfirmPage() {
   );
 }
 
-export default withAuthorization(withLayout(WithdrawalConfirmPage));
+export default withSafeArea(withAuthorization(withLayout(WithdrawalConfirmPage)));

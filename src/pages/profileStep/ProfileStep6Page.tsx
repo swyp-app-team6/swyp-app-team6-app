@@ -8,6 +8,7 @@ import useRegisterMutation from '@/features/register/api/useRegisterMutation';
 import Step5PreviewView from '@/features/register/ui/Step5PreviewView';
 import { buildRegisterRequest } from '@/features/register/lib/buildRegisterRequest';
 import type { NavigatorType, NavigationPropType } from '@/shared/types';
+import withSafeArea from '@/shared/hoc/withSafeArea';
 import { logProfileCompleted } from '@/shared/lib/analytics';
 import { useAuthStore } from '@/entities/user';
 
@@ -22,7 +23,7 @@ import { useAuthStore } from '@/entities/user';
  * @example
  * navigation.navigate('profileStep6', { mode: 'register' })
  */
-export default function ProfileStep6Page() {
+function ProfileStep6Page() {
   const navigation = useNavigation<NavigationPropType>();
   const route = useRoute<RouteProp<NavigatorType, 'profileStep6'>>();
   const { mode } = route.params;
@@ -70,3 +71,5 @@ export default function ProfileStep6Page() {
     </>
   );
 }
+
+export default withSafeArea(ProfileStep6Page);

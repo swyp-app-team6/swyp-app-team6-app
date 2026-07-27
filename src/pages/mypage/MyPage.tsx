@@ -5,6 +5,7 @@ import { Header, Layout, MenuList } from '@/shared/ui';
 import ArrowIcon from '@/shared/ui/icons/ArrowIcon';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
+import withSafeArea from '@/shared/hoc/withSafeArea';
 import useAuthStore from '@/entities/user/model/authStore';
 import type { NavigationPropType } from '@/shared/types';
 import { NOTICE_URL, PRIVACY_URL, SERVICE_URL } from '../../shared/constants';
@@ -106,4 +107,4 @@ function MyPage() {
   );
 }
 
-export default withAuthorization(withLayout(MyPage));
+export default withSafeArea(withAuthorization(withLayout(MyPage)));

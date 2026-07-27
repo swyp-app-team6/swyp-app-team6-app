@@ -12,6 +12,7 @@ import BioSection from '@/features/register/ui/BioSection';
 import CosmicTypeSection from '@/features/register/ui/CosmicTypeSection';
 import TmiSection from '@/features/register/ui/TmiSection';
 import { apiValueToCosmicType } from '@/entities/storage';
+import withSafeArea from '@/shared/hoc/withSafeArea';
 
 /**
  * # ProfileDetailPage
@@ -23,7 +24,7 @@ import { apiValueToCosmicType } from '@/entities/storage';
  *   - withLayout 미적용 (독립 스택 화면)
  * ---
  */
-export default function ProfileDetailPage() {
+function ProfileDetailPage() {
   const navigation = useNavigation<NavigationPropType>();
   const { data: profile, isLoading } = useMyProfileQuery();
   const { mutate: deleteProfile } = useDeleteProfileMutation();
@@ -118,3 +119,5 @@ export default function ProfileDetailPage() {
     </View>
   );
 }
+
+export default withSafeArea(ProfileDetailPage);

@@ -12,6 +12,7 @@ import WriteReviewView from '@/features/storage/ui/WriteReviewView';
 import useUpdateReviewMutation from '@/features/storage/api/useUpdateReviewMutation';
 import { logReviewCompleted } from '@/shared/lib/analytics';
 import { useAuthStore } from '@/entities/user';
+import withSafeArea from '@/shared/hoc/withSafeArea';
 
 /**
  * # WriteReviewPage
@@ -26,7 +27,7 @@ import { useAuthStore } from '@/entities/user';
  * navigation.navigate('writeReview', { profileId: 1 })
  * navigation.navigate('writeReview', { profileId: 1, mode: 'edit' })
  */
-export default function WriteReviewPage() {
+function WriteReviewPage() {
   const navigation = useNavigation<NavigationPropType>();
   const route = useRoute<RouteProp<NavigatorType, 'writeReview'>>();
   const { profileId, mode = 'write' } = route.params;
@@ -179,3 +180,5 @@ export default function WriteReviewPage() {
     </>
   );
 }
+
+export default withSafeArea(WriteReviewPage);

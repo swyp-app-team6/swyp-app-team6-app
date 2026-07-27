@@ -2,6 +2,7 @@ import React from 'react';
 import { Header, Layout } from '@/shared/ui';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
+import withSafeArea from '@/shared/hoc/withSafeArea';
 import { StorageWidget } from '@/widgets/storage';
 
 /**
@@ -24,4 +25,4 @@ function StoragePage() {
   );
 }
 
-export default withAuthorization(withLayout(StoragePage));
+export default withSafeArea(withAuthorization(withLayout(StoragePage)));

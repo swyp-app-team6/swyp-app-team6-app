@@ -7,7 +7,7 @@ import SystemNavigationBar from 'react-native-system-navigation-bar';
 import { Button, Layout, StepView } from '@/shared/ui';
 import type { NavigationPropType } from '@/shared/types';
 import useConditionStateStore from '@/shared/model/conditionStateStore';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import withSafeArea from '@/shared/hoc/withSafeArea';
 
 /** 온보딩 캐릭터 이미지 */
 const onboarding1 = require('@/assets/characters/onboarding-1.png');
@@ -54,7 +54,6 @@ const ONBOARDING_SLIDES = [
 function OnboardingPage() {
   const navigation = useNavigation<NavigationPropType>();
   const { setHasSeenOnboarding } = useConditionStateStore();
-  const { top } = useSafeAreaInsets();
   const [currentStep, setCurrentStep] = useState(0);
 
   /** 안드로이드 하단 시스템 네비게이션 바를 투명하게 설정 */
@@ -105,7 +104,7 @@ function OnboardingPage() {
     <Layout styleClass={{ root: 'bg-white' }}>
       {/* 슬라이드 영역 */}
       <GestureDetector gesture={swipeGesture}>
-        <View className="flex-1" style={{ paddingTop: top }}>
+        <View className="flex-1">
           <StepView currentStep={currentStep}>
             {ONBOARDING_SLIDES.map((slide, index) => (
               <StepView.Step key={index}>
@@ -174,4 +173,4 @@ function OnboardingPage() {
   );
 }
 
-export default OnboardingPage;
+export default withSafeArea(OnboardingPage);

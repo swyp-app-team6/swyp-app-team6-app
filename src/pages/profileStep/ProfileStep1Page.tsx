@@ -8,6 +8,7 @@ import type { MyProfileResponse } from '@/entities/user';
 import { useRegisterFormStore, profileToFormState } from '@/features/register';
 import Step1BasicInfoView from '@/features/register/ui/Step1BasicInfoView';
 import type { NavigatorType, NavigationPropType } from '@/shared/types';
+import withSafeArea from '@/shared/hoc/withSafeArea';
 
 /**
  * # ProfileStep1Page
@@ -21,7 +22,7 @@ import type { NavigatorType, NavigationPropType } from '@/shared/types';
  * @example
  * navigation.navigate('profileStep1', { mode: 'register' })
  */
-export default function ProfileStep1Page() {
+function ProfileStep1Page() {
   const navigation = useNavigation<NavigationPropType>();
   const route = useRoute<RouteProp<NavigatorType, 'profileStep1'>>();
   const { mode } = route.params;
@@ -87,3 +88,5 @@ export default function ProfileStep1Page() {
     </>
   );
 }
+
+export default withSafeArea(ProfileStep1Page);

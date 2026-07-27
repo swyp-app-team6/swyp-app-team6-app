@@ -4,6 +4,7 @@ import { useNavigation, useRoute, type RouteProp } from '@react-navigation/nativ
 import { Header, Layout, ArrowIcon, ProgressBar, ErrorBoundary, LoadSuspense } from '@/shared/ui';
 import Step2InterestsView from '@/features/register/ui/Step2InterestsView';
 import type { NavigatorType, NavigationPropType } from '@/shared/types';
+import withSafeArea from '@/shared/hoc/withSafeArea';
 
 /**
  * # ProfileStep3Page
@@ -13,7 +14,7 @@ import type { NavigatorType, NavigationPropType } from '@/shared/types';
  * @example
  * navigation.navigate('profileStep3', { mode: 'register' })
  */
-export default function ProfileStep3Page() {
+function ProfileStep3Page() {
   const navigation = useNavigation<NavigationPropType>();
   const route = useRoute<RouteProp<NavigatorType, 'profileStep3'>>();
   const { mode } = route.params;
@@ -45,3 +46,5 @@ export default function ProfileStep3Page() {
     </>
   );
 }
+
+export default withSafeArea(ProfileStep3Page);

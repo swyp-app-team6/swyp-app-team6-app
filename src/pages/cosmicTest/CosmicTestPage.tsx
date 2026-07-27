@@ -7,6 +7,7 @@ import { useMyProfileQuery } from '@/entities/user';
 import { useUpdateCosmicMutation } from '@/entities/cosmic';
 import type { CosmicType } from '@/shared/enums';
 import type { NavigationPropType } from '@/shared/types';
+import withSafeArea from '@/shared/hoc/withSafeArea';
 
 /**
  * # CosmicTestPage
@@ -20,7 +21,7 @@ import type { NavigationPropType } from '@/shared/types';
  * @example
  * navigation.navigate('cosmicTest')
  */
-export default function CosmicTestPage() {
+function CosmicTestPage() {
   const navigation = useNavigation<NavigationPropType>();
   const { data: profile } = useMyProfileQuery();
   const { mutate: updateCosmic } = useUpdateCosmicMutation();
@@ -53,3 +54,5 @@ export default function CosmicTestPage() {
     </View>
   );
 }
+
+export default withSafeArea(CosmicTestPage);

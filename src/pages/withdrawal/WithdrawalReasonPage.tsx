@@ -5,6 +5,7 @@ import { Button, Header, Layout, Textbox } from '@/shared/ui';
 import ArrowIcon from '@/shared/ui/icons/ArrowIcon';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
+import withSafeArea from '@/shared/hoc/withSafeArea';
 import { WITHDRAWAL_REASONS } from '@/features/withdrawal';
 import type { NavigationPropType } from '@/shared/types';
 
@@ -126,4 +127,4 @@ function WithdrawalReasonPage() {
   );
 }
 
-export default withAuthorization(withLayout(WithdrawalReasonPage));
+export default withSafeArea(withAuthorization(withLayout(WithdrawalReasonPage)));
