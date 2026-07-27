@@ -37,6 +37,7 @@ export default function FlipCardAnimation({
   front,
   back,
   isFlipped,
+  isFlippedState = false,
   direction = 'y',
   duration = 500,
   cardStyle,
@@ -44,6 +45,8 @@ export default function FlipCardAnimation({
   front: React.ReactNode;
   back: React.ReactNode;
   isFlipped: SharedValue<boolean>;
+  /** 앞/뒤면 pointerEvents 제어용 — 숨겨진 면의 터치 흡수를 막음 */
+  isFlippedState?: boolean;
   direction?: 'x' | 'y';
   duration?: number;
   cardStyle?: StyleProp<ViewStyle>;
@@ -69,6 +72,7 @@ export default function FlipCardAnimation({
   return (
     <View>
       <Animated.View
+        pointerEvents={isFlippedState ? 'none' : 'auto'}
         style={[
           { position: 'absolute', zIndex: 1, backfaceVisibility: 'hidden' },
           cardStyle,
@@ -78,6 +82,7 @@ export default function FlipCardAnimation({
         {front}
       </Animated.View>
       <Animated.View
+        pointerEvents={isFlippedState ? 'auto' : 'none'}
         style={[
           { zIndex: 2, backfaceVisibility: 'hidden' },
           cardStyle,

@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, Pressable } from 'react-native';
 import type { ImageSourcePropType } from 'react-native';
 import type { CosmicTypeResponse } from '@/entities/cosmic';
 import ProfileCardGradientBackground from '@/shared/ui/ProfileCard/ProfileCardGradientBackground';
-import { CharacterEllipseIcon } from '@/shared/ui/icons';
+import { CharacterEllipseIcon, FlipIcon } from '@/shared/ui/icons';
 
 /**
  * 코스믹 유형별 캐릭터 이미지 매핑
@@ -20,6 +20,8 @@ interface Props {
   result: CosmicTypeResponse;
   /** 사용자 닉네임 */
   nickname: string;
+  /** 뒷면 보기 전환 콜백 */
+  onFlip?: () => void;
 }
 
 /**
@@ -35,6 +37,7 @@ interface Props {
  * ---
  * @param result 유형 결과 데이터 (API 응답)
  * @param nickname 사용자 닉네임
+ * @param onFlip 뒷면 보기 전환 콜백
  * ---
  * @example
  * <CosmicResultFrontCard result={cosmicData} nickname="홍길동" />
@@ -42,6 +45,7 @@ interface Props {
 export default function CosmicResultFrontCard({
   result,
   nickname,
+  onFlip,
 }: Props) {
   const characterImage = COSMIC_CHARACTER_IMAGE[result.cosmic_type.type];
 
@@ -102,6 +106,18 @@ export default function CosmicResultFrontCard({
               {result.detail}
             </Text>
           </View>
+
+          {/* 뒷면보기 버튼 */}
+          <Pressable
+            onPress={onFlip}
+            className="flex-row items-center gap-1 rounded-[20px] px-3 py-2"
+            style={{ backgroundColor: 'rgba(245, 245, 245, 0.3)' }}
+          >
+            <FlipIcon size={20} color="#FFFFFF" />
+            <Text className="text-sm text-white" style={{ lineHeight: 19.6 }}>
+              뒷면보기
+            </Text>
+          </Pressable>
         </View>
       </ProfileCardGradientBackground>
     </View>

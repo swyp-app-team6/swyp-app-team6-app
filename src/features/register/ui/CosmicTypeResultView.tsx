@@ -51,12 +51,13 @@ export default function CosmicTypeResultView({
       <View className="flex-1 items-center justify-center">
         <ProfileFlipWrapper
           cardRef={cardRef}
-          front={
+          front={(flip) => (
             <CosmicResultFrontCard
               result={result}
               nickname={nickname}
+              onFlip={flip}
             />
-          }
+          )}
           back={
             <CosmicResultBackCard
               result={result}

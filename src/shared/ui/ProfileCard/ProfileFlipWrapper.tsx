@@ -27,7 +27,7 @@ import FlipCardAnimation from '../FlipCardAnimation';
  * />
  */
 function ProfileFlipWrapper({ front, back, onFlip, cardRef }: {
-  front: React.ReactNode;
+  front: React.ReactNode | ((flip: () => void) => React.ReactNode);
   back: React.ReactNode;
   onFlip?: (isFlipped: boolean) => void;
   cardRef?: React.RefObject<View | null>;
@@ -42,25 +42,31 @@ function ProfileFlipWrapper({ front, back, onFlip, cardRef }: {
     onFlip?.(next);
   };
 
+  const isFrontRenderFn = typeof front === 'function';
+  const frontContent = isFrontRenderFn ? front(handleFlip) : front;
+
   return (
     <View className="items-center">
       <View ref={cardRef} collapsable={false}>
         <FlipCardAnimation
           isFlipped={isFlipped}
-          front={front}
+          isFlippedState={isFlippedState}
+          front={frontContent}
           back={back}
         />
       </View>
 
-      <Pressable
-        onPress={handleFlip}
-        className="mt-4 flex-row items-center self-center gap-1 rounded-[20px] px-3 py-2"
-      >
-        <FlipIcon size={20} color="#888888" />
-        <Text className="text-[12px] tracking-tight text-text-gray4">
-          {isFlippedState ? '앞면 보기' : '뒷면 보기'}
-        </Text>
-      </Pressable>
+      {!isFrontRenderFn && (
+        <Pressable
+          onPress={handleFlip}
+          className="mt-4 flex-row items-center self-center gap-1 rounded-[20px] px-3 py-2"
+        >
+          <FlipIcon size={20} color="#888888" />
+          <Text className="text-[12px] tracking-tight text-text-gray4">
+            {isFlippedState ? '앞면 보기' : '뒷면 보기'}
+          </Text>
+        </Pressable>
+      )}
     </View>
   );
 }
