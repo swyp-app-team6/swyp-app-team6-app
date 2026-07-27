@@ -8,7 +8,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 /**
- * # FlipCard
+ * # FlipCardAnimation
  * ---
  * - 간단설명: 앞면과 뒷면을 3D 플립 애니메이션으로 전환하는 카드 컴포넌트
  * - 제약사항 및 특이사항:
@@ -26,14 +26,14 @@ import Animated, {
  * @example
  * const isFlipped = useSharedValue(false);
  *
- * <FlipCard
+ * <FlipCardAnimation
  *   isFlipped={isFlipped}
  *   front={<FrontContent />}
  *   back={<BackContent />}
  *   cardStyle={{ width: 300, height: 400 }}
  * />
  */
-export default function FlipCard({
+export default function FlipCardAnimation({
   front,
   back,
   isFlipped,

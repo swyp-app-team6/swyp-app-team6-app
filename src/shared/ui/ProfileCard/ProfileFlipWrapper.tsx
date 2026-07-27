@@ -2,7 +2,7 @@ import React, { memo, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
 import { FlipIcon } from '../icons';
-import FlipCard from '../FlipCard';
+import FlipCardAnimation from '../FlipCardAnimation';
 
 /**
  * # ProfileFlipWrapper
@@ -45,7 +45,7 @@ function ProfileFlipWrapper({ front, back, onFlip, cardRef }: {
   return (
     <View className="items-center">
       <View ref={cardRef} collapsable={false}>
-        <FlipCard
+        <FlipCardAnimation
           isFlipped={isFlipped}
           front={front}
           back={back}

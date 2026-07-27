@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
-import FlipCard from '@/shared/ui/FlipCard';
+import FlipCardAnimation from '@/shared/ui/FlipCardAnimation';
 import UserProfileCardExample from './UserProfileCardExample';
 import { EmptyProfileCard } from '../../../shared/ui';
 
@@ -10,7 +10,7 @@ export default function CardFlipAnimationExample() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <FlipCard
+      <FlipCardAnimation
         isFlipped={isFlipped}
         cardStyle={styles.flipCard}
         front={<UserProfileCardExample />}
