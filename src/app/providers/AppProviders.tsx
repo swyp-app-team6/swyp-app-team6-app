@@ -14,7 +14,7 @@ import * as Sentry from "@sentry/react-native";
    - SafeAreaProvider: 상태바, 노치, footer 등에 가려지지 않도록 여백 자동생성 provider
    - QueryProvider: tanstack query provider
    - BottomSheetModalProvider: 바텀시트 provider
-   - modal, selectbox 등에 사용예정 
+   - modal, selectbox 등에 사용예정
 
  */
 export default function AppProviders({ children }: { children: React.ReactNode }) {

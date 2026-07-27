@@ -139,7 +139,7 @@ function OnboardingPage() {
       </GestureDetector>
 
       {/* 하단: 인디케이터 + 건너뛰기 + CTA 버튼 */}
-      <View className="px-5 pb-10">
+      <View className="px-5">
         {/* 인디케이터 */}
         <View className="flex-row justify-center gap-2 mb-3">
           {ONBOARDING_SLIDES.map((_, index) => (
