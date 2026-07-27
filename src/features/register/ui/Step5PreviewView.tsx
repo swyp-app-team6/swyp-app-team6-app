@@ -3,6 +3,7 @@ import { View, Text, ScrollView, Pressable } from 'react-native';
 import { BottomCTA, Button } from '@/shared/ui';
 import UserProfileCard from '@/shared/ui/ProfileCard/UserProfileCard';
 import useRegisterFormStore from '../model/useRegisterFormStore';
+import useProfileDataStore from '@/entities/user/model/profileDataStore';
 import { INTEREST_LABEL, REGION_OPTIONS } from '../model/types';
 import { resolveRegionEnum, getRegionLabel } from '@/shared/lib/regionLabel';
 import BasicInfoSection from './BasicInfoSection';
@@ -41,6 +42,7 @@ interface Props {
  */
 export default function Step5PreviewView({ mode = 'register', onSubmit, loading }: Props) {
   const { form } = useRegisterFormStore();
+  const { data: profileData } = useProfileDataStore();
   const [activeTab, setActiveTab] = useState<TabType>('기본정보');
   const scrollRef = useRef<ScrollView>(null);
 
@@ -112,7 +114,7 @@ export default function Step5PreviewView({ mode = 'register', onSubmit, loading 
 
           {activeTab === '나만의 TMI' && (
             <TmiSection
-              tmiAnswers={form.tmiAnswers.map((tmi) => ({
+              tmiAnswers={profileData.tmiAnswers.map((tmi) => ({
                 question: tmi.question,
                 answer: tmi.answer,
               }))}

@@ -41,7 +41,7 @@ interface TMIQuestionUI {
  * <Step4TMIView onNext={() => navigation.navigate('profileStep6', { mode })} />
  */
 export default function Step4TMIView({ onNext }: { onNext: () => void }) {
-  const { form, addTMIAnswer, removeTMIAnswer } = useRegisterFormStore();
+  const { form, addTMIAnswer } = useRegisterFormStore();
   const { setProfileData } = useProfileDataStore();
   const { data: questionData, isLoading } = useQuestionsQuery();
   const [selectedCategory, setSelectedCategory] = useState<TMICategoryFilter>('ALL');
@@ -92,7 +92,6 @@ export default function Step4TMIView({ onNext }: { onNext: () => void }) {
       const next = new Set(prev);
       if (next.has(key)) {
         next.delete(key);
-        removeTMIAnswer(question.answerType, question.id);
       } else {
         next.add(key);
       }
