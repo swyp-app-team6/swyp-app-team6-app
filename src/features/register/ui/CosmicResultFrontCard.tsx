@@ -50,13 +50,13 @@ export default function CosmicResultFrontCard({
   const characterImage = COSMIC_CHARACTER_IMAGE[result.cosmic_type.type];
 
   return (
-    <View style={{ paddingHorizontal: 20, width: '100%' }}>
+    <View style={{ padding: 24, width: '100%' }}>
       <ProfileCardGradientBackground
         colors={['rgba(80, 50, 213, 0.80)', 'rgba(135, 67, 237, 0.80)']}
         style={{ width: '100%', aspectRatio: 350 / 520 }}
       >
         {/* 콘텐츠 영역 - 세로 중앙 배치 */}
-        <View className="flex-1 justify-center items-center" style={{ paddingVertical: '6%', gap: 12 }}>
+        <View className="flex-1 justify-between items-center" style={{ paddingVertical: '6%', gap: 12 }}>
           {/* 닉네임 + 유형명 */}
           <View className="items-center gap-1" style={{ paddingHorizontal: '9%' }}>
             <Text className="text-base font-medium text-white text-center" style={{ lineHeight: 22.4 }}>
@@ -76,48 +76,58 @@ export default function CosmicResultFrontCard({
             {characterImage && (
               <Image
                 source={characterImage}
-                style={{ width: 168, height: 168 }}
+                style={{
+                  width: 200, height: 200,
+                  padding: 10,
+                  shadowColor: '#FFFFFF',
+                  shadowOffset: { width: 0, height: 0 },
+                  shadowOpacity: 0.5,
+                  shadowRadius: 10,
+
+                }}
                 resizeMode="contain"
               />
             )}
           </View>
+          <View className='flex flex-col gap-4 items-center justify-center'>
+            {/* 태그 */}
+            <View className="flex-row justify-center items-center gap-1" style={{ paddingHorizontal: '9%' }}>
+              {result.tags.map((tag) => (
+                <View
+                  key={tag}
+                  className="rounded-[20px] px-3 py-2"
+                  style={{ borderWidth: 1, borderColor: '#FFFFFF' }}
+                >
+                  <Text className="text-xs text-white" style={{ lineHeight: 12 }}>
+                    {tag}
+                  </Text>
+                </View>
+              ))}
+            </View>
 
-          {/* 태그 */}
-          <View className="flex-row justify-center items-center gap-1" style={{ paddingHorizontal: '9%' }}>
-            {result.tags.map((tag) => (
-              <View
-                key={tag}
-                className="rounded-[20px] px-3 py-2"
-                style={{ borderWidth: 1, borderColor: '#FFFFFF' }}
+            {/* 한줄 설명 */}
+            <View className="items-center" style={{ paddingHorizontal: '9%' }}>
+              <Text
+                className="text-sm font-semibold text-white text-center"
+                style={{ lineHeight: 19.6 }}
               >
-                <Text className="text-xs text-white" style={{ lineHeight: 12 }}>
-                  {tag}
-                </Text>
-              </View>
-            ))}
-          </View>
+                {result.detail}
+              </Text>
+            </View>
 
-          {/* 한줄 설명 */}
-          <View className="items-center" style={{ paddingHorizontal: '9%' }}>
-            <Text
-              className="text-sm font-semibold text-white text-center"
-              style={{ lineHeight: 19.6 }}
+            {/* 뒷면보기 버튼 */}
+            <Pressable
+              onPress={onFlip}
+              className="flex-row items-center gap-1 rounded-[20px] px-3 py-2"
+              style={{ backgroundColor: 'rgba(245, 245, 245, 0.3)' }}
             >
-              {result.detail}
-            </Text>
+              <FlipIcon size={20} color="#FFFFFF" />
+              <Text className="text-sm text-white" style={{ lineHeight: 19.6 }}>
+                뒷면보기
+              </Text>
+            </Pressable>
           </View>
 
-          {/* 뒷면보기 버튼 */}
-          <Pressable
-            onPress={onFlip}
-            className="flex-row items-center gap-1 rounded-[20px] px-3 py-2"
-            style={{ backgroundColor: 'rgba(245, 245, 245, 0.3)' }}
-          >
-            <FlipIcon size={20} color="#FFFFFF" />
-            <Text className="text-sm text-white" style={{ lineHeight: 19.6 }}>
-              뒷면보기
-            </Text>
-          </Pressable>
         </View>
       </ProfileCardGradientBackground>
     </View>

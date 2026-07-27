@@ -28,7 +28,7 @@ import FlipCardAnimation from '../FlipCardAnimation';
  */
 function ProfileFlipWrapper({ front, back, onFlip, cardRef }: {
   front: React.ReactNode | ((flip: () => void) => React.ReactNode);
-  back: React.ReactNode;
+  back: React.ReactNode | ((flip: () => void) => React.ReactNode);
   onFlip?: (isFlipped: boolean) => void;
   cardRef?: React.RefObject<View | null>;
 }) {
@@ -44,6 +44,7 @@ function ProfileFlipWrapper({ front, back, onFlip, cardRef }: {
 
   const isFrontRenderFn = typeof front === 'function';
   const frontContent = isFrontRenderFn ? front(handleFlip) : front;
+  const backContent = typeof back === 'function' ? back(handleFlip) : back;
 
   return (
     <View className="items-center">
@@ -52,7 +53,7 @@ function ProfileFlipWrapper({ front, back, onFlip, cardRef }: {
           isFlipped={isFlipped}
           isFlippedState={isFlippedState}
           front={frontContent}
-          back={back}
+          back={backContent}
         />
       </View>
 
