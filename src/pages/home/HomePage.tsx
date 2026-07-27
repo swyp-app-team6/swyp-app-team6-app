@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Header, Layout, SettingIcon } from '@/shared/ui';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
+import withSafeArea from '@/shared/hoc/withSafeArea';
 import { HomeWidget } from '@/widgets/home';
 import type { NavigationPropType } from '@/shared/types';
 
@@ -59,4 +60,4 @@ function HomePage() {
   );
 }
 
-export default withAuthorization(withLayout(HomePage));
+export default withSafeArea(withAuthorization(withLayout(HomePage)));

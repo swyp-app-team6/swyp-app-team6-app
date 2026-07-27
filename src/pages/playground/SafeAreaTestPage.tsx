@@ -22,7 +22,7 @@ function SafeAreaTestPage() {
   return (
     <>
       {/* 상단 영역 — 노치/상태바 겹침 확인용 */}
-      <View className="bg-red-400 px-4 py-2">
+      <View className="bg-red-400 px-4">
         <Text className="text-white font-bold text-lg">상단 영역 (빨간색)</Text>
         <Text className="text-white text-sm">이 텍스트가 상태바/노치에 가려지면 SafeArea 미적용</Text>
       </View>
@@ -50,7 +50,7 @@ function SafeAreaTestPage() {
       </Layout.Body>
 
       {/* 하단 영역 — 홈 인디케이터 겹침 확인용 */}
-      <View className="bg-green-400 px-4 py-4">
+      <View className="bg-green-400 px-4">
         <Text className="text-white font-bold text-lg">하단 영역 (초록색)</Text>
         <Text className="text-white text-sm">이 텍스트가 홈 인디케이터에 가려지면 SafeArea 미적용</Text>
       </View>

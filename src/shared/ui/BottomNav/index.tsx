@@ -55,20 +55,6 @@ export default function BottomNav({ items, activeRoute, onPress, styleClass }: P
   return (
     <View
       className={cn('flex-row bg-white', styleClass?.root)}
-      style={[
-        { height: 64 + safePadding.paddingBottom },
-        Platform.select({
-          ios: {
-            shadowColor: 'rgba(84, 84, 84, 1)',
-            shadowOffset: { width: 2, height: 0 },
-            shadowOpacity: 0.05,
-            shadowRadius: 15,
-          },
-          android: {
-            elevation: 4,
-          },
-        }),
-      ]}
     >
       {items.map((item) => {
         const isActive = activeRoute === item.name;
@@ -77,8 +63,6 @@ export default function BottomNav({ items, activeRoute, onPress, styleClass }: P
             key={item.name}
             className={cn('flex-1 items-center', styleClass?.tab)}
             style={{
-              paddingTop: 12,
-              paddingBottom: 12 + safePadding.paddingBottom,
               gap: 4,
             }}
             onPress={() => onPress(item.name)}

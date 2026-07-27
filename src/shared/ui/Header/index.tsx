@@ -40,7 +40,6 @@ interface Props {
 
 export default function Header({ left, center, right, title, showBack = false }: Props) {
   const navigation = useNavigation();
-  const { top } = useSafeAreaInsets();
 
   const leftContent = showBack ? (
     <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -55,7 +54,7 @@ export default function Header({ left, center, right, title, showBack = false }:
   return (
     <Layout.Header
       styleClass={{ root: 'flex-row items-center px-4 bg-white' }}
-      style={{ paddingTop: top, height: 56 + top }}
+      style={{ height: 56 }}
     >
       <Layout styleClass={{ root: 'w-10 items-start' }}>
         {leftContent}
