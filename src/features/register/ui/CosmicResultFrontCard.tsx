@@ -34,13 +34,14 @@ interface Props {
  *   - CosmicTypeResponse API 데이터를 주입받아 렌더링
  *   - 카드 비율 350:520 (디자인 스펙), 좌우 20px 여백
  *   - 내부 레이아웃은 퍼센트/flex 기반 반응형
+ *   - 뒷면보기 버튼은 카드 하단 바깥에 배치
  * ---
  * @param result 유형 결과 데이터 (API 응답)
  * @param nickname 사용자 닉네임
  * @param onFlip 뒷면 보기 전환 콜백
  * ---
  * @example
- * <CosmicResultFrontCard result={cosmicData} nickname="홍길동" />
+ * <CosmicResultFrontCard result={cosmicData} nickname="홍길동" onFlip={handleFlip} />
  */
 export default function CosmicResultFrontCard({
   result,
@@ -104,6 +105,7 @@ export default function CosmicResultFrontCard({
               />
             )}
           </View>
+
           <View className="flex flex-col gap-4 items-center justify-center">
             {/* 태그 */}
             <View
@@ -135,21 +137,20 @@ export default function CosmicResultFrontCard({
                 {result.detail}
               </Text>
             </View>
-
-            {/* 뒷면보기 버튼 */}
-            <Pressable
-              onPress={onFlip}
-              className="flex-row items-center gap-1 rounded-[20px] px-3 py-2"
-              style={{ backgroundColor: 'rgba(245, 245, 245, 0.3)' }}
-            >
-              <FlipIcon size={20} color="#FFFFFF" />
-              <Text className="text-sm text-white" style={{ lineHeight: 19.6 }}>
-                뒷면보기
-              </Text>
-            </Pressable>
           </View>
         </View>
       </ProfileCardGradientBackground>
+
+      {/* 뒷면보기 버튼 — 카드 하단 바깥 */}
+      <Pressable
+        onPress={onFlip}
+        className="flex-row items-center gap-1 rounded-[20px] px-3 py-2 self-center mt-3"
+      >
+        <FlipIcon size={20} />
+        <Text className="text-sm text-gray-700" style={{ lineHeight: 19.6 }}>
+          뒷면보기
+        </Text>
+      </Pressable>
     </View>
   );
 }

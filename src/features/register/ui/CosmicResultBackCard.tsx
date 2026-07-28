@@ -34,13 +34,15 @@ interface Props {
  *   - 반투명 흰색 내부 패널에 연애 스타일 / 자주 듣는 말 / 궁합이 좋은 유형 3개 섹션
  *   - 카드 비율 350:520 (디자인 스펙), 좌우 20px 여백
  *   - 내부 레이아웃은 퍼센트/flex 기반 반응형
+ *   - 앞면보기 버튼은 카드 하단 바깥에 배치
  *   FIXME: ios 그라디언트 적용시 ui 깨지는 문제 발생해 단색으로 처리된 상황
  * ---
  * @param result 유형 결과 데이터 (API 응답)
  * @param nickname 사용자 닉네임
+ * @param onFlip 앞면 보기 전환 콜백
  * ---
  * @example
- * <CosmicResultBackCard result={cosmicData} nickname="홍길동" />
+ * <CosmicResultBackCard result={cosmicData} nickname="홍길동" onFlip={handleFlip} />
  */
 export default function CosmicResultBackCard({
   result,
@@ -51,10 +53,7 @@ export default function CosmicResultBackCard({
     <View style={{ padding: 24, width: '100%' }}>
       <ProfileCardGradientBackground
         colors={['#5032D5', '#8743ED']}
-        style={{
-          width: '100%',
-          aspectRatio: 350 / 520,
-        }}
+        style={{ width: '100%', aspectRatio: 350 / 520 }}
       >
         {/* 콘텐츠 영역 - 세로 중앙 배치 */}
         <View
@@ -175,19 +174,17 @@ export default function CosmicResultBackCard({
               </View>
             </View>
           </View>
-          {/* 앞면보기 버튼 */}
-          <Pressable
-            onPress={onFlip}
-            className="flex-row items-center gap-1 rounded-[20px] px-3 py-2 self-center"
-            style={{ backgroundColor: 'rgba(245, 245, 245, 0.3)' }}
-          >
-            <FlipIcon size={20} color="#FFFFFF" />
-            <Text className="text-sm text-white" style={{ lineHeight: 19.6 }}>
-              앞면보기
-            </Text>
-          </Pressable>
         </View>
       </ProfileCardGradientBackground>
+
+      {/* 앞면보기 버튼 — 카드 하단 바깥 */}
+      <Pressable
+        onPress={onFlip}
+        className="flex-row items-center gap-1 rounded-[20px] px-3 py-2 self-center mt-3"
+      >
+        <FlipIcon size={20} />
+        <Text className="text-sm text-gray-700">앞면보기</Text>
+      </Pressable>
     </View>
   );
 }

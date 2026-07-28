@@ -52,18 +52,10 @@ export default function CosmicTypeResultView({
         <ProfileFlipWrapper
           cardRef={cardRef}
           front={(flip) => (
-            <CosmicResultFrontCard
-              result={result}
-              nickname={nickname}
-              onFlip={flip}
-            />
+            <CosmicResultFrontCard result={result} nickname={nickname} onFlip={flip} />
           )}
           back={(flip) => (
-            <CosmicResultBackCard
-              result={result}
-              nickname={nickname}
-              onFlip={flip}
-            />
+            <CosmicResultBackCard result={result} nickname={nickname} onFlip={flip} />
           )}
         />
       </View>
