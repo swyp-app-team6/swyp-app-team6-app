@@ -51,7 +51,10 @@ export default function CosmicResultBackCard({
     <View style={{ padding: 24, width: '100%' }}>
       <ProfileCardGradientBackground
         colors={['#5032D5', '#8743ED']}
-        style={{ width: '100%', aspectRatio: 350 / 520 }}
+        style={{
+          width: '100%',
+          aspectRatio: 350 / 520,
+        }}
       >
         {/* 콘텐츠 영역 - 세로 중앙 배치 */}
         <View
@@ -150,27 +153,20 @@ export default function CosmicResultBackCard({
                   return (
                     <View
                       key={match.type}
-                      style={{ width: 50 }}
+                      style={{ width: 60 }}
                       className="items-center"
                     >
                       <View
                         style={{ width: 50, height: 50 }}
                         className="items-center justify-center"
                       >
-                        {matchImage ? (
-                          <Image
-                            source={matchImage}
-                            style={{ width: 50, height: 43 }}
-                            resizeMode="contain"
-                          />
-                        ) : (
-                          <Text className="text-lg">✨</Text>
-                        )}
+                        <Image
+                          source={matchImage}
+                          style={{ width: 50, height: 43 }}
+                          resizeMode="contain"
+                        />
                       </View>
-                      <Text
-                        className="text-sm text-white text-center"
-                        style={{ lineHeight: 19.6 }}
-                      >
+                      <Text className="text-sm text-white text-center text-nowrap">
                         {match.label}
                       </Text>
                     </View>
