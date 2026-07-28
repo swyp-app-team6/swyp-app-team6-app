@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react-native';
 import { API } from './client';
 import useAuthStore from '@/entities/user/model/authStore';
 import useConditionStateStore from '@/shared/model/conditionStateStore';
@@ -82,14 +83,24 @@ export function setupInterceptors() {
           },
           response: error.response
             ? {
-                headers: error.response.headers as unknown as Record<string, string>,
-                data: error.response.data,
-              }
+              headers: error.response.headers as unknown as Record<string, string>,
+              data: error.response.data,
+            }
             : null,
           error: error.message ?? 'Unknown error',
         };
         useApiLogStore.getState().addLog(entry);
       }
+
+      Sentry.captureException(error, {
+        extra: {
+          method: (originalRequest?.method ?? 'GET').toUpperCase(),
+          url: (originalRequest?.baseURL ?? '') + (originalRequest?.url ?? ''),
+          status: error.response?.status ?? null,
+          requestBody: originalRequest?.data ?? null,
+          responseBody: error.response?.data ?? null,
+        },
+      });
 
       if (error.response?.status !== 401 || originalRequest._retry || originalRequest.skipAuth) {
         return Promise.reject(error);

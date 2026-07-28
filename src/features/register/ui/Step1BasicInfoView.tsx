@@ -48,7 +48,7 @@ export default function Step1BasicInfoView({ onNext }: { onNext: () => void }) {
     try {
       setUploading(true);
       const imageKey = await ProfileAPI.profileImageUpload(uri, 'image/jpeg');
-      updateForm({ profileImageKey: imageKey });
+      updateForm({ profileImageKey: imageKey, imageChanged: true });
     } catch (error) {
       console.error('이미지 업로드 실패:', error);
       openErrorDialog({ message: '이미지 업로드에 실패했습니다' });

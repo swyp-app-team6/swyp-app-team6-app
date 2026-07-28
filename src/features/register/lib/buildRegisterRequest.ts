@@ -9,7 +9,7 @@ import type { RegisterFormState } from '../model/types';
  * ---
  * @param form 등록 폼 상태
  */
-export function buildRegisterRequest(form: RegisterFormState) {
+export function buildRegisterRequest(form: RegisterFormState, isEdit = false) {
   const choiceTemplate: ChoiceTemplate[] = [];
   const shortTemplate: ShortTemplate[] = [];
 
@@ -34,7 +34,7 @@ export function buildRegisterRequest(form: RegisterFormState) {
 
   return {
     nickname: form.nickname,
-    image_key: form.profileImageKey ?? '',
+    ...(isEdit && !form.imageChanged ? {} : { image_key: form.profileImageKey ?? '' }),
     gender: form.gender as 'M' | 'F',
     age: Number(form.age),
     region: resolveRegionEnum(form.region, form.subArea),

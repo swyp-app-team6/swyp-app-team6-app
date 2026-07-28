@@ -10,7 +10,7 @@ import { useMyProfileQuery } from '@/entities/user';
 import { openDialog } from '@/shared/ui/Dialog';
 import { apiValueToCosmicType } from '@/entities/storage';
 import type { NavigationPropType } from '@/shared/types';
-import HomeCardBack from './HomeCardBack';
+import HomeCardBackNew from './HomeCardBackNew';
 
 /**
  * # HomeWidget
@@ -129,7 +129,7 @@ export default function HomeWidget() {
 
   /** 뒷면 카드 */
   const backCard = (hasProfile && profile.cosmic_type) ? (
-    <HomeCardBack cosmicType={profile.cosmic_type} />
+    <HomeCardBackNew cosmicType={profile.cosmic_type} />
   ) : (
     <EmptyProfileCard
       text={'유형 테스트를 통해\n나의 유형을 찾아보세요!'}

@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, Pressable } from 'react-native';
 import type { ImageSourcePropType } from 'react-native';
 import type { CosmicTypeResponse } from '@/entities/cosmic';
 import ProfileCardGradientBackground from '@/shared/ui/ProfileCard/ProfileCardGradientBackground';
-import { CharacterEllipseIcon } from '@/shared/ui/icons';
+import { CharacterEllipseIcon, FlipIcon } from '@/shared/ui/icons';
 
 /**
  * 코스믹 유형별 캐릭터 이미지 매핑
@@ -20,6 +20,8 @@ interface Props {
   result: CosmicTypeResponse;
   /** 사용자 닉네임 */
   nickname: string;
+  /** 뒷면 보기 전환 콜백 */
+  onFlip?: () => void;
 }
 
 /**
@@ -32,39 +34,57 @@ interface Props {
  *   - CosmicTypeResponse API 데이터를 주입받아 렌더링
  *   - 카드 비율 350:520 (디자인 스펙), 좌우 20px 여백
  *   - 내부 레이아웃은 퍼센트/flex 기반 반응형
+ *   - 뒷면보기 버튼은 카드 하단 바깥에 배치
  * ---
  * @param result 유형 결과 데이터 (API 응답)
  * @param nickname 사용자 닉네임
+ * @param onFlip 뒷면 보기 전환 콜백
  * ---
  * @example
- * <CosmicResultFrontCard result={cosmicData} nickname="홍길동" />
+ * <CosmicResultFrontCard result={cosmicData} nickname="홍길동" onFlip={handleFlip} />
  */
 export default function CosmicResultFrontCard({
   result,
   nickname,
+  onFlip,
 }: Props) {
   const characterImage = COSMIC_CHARACTER_IMAGE[result.cosmic_type.type];
 
   return (
-    <View style={{ paddingHorizontal: 20, width: '100%' }}>
+    <View style={{ padding: 24, width: '100%' }}>
       <ProfileCardGradientBackground
         colors={['rgba(80, 50, 213, 0.80)', 'rgba(135, 67, 237, 0.80)']}
         style={{ width: '100%', aspectRatio: 350 / 520 }}
       >
         {/* 콘텐츠 영역 - 세로 중앙 배치 */}
-        <View className="flex-1 justify-center items-center" style={{ paddingVertical: '6%', gap: 12 }}>
+        <View
+          className="flex-1 justify-between items-center"
+          style={{ paddingVertical: '6%', gap: 12 }}
+        >
           {/* 닉네임 + 유형명 */}
-          <View className="items-center gap-1" style={{ paddingHorizontal: '9%' }}>
-            <Text className="text-base font-medium text-white text-center" style={{ lineHeight: 22.4 }}>
+          <View
+            className="items-center gap-1"
+            style={{ paddingHorizontal: '9%' }}
+          >
+            <Text
+              className="text-base font-medium text-white text-center"
+              style={{ lineHeight: 22.4 }}
+            >
               {nickname} 님은
             </Text>
-            <Text className="text-xl font-bold text-white text-center" style={{ lineHeight: 28 }}>
+            <Text
+              className="text-xl font-bold text-white text-center"
+              style={{ lineHeight: 28 }}
+            >
               {result.cosmic_type.label}
             </Text>
           </View>
 
           {/* 캐릭터 일러스트 영역 */}
-          <View className="items-center justify-center" style={{ width: 168, height: 168 }}>
+          <View
+            className="items-center justify-center"
+            style={{ width: 168, height: 168 }}
+          >
             {/* 블러 글로우 배경 */}
             <View style={{ position: 'absolute' }}>
               <CharacterEllipseIcon size={168} />
@@ -72,38 +92,65 @@ export default function CosmicResultFrontCard({
             {characterImage && (
               <Image
                 source={characterImage}
-                style={{ width: 168, height: 168 }}
+                style={{
+                  width: 200,
+                  height: 200,
+                  padding: 10,
+                  shadowColor: '#FFFFFF',
+                  shadowOffset: { width: 0, height: 0 },
+                  shadowOpacity: 0.5,
+                  shadowRadius: 10,
+                }}
                 resizeMode="contain"
               />
             )}
           </View>
 
-          {/* 태그 */}
-          <View className="flex-row justify-center items-center gap-1" style={{ paddingHorizontal: '9%' }}>
-            {result.tags.map((tag) => (
-              <View
-                key={tag}
-                className="rounded-[20px] px-3 py-2"
-                style={{ borderWidth: 1, borderColor: '#FFFFFF' }}
-              >
-                <Text className="text-xs text-white" style={{ lineHeight: 12 }}>
-                  {tag}
-                </Text>
-              </View>
-            ))}
-          </View>
-
-          {/* 한줄 설명 */}
-          <View className="items-center" style={{ paddingHorizontal: '9%' }}>
-            <Text
-              className="text-sm font-semibold text-white text-center"
-              style={{ lineHeight: 19.6 }}
+          <View className="flex flex-col gap-4 items-center justify-center">
+            {/* 태그 */}
+            <View
+              className="flex-row justify-center items-center gap-1"
+              style={{ paddingHorizontal: '9%' }}
             >
-              {result.detail}
-            </Text>
+              {result.tags.map(tag => (
+                <View
+                  key={tag}
+                  className="rounded-[20px] px-3 py-2"
+                  style={{ borderWidth: 1, borderColor: '#FFFFFF' }}
+                >
+                  <Text
+                    className="text-xs text-white"
+                    style={{ lineHeight: 12 }}
+                  >
+                    {tag}
+                  </Text>
+                </View>
+              ))}
+            </View>
+
+            {/* 한줄 설명 */}
+            <View className="items-center" style={{ paddingHorizontal: '9%' }}>
+              <Text
+                className="text-sm font-semibold text-white text-center"
+                style={{ lineHeight: 19.6 }}
+              >
+                {result.detail}
+              </Text>
+            </View>
           </View>
         </View>
       </ProfileCardGradientBackground>
+
+      {/* 뒷면보기 버튼 — 카드 하단 바깥 */}
+      <Pressable
+        onPress={onFlip}
+        className="flex-row items-center gap-1 rounded-[20px] px-3 py-2 self-center mt-3"
+      >
+        <FlipIcon size={20} />
+        <Text className="text-sm text-gray-700" style={{ lineHeight: 19.6 }}>
+          뒷면보기
+        </Text>
+      </Pressable>
     </View>
   );
 }

@@ -11,6 +11,7 @@ export { default as Anim } from './Anim';
 export { default as Header } from './Header';
 export { default as Card } from './Card';
 export { default as SwipeableCard } from './SwipeableCard';
+export { default as FlipCardAnimation } from './FlipCardAnimation';
 export { default as BottomNav, type BottomNavItem } from './BottomNav';
 export { default as Selectbox } from './Selectbox';
 export { default as StepView } from './StepView';
