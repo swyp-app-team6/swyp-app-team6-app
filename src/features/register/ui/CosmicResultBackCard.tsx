@@ -42,7 +42,11 @@ interface Props {
  * @example
  * <CosmicResultBackCard result={cosmicData} nickname="홍길동" />
  */
-export default function CosmicResultBackCard({ result, nickname, onFlip }: Props) {
+export default function CosmicResultBackCard({
+  result,
+  nickname,
+  onFlip,
+}: Props) {
   return (
     <View style={{ padding: 24, width: '100%' }}>
       <ProfileCardGradientBackground
@@ -50,13 +54,25 @@ export default function CosmicResultBackCard({ result, nickname, onFlip }: Props
         style={{ width: '100%', aspectRatio: 350 / 520 }}
       >
         {/* 콘텐츠 영역 - 세로 중앙 배치 */}
-        <View className="flex-1 justify-center" style={{ paddingVertical: '6%', gap: 12 }}>
+        <View
+          className="flex-1 justify-center"
+          style={{ paddingVertical: '6%', gap: 12 }}
+        >
           {/* 닉네임 + 유형명 */}
-          <View className="items-center gap-1" style={{ paddingHorizontal: '9%' }}>
-            <Text className="text-base font-medium text-white text-center" style={{ lineHeight: 22.4 }}>
+          <View
+            className="items-center gap-1"
+            style={{ paddingHorizontal: '9%' }}
+          >
+            <Text
+              className="text-base font-medium text-white text-center"
+              style={{ lineHeight: 22.4 }}
+            >
               {nickname} 님은
             </Text>
-            <Text className="text-xl font-bold text-white text-center" style={{ lineHeight: 28 }}>
+            <Text
+              className="text-xl font-bold text-white text-center"
+              style={{ lineHeight: 28 }}
+            >
               {result.cosmic_type.label}
             </Text>
           </View>
@@ -71,78 +87,98 @@ export default function CosmicResultBackCard({ result, nickname, onFlip }: Props
               padding: '5.7%',
             }}
           >
-          {/* 연애 스타일 */}
-          <View className="gap-1">
-            <Text className="text-base font-semibold text-white" style={{ lineHeight: 22.4 }}>
-              연애 스타일
-            </Text>
-            <Text className="text-sm text-white" style={{ lineHeight: 19.6 }}>
-              {result.features.map((item, i) => (
-                <React.Fragment key={item}>
-                  {' '}{item}
-                  {i < result.features.length - 1 ? '\n' : ''}
-                </React.Fragment>
-              ))}
-            </Text>
-          </View>
+            {/* 연애 스타일 */}
+            <View className="gap-1">
+              <Text
+                className="text-base font-semibold text-white"
+                style={{ lineHeight: 22.4 }}
+              >
+                연애 스타일
+              </Text>
+              <Text className="text-sm text-white" style={{ lineHeight: 19.6 }}>
+                {result.features.map((item, i) => (
+                  <React.Fragment key={item}>
+                    {' '}
+                    {item}
+                    {i < result.features.length - 1 ? '\n' : ''}
+                  </React.Fragment>
+                ))}
+              </Text>
+            </View>
 
-          {/* 구분선 */}
-          <View
-            className="my-4"
-            style={{ height: 1, backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
-          />
+            {/* 구분선 */}
+            <View
+              className="my-4"
+              style={{ height: 1, backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
+            />
 
-          {/* 자주 듣는 말 */}
-          <View className="gap-1">
-            <Text className="text-base font-semibold text-white" style={{ lineHeight: 22.4 }}>
-              이런 말을 자주 들어요
-            </Text>
-            <Text className="text-sm text-white" style={{ lineHeight: 19.6 }}>
-              {result.mentions.map((quote, i) => (
-                <React.Fragment key={quote}>
-                  {quote}
-                  {i < result.mentions.length - 1 ? '\n' : ''}
-                </React.Fragment>
-              ))}
-            </Text>
-          </View>
+            {/* 자주 듣는 말 */}
+            <View className="gap-1">
+              <Text
+                className="text-base font-semibold text-white"
+                style={{ lineHeight: 22.4 }}
+              >
+                이런 말을 자주 들어요
+              </Text>
+              <Text className="text-sm text-white" style={{ lineHeight: 19.6 }}>
+                {result.mentions.map((quote, i) => (
+                  <React.Fragment key={quote}>
+                    {quote}
+                    {i < result.mentions.length - 1 ? '\n' : ''}
+                  </React.Fragment>
+                ))}
+              </Text>
+            </View>
 
-          {/* 구분선 */}
-          <View
-            className="my-4"
-            style={{ height: 1, backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
-          />
+            {/* 구분선 */}
+            <View
+              className="my-4"
+              style={{ height: 1, backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
+            />
 
-          {/* 궁합이 좋은 유형 */}
-          <View className="gap-1">
-            <Text className="text-base font-semibold text-white" style={{ lineHeight: 22.4 }}>
-              궁합이 좋은 유형
-            </Text>
-            <View className="flex-row items-center gap-2 mt-1">
-              {result.matches.map((match) => {
-                const matchImage = COSMIC_CHARACTER_IMAGE[match.type];
-                return (
-                  <View key={match.type} style={{ width: 50 }} className="items-center">
-                    <View style={{ width: 50, height: 50 }} className="items-center justify-center">
-                      {matchImage ? (
-                        <Image
-                          source={matchImage}
-                          style={{ width: 50, height: 43 }}
-                          resizeMode="contain"
-                        />
-                      ) : (
-                        <Text className="text-lg">✨</Text>
-                      )}
+            {/* 궁합이 좋은 유형 */}
+            <View className="gap-1">
+              <Text
+                className="text-base font-semibold text-white"
+                style={{ lineHeight: 22.4 }}
+              >
+                궁합이 좋은 유형
+              </Text>
+              <View className="flex-row items-center gap-2 mt-1">
+                {result.matches.map(match => {
+                  const matchImage = COSMIC_CHARACTER_IMAGE[match.type];
+                  return (
+                    <View
+                      key={match.type}
+                      style={{ width: 50 }}
+                      className="items-center"
+                    >
+                      <View
+                        style={{ width: 50, height: 50 }}
+                        className="items-center justify-center"
+                      >
+                        {matchImage ? (
+                          <Image
+                            source={matchImage}
+                            style={{ width: 50, height: 43 }}
+                            resizeMode="contain"
+                          />
+                        ) : (
+                          <Text className="text-lg">✨</Text>
+                        )}
+                      </View>
+                      <Text
+                        className="text-sm text-white text-center"
+                        style={{ lineHeight: 19.6 }}
+                      >
+                        {match.label}
+                      </Text>
                     </View>
-                    <Text className="text-sm text-white text-center" style={{ lineHeight: 19.6 }}>
-                      {match.label}
-                    </Text>
-                  </View>
-                );
-              })}
+                  );
+                })}
+              </View>
             </View>
           </View>
-        </View>
           {/* 앞면보기 버튼 */}
           <Pressable
             onPress={onFlip}

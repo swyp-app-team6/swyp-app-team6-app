@@ -56,19 +56,34 @@ export default function CosmicResultFrontCard({
         style={{ width: '100%', aspectRatio: 350 / 520 }}
       >
         {/* 콘텐츠 영역 - 세로 중앙 배치 */}
-        <View className="flex-1 justify-between items-center" style={{ paddingVertical: '6%', gap: 12 }}>
+        <View
+          className="flex-1 justify-between items-center"
+          style={{ paddingVertical: '6%', gap: 12 }}
+        >
           {/* 닉네임 + 유형명 */}
-          <View className="items-center gap-1" style={{ paddingHorizontal: '9%' }}>
-            <Text className="text-base font-medium text-white text-center" style={{ lineHeight: 22.4 }}>
+          <View
+            className="items-center gap-1"
+            style={{ paddingHorizontal: '9%' }}
+          >
+            <Text
+              className="text-base font-medium text-white text-center"
+              style={{ lineHeight: 22.4 }}
+            >
               {nickname} 님은
             </Text>
-            <Text className="text-xl font-bold text-white text-center" style={{ lineHeight: 28 }}>
+            <Text
+              className="text-xl font-bold text-white text-center"
+              style={{ lineHeight: 28 }}
+            >
               {result.cosmic_type.label}
             </Text>
           </View>
 
           {/* 캐릭터 일러스트 영역 */}
-          <View className="items-center justify-center" style={{ width: 168, height: 168 }}>
+          <View
+            className="items-center justify-center"
+            style={{ width: 168, height: 168 }}
+          >
             {/* 블러 글로우 배경 */}
             <View style={{ position: 'absolute' }}>
               <CharacterEllipseIcon size={168} />
@@ -77,28 +92,34 @@ export default function CosmicResultFrontCard({
               <Image
                 source={characterImage}
                 style={{
-                  width: 200, height: 200,
+                  width: 200,
+                  height: 200,
                   padding: 10,
                   shadowColor: '#FFFFFF',
                   shadowOffset: { width: 0, height: 0 },
                   shadowOpacity: 0.5,
                   shadowRadius: 10,
-
                 }}
                 resizeMode="contain"
               />
             )}
           </View>
-          <View className='flex flex-col gap-4 items-center justify-center'>
+          <View className="flex flex-col gap-4 items-center justify-center">
             {/* 태그 */}
-            <View className="flex-row justify-center items-center gap-1" style={{ paddingHorizontal: '9%' }}>
-              {result.tags.map((tag) => (
+            <View
+              className="flex-row justify-center items-center gap-1"
+              style={{ paddingHorizontal: '9%' }}
+            >
+              {result.tags.map(tag => (
                 <View
                   key={tag}
                   className="rounded-[20px] px-3 py-2"
                   style={{ borderWidth: 1, borderColor: '#FFFFFF' }}
                 >
-                  <Text className="text-xs text-white" style={{ lineHeight: 12 }}>
+                  <Text
+                    className="text-xs text-white"
+                    style={{ lineHeight: 12 }}
+                  >
                     {tag}
                   </Text>
                 </View>
@@ -127,7 +148,6 @@ export default function CosmicResultFrontCard({
               </Text>
             </Pressable>
           </View>
-
         </View>
       </ProfileCardGradientBackground>
     </View>
