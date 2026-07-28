@@ -1,6 +1,6 @@
 {
   "name": "swyp-rotation-dating-app",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "private": true,
   "scripts": {
     "android:local": "ENVFILE=.env.development npx react-native run-android",
@@ -76,6 +76,7 @@
     "@babel/plugin-transform-class-static-block": "^7.29.7",
     "@babel/preset-env": "^7.25.3",
     "@babel/runtime": "^7.25.0",
+    "@changesets/cli": "^2.31.1",
     "@msw/data": "^1.1.6",
     "@react-native-community/cli": "20.1.0",
     "@react-native-community/cli-platform-android": "20.1.0",
