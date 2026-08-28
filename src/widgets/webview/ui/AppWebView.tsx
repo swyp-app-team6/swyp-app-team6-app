@@ -34,20 +34,7 @@ export default function AppWebView({ url }: AppWebViewProps) {
    * FIXME: react-native-webview-rpc 사용해 흐름 단순화 필요
    * */
   const handleMessage = useCallback((event: WebViewMessageEvent) => {
-    const parsed = parseWebMessage(event.nativeEvent.data);
-    console.log(event.nativeEvent.data, parsed);
     onRpcMessage(event);
-
-    // switch (parsed.key) {
-    //   case NATIVE_MSG_ID.START_FOREGROUND_SERVICE:
-    //     startForeground();
-    //     break;
-    //   case NATIVE_MSG_ID.STOP_FOREGROUND_SERVICE:
-    //     stopForeground();
-    //     break;
-    //   default:
-    //     break;
-    // }
   }, [startForeground, stopForeground]);
 
   // /** WebView 로드 완료 시 WEBVIEW_READY 전송 */

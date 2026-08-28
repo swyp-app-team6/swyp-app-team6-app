@@ -18,11 +18,15 @@ export const rpcs = {
   /**
    * 위치전송 시작
    */
-  onStartSendLocation() {},
+  onStartSendLocation(value) {
+    console.log('########### started', value)
+  },
   /**
    * 위치전송 종료
    */
-  onStopSendLocation() {},
+  onStopSendLocation() {
+    console.log('########### stop')
+  },
   /**
    * 각 값들 webview에 전달
    */
