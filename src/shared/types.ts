@@ -45,6 +45,7 @@ export type NavigatorType = {
   playground: undefined;
   apiLog: undefined;
   safeAreaTest: undefined;
+  webview: { url: string };
 }
 
 /** useNavigation 제네릭 타입 */

@@ -31,6 +31,7 @@ import { NavigatorType } from '../types';
 import ComponentPlaygroundPage from '../../pages/playground/ComponentPlaygroundPage';
 import ApiLogPage from '../../pages/playground/ApiLogPage';
 import SafeAreaTestPage from '../../pages/playground/SafeAreaTestPage';
+import WebViewPage from '@/pages/webview/WebViewPage';
 
 const Stack = createNativeStackNavigator<NavigatorType>();
 
@@ -79,6 +80,7 @@ export default function StackRouter({ initialRouteName = 'home' }: StackRouterPr
         <Stack.Screen name='accountEdit' component={AccountEditPage} />
         <Stack.Screen name='withdrawalReason' component={WithdrawalReasonPage} />
         <Stack.Screen name='withdrawalConfirm' component={WithdrawalConfirmPage} />
+        <Stack.Screen name='webview' component={WebViewPage} />
         {
           __DEV__ && (
             <>
