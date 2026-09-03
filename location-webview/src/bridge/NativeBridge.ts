@@ -62,9 +62,13 @@ export class NativeBridge {
    * @param payload 전달할 데이터
    */
   call(method: string, payload?: unknown) {
-    window.ReactNativeWebView?.postMessage(
-      JSON.stringify({ type: method, payload })
-    );
+    try {
+      window.ReactNativeWebView?.postMessage(
+        JSON.stringify({ type: method, payload })
+      );
+    } catch (e) {
+      console.warn('[NativeBridge] postMessage 실패:', e);
+    }
   }
 
   private emit(event: string, data: unknown) {

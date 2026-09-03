@@ -20,9 +20,11 @@ export function useMyCurPosition() {
   const rpcs = useRpcs();
   const { setPosition, setDegree, setEnabled, reset } = useLocationStore();
 
+  // TODO: 자체 rpc 라이브러리 사용해 리팩토링 필요
   useEffect(() => {
     const unsubPosition = bridge.on('positionUpdate', (data) => {
       const { lat, lng, isEnabled } = data as { lat: number; lng: number; isEnabled: boolean };
+      console.log('positionUpdate', data);
       setPosition(lat, lng);
       setEnabled(isEnabled);
     });
@@ -32,6 +34,13 @@ export function useMyCurPosition() {
       setDegree(degree);
     });
 
+    window.onLocationUpdate = (data) => {
+      const { lat, lng, degree } = data as { lat: number; lng: number; degree: number; isEnabled: boolean };
+      console.log('onLocationUpdate', data);
+      setPosition(lat, lng);
+      setDegree(degree);
+    }
+
     return () => {
       unsubPosition();
       unsubDegree();
@@ -39,13 +48,21 @@ export function useMyCurPosition() {
   }, [bridge, setPosition, setDegree, setEnabled]);
 
   const startMyLocation = async () => {
-    await rpcs.onStartSendLocation();
-    setEnabled(true);
+    try {
+      await rpcs.onStartSendLocation();
+      setEnabled(true);
+    } catch {
+      console.warn('[Location] 추적 시작 실패');
+    }
   };
 
   const stopMyLocation = async () => {
-    await rpcs.onStopSendLocation();
-    reset();
+    try {
+      await rpcs.onStopSendLocation();
+      reset();
+    } catch {
+      console.warn('[Location] 추적 중지 실패');
+    }
   };
 
   return { startMyLocation, stopMyLocation };

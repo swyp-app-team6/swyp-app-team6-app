@@ -23,6 +23,7 @@ interface AppWebViewProps {
  */
 export default function AppWebView({ url }: AppWebViewProps) {
   const webViewRef = useRef<WebView>(null);
+  // TODO: 자체 rpc 라이브러리 사용해 리팩토링 필요
   const rpcs = useRpcs(webViewRef);
   const onRpcMessage = useWebViewRpcHandler(webViewRef, rpcs);
 
