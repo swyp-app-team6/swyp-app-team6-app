@@ -41,8 +41,5 @@
       android:name=".location.MyService"
       android:exported="false"
       android:foregroundServiceType="location" />
-    <receiver
-      android:name=".location.MyReceiver"
-      android:exported="false" />
   </application>
 </manifest>

@@ -4,7 +4,7 @@ import type { RouteProp } from '@react-navigation/native';
 import { AppWebView } from '@/widgets/webview';
 import type { NavigatorType } from '@/shared/types';
 
-const WEBVIEW_URL = 'http://172.30.1.6:5173/location';
+const WEBVIEW_URL = 'http://172.30.1.15:5173/location';
 /**
  * # WebViewPage
  * ---

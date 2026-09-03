@@ -3,7 +3,7 @@ import { AppWebView } from '@/widgets/webview';
 import withLayout from '@/shared/hoc/withLayout';
 import withAuthorization from '@/shared/hoc/withAuthorization';
 
-const WEBVIEW_URL = 'http://172.30.1.6:5173/location';
+const WEBVIEW_URL = 'http://172.30.1.15:5173/location';
 
 /**
  * # HomePage

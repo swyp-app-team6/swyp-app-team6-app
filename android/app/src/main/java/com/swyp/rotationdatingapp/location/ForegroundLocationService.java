@@ -1,10 +1,9 @@
 package com.swyp.rotationdatingapp.location;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.location.LocationManager;
-import android.os.Build;
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -13,24 +12,19 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 
 /**
  * RN Native Module — 위치 서비스 제어
  * JS에서 NativeModules.ForegroundLocationService로 접근
  *
- * 메서드:
- * - start(): MyService 시작 + MyReceiver 콜백 등록
- * - stop(): MyService 중지
- * - getLocationInfo(Promise): "lat/lng/isEnabled" 문자열 반환
- * - setConfig(token, baseURL): 인증 정보 설정
- * - isLocationEnabled(Promise): 디바이스 위치 서비스 활성화 여부
+ * MyService.sLat/sLng (static volatile)에서 직접 읽음 — broadcast 불필요
  */
 public class ForegroundLocationService extends ReactContextBaseJavaModule {
     private static final String MODULE_NAME = "ForegroundLocationService";
 
     private final ReactApplicationContext reactContext;
-    private MyReceiver receiver;
-    private String lastLocationData = "0/0"; // "lat/lng"
     private boolean isRunning = false;
 
     public ForegroundLocationService(ReactApplicationContext context) {
@@ -45,27 +39,12 @@ public class ForegroundLocationService extends ReactContextBaseJavaModule {
     }
 
     /**
-     * Foreground Service 시작 + BroadcastReceiver 등록
+     * Foreground Service 시작
      */
     @ReactMethod
     public void start() {
         if (isRunning) return;
 
-        // 콜백 등록: MyReceiver → 이 모듈로 좌표 전달
-        ICallback.Holder.setCallback(result -> {
-            lastLocationData = result;
-        });
-
-        // BroadcastReceiver 등록
-        receiver = new MyReceiver();
-        IntentFilter filter = new IntentFilter(MyService.ACTION_LOCATION_UPDATE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            reactContext.registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED);
-        } else {
-            reactContext.registerReceiver(receiver, filter);
-        }
-
-        // Foreground Service 시작
         Intent serviceIntent = new Intent(reactContext, MyService.class);
         ContextCompat.startForegroundService(reactContext, serviceIntent);
         isRunning = true;
@@ -80,27 +59,38 @@ public class ForegroundLocationService extends ReactContextBaseJavaModule {
 
         Intent serviceIntent = new Intent(reactContext, MyService.class);
         reactContext.stopService(serviceIntent);
-
-        if (receiver != null) {
-            try {
-                reactContext.unregisterReceiver(receiver);
-            } catch (Exception ignored) {}
-            receiver = null;
-        }
-
-        ICallback.Holder.setCallback(null);
         isRunning = false;
     }
 
     /**
-     * 최근 위치 정보 반환
+     * 최근 위치 정보 반환 — FusedLocationProviderClient에서 직접 조회
      * @return "lat/lng/isEnabled" 형태의 문자열
      */
     @ReactMethod
     public void getLocationInfo(Promise promise) {
         try {
             boolean enabled = isDeviceLocationEnabled();
-            promise.resolve(lastLocationData + "/" + enabled);
+            FusedLocationProviderClient client =
+                    LocationServices.getFusedLocationProviderClient(reactContext);
+            client.getLastLocation()
+                    .addOnSuccessListener(location -> {
+                        if (location != null) {
+                            double lat = location.getLatitude();
+                            double lng = location.getLongitude();
+                            Log.d(MODULE_NAME, "getLastLocation: " + lat + ", " + lng);
+                            promise.resolve(lat + "/" + lng + "/" + enabled);
+                        } else {
+                            Log.w(MODULE_NAME, "getLastLocation null, fallback to static");
+                            promise.resolve(MyService.sLat + "/" + MyService.sLng + "/" + enabled);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(MODULE_NAME, "getLastLocation 실패: " + e.getMessage());
+                        promise.resolve(MyService.sLat + "/" + MyService.sLng + "/" + enabled);
+                    });
+        } catch (SecurityException e) {
+            Log.e(MODULE_NAME, "권한 없음: " + e.getMessage());
+            promise.resolve("0/0/false");
         } catch (Exception e) {
             promise.reject("LOCATION_ERROR", e.getMessage());
         }
@@ -108,8 +98,6 @@ public class ForegroundLocationService extends ReactContextBaseJavaModule {
 
     /**
      * 서버 전송용 인증 정보 설정
-     * @param token Bearer 토큰
-     * @param baseURL API 기본 URL
      */
     @ReactMethod
     public void setConfig(String token, String baseURL) {

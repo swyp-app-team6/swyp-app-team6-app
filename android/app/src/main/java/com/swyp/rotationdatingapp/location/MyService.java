@@ -23,7 +23,7 @@ import com.google.android.gms.location.Priority;
 /**
  * 백그라운드 위치 수집 Foreground Service
  * - FusedLocationProviderClient로 1초 간격 GPS 수집
- * - BroadcastReceiver(MyReceiver)로 좌표 전달
+ * - static 필드에 최신 좌표 저장 (ForegroundLocationService에서 직접 읽음)
  * - 5회 수집마다 서버 전송
  */
 public class MyService extends Service {
@@ -33,13 +33,13 @@ public class MyService extends Service {
     private static final long UPDATE_LOCATION_INTERVAL = 1000L;
     private static final int SERVER_SEND_INTERVAL = 5;
 
-    public static final String ACTION_LOCATION_UPDATE = "com.swyp.rotationdatingapp.LOCATION_UPDATE";
-    public static final String EXTRA_LAT = "lat";
-    public static final String EXTRA_LNG = "lng";
-
     /** 인증 정보 (ForegroundLocationService에서 설정) */
     public static String sAccessToken = "";
     public static String sBaseURL = "";
+
+    /** 최신 위치 — JS에서 getLocationInfo()로 직접 읽음 */
+    public static volatile double sLat = 0;
+    public static volatile double sLng = 0;
 
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
@@ -54,6 +54,7 @@ public class MyService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(TAG, "onStartCommand 호출됨");
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("위치 추적 중")
                 .setContentText("백그라운드에서 위치를 수집하고 있습니다")
@@ -62,6 +63,7 @@ public class MyService extends Service {
                 .build();
 
         startForeground(NOTIFICATION_ID, notification);
+        Log.d(TAG, "startForeground 완료");
         startLocationUpdates();
         return START_STICKY;
     }
@@ -75,36 +77,36 @@ public class MyService extends Service {
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) return;
+                if (locationResult == null || locationResult.getLastLocation() == null) {
+                    Log.w(TAG, "locationResult 또는 lastLocation이 null");
+                    return;
+                }
                 double lat = locationResult.getLastLocation().getLatitude();
                 double lng = locationResult.getLastLocation().getLongitude();
+                Log.d(TAG, "위치 수신: " + lat + ", " + lng);
 
-                broadcastLocation(lat, lng);
+                // static 필드에 직접 저장
+                sLat = lat;
+                sLng = lng;
+
+                // 5회마다 서버 전송
+                locationCount++;
+                if (locationCount % SERVER_SEND_INTERVAL == 0) {
+                    if (!sBaseURL.isEmpty() && !sAccessToken.isEmpty()) {
+                        HttpRequest.sendUserLocation(sBaseURL, sAccessToken, lat, lng);
+                    }
+                }
             }
         };
 
         try {
             fusedLocationClient.requestLocationUpdates(
                     locationRequest, locationCallback, Looper.getMainLooper());
+            Log.d(TAG, "requestLocationUpdates 성공");
         } catch (SecurityException e) {
             Log.e(TAG, "위치 권한 없음: " + e.getMessage());
-        }
-    }
-
-    private void broadcastLocation(double lat, double lng) {
-        // BroadcastReceiver로 좌표 전달
-        Intent intent = new Intent(ACTION_LOCATION_UPDATE);
-        intent.setPackage(getPackageName());
-        intent.putExtra(EXTRA_LAT, lat);
-        intent.putExtra(EXTRA_LNG, lng);
-        sendBroadcast(intent);
-
-        // 5회마다 서버 전송
-        locationCount++;
-        if (locationCount % SERVER_SEND_INTERVAL == 0) {
-            if (!sBaseURL.isEmpty() && !sAccessToken.isEmpty()) {
-                HttpRequest.sendUserLocation(sBaseURL, sAccessToken, lat, lng);
-            }
+        } catch (Exception e) {
+            Log.e(TAG, "requestLocationUpdates 실패: " + e.getMessage());
         }
     }
 
